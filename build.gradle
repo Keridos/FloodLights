@@ -19,6 +19,11 @@ archivesBaseName = "FloodLights"
 
 minecraft {
 	version = "1.6.4-9.11.1.964"
+	if (file('../run').exists()) {
+		assetDir="../run/assets"
+	} else {
+		assetDir = "assets"
+	}
 }
 
 processResources
