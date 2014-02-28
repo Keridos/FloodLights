@@ -1,0 +1,20 @@
+[{
+  "modid": "FloodLights",
+  "name": "Flood Lights",
+  "description": "Adds Flood Lights to Minecraft",
+  "version": "0.0.1",
+  "mcversion": "1.6.4",
+  "url": "",
+  "updateUrl": "",
+  "authors": [ "Keridos", "HarmonySmurf" ],
+  "credits": "Keridos, Harmonysmurf and GCEwing aka Greg for the initial mod idea",
+  "logoFile": "",
+  "screenshots": [ ],
+  "parent": "",
+  "requiredMods": [ "Forge" ],
+  "dependencies": [
+    "IC2"
+  ],
+  "dependants": [  ],
+  "useDependencyInformation": "true"
+}]
