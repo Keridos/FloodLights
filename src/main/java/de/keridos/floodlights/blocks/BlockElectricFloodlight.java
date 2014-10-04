@@ -2,6 +2,7 @@ package de.keridos.floodlights.blocks;
 
 import de.keridos.floodlights.core.LightHandler;
 import de.keridos.floodlights.tileentity.TileEntityElectricFloodlight;
+import javafx.scene.effect.Light;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -28,7 +29,7 @@ public class BlockElectricFloodlight extends BlockFL implements ITileEntityProvi
             if (world.isBlockIndirectlyGettingPowered(x, y, z)) {
                 LightHandlerInst.addSource(world, x, y, z, ForgeDirection.EAST, 0);
             } else if (!world.isBlockIndirectlyGettingPowered(x, y, z)) {
-                LightHandlerInst.removeSource(world, x, y, z, ForgeDirection.EAST, 0);
+                LightHandlerInst.removeSource(world, x, y, z,ForgeDirection.EAST, 0);
             }
             LightHandlerInst.updateLights();
         }
@@ -37,5 +38,11 @@ public class BlockElectricFloodlight extends BlockFL implements ITileEntityProvi
     @Override
     public TileEntityElectricFloodlight createNewTileEntity(World world, int metadata) {
         return new TileEntityElectricFloodlight();
+    }
+
+    @Override
+    public void breakBlock(World world, int x, int y, int z, Block block, int par6) {
+        LightHandler.getInstance().removeSource(world,x,y,z,ForgeDirection.EAST,0);
+        super.breakBlock(world, x, y, z, block, par6);
     }
 }

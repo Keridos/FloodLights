@@ -1,12 +1,12 @@
 package de.keridos.floodlights.core;
 
 import de.keridos.floodlights.init.ModBlocks;
+import de.keridos.floodlights.util.LightBlockHandle;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.ArrayList;
-import java.util.logging.Logger;
 
 /**
  * Created by Nico on 03/10/2014.

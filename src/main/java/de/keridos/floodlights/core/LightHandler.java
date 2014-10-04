@@ -1,8 +1,10 @@
 package de.keridos.floodlights.core;
 
+import de.keridos.floodlights.util.DiskIO;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -17,8 +19,10 @@ public class LightHandler {
 
     public static LightHandler getInstance() {
         if (instance == null) {
-            instance = new LightHandler();
-
+            instance = DiskIO.loadFromDisk();
+            if (instance == null) {
+                instance = new LightHandler();
+            }
         }
         return instance;
     }
@@ -80,6 +84,5 @@ public class LightHandler {
             ((WorldHandler) world).updateRun();
         }
     }
-
 
 }

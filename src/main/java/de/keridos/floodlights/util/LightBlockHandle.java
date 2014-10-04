@@ -1,4 +1,4 @@
-package de.keridos.floodlights.core;
+package de.keridos.floodlights.util;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -37,7 +37,6 @@ public class LightBlockHandle {
             }
         }
         if (!added) {
-            Logger.getGlobal().info("added source" + source.toString());
             sources.add(source);
         }
     }
