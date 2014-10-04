@@ -63,5 +63,7 @@ task sourceJar(type: Jar) {
 
 task deobfJar(type: Jar) {
     from sourceSets.main.output
-    classifier = 'deobf'
+    classifier = 'dev'
 }
+
+build.dependsOn sourceJar, deobfJar
