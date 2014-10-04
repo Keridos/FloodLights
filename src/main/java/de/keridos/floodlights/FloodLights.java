@@ -5,10 +5,12 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.network.NetworkMod;
-import de.keridos.floodlights.core.PacketHandler;
+import cpw.mods.fml.relauncher.Side;
 import de.keridos.floodlights.core.proxy.CommonProxy;
-import de.keridos.floodlights.lib.Reference;
+import de.keridos.floodlights.init.ModBlocks;
+import de.keridos.floodlights.reference.Reference;
+
+import java.util.Map;
 
 
 /**
@@ -16,7 +18,6 @@ import de.keridos.floodlights.lib.Reference;
  */
 
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, dependencies = Reference.DEPENDENCIES)
-@NetworkMod(clientSideRequired = true, serverSideRequired = true, channels = {Reference.CHANNEL}, packetHandler = PacketHandler.class)
 public class FloodLights {
     @Mod.Instance(Reference.MOD_ID)
     public static FloodLights instance;
@@ -25,17 +26,25 @@ public class FloodLights {
     public static CommonProxy proxy;
 
     @Mod.EventHandler
+    public static void postInit(FMLPostInitializationEvent event) {
+
+    }
+
+    //@NetworkCheckHandler()
+    public boolean matchModVersions(Map<String, String> remoteVersions, Side side) {
+        return remoteVersions.containsKey("floodlights") && Reference.VERSION.equals(remoteVersions.get("floodlights"));
+    }
+
+    @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+
 
     }
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
-
-    }
-
-    @Mod.EventHandler
-    public static void postInit(FMLPostInitializationEvent event) {
-
+        ModBlocks.setupBlocks();
+        ModBlocks.registerBlocks();
+        ModBlocks.registerTileEntities();
     }
 }

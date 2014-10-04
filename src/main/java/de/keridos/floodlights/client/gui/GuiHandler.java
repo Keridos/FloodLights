@@ -13,7 +13,7 @@ public class GuiHandler implements IGuiHandler {
     private static GuiHandler instance = null;
 
     private GuiHandler() {
-        NetworkRegistry.instance().registerGuiHandler(FloodLights.instance, this);
+        NetworkRegistry.INSTANCE.registerGuiHandler(FloodLights.instance, this);
     }
 
     public static GuiHandler getInstance() {
