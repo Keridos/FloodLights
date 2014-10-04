@@ -13,9 +13,9 @@ import net.minecraftforge.common.util.ForgeDirection;
 /**
  * Created by Nico on 01/10/2014.
  */
-public class ElectricFloodlight extends FLBlock implements ITileEntityProvider {
+public class BlockElectricFloodlight extends BlockFL implements ITileEntityProvider {
 
-    public ElectricFloodlight(Material material) {
+    public BlockElectricFloodlight(Material material) {
         super("blockElectricFloodlight", Material.rock, soundTypeMetal, 0.6F);
         setCreativeTab(CreativeTabs.tabBlock);
         setHarvestLevel("pickaxe", 0);

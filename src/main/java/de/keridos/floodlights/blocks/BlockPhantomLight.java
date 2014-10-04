@@ -10,8 +10,8 @@ import java.util.Random;
 /**
  * Created by Nico on 01/10/2014.
  */
-public class FLLight extends FLBlock {
-    public FLLight() {
+public class BlockPhantomLight extends BlockFL {
+    public BlockPhantomLight() {
         super("blockLight", Material.air, soundTypeCloth, 0.0F);
     }
 

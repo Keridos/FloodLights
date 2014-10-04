@@ -6,10 +6,10 @@ import net.minecraft.block.material.Material;
 /**
  * Created by Nico on 28.02.14.
  */
-public class FLBlock extends Block {
+public class BlockFL extends Block {
     protected String unlocName;
 
-    protected FLBlock(String unlocName, Material material, SoundType type, float hardness) {
+    protected BlockFL(String unlocName, Material material, SoundType type, float hardness) {
         super(material);
         setStepSound(type);
         setHardness(hardness);

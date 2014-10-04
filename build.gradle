@@ -16,6 +16,7 @@ buildscript {
 }
 apply plugin: 'scala'
 apply plugin: 'forge'
+apply plugin: 'maven-publish'
 
 project.ext.mcversion = "1.7.10"
 version = "0.0.1"
@@ -53,4 +54,14 @@ processResources {
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
+}
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier = 'deobf'
 }

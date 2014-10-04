@@ -2,8 +2,8 @@ package de.keridos.floodlights.init;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
-import de.keridos.floodlights.blocks.ElectricFloodlight;
-import de.keridos.floodlights.blocks.FLLight;
+import de.keridos.floodlights.blocks.BlockElectricFloodlight;
+import de.keridos.floodlights.blocks.BlockPhantomLight;
 import de.keridos.floodlights.core.Config;
 import de.keridos.floodlights.tileentity.TileEntityElectricFloodlight;
 import net.minecraft.block.Block;
@@ -18,8 +18,8 @@ public class ModBlocks {
     private static Config Configuration = Config.getInstance();
 
     public static void setupBlocks() {
-        blockElectricLight = new ElectricFloodlight(Material.rock);
-        blockFLLight = new FLLight();
+        blockElectricLight = new BlockElectricFloodlight(Material.rock);
+        blockFLLight = new BlockPhantomLight();
 
     }
 
