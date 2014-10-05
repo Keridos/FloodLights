@@ -2,7 +2,6 @@ package de.keridos.floodlights.util;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.logging.Logger;
 
 /**
  * Created by Nico on 03/10/2014.

@@ -72,7 +72,7 @@ public class WorldHandler {
 
     public void updateRun() {
         World activeworld = DimensionManager.getWorld(world.provider.dimensionId);
-        for (int i = lastPositionInList; i < lastPositionInList + 100; i++) {
+        for (int i = lastPositionInList; i < lastPositionInList + 5; i++) {
             if (i >= lightBlocks.size()) {
                 lastPositionInList = 0;
                 break;

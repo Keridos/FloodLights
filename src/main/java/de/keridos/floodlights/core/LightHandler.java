@@ -4,7 +4,6 @@ import de.keridos.floodlights.util.DiskIO;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -80,8 +79,10 @@ public class LightHandler {
     }
 
     public void updateLights() {
-        for (Object world : worlds) {
-            ((WorldHandler) world).updateRun();
+        if (worlds != null) {
+            for (Object world : worlds) {
+                ((WorldHandler) world).updateRun();
+            }
         }
     }
 

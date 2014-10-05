@@ -2,11 +2,11 @@ package de.keridos.floodlights.blocks;
 
 import de.keridos.floodlights.core.LightHandler;
 import de.keridos.floodlights.tileentity.TileEntityElectricFloodlight;
-import javafx.scene.effect.Light;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -17,21 +17,30 @@ import net.minecraftforge.common.util.ForgeDirection;
 public class BlockElectricFloodlight extends BlockFL implements ITileEntityProvider {
 
     public BlockElectricFloodlight(Material material) {
-        super("blockElectricFloodlight", Material.rock, soundTypeMetal, 0.6F);
+        super("electricFloodlight", Material.rock, soundTypeMetal, 0.6F);
         setCreativeTab(CreativeTabs.tabBlock);
         setHarvestLevel("pickaxe", 0);
     }
 
     @Override
+    public boolean shouldSideBeRendered(IBlockAccess iblockaccess, int i, int j, int k, int l) {
+        return false;
+    }
+
+    @Override
+    public boolean isOpaqueCube() {
+        return false;
+    }
+
+
+    @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, Block par5) {
-        LightHandler LightHandlerInst = LightHandler.getInstance();
         if (!world.isRemote) {
             if (world.isBlockIndirectlyGettingPowered(x, y, z)) {
-                LightHandlerInst.addSource(world, x, y, z, ForgeDirection.EAST, 0);
+                ((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).setActive(true);
             } else if (!world.isBlockIndirectlyGettingPowered(x, y, z)) {
-                LightHandlerInst.removeSource(world, x, y, z,ForgeDirection.EAST, 0);
+                ((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).setActive(false);
             }
-            LightHandlerInst.updateLights();
         }
     }
 
@@ -42,7 +51,8 @@ public class BlockElectricFloodlight extends BlockFL implements ITileEntityProvi
 
     @Override
     public void breakBlock(World world, int x, int y, int z, Block block, int par6) {
-        LightHandler.getInstance().removeSource(world,x,y,z,ForgeDirection.EAST,0);
+        ForgeDirection direction = ((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).getOrientation();
+        LightHandler.getInstance().removeSource(world, x, y, z, direction, 0);
         super.breakBlock(world, x, y, z, block, par6);
     }
 }

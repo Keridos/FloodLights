@@ -20,16 +20,13 @@ public class EventListener {
         return instance;
     }
 
-
     @SubscribeEvent
-    public void onWorldSave(WorldEvent.Save event)
-    {
+    public void onWorldSave(WorldEvent.Save event) {
         DiskIO.saveToDisk(LightHandler.getInstance());
     }
 
     @SubscribeEvent
-    public void onWorldLoad(WorldEvent.Load event)
-    {
+    public void onWorldLoad(WorldEvent.Load event) {
         LightHandler.getInstance();
     }
 

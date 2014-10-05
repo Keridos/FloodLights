@@ -15,6 +15,7 @@ import net.minecraft.block.material.Material;
 public class ModBlocks {
     public static Block blockElectricLight;
     public static Block blockFLLight;
+    public static int blockElectricLightRenderID;
     private static Config Configuration = Config.getInstance();
 
     public static void setupBlocks() {

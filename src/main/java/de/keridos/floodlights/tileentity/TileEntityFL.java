@@ -16,18 +16,21 @@ public class TileEntityFL extends TileEntity {
 
     public TileEntityFL() {
         orientation = ForgeDirection.SOUTH;
+        state = 0;
+        customName = "";
+        owner = "";
     }
 
     public ForgeDirection getOrientation() {
         return orientation;
     }
 
-    public void setOrientation(ForgeDirection orientation) {
-        this.orientation = orientation;
-    }
-
     public void setOrientation(int orientation) {
         this.orientation = ForgeDirection.getOrientation(orientation);
+    }
+
+    public void setOrientation(ForgeDirection orientation) {
+        this.orientation = orientation;
     }
 
     public short getState() {
