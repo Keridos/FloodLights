@@ -22,7 +22,7 @@ public class TileEntityElectricFloodlight extends TileEntityFL implements IEnerg
     public void readFromNBT(NBTTagCompound nbtTagCompound) {
 
         super.readFromNBT(nbtTagCompound);
-        storage.readFromNBT(nbtTagCompound);
+        //storage.readFromNBT(nbtTagCompound);
         if (nbtTagCompound.hasKey(Names.NBT.INVERT)) {
             this.inverted = nbtTagCompound.getBoolean(Names.NBT.INVERT);
         }
@@ -32,7 +32,7 @@ public class TileEntityElectricFloodlight extends TileEntityFL implements IEnerg
     public void writeToNBT(NBTTagCompound nbtTagCompound) {
 
         super.writeToNBT(nbtTagCompound);
-        storage.writeToNBT(nbtTagCompound);
+        //storage.writeToNBT(nbtTagCompound);
         nbtTagCompound.setBoolean(Names.NBT.INVERT, inverted);
 
     }
@@ -87,5 +87,9 @@ public class TileEntityElectricFloodlight extends TileEntityFL implements IEnerg
 
     public void setActive(boolean b) {
         active = b;
+    }
+
+    public EnergyStorage getStorage() {
+        return storage;
     }
 }

@@ -10,6 +10,7 @@ import cpw.mods.fml.common.network.NetworkCheckHandler;
 import cpw.mods.fml.relauncher.Side;
 import de.keridos.floodlights.core.EventListener;
 import de.keridos.floodlights.core.FMLEventListener;
+import de.keridos.floodlights.core.network.PacketHandler;
 import de.keridos.floodlights.core.proxy.CommonProxy;
 import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.reference.Reference;
@@ -58,6 +59,7 @@ public class FloodLights {
         ModBlocks.registerBlocks();
         ModBlocks.registerTileEntities();
         registerEventListeners();
+        PacketHandler.init();
         proxy.initRenderers();
     }
 }

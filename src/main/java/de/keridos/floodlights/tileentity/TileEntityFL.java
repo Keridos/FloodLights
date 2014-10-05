@@ -1,7 +1,10 @@
 package de.keridos.floodlights.tileentity;
 
+import de.keridos.floodlights.core.network.PacketHandler;
+import de.keridos.floodlights.core.network.message.MessageTileEntityFL;
 import de.keridos.floodlights.reference.Names;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -93,5 +96,10 @@ public class TileEntityFL extends TileEntity {
 
     public boolean hasOwner() {
         return owner != null && owner.length() > 0;
+    }
+
+    @Override
+    public Packet getDescriptionPacket() {
+        return PacketHandler.INSTANCE.getPacketFrom(new MessageTileEntityFL(this));
     }
 }
