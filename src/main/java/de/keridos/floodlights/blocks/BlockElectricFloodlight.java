@@ -6,6 +6,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -42,6 +44,16 @@ public class BlockElectricFloodlight extends BlockFL implements ITileEntityProvi
                 ((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).setActive(false);
             }
         }
+    }
+
+    @Override
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float p_149727_7_, float p_149727_8_, float p_149727_9_) {
+        if (player.getHeldItem() == null && !world.isRemote) {
+            ((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).toggleInverted();
+            boolean b = ((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).getInverted();
+            player.addChatMessage(new ChatComponentText("Light now: " + (b ? "inverted" : "not inverted")));
+        }
+        return false;
     }
 
     @Override

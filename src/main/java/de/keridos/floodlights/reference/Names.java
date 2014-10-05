@@ -9,6 +9,8 @@ public class Names {
     }
 
     public static final class Items {
+        public static final String RAW_FILAMENT = "rawFilament";
+        public static final String FILAMENT = "glowingFilament";
         public static final String ELECTRIC_LIGHTBULB = "electricLightbulb";
     }
 
@@ -17,6 +19,7 @@ public class Names {
         public static final String INVERT = "inverted";
         public static final String COLOR = "color";
         public static final String STATE = "teState";
+        public static final String WASACTIVE = "wasActive";
         public static final String CUSTOM_NAME = "CustomName";
         public static final String DIRECTION = "teDirection";
         public static final String OWNER = "owner";

@@ -72,11 +72,13 @@ public class WorldHandler {
 
     public void updateRun() {
         World activeworld = DimensionManager.getWorld(world.provider.dimensionId);
-        for (int i = lastPositionInList; i < lastPositionInList + 5; i++) {
+        int j = lastPositionInList;
+        for (int i = lastPositionInList; i < j + 3; i++) {
             if (i >= lightBlocks.size()) {
                 lastPositionInList = 0;
                 break;
             }
+            lastPositionInList = i;
             LightBlockHandle f = (lightBlocks.get(i));
             int x = f.getCoords()[0];
             int y = f.getCoords()[1];
@@ -85,6 +87,7 @@ public class WorldHandler {
                 activeworld.setBlockToAir(x, y, z);
                 lightBlocks.remove(i);
                 i--;
+                j--;
             }
             if (f.sourceNumber() > 0 && activeworld.getBlock(x, y, z).isAir(activeworld, x, y, z)) {
                 activeworld.setBlock(x, y, z, ModBlocks.blockFLLight);

@@ -14,17 +14,21 @@ import net.minecraftforge.common.util.ForgeDirection;
 public class TileEntityElectricFloodlight extends TileEntityFL implements IEnergyHandler {
     private boolean inverted = false;
     private boolean active = false;
+    private boolean wasActive = false;
     protected EnergyStorage storage = new EnergyStorage(32000);
     private LightHandler lightHandler = LightHandler.getInstance();
-    private ForgeDirection direction = this.getOrientation();
+
 
     @Override
     public void readFromNBT(NBTTagCompound nbtTagCompound) {
 
         super.readFromNBT(nbtTagCompound);
-        //storage.readFromNBT(nbtTagCompound);
+        storage.readFromNBT(nbtTagCompound);
         if (nbtTagCompound.hasKey(Names.NBT.INVERT)) {
             this.inverted = nbtTagCompound.getBoolean(Names.NBT.INVERT);
+        }
+        if (nbtTagCompound.hasKey(Names.NBT.WASACTIVE)) {
+            this.wasActive = nbtTagCompound.getBoolean(Names.NBT.WASACTIVE);
         }
     }
 
@@ -32,9 +36,9 @@ public class TileEntityElectricFloodlight extends TileEntityFL implements IEnerg
     public void writeToNBT(NBTTagCompound nbtTagCompound) {
 
         super.writeToNBT(nbtTagCompound);
-        //storage.writeToNBT(nbtTagCompound);
+        storage.writeToNBT(nbtTagCompound);
         nbtTagCompound.setBoolean(Names.NBT.INVERT, inverted);
-
+        nbtTagCompound.setBoolean(Names.NBT.WASACTIVE, wasActive);
     }
 
     @Override
@@ -75,12 +79,19 @@ public class TileEntityElectricFloodlight extends TileEntityFL implements IEnerg
     @Override
     public void updateEntity() {
         World world = this.getWorldObj();
-        if ((active ^ inverted) && getEnergyStored(ForgeDirection.DOWN) >= 5) {
+        ForgeDirection direction = this.getOrientation();
+        if (((active ^ inverted) && getEnergyStored(ForgeDirection.DOWN) >= 5)) {
+            if (!wasActive) {
+                lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, 0);
+            }
             storage.extractEnergy(5, false);
-            lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, 0);
+            wasActive = true;
 
         } else {
-            lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, 0);
+            if (wasActive) {
+                lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, 0);
+            }
+            wasActive = false;
         }
 
     }
@@ -89,7 +100,11 @@ public class TileEntityElectricFloodlight extends TileEntityFL implements IEnerg
         active = b;
     }
 
-    public EnergyStorage getStorage() {
-        return storage;
+    public void toggleInverted() {
+        inverted = !inverted;
+    }
+
+    public boolean getInverted() {
+        return inverted;
     }
 }

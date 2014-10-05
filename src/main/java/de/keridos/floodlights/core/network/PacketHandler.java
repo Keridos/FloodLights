@@ -10,7 +10,7 @@ import de.keridos.floodlights.reference.Reference;
  * Created by Nico on 05/10/2014.
  */
 public class PacketHandler {
-    public static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(Reference.MOD_ID.toLowerCase());
+    public static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(Reference.CHANNEL);
 
     public static void init() {
         INSTANCE.registerMessage(MessageTileEntityFL.class, MessageTileEntityFL.class, 0, Side.CLIENT);
