@@ -10,6 +10,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.Random;
+import java.util.logging.Logger;
 
 /**
  * Created by Nico on 01/10/2014.
@@ -46,7 +47,7 @@ public class TileEntityElectricFloodlight extends TileEntityFL implements IEnerg
             timeout = rand.nextInt((500 - 360) + 1) + 360;
         }
         if (nbtTagCompound.hasKey(Names.NBT.STATE)) {
-            this.active = nbtTagCompound.getInteger(Names.NBT.STATE) == 0 ? false : true;
+            this.setActive(nbtTagCompound.getInteger(Names.NBT.STATE) == 0 ? false : true);
         }
     }
 
@@ -97,26 +98,28 @@ public class TileEntityElectricFloodlight extends TileEntityFL implements IEnerg
     @Override
     public void updateEntity() {
         World world = this.getWorldObj();
-        ForgeDirection direction = this.getOrientation();
-        if (((active ^ inverted) && storage.getEnergyStored() >= configHandler.energyUsage)) {
-            if (!wasActive || world.getTotalWorldTime() % timeout == 0) {
-                if (world.getTotalWorldTime() % timeout == 0) {
-                    lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, 0);
-                    lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, 0);
-                } else {
-                    lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, 0);
+        if (!world.isRemote) {
+            ForgeDirection direction = this.getOrientation();
+            Logger.getGlobal().info(active + "  " + inverted + " " + wasActive);
+            if (((active ^ inverted) && storage.getEnergyStored() >= configHandler.energyUsage)) {
+                if (!wasActive || world.getTotalWorldTime() % timeout == 0) {
+                    if (world.getTotalWorldTime() % timeout == 0) {
+                        lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, 0);
+                        lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, 0);
+                    } else {
+                        lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, 0);
+                    }
                 }
-            }
-            storage.modifyEnergyStored(-configHandler.energyUsage);
-            wasActive = true;
+                storage.modifyEnergyStored(-configHandler.energyUsage);
+                wasActive = true;
 
-        } else {
-            if (wasActive) {
-                lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, 0);
+            } else {
+                if (wasActive) {
+                    lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, 0);
+                }
+                wasActive = false;
             }
-            wasActive = false;
         }
-
     }
 
     public void setActive(boolean b) {
