@@ -1,6 +1,7 @@
 package de.keridos.floodlights.blocks;
 
 import de.keridos.floodlights.handler.LightHandler;
+import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.tileentity.TileEntityElectricFloodlight;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
@@ -19,7 +20,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 public class BlockElectricFloodlight extends BlockFL implements ITileEntityProvider {
 
     public BlockElectricFloodlight(Material material) {
-        super("electricFloodlight", Material.rock, soundTypeMetal, 0.6F);
+        super(Names.Blocks.ELECTRIC_FLOODLIGHT, Material.rock, soundTypeMetal, 0.6F);
         setCreativeTab(CreativeTabs.tabBlock);
         setHarvestLevel("pickaxe", 0);
     }

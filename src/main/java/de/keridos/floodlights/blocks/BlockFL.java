@@ -10,7 +10,6 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -71,11 +70,6 @@ public class BlockFL extends Block {
     public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
         dropInventory(world, x, y, z);
         super.breakBlock(world, x, y, z, block, meta);
-    }
-
-    @Override
-    public Item getItemDropped(int p_149650_1_, Random p_149650_2_, int p_149650_3_) {
-        return Item.getItemFromBlock(getBlockFromName(getUnlocalizedName()));
     }
 
     @Override

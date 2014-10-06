@@ -32,12 +32,6 @@ public class RecipeHandler {
         return item;
     }
 
-    public Item getFLItem(String name) {
-        Item item;
-        item = GameData.getItemRegistry().getRaw("floodlights:" + name);
-        return item;
-    }
-
     public void initRecipes() {
         if (configHandler.electricFloodlight) {
             GameRegistry.addRecipe(new ItemStack(ModItems.rawFilament, 1), "RGR", 'R', new ItemStack(getMinecraftItem("redstone"), 1, 0), 'G', new ItemStack(getMinecraftItem("gold_ingot"), 1, 0));

@@ -5,6 +5,7 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 import de.keridos.floodlights.blocks.BlockElectricFloodlight;
 import de.keridos.floodlights.blocks.BlockPhantomLight;
 import de.keridos.floodlights.core.Config;
+import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.tileentity.TileEntityElectricFloodlight;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -25,9 +26,9 @@ public class ModBlocks {
     }
 
     public static void registerBlocks() {
-        GameRegistry.registerBlock(blockElectricLight, "blockElectricFloodlight");
+        GameRegistry.registerBlock(blockElectricLight, Names.Blocks.ELECTRIC_FLOODLIGHT);
         LanguageRegistry.addName(blockElectricLight, "Electric FloodLight");
-        GameRegistry.registerBlock(blockFLLight, "blockLight");
+        GameRegistry.registerBlock(blockFLLight, Names.Blocks.PHANTOM_LIGHT);
         LanguageRegistry.addName(blockFLLight, "FloodLight PhantomLight");
     }
 
