@@ -16,10 +16,9 @@ buildscript {
 }
 apply plugin: 'scala'
 apply plugin: 'forge'
-apply plugin: 'maven-publish'
 
 project.ext.mcversion = "1.7.10"
-version = "0.0.1"
+version = "0.1.0"
 if (hasProperty('appendBuildNumber')) {
     version = version + "-" + appendBuildNumber
 }

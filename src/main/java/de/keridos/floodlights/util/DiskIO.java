@@ -1,6 +1,6 @@
 package de.keridos.floodlights.util;
 
-import de.keridos.floodlights.core.LightHandler;
+import de.keridos.floodlights.handler.LightHandler;
 import net.minecraftforge.common.DimensionManager;
 
 import java.io.FileInputStream;

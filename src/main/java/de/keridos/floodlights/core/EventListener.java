@@ -1,6 +1,7 @@
 package de.keridos.floodlights.core;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import de.keridos.floodlights.handler.LightHandler;
 import de.keridos.floodlights.util.DiskIO;
 import net.minecraftforge.event.world.WorldEvent;
 

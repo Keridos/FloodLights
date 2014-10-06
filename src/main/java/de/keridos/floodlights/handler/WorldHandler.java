@@ -1,4 +1,4 @@
-package de.keridos.floodlights.core;
+package de.keridos.floodlights.handler;
 
 import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.util.LightBlockHandle;
@@ -12,6 +12,7 @@ import java.util.ArrayList;
  * Created by Nico on 03/10/2014.
  */
 public class WorldHandler {
+    private ConfigHandler configHandler = ConfigHandler.getInstance();
     private ArrayList<LightBlockHandle> lightBlocks = new ArrayList<LightBlockHandle>();
     private World world;
     private int lastPositionInList = 0;
@@ -73,7 +74,7 @@ public class WorldHandler {
     public void updateRun() {
         World activeworld = DimensionManager.getWorld(world.provider.dimensionId);
         int j = lastPositionInList;
-        for (int i = lastPositionInList; i < j + 3; i++) {
+        for (int i = lastPositionInList; i < j + configHandler.refreshRate; i++) {
             if (i >= lightBlocks.size()) {
                 lastPositionInList = 0;
                 break;

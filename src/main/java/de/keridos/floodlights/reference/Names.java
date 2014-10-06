@@ -10,7 +10,7 @@ public class Names {
 
     public static final class Items {
         public static final String RAW_FILAMENT = "rawFilament";
-        public static final String FILAMENT = "glowingFilament";
+        public static final String GLOWING_FILAMENT = "glowingFilament";
         public static final String ELECTRIC_LIGHTBULB = "electricLightbulb";
     }
 

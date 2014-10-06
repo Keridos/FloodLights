@@ -12,9 +12,13 @@ import de.keridos.floodlights.core.EventListener;
 import de.keridos.floodlights.core.FMLEventListener;
 import de.keridos.floodlights.core.network.PacketHandler;
 import de.keridos.floodlights.core.proxy.CommonProxy;
+import de.keridos.floodlights.handler.ConfigHandler;
+import de.keridos.floodlights.handler.RecipeHandler;
 import de.keridos.floodlights.init.ModBlocks;
+import de.keridos.floodlights.init.ModItems;
 import de.keridos.floodlights.reference.Reference;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.config.Configuration;
 
 import java.util.Map;
 
@@ -30,6 +34,10 @@ public class FloodLights {
 
     @SidedProxy(clientSide = Reference.PROXY_LOCATION + ".ClientProxy", serverSide = Reference.PROXY_LOCATION + ".CommonProxy")
     public static CommonProxy proxy;
+
+    private ConfigHandler configHandler = ConfigHandler.getInstance();
+    private static RecipeHandler recipeHandler = RecipeHandler.getInstance();
+
 
     @Mod.EventHandler
     public static void postInit(FMLPostInitializationEvent event) {
@@ -49,17 +57,18 @@ public class FloodLights {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-
-
+        configHandler.initConfig(new Configuration(event.getSuggestedConfigurationFile()));
+        ModBlocks.setupBlocks();
     }
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
-        ModBlocks.setupBlocks();
         ModBlocks.registerBlocks();
         ModBlocks.registerTileEntities();
+        ModItems.init();
         registerEventListeners();
         PacketHandler.init();
+        recipeHandler.initRecipes();
         proxy.initRenderers();
     }
 }

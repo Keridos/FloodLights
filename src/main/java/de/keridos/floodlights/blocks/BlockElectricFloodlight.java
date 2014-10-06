@@ -1,6 +1,6 @@
 package de.keridos.floodlights.blocks;
 
-import de.keridos.floodlights.core.LightHandler;
+import de.keridos.floodlights.handler.LightHandler;
 import de.keridos.floodlights.tileentity.TileEntityElectricFloodlight;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;

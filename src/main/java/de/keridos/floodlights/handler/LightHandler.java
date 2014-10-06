@@ -1,4 +1,4 @@
-package de.keridos.floodlights.core;
+package de.keridos.floodlights.handler;
 
 import de.keridos.floodlights.util.DiskIO;
 import net.minecraft.world.World;

@@ -2,7 +2,8 @@ package de.keridos.floodlights.tileentity;
 
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyHandler;
-import de.keridos.floodlights.core.LightHandler;
+import de.keridos.floodlights.handler.ConfigHandler;
+import de.keridos.floodlights.handler.LightHandler;
 import de.keridos.floodlights.reference.Names;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -17,6 +18,7 @@ public class TileEntityElectricFloodlight extends TileEntityFL implements IEnerg
     private boolean wasActive = false;
     protected EnergyStorage storage = new EnergyStorage(32000);
     private LightHandler lightHandler = LightHandler.getInstance();
+    private ConfigHandler configHandler = ConfigHandler.getInstance();
 
 
     @Override
@@ -80,11 +82,11 @@ public class TileEntityElectricFloodlight extends TileEntityFL implements IEnerg
     public void updateEntity() {
         World world = this.getWorldObj();
         ForgeDirection direction = this.getOrientation();
-        if (((active ^ inverted) && getEnergyStored(ForgeDirection.DOWN) >= 5)) {
+        if (((active ^ inverted) && getEnergyStored(ForgeDirection.DOWN) >= configHandler.energyUsage)) {
             if (!wasActive) {
                 lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, 0);
             }
-            storage.extractEnergy(5, false);
+            storage.extractEnergy(configHandler.energyUsage, false);
             wasActive = true;
 
         } else {
