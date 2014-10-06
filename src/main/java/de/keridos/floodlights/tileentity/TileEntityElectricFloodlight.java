@@ -10,7 +10,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.Random;
-import java.util.logging.Logger;
 
 /**
  * Created by Nico on 01/10/2014.
@@ -100,7 +99,6 @@ public class TileEntityElectricFloodlight extends TileEntityFL implements IEnerg
         World world = this.getWorldObj();
         if (!world.isRemote) {
             ForgeDirection direction = this.getOrientation();
-            Logger.getGlobal().info(active + "  " + inverted + " " + wasActive);
             if (((active ^ inverted) && storage.getEnergyStored() >= configHandler.energyUsage)) {
                 if (!wasActive || world.getTotalWorldTime() % timeout == 0) {
                     if (world.getTotalWorldTime() % timeout == 0) {
