@@ -26,7 +26,7 @@ public class LightBlockHandle {
     public void addSource(int xcord, int ycord, int zcord) {
         boolean added = false;
         int[] source = {xcord, ycord, zcord};
-        if (sources == null) {
+        if (sources.size() == 0) {
             added = true;
             sources.add(source);
         }

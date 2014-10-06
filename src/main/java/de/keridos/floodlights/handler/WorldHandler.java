@@ -28,7 +28,7 @@ public class WorldHandler {
 
     public LightBlockHandle getFloodlightHandler(int x, int y, int z) {
         boolean added = false;
-        if (lightBlocks == null) {
+        if (lightBlocks.size() == 0) {
             added = true;
             lightBlocks.add(new LightBlockHandle(x, y, z));
         }
@@ -50,8 +50,8 @@ public class WorldHandler {
                 int x = sourceX + direction.offsetX * i;
                 int y = sourceY + direction.offsetY * i;
                 int z = sourceZ + direction.offsetZ * i;
+                LightBlockHandle handler = getFloodlightHandler(x, y, z);
                 if (world.getBlock(x, y, z).isAir(world, x, y, z)) {
-                    LightBlockHandle handler = getFloodlightHandler(x, y, z);
                     lightBlocks.get(lightBlocks.indexOf(handler)).addSource(sourceX, sourceY, sourceZ);
                 } else if (world.getBlock(x, y, z).isOpaqueCube()) {
                     break;

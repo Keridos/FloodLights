@@ -28,7 +28,7 @@ public class ConfigHandler {
         electricFloodlight = config.getBoolean("electricFloodlightEnabled", "crafting", true, "Enables the electric FloodLight");
         config.getCategory("general");
         energyUsage = config.getInt("energyUsage", "general", 5, 0, 1000, "Energy Usage in RF/t for the electric FloodLight");
-        refreshRate = config.getInt("refreshRate", "general", 3, 0, 100, "How many Phantom lights should be updated per tick (Higher is faster, but lags more)");
+        refreshRate = config.getInt("refreshRate", "general", 8, 0, 100, "How many Phantom lights should be updated per tick (Higher is faster, but lags more)");
         config.save();
     }
 }

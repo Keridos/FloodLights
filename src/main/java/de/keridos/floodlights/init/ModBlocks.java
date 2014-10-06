@@ -4,7 +4,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import de.keridos.floodlights.blocks.BlockElectricFloodlight;
 import de.keridos.floodlights.blocks.BlockPhantomLight;
-import de.keridos.floodlights.core.Config;
+import de.keridos.floodlights.handler.ConfigHandler;
 import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.tileentity.TileEntityElectricFloodlight;
 import net.minecraft.block.Block;
@@ -17,7 +17,7 @@ public class ModBlocks {
     public static Block blockElectricLight;
     public static Block blockFLLight;
     public static int blockElectricLightRenderID;
-    private static Config Configuration = Config.getInstance();
+    private static ConfigHandler configHandler = ConfigHandler.getInstance();
 
     public static void setupBlocks() {
         blockElectricLight = new BlockElectricFloodlight(Material.rock);
@@ -26,8 +26,10 @@ public class ModBlocks {
     }
 
     public static void registerBlocks() {
-        GameRegistry.registerBlock(blockElectricLight, Names.Blocks.ELECTRIC_FLOODLIGHT);
-        LanguageRegistry.addName(blockElectricLight, "Electric FloodLight");
+        if (configHandler.electricFloodlight) {
+            GameRegistry.registerBlock(blockElectricLight, Names.Blocks.ELECTRIC_FLOODLIGHT);
+            LanguageRegistry.addName(blockElectricLight, "Electric FloodLight");
+        }
         GameRegistry.registerBlock(blockFLLight, Names.Blocks.PHANTOM_LIGHT);
         LanguageRegistry.addName(blockFLLight, "FloodLight PhantomLight");
     }

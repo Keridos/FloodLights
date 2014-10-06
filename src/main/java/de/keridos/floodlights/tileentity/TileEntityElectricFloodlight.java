@@ -9,6 +9,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import java.util.Random;
+
 /**
  * Created by Nico on 01/10/2014.
  */
@@ -16,14 +18,19 @@ public class TileEntityElectricFloodlight extends TileEntityFL implements IEnerg
     private boolean inverted = false;
     private boolean active = false;
     private boolean wasActive = false;
+    private int timeout;
     protected EnergyStorage storage = new EnergyStorage(32000);
     private LightHandler lightHandler = LightHandler.getInstance();
     private ConfigHandler configHandler = ConfigHandler.getInstance();
 
+    public TileEntityElectricFloodlight() {
+        Random rand = new Random();
+        timeout = rand.nextInt((500 - 360) + 1) + 360;
+    }
+
 
     @Override
     public void readFromNBT(NBTTagCompound nbtTagCompound) {
-
         super.readFromNBT(nbtTagCompound);
         storage.readFromNBT(nbtTagCompound);
         if (nbtTagCompound.hasKey(Names.NBT.INVERT)) {
@@ -32,15 +39,24 @@ public class TileEntityElectricFloodlight extends TileEntityFL implements IEnerg
         if (nbtTagCompound.hasKey(Names.NBT.WASACTIVE)) {
             this.wasActive = nbtTagCompound.getBoolean(Names.NBT.WASACTIVE);
         }
+        if (nbtTagCompound.hasKey(Names.NBT.TIMEOUT)) {
+            this.timeout = nbtTagCompound.getInteger(Names.NBT.TIMEOUT);
+        } else {
+            Random rand = new Random();
+            timeout = rand.nextInt((500 - 360) + 1) + 360;
+        }
+        if (nbtTagCompound.hasKey(Names.NBT.STATE)) {
+            this.active = nbtTagCompound.getInteger(Names.NBT.STATE) == 0 ? false : true;
+        }
     }
 
     @Override
     public void writeToNBT(NBTTagCompound nbtTagCompound) {
-
         super.writeToNBT(nbtTagCompound);
         storage.writeToNBT(nbtTagCompound);
         nbtTagCompound.setBoolean(Names.NBT.INVERT, inverted);
         nbtTagCompound.setBoolean(Names.NBT.WASACTIVE, wasActive);
+        nbtTagCompound.setInteger(Names.NBT.TIMEOUT, timeout);
     }
 
     @Override
@@ -82,11 +98,16 @@ public class TileEntityElectricFloodlight extends TileEntityFL implements IEnerg
     public void updateEntity() {
         World world = this.getWorldObj();
         ForgeDirection direction = this.getOrientation();
-        if (((active ^ inverted) && getEnergyStored(ForgeDirection.DOWN) >= configHandler.energyUsage)) {
-            if (!wasActive) {
-                lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, 0);
+        if (((active ^ inverted) && storage.getEnergyStored() >= configHandler.energyUsage)) {
+            if (!wasActive || world.getTotalWorldTime() % timeout == 0) {
+                if (world.getTotalWorldTime() % timeout == 0) {
+                    lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, 0);
+                    lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, 0);
+                } else {
+                    lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, 0);
+                }
             }
-            storage.extractEnergy(configHandler.energyUsage, false);
+            storage.modifyEnergyStored(-configHandler.energyUsage);
             wasActive = true;
 
         } else {
@@ -100,6 +121,7 @@ public class TileEntityElectricFloodlight extends TileEntityFL implements IEnerg
 
     public void setActive(boolean b) {
         active = b;
+        this.setState((byte) (this.active ? 1 : 0));
     }
 
     public void toggleInverted() {
