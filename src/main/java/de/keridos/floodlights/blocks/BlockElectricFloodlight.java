@@ -2,6 +2,7 @@ package de.keridos.floodlights.blocks;
 
 import de.keridos.floodlights.handler.LightHandler;
 import de.keridos.floodlights.reference.Names;
+import de.keridos.floodlights.reference.RenderIDs;
 import de.keridos.floodlights.tileentity.TileEntityElectricFloodlight;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
@@ -9,13 +10,12 @@ import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-
 /**
- * Created by Nico on 01/10/2014.
+ * Created by Keridos on 01.10.14.
+ * This Class defines the block properties of the electric floodlight.
  */
 public class BlockElectricFloodlight extends BlockFL implements ITileEntityProvider {
 
@@ -26,15 +26,14 @@ public class BlockElectricFloodlight extends BlockFL implements ITileEntityProvi
     }
 
     @Override
-    public boolean shouldSideBeRendered(IBlockAccess iblockaccess, int i, int j, int k, int l) {
-        return false;
+    public int getRenderType() {
+        return RenderIDs.ROTATABLE_BLOCK;
     }
 
     @Override
     public boolean isOpaqueCube() {
-        return false;
+        return true;
     }
-
 
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, Block par5) {

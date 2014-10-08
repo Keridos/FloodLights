@@ -7,7 +7,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 import java.util.ArrayList;
 
 /**
- * Created by Nico on 03/10/2014.
+ * Created by Keridos on 03.10.14.
+ * This Class is the main handler for all lights, stores the handler for each world.
  */
 public class LightHandler {
     private static LightHandler instance = null;

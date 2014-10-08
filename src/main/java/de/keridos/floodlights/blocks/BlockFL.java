@@ -21,7 +21,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 import java.util.Random;
 
 /**
- * Created by Nico on 28.02.14.
+ * Created by Keridos on 28.02.14.
+ * This Class describes the generic block this mod uses.
  */
 public class BlockFL extends Block {
     protected String unlocName;
@@ -50,17 +51,17 @@ public class BlockFL extends Block {
         sideIcon = iconRegister.registerIcon(String.format("%s", getUnwrappedUnlocalizedName(this.getUnlocalizedName() + "_side")));
     }
 
+    // For rotatable block, topIcon is front, botIcon is rear.
     @SideOnly(Side.CLIENT)
     public IIcon getIcon(int side, int meta) {
-        if (side == 0) {
-            return botIcon;
-        } else if (side == 1) {
+        if (side == meta) {
             return topIcon;
+        } else if (side == ForgeDirection.getOrientation(meta).getOpposite().ordinal()) {
+            return botIcon;
         } else {
             return sideIcon;
         }
     }
-
 
     protected String getUnwrappedUnlocalizedName(String unlocalizedName) {
         return unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
@@ -69,7 +70,7 @@ public class BlockFL extends Block {
     @Override
     public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
         dropInventory(world, x, y, z);
-        super.breakBlock(world, x, y, z, block, meta);
+        super.breakBlock(world, x, y, z, block, 0);
     }
 
     @Override
@@ -79,9 +80,9 @@ public class BlockFL extends Block {
                 ((TileEntityFL) world.getTileEntity(x, y, z)).setCustomName(itemStack.getDisplayName());
             }
             ((TileEntityFL) world.getTileEntity(x, y, z)).setOrientation(ForgeDirection.getOrientation(getFacing(entityLiving)));
+            world.setBlockMetadataWithNotify(x, y, z, getFacing(entityLiving), 2);
         }
     }
-
 
     protected void dropInventory(World world, int x, int y, int z) {
         TileEntity tileEntity = world.getTileEntity(x, y, z);
@@ -113,11 +114,8 @@ public class BlockFL extends Block {
     public int getFacing(EntityLivingBase entityLiving) {
         float rotationYaw = MathHelper.wrapAngleTo180_float(entityLiving.rotationYaw);
         float rotationPitch = (entityLiving.rotationPitch);
-        //Logger.getGlobal().info(rotationPitch+" "+rotationYaw);
         int result = (rotationPitch < -45.0F ? 1 : (rotationPitch > 45.0F ? 0 : ((MathHelper.floor_double(rotationYaw * 4.0F / 360.0F + 0.5D) & 3) + 2)));
         ForgeDirection[] direction = {ForgeDirection.UP, ForgeDirection.DOWN, ForgeDirection.NORTH, ForgeDirection.EAST, ForgeDirection.SOUTH, ForgeDirection.WEST};
-        //Logger.getGlobal().info(result+" ForgeDirection Player:"+ForgeDirection.getOrientation(result).toString()+" directionInt:"+direction[result].ordinal()+" result direction"+direction[result].toString());
         return direction[result].ordinal();
     }
-
 }

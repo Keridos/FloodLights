@@ -12,7 +12,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 import java.util.Random;
 
 /**
- * Created by Nico on 01/10/2014.
+ * Created by Keridos on 01.10.14.
+ * This Class is the electric floodlight TileEntity.
  */
 public class TileEntityElectricFloodlight extends TileEntityFL implements IEnergyHandler {
     private boolean inverted = false;
@@ -28,7 +29,6 @@ public class TileEntityElectricFloodlight extends TileEntityFL implements IEnerg
         timeout = rand.nextInt((500 - 360) + 1) + 360;
     }
 
-
     @Override
     public void readFromNBT(NBTTagCompound nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
@@ -36,8 +36,8 @@ public class TileEntityElectricFloodlight extends TileEntityFL implements IEnerg
         if (nbtTagCompound.hasKey(Names.NBT.INVERT)) {
             this.inverted = nbtTagCompound.getBoolean(Names.NBT.INVERT);
         }
-        if (nbtTagCompound.hasKey(Names.NBT.WASACTIVE)) {
-            this.wasActive = nbtTagCompound.getBoolean(Names.NBT.WASACTIVE);
+        if (nbtTagCompound.hasKey(Names.NBT.WAS_ACTIVE)) {
+            this.wasActive = nbtTagCompound.getBoolean(Names.NBT.WAS_ACTIVE);
         }
         if (nbtTagCompound.hasKey(Names.NBT.TIMEOUT)) {
             this.timeout = nbtTagCompound.getInteger(Names.NBT.TIMEOUT);
@@ -55,7 +55,7 @@ public class TileEntityElectricFloodlight extends TileEntityFL implements IEnerg
         super.writeToNBT(nbtTagCompound);
         storage.writeToNBT(nbtTagCompound);
         nbtTagCompound.setBoolean(Names.NBT.INVERT, inverted);
-        nbtTagCompound.setBoolean(Names.NBT.WASACTIVE, wasActive);
+        nbtTagCompound.setBoolean(Names.NBT.WAS_ACTIVE, wasActive);
         nbtTagCompound.setInteger(Names.NBT.TIMEOUT, timeout);
     }
 
@@ -97,6 +97,7 @@ public class TileEntityElectricFloodlight extends TileEntityFL implements IEnerg
     @Override
     public void updateEntity() {
         World world = this.getWorldObj();
+        world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, this.getOrientation().ordinal(), 2);
         if (!world.isRemote) {
             ForgeDirection direction = this.getOrientation();
             if (((active ^ inverted) && storage.getEnergyStored() >= configHandler.energyUsage)) {

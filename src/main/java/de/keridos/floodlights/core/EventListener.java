@@ -6,7 +6,8 @@ import de.keridos.floodlights.util.DiskIO;
 import net.minecraftforge.event.world.WorldEvent;
 
 /**
- * Created by Nico on 28.02.14.
+ * Created by Keridos on 28.02.14.
+ * This Class Listens for normal forge events.
  */
 public class EventListener {
     private static EventListener instance = null;

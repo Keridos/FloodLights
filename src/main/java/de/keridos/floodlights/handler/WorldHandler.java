@@ -9,7 +9,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 import java.util.ArrayList;
 
 /**
- * Created by Nico on 03/10/2014.
+ * Created by Keridos on 03.10.14.
+ * This Class stores every lighting block in its designated world and manages them.
  */
 public class WorldHandler {
     private ConfigHandler configHandler = ConfigHandler.getInstance();

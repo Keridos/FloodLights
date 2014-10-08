@@ -1,19 +1,18 @@
 package de.keridos.floodlights.core.proxy;
 
-import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
-import de.keridos.floodlights.client.render.CustomBlockRenderer;
+import de.keridos.floodlights.client.render.RotatableBlockRenderer;
 import de.keridos.floodlights.reference.RenderIDs;
-import de.keridos.floodlights.tileentity.TileEntityElectricFloodlight;
 
 /**
- * Created by Nico on 28.02.14.
+ * Created by Keridos on 28.02.14.
+ * This Class is the proxy for the client.
  */
 public class ClientProxy extends CommonProxy {
     @Override
     public void initRenderers() {
-        RenderIDs.electricFloodlight = RenderingRegistry.getNextAvailableRenderId();
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityElectricFloodlight.class, new CustomBlockRenderer());
+        RenderIDs.ROTATABLE_BLOCK = RenderingRegistry.getNextAvailableRenderId();
+        RenderingRegistry.registerBlockHandler(RenderIDs.ROTATABLE_BLOCK, new RotatableBlockRenderer());
     }
 
     @Override

@@ -8,7 +8,8 @@ import net.minecraft.world.World;
 import java.util.Random;
 
 /**
- * Created by Nico on 01/10/2014.
+ * Created by Keridos on 01.10.14.
+ * This Class implements the invislbe light block the mod uses to light up areas.
  */
 public class BlockPhantomLight extends BlockFL {
     public BlockPhantomLight() {

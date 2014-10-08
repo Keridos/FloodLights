@@ -9,7 +9,8 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.tileentity.TileEntity;
 
 /**
- * Created by Nico on 05/10/2014.
+ * Created by Keridos on 05.10.14.
+ * This Class is the Message that the electric floodlights TileEntity uses.
  */
 public class MessageTileEntityFL implements IMessage, IMessageHandler<MessageTileEntityFL, IMessage> {
     public int x, y, z;

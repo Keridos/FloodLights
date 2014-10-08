@@ -5,7 +5,8 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import de.keridos.floodlights.handler.LightHandler;
 
 /**
- * Created by Nico on 05/10/2014.
+ * Created by Keridos on 05.10.14.
+ * This Class listens for FML events.
  */
 public class FMLEventListener {
     private static FMLEventListener instance = null;
@@ -50,6 +51,5 @@ public class FMLEventListener {
     public void onWorldTick(TickEvent.WorldTickEvent event) {
 
     }
-
 
 }

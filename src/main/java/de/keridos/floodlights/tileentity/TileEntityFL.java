@@ -9,7 +9,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /**
- * Created by Nico on 01/10/2014.
+ * Created by Keridos on 01.10.14.
+ * This Class is the base for all TileEntities within this mod.
  */
 public class TileEntityFL extends TileEntity {
     protected ForgeDirection orientation;

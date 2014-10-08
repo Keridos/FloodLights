@@ -7,7 +7,8 @@ import de.keridos.floodlights.core.network.message.MessageTileEntityFL;
 import de.keridos.floodlights.reference.Reference;
 
 /**
- * Created by Nico on 05/10/2014.
+ * Created by Keridos on 05.10.14.
+ * This Class manages all Messages that can be sent from the server to the client.
  */
 public class PacketHandler {
     public static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(Reference.CHANNEL);

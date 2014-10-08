@@ -12,7 +12,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * Created by Nico on 04/10/2014.
+ * Created by Keridos on 04.10.14.
+ * This Class handles writing the Lighthandler to the disk.
  */
 public class DiskIO {
     public static void saveToDisk(LightHandler input) {

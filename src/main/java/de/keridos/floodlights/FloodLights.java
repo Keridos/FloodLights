@@ -22,9 +22,9 @@ import net.minecraftforge.common.config.Configuration;
 
 import java.util.Map;
 
-
 /**
- * Created by Nico on 28.02.14.
+ * Created by Keridos on 28.02.14.
+ * This Class is the Main Class of the Mod.
  */
 
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, dependencies = Reference.DEPENDENCIES)
@@ -37,7 +37,6 @@ public class FloodLights {
 
     private ConfigHandler configHandler = ConfigHandler.getInstance();
     private static RecipeHandler recipeHandler = RecipeHandler.getInstance();
-
 
     @Mod.EventHandler
     public static void postInit(FMLPostInitializationEvent event) {

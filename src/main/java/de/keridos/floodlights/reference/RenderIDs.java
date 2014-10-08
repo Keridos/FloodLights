@@ -1,8 +1,9 @@
 package de.keridos.floodlights.reference;
 
 /**
- * Created by Nico on 05/10/2014.
+ * Created by Keridos on 05.10.14.
+ * This Class stores the RenderIDs of (Tile)Entities.
  */
 public class RenderIDs {
-    public static int electricFloodlight;
+    public static int ROTATABLE_BLOCK;
 }

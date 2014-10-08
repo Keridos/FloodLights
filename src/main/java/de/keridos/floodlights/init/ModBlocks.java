@@ -11,12 +11,12 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 
 /**
- * Created by Nico on 04/10/2014.
+ * Created by Keridos on 04.10.14.
+ * This Class manages all blocks and TileEntities that this mod uses.
  */
 public class ModBlocks {
     public static Block blockElectricLight;
     public static Block blockFLLight;
-    public static int blockElectricLightRenderID;
     private static ConfigHandler configHandler = ConfigHandler.getInstance();
 
     public static void setupBlocks() {
@@ -35,7 +35,7 @@ public class ModBlocks {
     }
 
     public static void registerTileEntities() {
-        GameRegistry.registerTileEntity(TileEntityElectricFloodlight.class, "floodlights:electricFloodlight");
+        GameRegistry.registerTileEntity(TileEntityElectricFloodlight.class, "floodlights:FLOODLIGHT");
     }
 
 }

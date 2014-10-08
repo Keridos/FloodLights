@@ -7,7 +7,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
 /**
- * Created by Nico on 28.02.14.
+ * Created by Keridos on 28.02.14.
+ * This Class handles the GUIs that this mod uses (will use soon).
  */
 public class GuiHandler implements IGuiHandler {
     private static GuiHandler instance = null;

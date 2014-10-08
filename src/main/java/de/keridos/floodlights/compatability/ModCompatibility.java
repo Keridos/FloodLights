@@ -3,19 +3,20 @@ package de.keridos.floodlights.compatability;
 import net.minecraft.item.ItemStack;
 
 /**
- * Created by Nico on 28.02.14.
+ * Created by Keridos on 28.02.14.
+ * This Class will be used for Mod Compatibility functions.
  */
-public class ModCompatability {
-    private static ModCompatability instance = null;
+public class ModCompatibility {
+    private static ModCompatibility instance = null;
 
     private static Class Ic2Items;
 
-    private ModCompatability() {
+    private ModCompatibility() {
     }
 
-    public static ModCompatability getInstance() {
+    public static ModCompatibility getInstance() {
         if (instance == null) {
-            instance = new ModCompatability();
+            instance = new ModCompatibility();
         }
         return instance;
     }

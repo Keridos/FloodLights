@@ -9,7 +9,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 
 /**
- * Created by Nico on 06/10/2014.
+ * Created by Keridos on 06.10.14.
+ * This Class is the generic Item class of this Mod.
  */
 
 public class ItemFL extends Item {
