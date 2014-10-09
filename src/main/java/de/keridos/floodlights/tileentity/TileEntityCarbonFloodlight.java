@@ -120,7 +120,9 @@ public class TileEntityCarbonFloodlight extends TileEntityFL implements ISidedIn
 
     @Override
     public ItemStack getStackInSlot(int i) {
+        worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
         return inventory[i];
+
     }
 
     @Override
@@ -186,8 +188,8 @@ public class TileEntityCarbonFloodlight extends TileEntityFL implements ISidedIn
     public void updateEntity() {
         World world = this.getWorldObj();
         world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, this.getOrientation().ordinal(), 2);
-        if (world.isRemote && world.getTotalWorldTime() % 20 == 0) {
-            world.markBlockForUpdate(xCoord, yCoord, zCoord);
+        if (!world.isRemote && world.getTotalWorldTime() % 20 == 0) {
+            //world.markBlockForUpdate(xCoord, yCoord, zCoord);
         }
         if (!world.isRemote) {
             ForgeDirection direction = this.getOrientation();

@@ -1,5 +1,8 @@
-item.floodlights:rawFilament.name=Raw filament
-item.floodlights:glowingFilament.name=Glowing filament
-item.floodlights:electricLightBulb.name=Electric light bulb
-tile.floodlights:carbonFloodlight.name=Carbon floodlight
-tile.floodlights:electricFloodlight.name=Electric floodlight
+item.floodlights:rawFilament.name=Raw Filament
+item.floodlights:glowingFilament.name=Glowing Filament
+item.floodlights:electricIncandescentLightBulb.name=Electric Incandescent Light Bulb
+item.floodlights:carbonDissolver.name=Carbon Dissolver
+item.floodlights:carbonLantern.name=Carbon Lantern
+item.floodlights:mantle.name=Mantle
+tile.floodlights:carbonFloodlight.name=Carbon Floodlight
+tile.floodlights:electricFloodlight.name=Electric Floodlight

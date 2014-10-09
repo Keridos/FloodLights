@@ -14,7 +14,10 @@ public class Names {
     public static final class Items {
         public static final String RAW_FILAMENT = "rawFilament";
         public static final String GLOWING_FILAMENT = "glowingFilament";
-        public static final String ELECTRIC_LIGHT_BULB = "electricLightBulb";
+        public static final String ELECTRIC_INCANDESCENT_LIGHT_BULB = "electricIncandescentLightBulb";
+        public static final String CARBON_DISSOLVER = "carbonDissolver";
+        public static final String CARBON_LANTERN = "carbonLantern";
+        public static final String MANTLE = "mantle";
     }
 
     public static final class NBT {

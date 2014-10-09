@@ -2,11 +2,18 @@ package de.keridos.floodlights.tileentity;
 
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyHandler;
+import cpw.mods.fml.common.Optional;
 import de.keridos.floodlights.handler.ConfigHandler;
 import de.keridos.floodlights.handler.LightHandler;
 import de.keridos.floodlights.reference.Names;
+import ic2.api.energy.event.EnergyTileLoadEvent;
+import ic2.api.energy.event.EnergyTileUnloadEvent;
+import ic2.api.energy.tile.IEnergySink;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.Random;
@@ -15,12 +22,13 @@ import java.util.Random;
  * Created by Keridos on 01.10.14.
  * This Class is the electric floodlight TileEntity.
  */
-public class TileEntityElectricFloodlight extends TileEntityFL implements IEnergyHandler {
+@Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink", modid = "IC2")
+public class TileEntityElectricFloodlight extends TileEntityFL implements IEnergyHandler, IEnergySink {
     private boolean inverted = false;
     private boolean active = false;
     private boolean wasActive = false;
     private int timeout;
-    protected EnergyStorage storage = new EnergyStorage(32000);
+    protected EnergyStorage storage = new EnergyStorage(50000);
     private LightHandler lightHandler = LightHandler.getInstance();
     private ConfigHandler configHandler = ConfigHandler.getInstance();
 
@@ -87,6 +95,54 @@ public class TileEntityElectricFloodlight extends TileEntityFL implements IEnerg
     public int getMaxEnergyStored(ForgeDirection from) {
 
         return storage.getMaxEnergyStored();
+    }
+
+    @Optional.Method(modid = "IC2")
+    @Override
+    public double injectEnergy(ForgeDirection forgeDirection, double v, double v1) {
+        storage.modifyEnergyStored(MathHelper.truncateDoubleToInt(v * 4));
+        return 0;
+    }
+
+    @Optional.Method(modid = "IC2")
+    @Override
+    public int getSinkTier() {
+        return 4;
+    }
+
+    @Optional.Method(modid = "IC2")
+    @Override
+    public double getDemandedEnergy() {
+        if ((storage.getMaxEnergyStored() - storage.getEnergyStored()) > 32768) {
+            return 8192.0D;
+        }
+        return 0.0D;
+    }
+
+    @Optional.Method(modid = "IC2")
+    @Override
+    public boolean acceptsEnergyFrom(TileEntity tileEntity, ForgeDirection forgeDirection) {
+        return true;
+    }
+
+    @Optional.Method(modid = "IC2")
+    @Override
+    public void invalidate() {
+        super.invalidate();
+        if (!worldObj.isRemote) {
+            EnergyTileUnloadEvent event = new EnergyTileUnloadEvent(this);
+            MinecraftForge.EVENT_BUS.post(event);
+        }
+    }
+
+    @Optional.Method(modid = "IC2")
+    @Override
+    public void validate() {
+        super.validate();
+        if (!worldObj.isRemote) {
+            EnergyTileLoadEvent event = new EnergyTileLoadEvent(this);
+            MinecraftForge.EVENT_BUS.post(event);
+        }
     }
 
     @Override

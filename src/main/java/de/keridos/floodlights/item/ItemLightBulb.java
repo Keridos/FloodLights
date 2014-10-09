@@ -9,6 +9,6 @@ import de.keridos.floodlights.reference.Names;
 public class ItemLightBulb extends ItemFL {
     public ItemLightBulb() {
         super();
-        this.setUnlocalizedName(Names.Items.ELECTRIC_LIGHT_BULB);
+        this.setUnlocalizedName(Names.Items.ELECTRIC_INCANDESCENT_LIGHT_BULB);
     }
 }
