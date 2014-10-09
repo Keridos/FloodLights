@@ -56,9 +56,9 @@ public class TileEntityCarbonFloodlight extends TileEntityFL implements ISidedIn
         if (nbtTagCompound.hasKey(Names.NBT.TIME_REMAINING)) {
             this.timeRemaining = nbtTagCompound.getInteger(Names.NBT.TIME_REMAINING);
         }
-        NBTTagList list = nbtTagCompound.getTagList("ItemsCarbonFloodlight", 10);
+        NBTTagList list = nbtTagCompound.getTagList(Names.NBT.ITEMS, 10);
         NBTTagCompound item = list.getCompoundTagAt(0);
-        int slot = item.getByte("ItemsCarbonFloodlight");
+        int slot = item.getByte(Names.NBT.ITEMS);
 
         if (slot >= 0 && slot < getSizeInventory()) {
             setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(item));
@@ -77,11 +77,11 @@ public class TileEntityCarbonFloodlight extends TileEntityFL implements ISidedIn
         ItemStack itemstack = getStackInSlot(0);
         if (itemstack != null) {
             NBTTagCompound item = new NBTTagCompound();
-            item.setByte("ItemsCarbonFloodlight", (byte) 0);
+            item.setByte(Names.NBT.ITEMS, (byte) 0);
             itemstack.writeToNBT(item);
             list.appendTag(item);
         }
-        nbtTagCompound.setTag("ItemsCarbonFloodlight", list);
+        nbtTagCompound.setTag(Names.NBT.ITEMS, list);
     }
 
     @Override

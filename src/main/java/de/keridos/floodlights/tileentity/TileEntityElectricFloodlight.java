@@ -3,6 +3,7 @@ package de.keridos.floodlights.tileentity;
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyHandler;
 import cpw.mods.fml.common.Optional;
+import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.handler.ConfigHandler;
 import de.keridos.floodlights.handler.LightHandler;
 import de.keridos.floodlights.reference.Names;
@@ -27,7 +28,9 @@ public class TileEntityElectricFloodlight extends TileEntityFL implements IEnerg
     private boolean inverted = false;
     private boolean active = false;
     private boolean wasActive = false;
+    private boolean wasAddedToEnergyNet = false;
     private int timeout;
+    private int storageEU;
     protected EnergyStorage storage = new EnergyStorage(50000);
     private LightHandler lightHandler = LightHandler.getInstance();
     private ConfigHandler configHandler = ConfigHandler.getInstance();
@@ -56,6 +59,9 @@ public class TileEntityElectricFloodlight extends TileEntityFL implements IEnerg
         if (nbtTagCompound.hasKey(Names.NBT.STATE)) {
             this.setActive(nbtTagCompound.getInteger(Names.NBT.STATE) == 0 ? false : true);
         }
+        if (nbtTagCompound.hasKey(Names.NBT.STORAGE_EU)) {
+            this.storageEU = nbtTagCompound.getInteger(Names.NBT.STORAGE_EU);
+        }
     }
 
     @Override
@@ -65,6 +71,7 @@ public class TileEntityElectricFloodlight extends TileEntityFL implements IEnerg
         nbtTagCompound.setBoolean(Names.NBT.INVERT, inverted);
         nbtTagCompound.setBoolean(Names.NBT.WAS_ACTIVE, wasActive);
         nbtTagCompound.setInteger(Names.NBT.TIMEOUT, timeout);
+        nbtTagCompound.setInteger(Names.NBT.STORAGE_EU, storageEU);
     }
 
     @Override
@@ -100,7 +107,12 @@ public class TileEntityElectricFloodlight extends TileEntityFL implements IEnerg
     @Optional.Method(modid = "IC2")
     @Override
     public double injectEnergy(ForgeDirection forgeDirection, double v, double v1) {
-        storage.modifyEnergyStored(MathHelper.truncateDoubleToInt(v * 4));
+        if (storage.getMaxEnergyStored() - storage.getEnergyStored() >= MathHelper.truncateDoubleToInt(v * 4)) {
+            storage.modifyEnergyStored(MathHelper.truncateDoubleToInt(v * 4));
+        } else {
+            storageEU += MathHelper.truncateDoubleToInt(v * 4) - (storage.getMaxEnergyStored() - storage.getEnergyStored());
+            storage.modifyEnergyStored(MathHelper.truncateDoubleToInt(v * 4));
+        }
         return 0;
     }
 
@@ -113,7 +125,7 @@ public class TileEntityElectricFloodlight extends TileEntityFL implements IEnerg
     @Optional.Method(modid = "IC2")
     @Override
     public double getDemandedEnergy() {
-        if ((storage.getMaxEnergyStored() - storage.getEnergyStored()) > 32768) {
+        if (storageEU < 100) {
             return 8192.0D;
         }
         return 0.0D;
@@ -126,21 +138,20 @@ public class TileEntityElectricFloodlight extends TileEntityFL implements IEnerg
     }
 
     @Optional.Method(modid = "IC2")
-    @Override
-    public void invalidate() {
-        super.invalidate();
+    public void addToIc2EnergyNetwork() {
         if (!worldObj.isRemote) {
-            EnergyTileUnloadEvent event = new EnergyTileUnloadEvent(this);
+            EnergyTileLoadEvent event = new EnergyTileLoadEvent(this);
             MinecraftForge.EVENT_BUS.post(event);
         }
     }
 
     @Optional.Method(modid = "IC2")
     @Override
-    public void validate() {
-        super.validate();
+    public void invalidate() {
+        super.invalidate();
         if (!worldObj.isRemote) {
-            EnergyTileLoadEvent event = new EnergyTileLoadEvent(this);
+
+            EnergyTileUnloadEvent event = new EnergyTileUnloadEvent(this);
             MinecraftForge.EVENT_BUS.post(event);
         }
     }
@@ -153,10 +164,14 @@ public class TileEntityElectricFloodlight extends TileEntityFL implements IEnerg
     @Override
     public void updateEntity() {
         World world = this.getWorldObj();
+        if (ModCompatibility.IC2Loaded && !wasAddedToEnergyNet && !world.isRemote) {
+            addToIc2EnergyNetwork();
+            wasAddedToEnergyNet = true;
+        }
         world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, this.getOrientation().ordinal(), 2);
         if (!world.isRemote) {
             ForgeDirection direction = this.getOrientation();
-            if (((active ^ inverted) && storage.getEnergyStored() >= configHandler.energyUsage)) {
+            if ((active ^ inverted) && (storage.getEnergyStored() >= configHandler.energyUsage || storageEU >= configHandler.energyUsage * 4)) {
                 if (!wasActive || world.getTotalWorldTime() % timeout == 0) {
                     if (world.getTotalWorldTime() % timeout == 0) {
                         lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, 0);
@@ -165,7 +180,11 @@ public class TileEntityElectricFloodlight extends TileEntityFL implements IEnerg
                         lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, 0);
                     }
                 }
-                storage.modifyEnergyStored(-configHandler.energyUsage);
+                if (storageEU >= 20) {
+                    storageEU -= 20;
+                } else {
+                    storage.modifyEnergyStored(-configHandler.energyUsage);
+                }
                 wasActive = true;
 
             } else {

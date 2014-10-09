@@ -1,6 +1,6 @@
 package de.keridos.floodlights.compatability;
 
-import net.minecraft.item.ItemStack;
+import cpw.mods.fml.common.Loader;
 
 /**
  * Created by Keridos on 28.02.14.
@@ -9,7 +9,7 @@ import net.minecraft.item.ItemStack;
 public class ModCompatibility {
     private static ModCompatibility instance = null;
 
-    private static Class Ic2Items;
+    public static boolean IC2Loaded = false;
 
     private ModCompatibility() {
     }
@@ -21,19 +21,7 @@ public class ModCompatibility {
         return instance;
     }
 
-    public static ItemStack getIC2Item(String name) {
-        try {
-            if (Ic2Items == null) Ic2Items = Class.forName("ic2.core.Ic2Items");
-
-            Object ret = Ic2Items.getField(name).get(null);
-
-            if (ret instanceof ItemStack) {
-                return ((ItemStack) ret).copy();
-            } else {
-                return null;
-            }
-        } catch (Exception e) {
-            return null;
-        }
+    public void checkForMods() {
+        IC2Loaded = Loader.isModLoaded("IC2");
     }
 }

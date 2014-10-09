@@ -25,6 +25,7 @@ public class Names {
         public static final String INVERT = "inverted";
         public static final String TIMEOUT = "timeout";
         public static final String TIME_REMAINING = "timeRemaining";
+        public static final String STORAGE_EU = "storageEU";
         public static final String COLOR = "color";
         public static final String STATE = "teState";
         public static final String WAS_ACTIVE = "wasActive";
