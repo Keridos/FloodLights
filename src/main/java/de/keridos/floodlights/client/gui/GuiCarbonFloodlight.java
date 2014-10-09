@@ -25,7 +25,7 @@ public class GuiCarbonFloodlight extends GuiContainer {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int par1, int par2) {
-        fontRendererObj.drawString("Time remaining: " + tileEntityCarbonFloodlight.timeRemaining / 1200 + "m" + tileEntityCarbonFloodlight.timeRemaining / 20 % 60 + "sec", 50, 27, 0x000000);
+        fontRendererObj.drawString("Time remaining: " + tileEntityCarbonFloodlight.timeRemaining / 1200 + "m" + tileEntityCarbonFloodlight.timeRemaining / 20 % 60 + "sec", 50, 26, 0x000000);
     }
 
     @Override

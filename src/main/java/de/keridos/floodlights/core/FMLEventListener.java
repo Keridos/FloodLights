@@ -2,7 +2,7 @@ package de.keridos.floodlights.core;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
-import de.keridos.floodlights.handler.LightHandler;
+import de.keridos.floodlights.handler.lighting.LightHandler;
 
 /**
  * Created by Keridos on 05.10.14.

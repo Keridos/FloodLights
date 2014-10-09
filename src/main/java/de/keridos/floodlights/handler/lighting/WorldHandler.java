@@ -1,7 +1,7 @@
-package de.keridos.floodlights.handler;
+package de.keridos.floodlights.handler.lighting;
 
+import de.keridos.floodlights.handler.ConfigHandler;
 import de.keridos.floodlights.init.ModBlocks;
-import de.keridos.floodlights.util.LightBlockHandle;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.ForgeDirection;
