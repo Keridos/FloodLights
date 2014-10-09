@@ -8,6 +8,7 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkCheckHandler;
 import cpw.mods.fml.relauncher.Side;
+import de.keridos.floodlights.client.gui.GuiHandler;
 import de.keridos.floodlights.core.EventListener;
 import de.keridos.floodlights.core.FMLEventListener;
 import de.keridos.floodlights.core.network.PacketHandler;
@@ -37,6 +38,7 @@ public class FloodLights {
 
     private ConfigHandler configHandler = ConfigHandler.getInstance();
     private static RecipeHandler recipeHandler = RecipeHandler.getInstance();
+    private static GuiHandler Gui = null;
 
     @Mod.EventHandler
     public static void postInit(FMLPostInitializationEvent event) {
@@ -69,5 +71,6 @@ public class FloodLights {
         PacketHandler.init();
         recipeHandler.initRecipes();
         proxy.initRenderers();
+        Gui = GuiHandler.getInstance();
     }
 }

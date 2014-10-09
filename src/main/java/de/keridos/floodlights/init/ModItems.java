@@ -1,7 +1,6 @@
 package de.keridos.floodlights.init;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.LanguageRegistry;
 import de.keridos.floodlights.item.ItemFL;
 import de.keridos.floodlights.item.ItemGlowingFilament;
 import de.keridos.floodlights.item.ItemLightBulb;
@@ -21,8 +20,5 @@ public class ModItems {
         GameRegistry.registerItem(rawFilament, Names.Items.RAW_FILAMENT);
         GameRegistry.registerItem(glowingFilament, Names.Items.GLOWING_FILAMENT);
         GameRegistry.registerItem(lightBulb, Names.Items.ELECTRIC_LIGHT_BULB);
-        LanguageRegistry.addName(rawFilament, "Raw Filament");
-        LanguageRegistry.addName(glowingFilament, "Glowing Filament");
-        LanguageRegistry.addName(lightBulb, "Electric light bulb");
     }
 }

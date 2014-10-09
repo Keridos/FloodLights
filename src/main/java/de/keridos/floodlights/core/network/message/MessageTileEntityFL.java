@@ -4,6 +4,7 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import de.keridos.floodlights.tileentity.TileEntityCarbonFloodlight;
 import de.keridos.floodlights.tileentity.TileEntityFL;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.tileentity.TileEntity;
@@ -13,21 +14,29 @@ import net.minecraft.tileentity.TileEntity;
  * This Class is the Message that the electric floodlights TileEntity uses.
  */
 public class MessageTileEntityFL implements IMessage, IMessageHandler<MessageTileEntityFL, IMessage> {
-    public int x, y, z;
+    public int x, y, z, timeRemaining;
     public byte orientation, state;
     public String customName, owner;
 
     public MessageTileEntityFL() {
     }
 
-    public MessageTileEntityFL(TileEntityFL tileEntityFL) {
-        this.x = tileEntityFL.xCoord;
-        this.y = tileEntityFL.yCoord;
-        this.z = tileEntityFL.zCoord;
-        this.orientation = (byte) tileEntityFL.getOrientation().ordinal();
-        this.state = (byte) tileEntityFL.getState();
-        this.customName = tileEntityFL.getCustomName();
-        this.owner = tileEntityFL.getOwner();
+    public MessageTileEntityFL(TileEntity tileEntity) {
+        if (tileEntity instanceof TileEntityFL) {
+            TileEntityFL tileEntityFL = (TileEntityFL) tileEntity;
+            this.x = tileEntityFL.xCoord;
+            this.y = tileEntityFL.yCoord;
+            this.z = tileEntityFL.zCoord;
+            if (tileEntity instanceof TileEntityCarbonFloodlight) {
+                this.timeRemaining = ((TileEntityCarbonFloodlight) tileEntity).timeRemaining;
+            } else {
+                this.timeRemaining = 0;
+            }
+            this.orientation = (byte) tileEntityFL.getOrientation().ordinal();
+            this.state = (byte) tileEntityFL.getState();
+            this.customName = tileEntityFL.getCustomName();
+            this.owner = tileEntityFL.getOwner();
+        }
     }
 
     @Override
@@ -35,6 +44,7 @@ public class MessageTileEntityFL implements IMessage, IMessageHandler<MessageTil
         this.x = buf.readInt();
         this.y = buf.readInt();
         this.z = buf.readInt();
+        this.timeRemaining = buf.readInt();
         this.orientation = buf.readByte();
         this.state = buf.readByte();
         int customNameLength = buf.readInt();
@@ -48,6 +58,7 @@ public class MessageTileEntityFL implements IMessage, IMessageHandler<MessageTil
         buf.writeInt(x);
         buf.writeInt(y);
         buf.writeInt(z);
+        buf.writeInt(timeRemaining);
         buf.writeByte(orientation);
         buf.writeByte(state);
         buf.writeInt(customName.length());
@@ -65,11 +76,14 @@ public class MessageTileEntityFL implements IMessage, IMessageHandler<MessageTil
             ((TileEntityFL) tileEntity).setCustomName(message.customName);
             ((TileEntityFL) tileEntity).setOwner(message.owner);
         }
+        if (tileEntity instanceof TileEntityCarbonFloodlight) {
+            ((TileEntityCarbonFloodlight) tileEntity).timeRemaining = message.timeRemaining;
+        }
         return null;
     }
 
     @Override
     public String toString() {
-        return String.format("MessageTileEntityFL - x:%s, y:%s, z:%s, orientation:%s, state:%s, customName:%s, owner:%s", x, y, z, orientation, state, customName, owner);
+        return String.format("MessageTileEntityFL - x:%s, y:%s, z:%s, timeRemaining:%s, orientation:%s, state:%s, customName:%s, owner:%s", x, y, z, timeRemaining, orientation, state, customName, owner);
     }
 }
