@@ -4,7 +4,7 @@ import de.keridos.floodlights.reference.Names;
 
 /**
  * Created by Keridos on 09/10/2014.
- * This Class
+ * This Class is the mantle class. Nothing spectacular.
  */
 public class ItemMantle extends ItemFL {
     public ItemMantle() {

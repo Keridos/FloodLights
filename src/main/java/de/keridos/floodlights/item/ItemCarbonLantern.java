@@ -4,7 +4,7 @@ import de.keridos.floodlights.reference.Names;
 
 /**
  * Created by Keridos on 09/10/2014.
- * This Class
+ * This Class is the carbon lantern class. Nothing spectacular.
  */
 public class ItemCarbonLantern extends ItemFL {
     public ItemCarbonLantern() {

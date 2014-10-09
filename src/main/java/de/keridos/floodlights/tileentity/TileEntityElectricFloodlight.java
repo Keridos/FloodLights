@@ -168,7 +168,6 @@ public class TileEntityElectricFloodlight extends TileEntityFL implements IEnerg
             addToIc2EnergyNetwork();
             wasAddedToEnergyNet = true;
         }
-        world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, this.getOrientation().ordinal(), 2);
         if (!world.isRemote) {
             ForgeDirection direction = this.getOrientation();
             if ((active ^ inverted) && (storage.getEnergyStored() >= configHandler.energyUsage || storageEU >= configHandler.energyUsage * 4)) {

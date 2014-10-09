@@ -16,7 +16,7 @@ import java.util.Random;
 
 /**
  * Created by Keridos on 09/10/2014.
- * This Class
+ * This Class describes the carbon floodlight TileEntity.
  */
 public class TileEntityCarbonFloodlight extends TileEntityFL implements ISidedInventory {
     private boolean inverted = false;

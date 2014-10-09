@@ -10,7 +10,7 @@ import org.lwjgl.opengl.GL11;
 
 /**
  * Created by Keridos on 09/10/2014.
- * This Class
+ * This Class implements the Gui for the Carbon floodlight.
  */
 public class GuiCarbonFloodlight extends GuiContainer {
     public static final ResourceLocation texture = new ResourceLocation(Textures.Gui.CARBON_FLOODLIGHT);

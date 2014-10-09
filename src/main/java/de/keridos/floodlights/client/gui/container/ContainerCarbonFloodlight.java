@@ -9,7 +9,7 @@ import net.minecraft.item.ItemStack;
 
 /**
  * Created by Keridos on 09/10/2014.
- * This Class
+ * This Class describes the Container for the Carbon Floodlight.
  */
 public class ContainerCarbonFloodlight extends Container {
     private TileEntityCarbonFloodlight carbonFloodlight;

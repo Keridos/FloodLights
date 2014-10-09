@@ -16,7 +16,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * Created by Keridos on 01.10.14.
- * This Class defines the block properties of the electric floodlight.
+ * This Class defines the block properties of the carbon floodlight.
  */
 public class BlockCarbonFloodlight extends BlockFL implements ITileEntityProvider {
 

@@ -47,7 +47,7 @@ public class WorldHandler {
 
     public void addSource(int sourceX, int sourceY, int sourceZ, ForgeDirection direction, int sourcetype) {
         if (sourcetype == 0) {
-            for (int i = 1; i <= 64; i++) {
+            for (int i = 1; i <= configHandler.rangeStraightFloodlight; i++) {
                 int x = sourceX + direction.offsetX * i;
                 int y = sourceY + direction.offsetY * i;
                 int z = sourceZ + direction.offsetZ * i;
