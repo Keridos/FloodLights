@@ -1,7 +1,7 @@
 package de.keridos.floodlights.tileentity;
 
 import de.keridos.floodlights.handler.ConfigHandler;
-import de.keridos.floodlights.handler.LightHandler;
+import de.keridos.floodlights.handler.lighting.LightHandler;
 import de.keridos.floodlights.reference.Names;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;

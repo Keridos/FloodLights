@@ -1,6 +1,6 @@
 package de.keridos.floodlights.blocks;
 
-import de.keridos.floodlights.handler.LightHandler;
+import de.keridos.floodlights.handler.lighting.LightHandler;
 import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.reference.RenderIDs;
 import de.keridos.floodlights.tileentity.TileEntityElectricFloodlight;

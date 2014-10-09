@@ -1,4 +1,4 @@
-package de.keridos.floodlights.util;
+package de.keridos.floodlights.handler.lighting;
 
 import java.util.ArrayList;
 import java.util.Iterator;

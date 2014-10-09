@@ -5,7 +5,7 @@ import cofh.api.energy.IEnergyHandler;
 import cpw.mods.fml.common.Optional;
 import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.handler.ConfigHandler;
-import de.keridos.floodlights.handler.LightHandler;
+import de.keridos.floodlights.handler.lighting.LightHandler;
 import de.keridos.floodlights.reference.Names;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
@@ -76,31 +76,26 @@ public class TileEntityElectricFloodlight extends TileEntityFL implements IEnerg
 
     @Override
     public boolean canConnectEnergy(ForgeDirection from) {
-
         return true;
     }
 
     @Override
     public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
-
         return storage.receiveEnergy(maxReceive, simulate);
     }
 
     @Override
     public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate) {
-
         return storage.extractEnergy(maxExtract, simulate);
     }
 
     @Override
     public int getEnergyStored(ForgeDirection from) {
-
         return storage.getEnergyStored();
     }
 
     @Override
     public int getMaxEnergyStored(ForgeDirection from) {
-
         return storage.getMaxEnergyStored();
     }
 
@@ -150,7 +145,6 @@ public class TileEntityElectricFloodlight extends TileEntityFL implements IEnerg
     public void invalidate() {
         super.invalidate();
         if (!worldObj.isRemote) {
-
             EnergyTileUnloadEvent event = new EnergyTileUnloadEvent(this);
             MinecraftForge.EVENT_BUS.post(event);
         }
@@ -185,7 +179,6 @@ public class TileEntityElectricFloodlight extends TileEntityFL implements IEnerg
                     storage.modifyEnergyStored(-configHandler.energyUsage);
                 }
                 wasActive = true;
-
             } else {
                 if (wasActive) {
                     lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, 0);
