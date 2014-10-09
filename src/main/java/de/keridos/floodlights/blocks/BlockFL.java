@@ -27,6 +27,7 @@ import java.util.Random;
 public class BlockFL extends Block {
     protected String unlocName;
     public IIcon topIcon;
+    public IIcon topOnIcon;
     public IIcon sideIcon;
     public IIcon botIcon;
 
@@ -47,6 +48,7 @@ public class BlockFL extends Block {
     @SideOnly(Side.CLIENT)
     public void registerBlockIcons(IIconRegister iconRegister) {
         topIcon = iconRegister.registerIcon(String.format("%s", getUnwrappedUnlocalizedName(this.getUnlocalizedName() + "_top")));
+        topOnIcon = iconRegister.registerIcon(String.format("%s", getUnwrappedUnlocalizedName(this.getUnlocalizedName() + "_top_on")));
         botIcon = iconRegister.registerIcon(String.format("%s", getUnwrappedUnlocalizedName(this.getUnlocalizedName() + "_bot")));
         sideIcon = iconRegister.registerIcon(String.format("%s", getUnwrappedUnlocalizedName(this.getUnlocalizedName() + "_side")));
     }
@@ -54,6 +56,11 @@ public class BlockFL extends Block {
     // For rotatable block, topIcon is front, botIcon is rear.
     @SideOnly(Side.CLIENT)
     public IIcon getIcon(int side, int meta) {
+        if (side == meta - 6) {
+            return topOnIcon;
+        } else if (meta > 5) {
+            meta -= 6;
+        }
         if (side == meta) {
             return topIcon;
         } else if (side == ForgeDirection.getOrientation(meta).getOpposite().ordinal()) {

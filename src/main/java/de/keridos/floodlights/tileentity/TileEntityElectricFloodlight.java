@@ -120,7 +120,7 @@ public class TileEntityElectricFloodlight extends TileEntityFL implements IEnerg
     @Optional.Method(modid = "IC2")
     @Override
     public double getDemandedEnergy() {
-        if (storageEU < 100) {
+        if (storageEU < 4000) {
             return 8192.0D;
         }
         return 0.0D;
@@ -169,12 +169,14 @@ public class TileEntityElectricFloodlight extends TileEntityFL implements IEnerg
                     if (world.getTotalWorldTime() % timeout == 0) {
                         lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, 0);
                         lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, 0);
+                        world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, this.getOrientation().ordinal() + 6, 2);
                     } else {
                         lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, 0);
+                        world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, world.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) + 6, 2);
                     }
                 }
-                if (storageEU >= 20) {
-                    storageEU -= 20;
+                if (storageEU >= configHandler.energyUsage * 4) {
+                    storageEU -= configHandler.energyUsage * 4;
                 } else {
                     storage.modifyEnergyStored(-configHandler.energyUsage);
                 }
@@ -182,6 +184,7 @@ public class TileEntityElectricFloodlight extends TileEntityFL implements IEnerg
             } else {
                 if (wasActive) {
                     lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, 0);
+                    world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, world.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) - 6, 2);
                 }
                 wasActive = false;
             }

@@ -198,8 +198,10 @@ public class TileEntityCarbonFloodlight extends TileEntityFL implements ISidedIn
                     if (world.getTotalWorldTime() % timeout == 0) {
                         lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, 0);
                         lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, 0);
+                        world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, this.getOrientation().ordinal() + 6, 2);
                     } else {
                         lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, 0);
+                        world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, this.getOrientation().ordinal() + 6, 2);
                     }
                 }
                 timeRemaining--;
@@ -207,6 +209,7 @@ public class TileEntityCarbonFloodlight extends TileEntityFL implements ISidedIn
             } else {
                 if (wasActive) {
                     lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, 0);
+                    world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, world.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) - 6, 2);
                 }
                 wasActive = false;
             }
