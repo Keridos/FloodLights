@@ -187,10 +187,6 @@ public class TileEntityCarbonFloodlight extends TileEntityFL implements ISidedIn
     @Override
     public void updateEntity() {
         World world = this.getWorldObj();
-        world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, this.getOrientation().ordinal(), 2);
-        if (!world.isRemote && world.getTotalWorldTime() % 20 == 0) {
-            //world.markBlockForUpdate(xCoord, yCoord, zCoord);
-        }
         if (!world.isRemote) {
             ForgeDirection direction = this.getOrientation();
             if (timeRemaining == 0 && inventory[0] != null) {
