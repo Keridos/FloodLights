@@ -21,9 +21,9 @@ import net.minecraftforge.common.util.ForgeDirection;
 public class BlockCarbonFloodlight extends BlockFL implements ITileEntityProvider {
 
     public BlockCarbonFloodlight(Material material) {
-        super(Names.Blocks.CARBON_FLOODLIGHT, Material.rock, soundTypeMetal, 0.6F);
+        super(Names.Blocks.CARBON_FLOODLIGHT, Material.rock, soundTypeMetal, 2.5F);
         setCreativeTab(CreativeTabs.tabBlock);
-        setHarvestLevel("pickaxe", 0);
+        setHarvestLevel("pickaxe", 1);
     }
 
     @Override

@@ -30,15 +30,9 @@ public class ModBlocks {
     }
 
     public static void registerBlocks() {
-        if (configHandler.electricFloodlight) {
-            GameRegistry.registerBlock(blockElectricLight, Names.Blocks.ELECTRIC_FLOODLIGHT);
-        }
-        if (configHandler.carbonFloodlight) {
-            GameRegistry.registerBlock(blockCarbonLight, Names.Blocks.CARBON_FLOODLIGHT);
-
-        }
+        GameRegistry.registerBlock(blockElectricLight, Names.Blocks.ELECTRIC_FLOODLIGHT);
+        GameRegistry.registerBlock(blockCarbonLight, Names.Blocks.CARBON_FLOODLIGHT);
         GameRegistry.registerBlock(blockFLLight, Names.Blocks.PHANTOM_LIGHT);
-
     }
 
     public static void registerTileEntities() {

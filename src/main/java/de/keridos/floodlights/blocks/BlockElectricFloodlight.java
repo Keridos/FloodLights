@@ -20,9 +20,9 @@ import net.minecraftforge.common.util.ForgeDirection;
 public class BlockElectricFloodlight extends BlockFL implements ITileEntityProvider {
 
     public BlockElectricFloodlight(Material material) {
-        super(Names.Blocks.ELECTRIC_FLOODLIGHT, Material.rock, soundTypeMetal, 0.6F);
+        super(Names.Blocks.ELECTRIC_FLOODLIGHT, Material.rock, soundTypeMetal, 2.5F);
         setCreativeTab(CreativeTabs.tabBlock);
-        setHarvestLevel("pickaxe", 0);
+        setHarvestLevel("pickaxe", 1);
     }
 
     @Override
