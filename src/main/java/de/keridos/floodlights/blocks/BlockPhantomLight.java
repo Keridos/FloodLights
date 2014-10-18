@@ -48,7 +48,7 @@ public class BlockPhantomLight extends BlockFL {
 
     @Override
     public boolean canProvidePower() {
-        return true;
+        return false;
     }
 
     @Override
