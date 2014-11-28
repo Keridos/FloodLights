@@ -10,8 +10,10 @@ import de.keridos.floodlights.reference.Names;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergySink;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
@@ -164,26 +166,27 @@ public class TileEntityElectricFloodlight extends TileEntityFL implements IEnerg
         }
         if (!world.isRemote) {
             ForgeDirection direction = this.getOrientation();
-            if ((active ^ inverted) && (storage.getEnergyStored() >= configHandler.energyUsage || storageEU >= configHandler.energyUsage * 4)) {
+            int realEnergyUsage = configHandler.energyUsage / (mode == 0 ? 1 : 2);
+            if ((active ^ inverted) && (storage.getEnergyStored() >= realEnergyUsage || storageEU >= realEnergyUsage * 4)) {
                 if (!wasActive || world.getTotalWorldTime() % timeout == 0) {
                     if (world.getTotalWorldTime() % timeout == 0) {
-                        lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, 0);
-                        lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, 0);
+                        lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
+                        lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
                         world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, this.getOrientation().ordinal() + 6, 2);
                     } else {
-                        lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, 0);
+                        lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
                         world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, world.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) + 6, 2);
                     }
                 }
-                if (storageEU >= configHandler.energyUsage * 4) {
-                    storageEU -= configHandler.energyUsage * 4;
+                if (storageEU >= realEnergyUsage * 4) {
+                    storageEU -= realEnergyUsage * 4;
                 } else {
-                    storage.modifyEnergyStored(-configHandler.energyUsage);
+                    storage.modifyEnergyStored(-realEnergyUsage);
                 }
                 wasActive = true;
             } else {
                 if (wasActive) {
-                    lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, 0);
+                    lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
                     world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, world.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) - 6, 2);
                 }
                 wasActive = false;
@@ -202,5 +205,19 @@ public class TileEntityElectricFloodlight extends TileEntityFL implements IEnerg
 
     public boolean getInverted() {
         return inverted;
+    }
+
+    public void changeMode(EntityPlayer player) {
+        World world = this.getWorldObj();
+        if (!world.isRemote) {
+            ForgeDirection direction = this.getOrientation();
+            int realEnergyUsage = configHandler.energyUsage / (mode == 0 ? 1 : 2);
+            lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
+            mode = (mode == 2 ? 0 : mode + 1);
+            if ((active ^ inverted) && (storage.getEnergyStored() >= realEnergyUsage || storageEU >= realEnergyUsage * 4)) {
+                lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
+            }
+            player.addChatMessage(new ChatComponentText("Light mode now: " + (mode == 0 ? "Straight" : mode == 1 ? "Cone Narrow" : mode == 2 ? "Cone Wide" : "")));
+        }
     }
 }

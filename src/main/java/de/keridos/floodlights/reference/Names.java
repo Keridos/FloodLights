@@ -27,7 +27,8 @@ public class Names {
         public static final String TIME_REMAINING = "timeRemaining";
         public static final String STORAGE_EU = "storageEU";
         public static final String COLOR = "color";
-        public static final String STATE = "teState";
+        public static final String MODE = "teState";
+        public static final String STATE = "teMode";
         public static final String WAS_ACTIVE = "wasActive";
         public static final String CUSTOM_NAME = "CustomName";
         public static final String DIRECTION = "teDirection";

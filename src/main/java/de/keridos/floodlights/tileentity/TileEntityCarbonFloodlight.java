@@ -9,6 +9,7 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -191,16 +192,16 @@ public class TileEntityCarbonFloodlight extends TileEntityFL implements ISidedIn
             ForgeDirection direction = this.getOrientation();
             if (timeRemaining == 0 && inventory[0] != null) {
                 decrStackSize(0, 1);
-                timeRemaining = configHandler.carbonTime * 20;
+                timeRemaining = configHandler.carbonTime * (mode == 0 ? 20 : 10);
             }
             if (((active ^ inverted) && timeRemaining > 0)) {
                 if (!wasActive || world.getTotalWorldTime() % timeout == 0) {
                     if (world.getTotalWorldTime() % timeout == 0) {
-                        lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, 0);
-                        lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, 0);
+                        lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, mode);
+                        lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, mode);
                         world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, this.getOrientation().ordinal() + 6, 2);
                     } else {
-                        lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, 0);
+                        lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, mode);
                         world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, this.getOrientation().ordinal() + 6, 2);
                     }
                 }
@@ -208,7 +209,7 @@ public class TileEntityCarbonFloodlight extends TileEntityFL implements ISidedIn
                 wasActive = true;
             } else {
                 if (wasActive) {
-                    lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, 0);
+                    lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, mode);
                     world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, world.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) - 6, 2);
                 }
                 wasActive = false;
@@ -227,5 +228,19 @@ public class TileEntityCarbonFloodlight extends TileEntityFL implements ISidedIn
 
     public boolean getInverted() {
         return inverted;
+    }
+
+    public void changeMode(EntityPlayer player) {
+        World world = this.getWorldObj();
+        if (!world.isRemote) {
+            ForgeDirection direction = this.getOrientation();
+            lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
+
+            mode = (mode == 2 ? 0 : mode++);
+            if (((active ^ inverted) && timeRemaining > 0)) {
+                lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
+            }
+            player.addChatMessage(new ChatComponentText("Light mode now: " + (mode == 0 ? "Straight" : mode == 1 ? "Cone Narrow" : mode == 2 ? "Cone Wide" : "")));
+        }
     }
 }

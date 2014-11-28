@@ -13,6 +13,7 @@ import static de.keridos.floodlights.util.MathUtil.rotate;
 /**
  * Created by Keridos on 03.10.14.
  * This Class stores every lighting block in its designated world and manages them.
+ * Currently all algorithms for placing the lights are in this class.
  */
 public class WorldHandler {
     private ConfigHandler configHandler = ConfigHandler.getInstance();
@@ -47,26 +48,30 @@ public class WorldHandler {
         return getFloodlightHandler(x, y, z);
     }
 
-    private void addStraightSource(int sourceX, int sourceY, int sourceZ, ForgeDirection direction) {
+    private void straightSource(int sourceX, int sourceY, int sourceZ, ForgeDirection direction, boolean remove) {
         for (int i = 1; i <= configHandler.rangeStraightFloodlight; i++) {
             int x = sourceX + direction.offsetX * i;
             int y = sourceY + direction.offsetY * i;
             int z = sourceZ + direction.offsetZ * i;
             LightBlockHandle handler = getFloodlightHandler(x, y, z);
             if (world.getBlock(x, y, z).isAir(world, x, y, z)) {
-                lightBlocks.get(lightBlocks.indexOf(handler)).addSource(sourceX, sourceY, sourceZ);
-            } else if (world.getBlock(x, y, z).isOpaqueCube()) {
+                if (remove) {
+                    lightBlocks.get(lightBlocks.indexOf(handler)).removeSource(sourceX, sourceY, sourceZ);
+                } else {
+                    lightBlocks.get(lightBlocks.indexOf(handler)).addSource(sourceX, sourceY, sourceZ);
+                }
+            } else if (world.getBlock(x, y, z).isOpaqueCube() && !remove) {
                 break;
             }
         }
     }
 
-    private void addNarrowConeSource(int sourceX, int sourceY, int sourceZ, ForgeDirection direction) {
-        for (int i = 1; i <= configHandler.rangeConeFloodlight; i++) {
-            int a = 2 * i;
-            int b = 0;
-            int c = 0;
-            for (int j = 1; i < 8; i++) {
+    private void narrowConeSource(int sourceX, int sourceY, int sourceZ, ForgeDirection direction, boolean remove) {
+        for (int j = 0; j <= 8; j++) {
+            for (int i = 1; i <= configHandler.rangeConeFloodlight; i++) {
+                int a = 2 * i;
+                int b = 0;
+                int c = 0;
                 switch (j) {
                     case 0:
                         b += i;
@@ -95,20 +100,24 @@ public class WorldHandler {
                 int z = sourceZ + rotatedCoords[2];
                 LightBlockHandle handler = getFloodlightHandler(x, y, z);
                 if (world.getBlock(x, y, z).isAir(world, x, y, z)) {
-                    lightBlocks.get(lightBlocks.indexOf(handler)).addSource(sourceX, sourceY, sourceZ);
-                } else if (world.getBlock(x, y, z).isOpaqueCube()) {
+                    if (remove) {
+                        lightBlocks.get(lightBlocks.indexOf(handler)).removeSource(sourceX, sourceY, sourceZ);
+                    } else {
+                        lightBlocks.get(lightBlocks.indexOf(handler)).addSource(sourceX, sourceY, sourceZ);
+                    }
+                } else if (world.getBlock(x, y, z).isOpaqueCube() && !remove) {
                     break;
                 }
             }
         }
     }
 
-    private void addWideConeSource(int sourceX, int sourceY, int sourceZ, ForgeDirection direction) {
-        for (int i = 1; i <= configHandler.rangeConeFloodlight; i++) {
-            int a = i;
-            int b = 0;
-            int c = 0;
-            for (int j = 1; i < 8; i++) {
+    private void wideConeSource(int sourceX, int sourceY, int sourceZ, ForgeDirection direction, boolean remove) {
+        for (int j = 0; j <= 8; j++) {
+            for (int i = 1; i <= configHandler.rangeConeFloodlight / 2; i++) {
+                int a = i;
+                int b = 0;
+                int c = 0;
                 switch (j) {
                     case 0:
                         b += i;
@@ -137,8 +146,12 @@ public class WorldHandler {
                 int z = sourceZ + rotatedCoords[2];
                 LightBlockHandle handler = getFloodlightHandler(x, y, z);
                 if (world.getBlock(x, y, z).isAir(world, x, y, z)) {
-                    lightBlocks.get(lightBlocks.indexOf(handler)).addSource(sourceX, sourceY, sourceZ);
-                } else if (world.getBlock(x, y, z).isOpaqueCube()) {
+                    if (remove) {
+                        lightBlocks.get(lightBlocks.indexOf(handler)).removeSource(sourceX, sourceY, sourceZ);
+                    } else {
+                        lightBlocks.get(lightBlocks.indexOf(handler)).addSource(sourceX, sourceY, sourceZ);
+                    }
+                } else if (world.getBlock(x, y, z).isOpaqueCube() && !remove) {
                     break;
                 }
             }
@@ -147,20 +160,21 @@ public class WorldHandler {
 
     public void addSource(int sourceX, int sourceY, int sourceZ, ForgeDirection direction, int sourcetype) {
         if (sourcetype == 0) {
-            addStraightSource(sourceX, sourceY, sourceZ, direction);
+            straightSource(sourceX, sourceY, sourceZ, direction, false);
         } else if (sourcetype == 1) {
-
+            narrowConeSource(sourceX, sourceY, sourceZ, direction, false);
+        } else if (sourcetype == 2) {
+            wideConeSource(sourceX, sourceY, sourceZ, direction, false);
         }
     }
 
     public void removeSource(int sourceX, int sourceY, int sourceZ, ForgeDirection direction, int sourcetype) {
         if (sourcetype == 0) {
-            for (int i = 1; i <= 64; i++) {
-                int x = sourceX + direction.offsetX * i;
-                int y = sourceY + direction.offsetY * i;
-                int z = sourceZ + direction.offsetZ * i;
-                getFloodlightHandler(x, y, z).removeSource(sourceX, sourceY, sourceZ);
-            }
+            straightSource(sourceX, sourceY, sourceZ, direction, true);
+        } else if (sourcetype == 1) {
+            narrowConeSource(sourceX, sourceY, sourceZ, direction, true);
+        } else if (sourcetype == 2) {
+            wideConeSource(sourceX, sourceY, sourceZ, direction, true);
         }
     }
 

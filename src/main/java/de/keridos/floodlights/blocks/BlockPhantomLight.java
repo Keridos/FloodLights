@@ -13,7 +13,7 @@ import java.util.Random;
  */
 public class BlockPhantomLight extends BlockFL {
     public BlockPhantomLight() {
-        super("blockLight", Material.air, soundTypeCloth, 0.0F);
+        super("blockLight", Material.rock, soundTypeCloth, 0.0F);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class BlockPhantomLight extends BlockFL {
 
     @Override
     public boolean renderAsNormalBlock() {
-        return false;
+        return true;
     }
 
     @Override

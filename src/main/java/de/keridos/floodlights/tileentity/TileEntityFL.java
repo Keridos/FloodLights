@@ -17,6 +17,7 @@ public class TileEntityFL extends TileEntity {
     protected byte state;
     protected String customName;
     protected String owner;
+    protected int mode = 0;
 
     public TileEntityFL() {
         orientation = ForgeDirection.SOUTH;
@@ -61,6 +62,14 @@ public class TileEntityFL extends TileEntity {
         this.owner = owner;
     }
 
+    public int getMode() {
+        return mode;
+    }
+
+    public void setMode(int mode) {
+        this.mode = mode;
+    }
+
     @Override
     public void readFromNBT(NBTTagCompound nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
@@ -76,6 +85,9 @@ public class TileEntityFL extends TileEntity {
         if (nbtTagCompound.hasKey(Names.NBT.OWNER)) {
             this.owner = nbtTagCompound.getString(Names.NBT.OWNER);
         }
+        if (nbtTagCompound.hasKey(Names.NBT.MODE)) {
+            this.mode = nbtTagCompound.getInteger(Names.NBT.MODE);
+        }
     }
 
     @Override
@@ -83,6 +95,7 @@ public class TileEntityFL extends TileEntity {
         super.writeToNBT(nbtTagCompound);
         nbtTagCompound.setByte(Names.NBT.DIRECTION, (byte) orientation.ordinal());
         nbtTagCompound.setByte(Names.NBT.STATE, state);
+        nbtTagCompound.setInteger(Names.NBT.MODE, mode);
         if (this.hasCustomName()) {
             nbtTagCompound.setString(Names.NBT.CUSTOM_NAME, customName);
         }

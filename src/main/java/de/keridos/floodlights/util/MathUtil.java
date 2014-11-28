@@ -2,6 +2,8 @@ package de.keridos.floodlights.util;
 
 import net.minecraftforge.common.util.ForgeDirection;
 
+import java.util.logging.Logger;
+
 /**
  * Created by Keridos on 28/11/2014.
  * This Class
@@ -13,13 +15,14 @@ public class MathUtil {
         int[] result = new int[3];
         switch (direction) {
             case DOWN:
+                Logger.getGlobal().info("down");
                 result[0] = y;
                 result[1] = -x;
-                result[2] = y;
+                result[2] = z;
             case UP:
                 result[0] = -y;
                 result[1] = x;
-                result[2] = y;
+                result[2] = z;
             case NORTH:
                 result[0] = z;
                 result[1] = y;

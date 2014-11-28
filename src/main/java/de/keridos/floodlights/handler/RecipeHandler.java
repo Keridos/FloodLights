@@ -1,13 +1,13 @@
 package de.keridos.floodlights.handler;
 
-import cpw.mods.fml.common.registry.GameData;
 import cpw.mods.fml.common.registry.GameRegistry;
 import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.init.ModItems;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+
+import static de.keridos.floodlights.util.GeneralUtil.getMinecraftItem;
 
 /**
  * Created by Keridos on 28.02.14.
@@ -25,12 +25,6 @@ public class RecipeHandler {
             instance = new RecipeHandler();
         }
         return instance;
-    }
-
-    public Item getMinecraftItem(String name) {
-        Item item;
-        item = GameData.getItemRegistry().getRaw("minecraft:" + name);
-        return item;
     }
 
     public void initRecipes() {
