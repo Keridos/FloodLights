@@ -8,6 +8,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.ArrayList;
 
+import static de.keridos.floodlights.util.MathUtil.rotate;
+
 /**
  * Created by Keridos on 03.10.14.
  * This Class stores every lighting block in its designated world and manages them.
@@ -45,12 +47,52 @@ public class WorldHandler {
         return getFloodlightHandler(x, y, z);
     }
 
-    public void addSource(int sourceX, int sourceY, int sourceZ, ForgeDirection direction, int sourcetype) {
-        if (sourcetype == 0) {
-            for (int i = 1; i <= configHandler.rangeStraightFloodlight; i++) {
-                int x = sourceX + direction.offsetX * i;
-                int y = sourceY + direction.offsetY * i;
-                int z = sourceZ + direction.offsetZ * i;
+    private void addStraightSource(int sourceX, int sourceY, int sourceZ, ForgeDirection direction) {
+        for (int i = 1; i <= configHandler.rangeStraightFloodlight; i++) {
+            int x = sourceX + direction.offsetX * i;
+            int y = sourceY + direction.offsetY * i;
+            int z = sourceZ + direction.offsetZ * i;
+            LightBlockHandle handler = getFloodlightHandler(x, y, z);
+            if (world.getBlock(x, y, z).isAir(world, x, y, z)) {
+                lightBlocks.get(lightBlocks.indexOf(handler)).addSource(sourceX, sourceY, sourceZ);
+            } else if (world.getBlock(x, y, z).isOpaqueCube()) {
+                break;
+            }
+        }
+    }
+
+    private void addNarrowConeSource(int sourceX, int sourceY, int sourceZ, ForgeDirection direction) {
+        for (int i = 1; i <= configHandler.rangeConeFloodlight; i++) {
+            int a = 2 * i;
+            int b = 0;
+            int c = 0;
+            for (int j = 1; i < 8; i++) {
+                switch (j) {
+                    case 0:
+                        b += i;
+                    case 1:
+                        b -= i;
+                    case 2:
+                        c += i;
+                    case 3:
+                        c -= i;
+                    case 4:
+                        b += i;
+                        c += i;
+                    case 5:
+                        b += i;
+                        c -= i;
+                    case 6:
+                        b -= i;
+                        c += i;
+                    case 7:
+                        b -= i;
+                        c -= i;
+                }
+                int[] rotatedCoords = rotate(a, b, c, direction);
+                int x = sourceX + rotatedCoords[0];
+                int y = sourceY + rotatedCoords[1];
+                int z = sourceZ + rotatedCoords[2];
                 LightBlockHandle handler = getFloodlightHandler(x, y, z);
                 if (world.getBlock(x, y, z).isAir(world, x, y, z)) {
                     lightBlocks.get(lightBlocks.indexOf(handler)).addSource(sourceX, sourceY, sourceZ);
@@ -58,6 +100,56 @@ public class WorldHandler {
                     break;
                 }
             }
+        }
+    }
+
+    private void addWideConeSource(int sourceX, int sourceY, int sourceZ, ForgeDirection direction) {
+        for (int i = 1; i <= configHandler.rangeConeFloodlight; i++) {
+            int a = i;
+            int b = 0;
+            int c = 0;
+            for (int j = 1; i < 8; i++) {
+                switch (j) {
+                    case 0:
+                        b += i;
+                    case 1:
+                        b -= i;
+                    case 2:
+                        c += i;
+                    case 3:
+                        c -= i;
+                    case 4:
+                        b += i;
+                        c += i;
+                    case 5:
+                        b += i;
+                        c -= i;
+                    case 6:
+                        b -= i;
+                        c += i;
+                    case 7:
+                        b -= i;
+                        c -= i;
+                }
+                int[] rotatedCoords = rotate(a, b, c, direction);
+                int x = sourceX + rotatedCoords[0];
+                int y = sourceY + rotatedCoords[1];
+                int z = sourceZ + rotatedCoords[2];
+                LightBlockHandle handler = getFloodlightHandler(x, y, z);
+                if (world.getBlock(x, y, z).isAir(world, x, y, z)) {
+                    lightBlocks.get(lightBlocks.indexOf(handler)).addSource(sourceX, sourceY, sourceZ);
+                } else if (world.getBlock(x, y, z).isOpaqueCube()) {
+                    break;
+                }
+            }
+        }
+    }
+
+    public void addSource(int sourceX, int sourceY, int sourceZ, ForgeDirection direction, int sourcetype) {
+        if (sourcetype == 0) {
+            addStraightSource(sourceX, sourceY, sourceZ, direction);
+        } else if (sourcetype == 1) {
+
         }
     }
 
