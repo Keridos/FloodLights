@@ -75,24 +75,32 @@ public class WorldHandler {
                 switch (j) {
                     case 0:
                         b += i;
+                        break;
                     case 1:
                         b -= i;
+                        break;
                     case 2:
                         c += i;
+                        break;
                     case 3:
                         c -= i;
+                        break;
                     case 4:
                         b += i;
                         c += i;
+                        break;
                     case 5:
                         b += i;
                         c -= i;
+                        break;
                     case 6:
                         b -= i;
                         c += i;
+                        break;
                     case 7:
                         b -= i;
                         c -= i;
+                        break;
                 }
                 int[] rotatedCoords = rotate(a, b, c, direction);
                 int x = sourceX + rotatedCoords[0];
@@ -121,24 +129,32 @@ public class WorldHandler {
                 switch (j) {
                     case 0:
                         b += i;
+                        break;
                     case 1:
                         b -= i;
+                        break;
                     case 2:
                         c += i;
+                        break;
                     case 3:
                         c -= i;
+                        break;
                     case 4:
                         b += i;
                         c += i;
+                        break;
                     case 5:
                         b += i;
                         c -= i;
+                        break;
                     case 6:
                         b -= i;
                         c += i;
+                        break;
                     case 7:
                         b -= i;
                         c -= i;
+                        break;
                 }
                 int[] rotatedCoords = rotate(a, b, c, direction);
                 int x = sourceX + rotatedCoords[0];
