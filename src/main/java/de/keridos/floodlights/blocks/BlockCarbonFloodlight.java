@@ -85,7 +85,8 @@ public class BlockCarbonFloodlight extends BlockFL implements ITileEntityProvide
     @Override
     public void breakBlock(World world, int x, int y, int z, Block block, int par6) {
         ForgeDirection direction = ((TileEntityCarbonFloodlight) world.getTileEntity(x, y, z)).getOrientation();
-        LightHandler.getInstance().removeSource(world, x, y, z, direction, 0);
+        int mode = ((TileEntityCarbonFloodlight) world.getTileEntity(x, y, z)).getMode();
+        LightHandler.getInstance().removeSource(world, x, y, z, direction, mode);
         super.breakBlock(world, x, y, z, block, par6);
     }
 }
