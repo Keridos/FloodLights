@@ -67,6 +67,7 @@ public class WorldHandler {
     }
 
     private void narrowConeSource(int sourceX, int sourceY, int sourceZ, ForgeDirection direction, boolean remove) {
+        boolean[] failedBeams = new boolean[9];    // for the additional beam to cancel when the main beams fail.
         for (int j = 0; j <= 16; j++) {
             if (j <= 8) {     // This is the main beams
                 for (int i = 1; i <= configHandler.rangeConeFloodlight / 2; i++) {
@@ -116,7 +117,7 @@ public class WorldHandler {
                             c -= i;
                             break;
                     }
-                    int[] rotatedCoords = rotate(a, b, c, direction);
+                    int[] rotatedCoords = rotate(a, b, c, direction); // rotate the coordinate to the correct spot in the real world :)
                     int x = sourceX + rotatedCoords[0];
                     int y = sourceY + rotatedCoords[1];
                     int z = sourceZ + rotatedCoords[2];
@@ -128,10 +129,13 @@ public class WorldHandler {
                             lightBlocks.get(lightBlocks.indexOf(handler)).addSource(sourceX, sourceY, sourceZ);
                         }
                     } else if (world.getBlock(x, y, z).isOpaqueCube() && !remove) {
+                        if (i < configHandler.rangeConeFloodlight / 4) {   //This is for canceling the long rangs beams
+                            failedBeams[j] = true;
+                        }
                         break;
                     }
                 }
-            } else { // This is for the inner beams at longer range
+            } else if (!failedBeams[j - 9]) { // This is for the inner beams at longer range
                 for (int i = configHandler.rangeConeFloodlight / 4; i <= configHandler.rangeConeFloodlight / 2; i++) {
                     int a = 2 * i;
                     int b = 0;
