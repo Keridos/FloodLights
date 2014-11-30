@@ -67,69 +67,122 @@ public class WorldHandler {
     }
 
     private void narrowConeSource(int sourceX, int sourceY, int sourceZ, ForgeDirection direction, boolean remove) {
-        for (int j = 0; j <= 8; j++) {
-            for (int i = 1; i <= configHandler.rangeConeFloodlight; i++) {
-                // for 1st light:
-                if (i == 1) {
-                    LightBlockHandle handler = getFloodlightHandler(sourceX + direction.offsetX, sourceY + direction.offsetY, sourceZ + direction.offsetZ);
-                    if (world.getBlock(sourceX + direction.offsetX, sourceY + direction.offsetY, sourceZ + direction.offsetZ).isAir(world, sourceX + direction.offsetX, sourceY + direction.offsetY, sourceZ + direction.offsetZ)) {
+        for (int j = 0; j <= 16; j++) {
+            if (j <= 8) {     // This is the main beams
+                for (int i = 1; i <= configHandler.rangeConeFloodlight / 2; i++) {
+                    // for 1st light:
+                    if (i == 1) {
+                        LightBlockHandle handler = getFloodlightHandler(sourceX + direction.offsetX, sourceY + direction.offsetY, sourceZ + direction.offsetZ);
+                        if (world.getBlock(sourceX + direction.offsetX, sourceY + direction.offsetY, sourceZ + direction.offsetZ).isAir(world, sourceX + direction.offsetX, sourceY + direction.offsetY, sourceZ + direction.offsetZ)) {
+                            if (remove) {
+                                lightBlocks.get(lightBlocks.indexOf(handler)).removeSource(sourceX, sourceY, sourceZ);
+                            } else {
+                                lightBlocks.get(lightBlocks.indexOf(handler)).addSource(sourceX, sourceY, sourceZ);
+                            }
+                        } else if (world.getBlock(sourceX + direction.offsetX, sourceY + direction.offsetY, sourceZ + direction.offsetZ).isOpaqueCube() && !remove) {
+                            return;
+                        }
+                    }
+                    int a = 2 * i;
+                    int b = 0;
+                    int c = 0;
+                    switch (j) {
+                        case 0:
+                            b += i;
+                            break;
+                        case 1:
+                            b -= i;
+                            break;
+                        case 2:
+                            c += i;
+                            break;
+                        case 3:
+                            c -= i;
+                            break;
+                        case 4:
+                            b += i;
+                            c += i;
+                            break;
+                        case 5:
+                            b += i;
+                            c -= i;
+                            break;
+                        case 6:
+                            b -= i;
+                            c += i;
+                            break;
+                        case 7:
+                            b -= i;
+                            c -= i;
+                            break;
+                    }
+                    int[] rotatedCoords = rotate(a, b, c, direction);
+                    int x = sourceX + rotatedCoords[0];
+                    int y = sourceY + rotatedCoords[1];
+                    int z = sourceZ + rotatedCoords[2];
+                    LightBlockHandle handler = getFloodlightHandler(x, y, z);
+                    if (world.getBlock(x, y, z).isAir(world, x, y, z)) {
                         if (remove) {
                             lightBlocks.get(lightBlocks.indexOf(handler)).removeSource(sourceX, sourceY, sourceZ);
                         } else {
                             lightBlocks.get(lightBlocks.indexOf(handler)).addSource(sourceX, sourceY, sourceZ);
                         }
-                    } else if (world.getBlock(sourceX + direction.offsetX, sourceY + direction.offsetY, sourceZ + direction.offsetZ).isOpaqueCube() && !remove) {
-                        return;
+                    } else if (world.getBlock(x, y, z).isOpaqueCube() && !remove) {
+                        break;
                     }
                 }
-                int a = 2 * i;
-                int b = 0;
-                int c = 0;
-                switch (j) {
-                    case 0:
-                        b += i;
-                        break;
-                    case 1:
-                        b -= i;
-                        break;
-                    case 2:
-                        c += i;
-                        break;
-                    case 3:
-                        c -= i;
-                        break;
-                    case 4:
-                        b += i;
-                        c += i;
-                        break;
-                    case 5:
-                        b += i;
-                        c -= i;
-                        break;
-                    case 6:
-                        b -= i;
-                        c += i;
-                        break;
-                    case 7:
-                        b -= i;
-                        c -= i;
-                        break;
-                }
-                int[] rotatedCoords = rotate(a, b, c, direction);
-                int x = sourceX + rotatedCoords[0];
-                int y = sourceY + rotatedCoords[1];
-                int z = sourceZ + rotatedCoords[2];
-                LightBlockHandle handler = getFloodlightHandler(x, y, z);
-                if (world.getBlock(x, y, z).isAir(world, x, y, z)) {
-                    if (remove) {
-                        lightBlocks.get(lightBlocks.indexOf(handler)).removeSource(sourceX, sourceY, sourceZ);
-                    } else {
-                        lightBlocks.get(lightBlocks.indexOf(handler)).addSource(sourceX, sourceY, sourceZ);
+            } else { // This is for the inner beams at longer range
+                for (int i = configHandler.rangeConeFloodlight / 4; i <= configHandler.rangeConeFloodlight / 2; i++) {
+                    int a = 2 * i;
+                    int b = 0;
+                    int c = 0;
+                    switch (j) {
+                        case 9:
+                            b += i / 2;
+                            break;
+                        case 10:
+                            b -= i / 2;
+                            break;
+                        case 11:
+                            c += i / 2;
+                            break;
+                        case 12:
+                            c -= i / 2;
+                            break;
+                        case 13:
+                            b += i / 2;
+                            c += i / 2;
+                            break;
+                        case 14:
+                            b += i / 2;
+                            c -= i / 2;
+                            break;
+                        case 15:
+                            b -= i / 2;
+                            c += i / 2;
+                            break;
+                        case 16:
+                            b -= i / 2;
+                            c -= i / 2;
+                            break;
                     }
-                } else if (world.getBlock(x, y, z).isOpaqueCube() && !remove) {
-                    break;
+                    int[] rotatedCoords = rotate(a, b, c, direction);
+                    int x = sourceX + rotatedCoords[0];
+                    int y = sourceY + rotatedCoords[1];
+                    int z = sourceZ + rotatedCoords[2];
+                    LightBlockHandle handler = getFloodlightHandler(x, y, z);
+                    if (world.getBlock(x, y, z).isAir(world, x, y, z)) {
+                        if (remove) {
+                            lightBlocks.get(lightBlocks.indexOf(handler)).removeSource(sourceX, sourceY, sourceZ);
+                        } else {
+                            lightBlocks.get(lightBlocks.indexOf(handler)).addSource(sourceX, sourceY, sourceZ);
+                        }
+                    } else if (world.getBlock(x, y, z).isOpaqueCube() && !remove) {
+                        break;
+                    }
                 }
             }
+
         }
     }
 

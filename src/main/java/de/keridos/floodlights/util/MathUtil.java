@@ -8,7 +8,7 @@ import net.minecraftforge.common.util.ForgeDirection;
  */
 public class MathUtil {
 
-    // This is for rotation from the +x direction to another axis
+    // This is for rotation a coordinate from the +x direction to another axis around (0, 0, 0)
     public static int[] rotate(int x, int y, int z, ForgeDirection direction) {
         int[] result = new int[3];
         switch (direction) {
