@@ -11,6 +11,8 @@ public class ModCompatibility {
 
     public static boolean IC2Loaded = false;
 
+    public static boolean WrenchModeSupport = false;
+
     private ModCompatibility() {
     }
 

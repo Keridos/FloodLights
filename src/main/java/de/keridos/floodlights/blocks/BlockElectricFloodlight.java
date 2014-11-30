@@ -13,8 +13,6 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import java.util.logging.Logger;
-
 import static de.keridos.floodlights.util.GeneralUtil.getMinecraftItem;
 
 /**
@@ -68,7 +66,6 @@ public class BlockElectricFloodlight extends BlockFL implements ITileEntityProvi
             boolean b = ((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).getInverted();
             player.addChatMessage(new ChatComponentText("Light now: " + (b ? "inverted" : "not inverted")));
         } else if (player.getHeldItem() != null && !world.isRemote) {
-            Logger.getGlobal().info("poke, found item");
             if (player.getHeldItem().getItem() == getMinecraftItem("stick")) {
                 ((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).changeMode(player);
             }

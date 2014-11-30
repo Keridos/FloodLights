@@ -69,6 +69,19 @@ public class WorldHandler {
     private void narrowConeSource(int sourceX, int sourceY, int sourceZ, ForgeDirection direction, boolean remove) {
         for (int j = 0; j <= 8; j++) {
             for (int i = 1; i <= configHandler.rangeConeFloodlight; i++) {
+                // for 1st light:
+                if (i == 1) {
+                    LightBlockHandle handler = getFloodlightHandler(sourceX + direction.offsetX, sourceY + direction.offsetY, sourceZ + direction.offsetZ);
+                    if (world.getBlock(sourceX + direction.offsetX, sourceY + direction.offsetY, sourceZ + direction.offsetZ).isAir(world, sourceX + direction.offsetX, sourceY + direction.offsetY, sourceZ + direction.offsetZ)) {
+                        if (remove) {
+                            lightBlocks.get(lightBlocks.indexOf(handler)).removeSource(sourceX, sourceY, sourceZ);
+                        } else {
+                            lightBlocks.get(lightBlocks.indexOf(handler)).addSource(sourceX, sourceY, sourceZ);
+                        }
+                    } else if (world.getBlock(sourceX + direction.offsetX, sourceY + direction.offsetY, sourceZ + direction.offsetZ).isOpaqueCube() && !remove) {
+                        return;
+                    }
+                }
                 int a = 2 * i;
                 int b = 0;
                 int c = 0;
