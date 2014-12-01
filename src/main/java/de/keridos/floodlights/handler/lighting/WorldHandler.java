@@ -54,13 +54,11 @@ public class WorldHandler {
             int y = sourceY + direction.offsetY * i;
             int z = sourceZ + direction.offsetZ * i;
             LightBlockHandle handler = getFloodlightHandler(x, y, z);
-            if (world.getBlock(x, y, z).isAir(world, x, y, z)) {
-                if (remove) {
-                    lightBlocks.get(lightBlocks.indexOf(handler)).removeSource(sourceX, sourceY, sourceZ);
-                } else {
-                    lightBlocks.get(lightBlocks.indexOf(handler)).addSource(sourceX, sourceY, sourceZ);
-                }
-            } else if (world.getBlock(x, y, z).isOpaqueCube() && !remove) {
+            if (remove) {
+                lightBlocks.get(lightBlocks.indexOf(handler)).removeSource(sourceX, sourceY, sourceZ);
+            } else if (world.getBlock(x, y, z).isAir(world, x, y, z)) {
+                lightBlocks.get(lightBlocks.indexOf(handler)).addSource(sourceX, sourceY, sourceZ);
+            } else if (world.getBlock(x, y, z).isOpaqueCube()) {
                 break;
             }
         }
@@ -74,13 +72,11 @@ public class WorldHandler {
                     // for 1st light:
                     if (i == 1) {
                         LightBlockHandle handler = getFloodlightHandler(sourceX + direction.offsetX, sourceY + direction.offsetY, sourceZ + direction.offsetZ);
-                        if (world.getBlock(sourceX + direction.offsetX, sourceY + direction.offsetY, sourceZ + direction.offsetZ).isAir(world, sourceX + direction.offsetX, sourceY + direction.offsetY, sourceZ + direction.offsetZ)) {
-                            if (remove) {
-                                lightBlocks.get(lightBlocks.indexOf(handler)).removeSource(sourceX, sourceY, sourceZ);
-                            } else {
-                                lightBlocks.get(lightBlocks.indexOf(handler)).addSource(sourceX, sourceY, sourceZ);
-                            }
-                        } else if (world.getBlock(sourceX + direction.offsetX, sourceY + direction.offsetY, sourceZ + direction.offsetZ).isOpaqueCube() && !remove) {
+                        if (remove) {
+                            lightBlocks.get(lightBlocks.indexOf(handler)).removeSource(sourceX, sourceY, sourceZ);
+                        } else if (world.getBlock(sourceX + direction.offsetX, sourceY + direction.offsetY, sourceZ + direction.offsetZ).isAir(world, sourceX + direction.offsetX, sourceY + direction.offsetY, sourceZ + direction.offsetZ)) {
+                            lightBlocks.get(lightBlocks.indexOf(handler)).addSource(sourceX, sourceY, sourceZ);
+                        } else if (world.getBlock(sourceX + direction.offsetX, sourceY + direction.offsetY, sourceZ + direction.offsetZ).isOpaqueCube()) {
                             return;
                         }
                     }
@@ -122,13 +118,11 @@ public class WorldHandler {
                     int y = sourceY + rotatedCoords[1];
                     int z = sourceZ + rotatedCoords[2];
                     LightBlockHandle handler = getFloodlightHandler(x, y, z);
-                    if (world.getBlock(x, y, z).isAir(world, x, y, z)) {
-                        if (remove) {
-                            lightBlocks.get(lightBlocks.indexOf(handler)).removeSource(sourceX, sourceY, sourceZ);
-                        } else {
-                            lightBlocks.get(lightBlocks.indexOf(handler)).addSource(sourceX, sourceY, sourceZ);
-                        }
-                    } else if (world.getBlock(x, y, z).isOpaqueCube() && !remove) {
+                    if (remove) {
+                        lightBlocks.get(lightBlocks.indexOf(handler)).removeSource(sourceX, sourceY, sourceZ);
+                    } else if (world.getBlock(x, y, z).isAir(world, x, y, z)) {
+                        lightBlocks.get(lightBlocks.indexOf(handler)).addSource(sourceX, sourceY, sourceZ);
+                    } else if (world.getBlock(x, y, z).isOpaqueCube()) {
                         if (i < configHandler.rangeConeFloodlight / 4) {   //This is for canceling the long rangs beams
                             failedBeams[j] = true;
                         }
@@ -175,13 +169,11 @@ public class WorldHandler {
                     int y = sourceY + rotatedCoords[1];
                     int z = sourceZ + rotatedCoords[2];
                     LightBlockHandle handler = getFloodlightHandler(x, y, z);
-                    if (world.getBlock(x, y, z).isAir(world, x, y, z)) {
-                        if (remove) {
-                            lightBlocks.get(lightBlocks.indexOf(handler)).removeSource(sourceX, sourceY, sourceZ);
-                        } else {
-                            lightBlocks.get(lightBlocks.indexOf(handler)).addSource(sourceX, sourceY, sourceZ);
-                        }
-                    } else if (world.getBlock(x, y, z).isOpaqueCube() && !remove) {
+                    if (remove) {
+                        lightBlocks.get(lightBlocks.indexOf(handler)).removeSource(sourceX, sourceY, sourceZ);
+                    } else if (world.getBlock(x, y, z).isAir(world, x, y, z)) {
+                        lightBlocks.get(lightBlocks.indexOf(handler)).addSource(sourceX, sourceY, sourceZ);
+                    } else if (world.getBlock(x, y, z).isOpaqueCube()) {
                         break;
                     }
                 }
@@ -231,13 +223,11 @@ public class WorldHandler {
                 int y = sourceY + rotatedCoords[1];
                 int z = sourceZ + rotatedCoords[2];
                 LightBlockHandle handler = getFloodlightHandler(x, y, z);
-                if (world.getBlock(x, y, z).isAir(world, x, y, z)) {
-                    if (remove) {
-                        lightBlocks.get(lightBlocks.indexOf(handler)).removeSource(sourceX, sourceY, sourceZ);
-                    } else {
-                        lightBlocks.get(lightBlocks.indexOf(handler)).addSource(sourceX, sourceY, sourceZ);
-                    }
-                } else if (world.getBlock(x, y, z).isOpaqueCube() && !remove) {
+                if (remove) {
+                    lightBlocks.get(lightBlocks.indexOf(handler)).removeSource(sourceX, sourceY, sourceZ);
+                } else if (world.getBlock(x, y, z).isAir(world, x, y, z)) {
+                    lightBlocks.get(lightBlocks.indexOf(handler)).addSource(sourceX, sourceY, sourceZ);
+                } else if (world.getBlock(x, y, z).isOpaqueCube()) {
                     break;
                 }
             }
