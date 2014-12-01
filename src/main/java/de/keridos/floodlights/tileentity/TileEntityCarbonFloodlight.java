@@ -236,10 +236,10 @@ public class TileEntityCarbonFloodlight extends TileEntityFL implements ISidedIn
             ForgeDirection direction = this.getOrientation();
             lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
             mode = (mode == 2 ? 0 : mode + 1);
-            if (mode != 0) {
-                timeRemaining /= 2;
-            } else {
-                timeRemaining *= 2;
+            if (mode == 1) {
+                timeRemaining /= 4;
+            } else if (mode == 0) {
+                timeRemaining *= 4;
             }
             if (((active ^ inverted) && timeRemaining > 0)) {
                 lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);

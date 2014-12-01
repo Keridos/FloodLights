@@ -211,7 +211,7 @@ public class TileEntityElectricFloodlight extends TileEntityFL implements IEnerg
         World world = this.getWorldObj();
         if (!world.isRemote) {
             ForgeDirection direction = this.getOrientation();
-            int realEnergyUsage = configHandler.energyUsage / (mode == 0 ? 1 : 2);
+            int realEnergyUsage = configHandler.energyUsage / (mode == 0 ? 1 : 4);
             lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
             mode = (mode == 2 ? 0 : mode + 1);
             if ((active ^ inverted) && (storage.getEnergyStored() >= realEnergyUsage || storageEU >= realEnergyUsage * 4)) {
