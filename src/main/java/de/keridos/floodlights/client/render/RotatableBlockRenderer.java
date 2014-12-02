@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
+import org.lwjgl.opengl.GL11;
 
 /**
  * Created by Keridos on 04.10.14.
@@ -20,7 +21,9 @@ public class RotatableBlockRenderer implements ISimpleBlockRenderingHandler {
 
     @Override
     public void renderInventoryBlock(Block block, int metadata, int modelID, RenderBlocks renderer) {
+        GL11.glPushMatrix();
         Tessellator t = Tessellator.instance;
+        GL11.glTranslated(-0.5, -0.5, -0.5);
         t.startDrawingQuads();
         t.setNormal(-1, 0, 0);
         renderer.renderFaceXNeg(block, 0, 0, 0, renderer.getBlockIconFromSideAndMetadata(block, ForgeDirection.WEST.ordinal(), 1));
@@ -45,6 +48,7 @@ public class RotatableBlockRenderer implements ISimpleBlockRenderingHandler {
         t.setNormal(0, 1, 0);
         renderer.renderFaceYPos(block, 0, 0, 0, renderer.getBlockIconFromSideAndMetadata(block, ForgeDirection.UP.ordinal(), 1));
         t.draw();
+        GL11.glPopMatrix();
     }
 
     @Override

@@ -72,8 +72,8 @@ public class FloodLights {
         registerEventListeners();
         PacketHandler.init();
         recipeHandler.initRecipes();
+        modCompatibility.checkForMods();
         proxy.initRenderers();
         Gui = GuiHandler.getInstance();
-        modCompatibility.checkForMods();
     }
 }
