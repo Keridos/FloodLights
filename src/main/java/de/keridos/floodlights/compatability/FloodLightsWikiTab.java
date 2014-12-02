@@ -6,8 +6,6 @@ import igwmod.gui.tabs.BaseWikiTab;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 
-import java.util.logging.Logger;
-
 /**
  * Created by Keridos on 02/12/2014.
  * This Class
@@ -39,7 +37,6 @@ public class FloodLightsWikiTab extends BaseWikiTab {
 
     @Override
     protected String getPageLocation(String pageEntry) {
-        Logger.getGlobal().info(I18n.format(pageEntry.replace("/floodlights:", "/")));
         if (pageEntry.startsWith("item") || pageEntry.startsWith("block"))
             return I18n.format(pageEntry.replace("/floodlights:", "/"));
         return "menu/" + pageEntry;
