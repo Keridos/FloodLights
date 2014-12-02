@@ -9,7 +9,7 @@ import cpw.mods.fml.common.Loader;
 public class ModCompatibility {
     private static ModCompatibility instance = null;
 
-    private static IGWHandler igwHandler = null;
+    public IGWHandler igwHandler = null;
 
     public static boolean IC2Loaded = false;
     public static boolean IGWModLoaded = false;
@@ -30,9 +30,6 @@ public class ModCompatibility {
         IC2Loaded = Loader.isModLoaded("IC2");
         IGWModLoaded = Loader.isModLoaded("IGWMod");
         new IGWSupportNotifier();
-        if (IGWModLoaded) {
-            igwHandler = IGWHandler.getInstance();
-        }
     }
 
 }

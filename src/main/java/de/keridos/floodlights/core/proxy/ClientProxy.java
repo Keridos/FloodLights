@@ -1,8 +1,9 @@
 package de.keridos.floodlights.core.proxy;
 
 import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.common.event.FMLInterModComms;
 import de.keridos.floodlights.client.render.RotatableBlockRenderer;
+import de.keridos.floodlights.compatability.IGWHandler;
+import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.reference.RenderIDs;
 
 /**
@@ -23,6 +24,8 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void initHandlers() {
-        FMLInterModComms.sendMessage("IGWMod", "de.keridos.floodlights.compatability.IGWHandler", "init");
+        if (ModCompatibility.IGWModLoaded) {
+            ModCompatibility.getInstance().igwHandler = IGWHandler.getInstance();
+        }
     }
 }
