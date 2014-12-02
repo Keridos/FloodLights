@@ -1,3 +1,3 @@
-The electric floodlight is the coal powered version of the floodlight.
-Toggle invert state via shift rightclicking with an empty hand. Right click with a Stick to change mode.
+The carbon floodlight is the coal powered version of the floodlight.
+Toggle invert state via shift right clicking with an empty hand. Right click with a Stick to change mode.
 It uses 4x as much fuel in Cone modes. 1 Coal gives 5 minutes of fuel, so 1 minute, 15 seconds in cone mode.
