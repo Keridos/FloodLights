@@ -1,6 +1,9 @@
 package de.keridos.floodlights.blocks;
 
+import buildcraft.api.tools.IToolWrench;
+import cofh.api.item.IToolHammer;
 import de.keridos.floodlights.FloodLights;
+import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.handler.lighting.LightHandler;
 import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.reference.RenderIDs;
@@ -68,9 +71,43 @@ public class BlockCarbonFloodlight extends BlockFL implements ITileEntityProvide
             player.addChatMessage(new ChatComponentText("Light now: " + (b ? "inverted" : "not inverted")));
             return true;
         } else if (player.getHeldItem() != null && !world.isRemote) {
-            if (player.getHeldItem().getItem() == getMinecraftItem("stick")) {
+            if (!ModCompatibility.BCLoaded && !ModCompatibility.CofhCoreLoaded && !ModCompatibility.IC2Loaded && player.getHeldItem().getItem() == getMinecraftItem("stick")) {
                 ((TileEntityCarbonFloodlight) world.getTileEntity(x, y, z)).changeMode(player);
-                return true;
+            }
+            if (ModCompatibility.BCLoaded) {
+                if (!player.isSneaking() && player.getHeldItem().getItem() instanceof IToolWrench) {
+                    ((TileEntityCarbonFloodlight) world.getTileEntity(x, y, z)).changeMode(player);
+                    return true;
+                } else if (player.isSneaking() && player.getHeldItem().getItem() instanceof IToolWrench) {
+                    world.func_147480_a(x, y, z, true);
+                    return true;
+                }
+
+            }
+            if (ModCompatibility.CofhCoreLoaded) {
+                if (!player.isSneaking() && player.getHeldItem().getItem() instanceof IToolHammer) {
+                    ((TileEntityCarbonFloodlight) world.getTileEntity(x, y, z)).changeMode(player);
+                    return true;
+                } else if (player.isSneaking() && player.getHeldItem().getItem() instanceof IToolHammer) {
+                    world.func_147480_a(x, y, z, true);
+                    return true;
+                }
+            }
+            if (ModCompatibility.IC2Loaded) {
+                if (!player.isSneaking() && player.getHeldItem().getItem().getUnlocalizedName().equals("ic2.itemToolWrench")) {
+                    ((TileEntityCarbonFloodlight) world.getTileEntity(x, y, z)).changeMode(player);
+                    return true;
+                } else if (player.isSneaking() && player.getHeldItem().getItem().getUnlocalizedName().equals("ic2.itemToolWrench")) {
+                    world.func_147480_a(x, y, z, true);
+                    return true;
+                }
+                if (!player.isSneaking() && player.getHeldItem().getItem().getUnlocalizedName().equals("ic2.itemToolWrenchElectric")) {
+                    ((TileEntityCarbonFloodlight) world.getTileEntity(x, y, z)).changeMode(player);
+                    return true;
+                } else if (player.isSneaking() && player.getHeldItem().getItem().getUnlocalizedName().equals("ic2.itemToolWrenchElectric")) {
+                    world.func_147480_a(x, y, z, true);
+                    return true;
+                }
             }
         }
         if (!world.isRemote) {
