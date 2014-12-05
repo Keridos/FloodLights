@@ -7,6 +7,7 @@ import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.handler.ConfigHandler;
 import de.keridos.floodlights.handler.lighting.LightHandler;
 import de.keridos.floodlights.reference.Names;
+import de.keridos.floodlights.util.MathUtil;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergySink;
@@ -105,10 +106,10 @@ public class TileEntityElectricFloodlight extends TileEntityFL implements IEnerg
     @Override
     public double injectEnergy(ForgeDirection forgeDirection, double v, double v1) {
         if (storage.getMaxEnergyStored() - storage.getEnergyStored() >= MathHelper.truncateDoubleToInt(v * 4)) {
-            storage.modifyEnergyStored(MathHelper.truncateDoubleToInt(v * 4));
+            storage.modifyEnergyStored(MathUtil.truncateDoubleToInt(v * 4));
         } else {
             storageEU += MathHelper.truncateDoubleToInt(v * 4) - (storage.getMaxEnergyStored() - storage.getEnergyStored());
-            storage.modifyEnergyStored(MathHelper.truncateDoubleToInt(v * 4));
+            storage.modifyEnergyStored(MathUtil.truncateDoubleToInt(v * 4));
         }
         return 0;
     }

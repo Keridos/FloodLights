@@ -42,17 +42,6 @@ public class FloodLights {
     private static ModCompatibility modCompatibility = ModCompatibility.getInstance();
     private static GuiHandler Gui = null;
 
-    @Mod.EventHandler
-    public static void postInit(FMLPostInitializationEvent event) {
-
-    }
-
-    public void registerEventListeners() {
-        MinecraftForge.EVENT_BUS.register(EventListener.getInstance());
-        // some events, especially tick, are handled on FML bus
-        FMLCommonHandler.instance().bus().register(FMLEventListener.getInstance());
-    }
-
     @NetworkCheckHandler()
     public boolean matchModVersions(Map<String, String> remoteVersions, Side side) {
         return remoteVersions.containsKey("FloodLights") && Reference.VERSION.equals(remoteVersions.get("FloodLights"));
@@ -77,5 +66,16 @@ public class FloodLights {
         proxy.initSounds();
         proxy.initHandlers();
         Gui = GuiHandler.getInstance();
+    }
+
+    @Mod.EventHandler
+    public static void postInit(FMLPostInitializationEvent event) {
+
+    }
+
+    public void registerEventListeners() {
+        MinecraftForge.EVENT_BUS.register(EventListener.getInstance());
+        // some events, especially tick, are handled on FML bus
+        FMLCommonHandler.instance().bus().register(FMLEventListener.getInstance());
     }
 }

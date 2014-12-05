@@ -45,4 +45,8 @@ public class MathUtil {
         }
         return result;
     }
+
+    public static int truncateDoubleToInt(double x) {
+        return (int) Math.floor(x);
+    }
 }
