@@ -82,7 +82,6 @@ public class BlockCarbonFloodlight extends BlockFL implements ITileEntityProvide
                     world.func_147480_a(x, y, z, true);
                     return true;
                 }
-
             }
             if (ModCompatibility.CofhCoreLoaded) {
                 if (!player.isSneaking() && player.getHeldItem().getItem() instanceof IToolHammer) {

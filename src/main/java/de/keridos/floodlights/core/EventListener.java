@@ -31,5 +31,4 @@ public class EventListener {
     public void onWorldLoad(WorldEvent.Load event) {
         LightHandler.getInstance();
     }
-
 }

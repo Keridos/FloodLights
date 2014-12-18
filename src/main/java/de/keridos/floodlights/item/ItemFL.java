@@ -40,7 +40,6 @@ public class ItemFL extends Item {
     @SideOnly(Side.CLIENT)
     public IIcon getIcon(ItemStack itemStack, int renderPass) {
         return itemIcon;
-
     }
 
     protected String getUnwrappedUnlocalizedName(String unlocalizedName) {

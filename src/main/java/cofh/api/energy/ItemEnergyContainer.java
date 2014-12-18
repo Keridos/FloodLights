@@ -105,5 +105,4 @@ public class ItemEnergyContainer extends Item implements IEnergyContainerItem {
 
         return capacity;
     }
-
 }

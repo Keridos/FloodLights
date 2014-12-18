@@ -64,7 +64,6 @@ public class TileEntityCarbonFloodlight extends TileEntityFL implements ISidedIn
         if (slot >= 0 && slot < getSizeInventory()) {
             setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(item));
         }
-
     }
 
     @Override
@@ -123,7 +122,6 @@ public class TileEntityCarbonFloodlight extends TileEntityFL implements ISidedIn
     public ItemStack getStackInSlot(int i) {
         worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
         return inventory[i];
-
     }
 
     @Override

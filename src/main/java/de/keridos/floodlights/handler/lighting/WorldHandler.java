@@ -178,7 +178,6 @@ public class WorldHandler {
                     }
                 }
             }
-
         }
     }
 
@@ -285,9 +284,7 @@ public class WorldHandler {
                     }
                 }
             }
-
         }
-
     }
 
     public void addSource(int sourceX, int sourceY, int sourceZ, ForgeDirection direction, int sourcetype) {
@@ -334,5 +331,4 @@ public class WorldHandler {
             }
         }
     }
-
 }

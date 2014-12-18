@@ -27,7 +27,6 @@ public class DiskIO {
             FileOutputStream saveFile = new FileOutputStream(fullpath.toFile());
             ObjectOutputStream save = new ObjectOutputStream(saveFile);
             save.writeObject(input);
-
         } catch (Exception e) {
 
         }

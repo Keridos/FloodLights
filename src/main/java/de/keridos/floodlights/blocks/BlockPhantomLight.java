@@ -75,5 +75,4 @@ public class BlockPhantomLight extends BlockFL {
     public int getLightValue() {
         return 15;
     }
-
 }

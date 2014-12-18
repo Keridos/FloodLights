@@ -26,7 +26,6 @@ public class ModBlocks {
         blockElectricLight = new BlockElectricFloodlight(Material.rock);
         blockCarbonLight = new BlockCarbonFloodlight(Material.rock);
         blockFLLight = new BlockPhantomLight();
-
     }
 
     public static void registerBlocks() {
@@ -39,5 +38,4 @@ public class ModBlocks {
         GameRegistry.registerTileEntity(TileEntityElectricFloodlight.class, Reference.MOD_ID.toLowerCase() + ":" + Names.Blocks.ELECTRIC_FLOODLIGHT);
         GameRegistry.registerTileEntity(TileEntityCarbonFloodlight.class, Reference.MOD_ID.toLowerCase() + ":" + Names.Blocks.CARBON_FLOODLIGHT);
     }
-
 }

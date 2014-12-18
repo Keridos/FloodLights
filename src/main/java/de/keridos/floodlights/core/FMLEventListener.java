@@ -37,7 +37,6 @@ public class FMLEventListener {
     @SubscribeEvent
     public void onServerTick(TickEvent.ServerTickEvent event) {
         lightHandler.updateLights();
-
     }
 
     //Called when a new frame is displayed (See fps)
@@ -51,5 +50,4 @@ public class FMLEventListener {
     public void onWorldTick(TickEvent.WorldTickEvent event) {
 
     }
-
 }
