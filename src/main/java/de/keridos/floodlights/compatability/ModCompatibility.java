@@ -33,8 +33,5 @@ public class ModCompatibility {
         BCLoaded = ModAPIManager.INSTANCE.hasAPI("BuildCraftAPI|tools");
         CofhCoreLoaded = ModAPIManager.INSTANCE.hasAPI("CoFHAPI|item");
         new IGWSupportNotifier();
-        if (IGWModLoaded) {
-            igwHandler = IGWHandler.getInstance();
-        }
     }
 }
