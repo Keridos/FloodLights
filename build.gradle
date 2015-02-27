@@ -86,3 +86,10 @@ repositories {
 dependencies {
     compile "igwmod:IGW-Mod-1.7.10:1.1.1-17:userdev"
 }
+
+// this fixes dev environments for IDEA 14 users.
+sourceSets {
+    main {
+        output.resourcesDir = output.classesDir
+    }
+}

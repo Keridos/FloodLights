@@ -38,7 +38,7 @@ public class FloodLightsWikiTab extends BaseWikiTab {
     @Override
     protected String getPageLocation(String pageEntry) {
         if (pageEntry.startsWith("item") || pageEntry.startsWith("block"))
-            return I18n.format(pageEntry.replace("/floodlights:", "/"));
+            return pageEntry.replace("/floodlights:", "/");
         return "menu/" + pageEntry;
     }
 }
