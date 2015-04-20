@@ -28,7 +28,7 @@ import java.util.Random;
  */
 @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink", modid = "IC2")
 public class TileEntityElectricFloodlight extends TileEntityFL implements IEnergyHandler, IEnergySink {
-    private boolean inverted = false;
+
     private boolean active = false;
     private boolean wasActive = false;
     private boolean wasAddedToEnergyNet = false;
@@ -39,6 +39,7 @@ public class TileEntityElectricFloodlight extends TileEntityFL implements IEnerg
     private ConfigHandler configHandler = ConfigHandler.getInstance();
 
     public TileEntityElectricFloodlight() {
+        super();
         Random rand = new Random();
         timeout = rand.nextInt((500 - 360) + 1) + 360;
     }
@@ -47,9 +48,6 @@ public class TileEntityElectricFloodlight extends TileEntityFL implements IEnerg
     public void readFromNBT(NBTTagCompound nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
         storage.readFromNBT(nbtTagCompound);
-        if (nbtTagCompound.hasKey(Names.NBT.INVERT)) {
-            this.inverted = nbtTagCompound.getBoolean(Names.NBT.INVERT);
-        }
         if (nbtTagCompound.hasKey(Names.NBT.WAS_ACTIVE)) {
             this.wasActive = nbtTagCompound.getBoolean(Names.NBT.WAS_ACTIVE);
         }
@@ -71,7 +69,6 @@ public class TileEntityElectricFloodlight extends TileEntityFL implements IEnerg
     public void writeToNBT(NBTTagCompound nbtTagCompound) {
         super.writeToNBT(nbtTagCompound);
         storage.writeToNBT(nbtTagCompound);
-        nbtTagCompound.setBoolean(Names.NBT.INVERT, inverted);
         nbtTagCompound.setBoolean(Names.NBT.WAS_ACTIVE, wasActive);
         nbtTagCompound.setInteger(Names.NBT.TIMEOUT, timeout);
         nbtTagCompound.setInteger(Names.NBT.STORAGE_EU, storageEU);

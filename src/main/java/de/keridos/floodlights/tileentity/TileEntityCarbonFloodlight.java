@@ -4,7 +4,6 @@ import de.keridos.floodlights.handler.ConfigHandler;
 import de.keridos.floodlights.handler.lighting.LightHandler;
 import de.keridos.floodlights.reference.Names;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -15,12 +14,13 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.Random;
 
+import static de.keridos.floodlights.util.GeneralUtil.getBurnTime;
+
 /**
  * Created by Keridos on 09/10/2014.
  * This Class describes the carbon floodlight TileEntity.
  */
 public class TileEntityCarbonFloodlight extends TileEntityFL implements ISidedInventory {
-    private boolean inverted = false;
     private boolean active = false;
     private boolean wasActive = false;
     private int timeout;
@@ -30,6 +30,7 @@ public class TileEntityCarbonFloodlight extends TileEntityFL implements ISidedIn
     private ItemStack[] inventory;
 
     public TileEntityCarbonFloodlight() {
+        super();
         Random rand = new Random();
         timeout = rand.nextInt((500 - 360) + 1) + 360;
         inventory = new ItemStack[1];
@@ -39,9 +40,6 @@ public class TileEntityCarbonFloodlight extends TileEntityFL implements ISidedIn
     @Override
     public void readFromNBT(NBTTagCompound nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
-        if (nbtTagCompound.hasKey(Names.NBT.INVERT)) {
-            this.inverted = nbtTagCompound.getBoolean(Names.NBT.INVERT);
-        }
         if (nbtTagCompound.hasKey(Names.NBT.WAS_ACTIVE)) {
             this.wasActive = nbtTagCompound.getBoolean(Names.NBT.WAS_ACTIVE);
         }
@@ -69,7 +67,6 @@ public class TileEntityCarbonFloodlight extends TileEntityFL implements ISidedIn
     @Override
     public void writeToNBT(NBTTagCompound nbtTagCompound) {
         super.writeToNBT(nbtTagCompound);
-        nbtTagCompound.setBoolean(Names.NBT.INVERT, inverted);
         nbtTagCompound.setBoolean(Names.NBT.WAS_ACTIVE, wasActive);
         nbtTagCompound.setInteger(Names.NBT.TIMEOUT, timeout);
         nbtTagCompound.setInteger(Names.NBT.TIME_REMAINING, timeRemaining);
@@ -102,7 +99,7 @@ public class TileEntityCarbonFloodlight extends TileEntityFL implements ISidedIn
 
     @Override
     public boolean canInsertItem(int i, ItemStack itemstack, int j) {
-        if (i == 0) {
+        if (i == 0 && getBurnTime(itemstack) > 0) {
             return true;
         }
         return false;
@@ -177,7 +174,7 @@ public class TileEntityCarbonFloodlight extends TileEntityFL implements ISidedIn
 
     @Override
     public boolean isItemValidForSlot(int i, ItemStack itemstack) {
-        if (itemstack.getItem() == Items.coal) {
+        if (getBurnTime(itemstack) > 0) {
             return true;
         }
         return false;
@@ -189,8 +186,8 @@ public class TileEntityCarbonFloodlight extends TileEntityFL implements ISidedIn
         if (!world.isRemote) {
             ForgeDirection direction = this.getOrientation();
             if (timeRemaining == 0 && inventory[0] != null) {
+                timeRemaining = configHandler.carbonTime * getBurnTime(inventory[0]) / 1600 * (mode == 0 ? 20 : 10);
                 decrStackSize(0, 1);
-                timeRemaining = configHandler.carbonTime * (mode == 0 ? 20 : 10);
             }
             if (((active ^ inverted) && timeRemaining > 0)) {
                 if (!wasActive || world.getTotalWorldTime() % timeout == 0) {

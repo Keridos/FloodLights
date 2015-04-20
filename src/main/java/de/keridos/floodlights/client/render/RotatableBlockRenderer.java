@@ -93,7 +93,7 @@ public class RotatableBlockRenderer implements ISimpleBlockRenderingHandler {
         renderer.uvRotateNorth = 0;
         renderer.uvRotateTop = 0;
         renderer.uvRotateBottom = 0;
-        return false;
+        return true;
     }
 
     @Override

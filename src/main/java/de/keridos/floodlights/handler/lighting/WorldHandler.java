@@ -336,4 +336,23 @@ public class WorldHandler {
             }
         }
     }
+
+    public void removeAllLights() {
+        World activeworld = DimensionManager.getWorld(world.provider.dimensionId);
+        if (activeworld != null) {
+            for (int i = 0; i <= lightBlocks.size(); i++) {
+                LightBlockHandle f = (lightBlocks.get(i));
+                int x = f.getCoords()[0];
+                int y = f.getCoords()[1];
+                int z = f.getCoords()[2];
+                if (activeworld.getBlock(x, y, z) != null) {
+                    if (activeworld.getBlock(x, y, z).getUnlocalizedName().contains("blockLight")) {
+                        activeworld.setBlockToAir(x, y, z);
+                        lightBlocks.remove(i);
+                        i--;
+                    }
+                }
+            }
+        }
+    }
 }

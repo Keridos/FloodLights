@@ -86,4 +86,12 @@ public class LightHandler {
             }
         }
     }
+
+    public void removeAllLights() {
+        if (worlds != null) {
+            for (Object world : worlds) {
+                ((WorldHandler) world).removeAllLights();
+            }
+        }
+    }
 }

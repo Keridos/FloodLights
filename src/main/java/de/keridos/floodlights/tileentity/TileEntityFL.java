@@ -18,6 +18,7 @@ public class TileEntityFL extends TileEntity {
     protected String customName;
     protected String owner;
     protected int mode = 0;
+    protected boolean inverted = false;
 
     public TileEntityFL() {
         orientation = ForgeDirection.SOUTH;
@@ -76,6 +77,9 @@ public class TileEntityFL extends TileEntity {
         if (nbtTagCompound.hasKey(Names.NBT.DIRECTION)) {
             this.orientation = ForgeDirection.getOrientation(nbtTagCompound.getByte(Names.NBT.DIRECTION));
         }
+        if (nbtTagCompound.hasKey(Names.NBT.INVERT)) {
+            this.inverted = nbtTagCompound.getBoolean(Names.NBT.INVERT);
+        }
         if (nbtTagCompound.hasKey(Names.NBT.STATE)) {
             this.state = nbtTagCompound.getByte(Names.NBT.STATE);
         }
@@ -94,6 +98,7 @@ public class TileEntityFL extends TileEntity {
     public void writeToNBT(NBTTagCompound nbtTagCompound) {
         super.writeToNBT(nbtTagCompound);
         nbtTagCompound.setByte(Names.NBT.DIRECTION, (byte) orientation.ordinal());
+        nbtTagCompound.setBoolean(Names.NBT.INVERT, inverted);
         nbtTagCompound.setByte(Names.NBT.STATE, state);
         nbtTagCompound.setInteger(Names.NBT.MODE, mode);
         if (this.hasCustomName()) {
@@ -110,6 +115,10 @@ public class TileEntityFL extends TileEntity {
 
     public boolean hasOwner() {
         return owner != null && owner.length() > 0;
+    }
+
+    public boolean getInverted() {
+        return this.inverted;
     }
 
     @Override

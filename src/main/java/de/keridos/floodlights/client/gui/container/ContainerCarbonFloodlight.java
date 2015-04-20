@@ -1,5 +1,6 @@
 package de.keridos.floodlights.client.gui.container;
 
+import de.keridos.floodlights.client.gui.slot.FuelSlot;
 import de.keridos.floodlights.tileentity.TileEntityCarbonFloodlight;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -25,7 +26,7 @@ public class ContainerCarbonFloodlight extends Container {
             this.addSlotToContainer(new Slot(invPlayer, x, 8 + x * 18, 116));
         }
 
-        this.addSlotToContainer(new Slot(entity, 0, 26, 22));
+        this.addSlotToContainer(new FuelSlot(entity, 0, 26, 22));
     }
 
     @Override
