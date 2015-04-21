@@ -40,7 +40,6 @@ public class ModCompatibility {
         BCLoaded = ModAPIManager.INSTANCE.hasAPI("BuildCraftAPI|tools");
         CofhCoreLoaded = ModAPIManager.INSTANCE.hasAPI("CoFHAPI|item");
         NEILoaded = Loader.isModLoaded("NotEnoughItems");
-
     }
 
     private void hideNEIItems() {
@@ -61,5 +60,6 @@ public class ModCompatibility {
         new IGWSupportNotifier();
         hideNEIItems();
         addVersionCheckerInfo();
+        FMLInterModComms.sendMessage("Waila", "register", "de.keridos.floodlights.compatability.WailaTileHandler.callbackRegister");
     }
 }
