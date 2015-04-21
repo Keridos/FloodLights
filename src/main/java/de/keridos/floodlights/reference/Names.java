@@ -22,8 +22,8 @@ public class Names {
 
     public static final class Localizations {
         public static final String NONELECTRIC_GUI_TEXT = "gui.floodlights:nonElectricFloodlightTimeRemaining";
-        public static final String WAILA_MODE = "gui.floodlights:mode";
-        public static final String WAILA_INVERT = "gui.floodlights:invert";
+        public static final String MODE = "gui.floodlights:mode";
+        public static final String INVERT = "gui.floodlights:invert";
         public static final String TRUE = "gui.floodlights:true";
         public static final String FALSE = "gui.floodlights:false";
         public static final String STRAIGHT = "gui.floodlights:straight";

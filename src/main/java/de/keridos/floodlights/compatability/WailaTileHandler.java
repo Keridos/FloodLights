@@ -84,8 +84,8 @@ public class WailaTileHandler implements IWailaDataProvider {
         String inverted = (invert ? Names.Localizations.TRUE : Names.Localizations.FALSE);
         String modeString = (mode == 0 ? Names.Localizations.STRAIGHT : mode == 1 ? Names.Localizations.NARROW_CONE : Names.Localizations.WIDE_CONE);
 
-        currenttip.add(safeLocalize(Names.Localizations.WAILA_INVERT) + ": " + safeLocalize(inverted));
-        currenttip.add(safeLocalize(Names.Localizations.WAILA_MODE) + ": " + safeLocalize(modeString));
+        currenttip.add(safeLocalize(Names.Localizations.INVERT) + ": " + safeLocalize(inverted));
+        currenttip.add(safeLocalize(Names.Localizations.MODE) + ": " + safeLocalize(modeString));
 
         return currenttip;
     }

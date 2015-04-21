@@ -69,7 +69,7 @@ public class BlockCarbonFloodlight extends BlockFL implements ITileEntityProvide
         if (player.getHeldItem() == null && player.isSneaking() && !world.isRemote) {
             ((TileEntityCarbonFloodlight) world.getTileEntity(x, y, z)).toggleInverted();
             String invert = (((TileEntityCarbonFloodlight) world.getTileEntity(x, y, z)).getInverted() ? Names.Localizations.TRUE : Names.Localizations.FALSE);
-            player.addChatMessage(new ChatComponentText(safeLocalize(Names.Localizations.WAILA_INVERT) + ": " + safeLocalize(invert)));
+            player.addChatMessage(new ChatComponentText(safeLocalize(Names.Localizations.INVERT) + ": " + safeLocalize(invert)));
             return true;
         } else if (player.getHeldItem() != null && !world.isRemote) {
             if (!ModCompatibility.WrenchAvailable && player.getHeldItem().getItem() == getMinecraftItem("stick")) {
