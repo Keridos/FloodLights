@@ -1,0 +1,8 @@
+item.floodlights:rawFilament.name=Заготовка нити накаливания
+item.floodlights:glowingFilament.name=Раскалённая нить накаливания
+item.floodlights:electricIncandescentLightBulb.name=Электрическая лампа накаливания
+item.floodlights:carbonDissolver.name=Поглотитель топлива
+item.floodlights:carbonLantern.name=Лампа
+item.floodlights:mantle.name=Свеча
+tile.floodlights:carbonFloodlight.name=Прожектор
+tile.floodlights:electricFloodlight.name=Электрический прожектор
