@@ -3,6 +3,6 @@ item.floodlights:glowingFilament.name=Раскалённая нить накал
 item.floodlights:electricIncandescentLightBulb.name=Электрическая лампа накаливания
 item.floodlights:carbonDissolver.name=Поглотитель топлива
 item.floodlights:carbonLantern.name=Лампа
-item.floodlights:mantle.name=Свеча
+item.floodlights:mantle.name=Фитиль
 tile.floodlights:carbonFloodlight.name=Прожектор
 tile.floodlights:electricFloodlight.name=Электрический прожектор
