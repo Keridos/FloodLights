@@ -20,6 +20,19 @@ public class Names {
         public static final String MANTLE = "mantle";
     }
 
+    public static final class Localizations {
+        public static final String NONELECTRIC_GUI_TEXT = "gui.floodlights:nonElectricFloodlightTimeRemaining";
+        public static final String WAILA_MODE = "gui.floodlights:mode";
+        public static final String WAILA_INVERT = "gui.floodlights:invert";
+        public static final String TRUE = "gui.floodlights:true";
+        public static final String FALSE = "gui.floodlights:false";
+        public static final String STRAIGHT = "gui.floodlights:straight";
+        public static final String NARROW_CONE = "gui.floodlights:narrowCone";
+        public static final String WIDE_CONE = "gui.floodlights:wideCone";
+        public static final String GUI_MINUTES_SHORT = "gui.floodlights:minutesShort";
+        public static final String GUI_SECONDS_SHORT = "gui.floodlights:secondsShort";
+    }
+
     public static final class NBT {
         public static final String ITEMS = "Items";
         public static final String INVERT = "inverted";

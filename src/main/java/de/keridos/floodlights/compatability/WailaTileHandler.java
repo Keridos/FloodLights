@@ -1,6 +1,7 @@
 package de.keridos.floodlights.compatability;
 
 import cpw.mods.fml.common.Optional;
+import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.tileentity.TileEntityFL;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
@@ -13,6 +14,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 import java.util.List;
+
+import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
 
 /**
  * Created by Keridos on 20.04.2015.
@@ -76,11 +79,13 @@ public class WailaTileHandler implements IWailaDataProvider {
     @Override
     @Optional.Method(modid = "Waila")
     public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
-
-        boolean inverted = accessor.getNBTData().getBoolean("inverted");
+        boolean invert = accessor.getNBTData().getBoolean("inverted");
         int mode = accessor.getNBTData().getInteger("teState");
-        currenttip.add("Inverted: " + inverted);
-        currenttip.add("Mode: " + (mode == 0 ? "straight" : mode == 1 ? "narrow cone" : "wide cone"));
+        String inverted = (invert ? Names.Localizations.TRUE : Names.Localizations.FALSE);
+        String modeString = (mode == 0 ? Names.Localizations.STRAIGHT : mode == 1 ? Names.Localizations.NARROW_CONE : Names.Localizations.WIDE_CONE);
+
+        currenttip.add(safeLocalize(Names.Localizations.WAILA_INVERT) + ": " + safeLocalize(inverted));
+        currenttip.add(safeLocalize(Names.Localizations.WAILA_MODE) + ": " + safeLocalize(modeString));
 
         return currenttip;
     }

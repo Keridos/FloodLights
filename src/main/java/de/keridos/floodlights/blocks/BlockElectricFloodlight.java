@@ -17,6 +17,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import static de.keridos.floodlights.util.GeneralUtil.getMinecraftItem;
+import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
 
 /**
  * Created by Keridos on 01.10.14.
@@ -66,35 +67,45 @@ public class BlockElectricFloodlight extends BlockFL implements ITileEntityProvi
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float p_149727_7_, float p_149727_8_, float p_149727_9_) {
         if (player.getHeldItem() == null && !world.isRemote && player.isSneaking()) {
             ((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).toggleInverted();
-            boolean b = ((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).getInverted();
-            player.addChatMessage(new ChatComponentText("Light now: " + (b ? "inverted" : "not inverted")));
+            String invert = (((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).getInverted() ? Names.Localizations.TRUE : Names.Localizations.FALSE);
+            player.addChatMessage(new ChatComponentText(safeLocalize(Names.Localizations.WAILA_INVERT) + ": " + safeLocalize(invert)));
+            return true;
         } else if (player.getHeldItem() != null && !world.isRemote) {
-            if (!ModCompatibility.BCLoaded && !ModCompatibility.CofhCoreLoaded && !ModCompatibility.IC2Loaded && player.getHeldItem().getItem() == getMinecraftItem("stick")) {
+            if (!ModCompatibility.WrenchAvailable && player.getHeldItem().getItem() == getMinecraftItem("stick")) {
                 ((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).changeMode(player);
             }
-            if (ModCompatibility.BCLoaded) {
+            if (ModCompatibility.BCLoaded || ModCompatibility.EnderIOLoaded) {
                 if (!player.isSneaking() && player.getHeldItem().getItem() instanceof IToolWrench) {
                     ((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).changeMode(player);
+                    return true;
                 } else if (player.isSneaking() && player.getHeldItem().getItem() instanceof IToolWrench) {
                     world.func_147480_a(x, y, z, true);
+                    return true;
                 }
             }
             if (ModCompatibility.CofhCoreLoaded) {
                 if (!player.isSneaking() && player.getHeldItem().getItem() instanceof IToolHammer) {
                     ((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).changeMode(player);
+                    return true;
                 } else if (player.isSneaking() && player.getHeldItem().getItem() instanceof IToolHammer) {
                     world.func_147480_a(x, y, z, true);
+                    return true;
                 }
             }
             if (ModCompatibility.IC2Loaded) {
                 if (!player.isSneaking() && player.getHeldItem().getItem().getUnlocalizedName().equals("ic2.itemToolWrench")) {
                     ((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).changeMode(player);
+                    return true;
                 } else if (player.isSneaking() && player.getHeldItem().getItem().getUnlocalizedName().equals("ic2.itemToolWrench")) {
                     world.func_147480_a(x, y, z, true);
-                } else if (!player.isSneaking() && player.getHeldItem().getItem().getUnlocalizedName().equals("ic2.itemToolWrenchElectric")) {
+                    return true;
+                }
+                if (!player.isSneaking() && player.getHeldItem().getItem().getUnlocalizedName().equals("ic2.itemToolWrenchElectric")) {
                     ((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).changeMode(player);
+                    return true;
                 } else if (player.isSneaking() && player.getHeldItem().getItem().getUnlocalizedName().equals("ic2.itemToolWrenchElectric")) {
                     world.func_147480_a(x, y, z, true);
+                    return true;
                 }
             }
         }

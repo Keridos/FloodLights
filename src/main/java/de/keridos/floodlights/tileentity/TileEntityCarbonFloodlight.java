@@ -15,6 +15,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import java.util.Random;
 
 import static de.keridos.floodlights.util.GeneralUtil.getBurnTime;
+import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
 
 /**
  * Created by Keridos on 09/10/2014.
@@ -239,7 +240,8 @@ public class TileEntityCarbonFloodlight extends TileEntityFL implements ISidedIn
             if (((active ^ inverted) && timeRemaining > 0)) {
                 lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
             }
-            player.addChatMessage(new ChatComponentText("Light mode now: " + (mode == 0 ? "Straight" : mode == 1 ? "Cone Narrow" : mode == 2 ? "Cone Wide" : "")));
+            String modeString = (mode == 0 ? Names.Localizations.STRAIGHT : mode == 1 ? Names.Localizations.NARROW_CONE : Names.Localizations.WIDE_CONE);
+            player.addChatMessage(new ChatComponentText(safeLocalize(Names.Localizations.WAILA_MODE) + ": " + safeLocalize(modeString)));
         }
     }
 }

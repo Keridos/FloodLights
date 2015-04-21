@@ -7,6 +7,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.*;
+import net.minecraft.util.StatCollector;
 
 /**
  * Created by Keridos on 28/11/2014.
@@ -18,6 +19,14 @@ public class GeneralUtil {
         Item item;
         item = GameData.getItemRegistry().getRaw("minecraft:" + name);
         return item;
+    }
+
+    public static String safeLocalize(String text) {
+        if (StatCollector.translateToLocal(text) != null) {
+            return StatCollector.translateToLocal(text);
+        } else {
+            return StatCollector.translateToFallback(text);
+        }
     }
 
     public static int getBurnTime(ItemStack itemStack) {

@@ -23,6 +23,9 @@ public class ModCompatibility {
     public static boolean BCLoaded = false;
     public static boolean CofhCoreLoaded = false;
     public static boolean NEILoaded = false;
+    public static boolean EnderIOLoaded = false;
+
+    public static boolean WrenchAvailable = false;
 
     private ModCompatibility() {
     }
@@ -40,6 +43,7 @@ public class ModCompatibility {
         BCLoaded = ModAPIManager.INSTANCE.hasAPI("BuildCraftAPI|tools");
         CofhCoreLoaded = ModAPIManager.INSTANCE.hasAPI("CoFHAPI|item");
         NEILoaded = Loader.isModLoaded("NotEnoughItems");
+        NEILoaded = Loader.isModLoaded("EnderIO");
     }
 
     private void hideNEIItems() {
@@ -61,5 +65,6 @@ public class ModCompatibility {
         hideNEIItems();
         addVersionCheckerInfo();
         FMLInterModComms.sendMessage("Waila", "register", "de.keridos.floodlights.compatability.WailaTileHandler.callbackRegister");
+        WrenchAvailable = (BCLoaded || EnderIOLoaded || IC2Loaded || CofhCoreLoaded);
     }
 }

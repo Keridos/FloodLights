@@ -6,3 +6,15 @@ item.floodlights:carbonLantern.name=Non-electric Lantern
 item.floodlights:mantle.name=Mantle
 tile.floodlights:carbonFloodlight.name=Non-electric Floodlight
 tile.floodlights:electricFloodlight.name=Electric Floodlight
+gui.floodlights:nonElectricFloodlightTimeRemaining=Time remaining
+gui.floodlights:invert=Inverted
+gui.floodlights:mode=Mode
+gui.floodlights:true=true
+gui.floodlights:false=false
+gui.floodlights:straight=straight
+gui.floodlights:narrowCone=narrow cone
+gui.floodlights:wideCone=wide cone
+gui.floodlights:minutesShort=m
+gui.floodlights:secondsShort=s
+
+
