@@ -1,10 +1,15 @@
 package de.keridos.floodlights.util;
 
 import de.keridos.floodlights.handler.lighting.LightHandler;
+import de.keridos.floodlights.reference.Names;
+import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.util.ChatComponentText;
 
 import java.util.List;
+
+import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
 
 /**
  * Created by Keridos on 20.04.2015.
@@ -33,6 +38,7 @@ public class ClearLightCommand implements ICommand {
     public void processCommand(ICommandSender sender, String[] p_71515_2_) {
         if (!sender.getEntityWorld().isRemote) {
             LightHandler.getInstance().removeAllLights();
+            CommandBase.getCommandSenderAsPlayer(sender).addChatMessage(new ChatComponentText(safeLocalize(Names.Localizations.CLEARLIGHTS_COMMAND_TEXT)));
         }
     }
 

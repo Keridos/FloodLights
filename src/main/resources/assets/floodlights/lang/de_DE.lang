@@ -1,6 +1,6 @@
-item.floodlights:rawFilament.name=Rohe Glühwendel
-item.floodlights:glowingFilament.name=Glühwendel
-item.floodlights:electricIncandescentLightBulb.name=Elektrische Glühbirne
+item.floodlights:rawFilament.name=Rohe GlÃ¼hwendel
+item.floodlights:glowingFilament.name=GlÃ¼hwendel
+item.floodlights:electricIncandescentLightBulb.name=Elektrische GlÃ¼hbirne
 item.floodlights:carbonDissolver.name=Treibstoffzersetzer
 item.floodlights:carbonLantern.name=Nicht-elektrische Laterne
 item.floodlights:mantle.name=Docht
@@ -16,3 +16,4 @@ gui.floodlights:narrowCone=enger Kegel
 gui.floodlights:wideCone=weiter Kegel
 gui.floodlights:minutesShort=m
 gui.floodlights:secondsShort=s
+gui.floodlights:clearLightsCommandText=Erfolgreich alle Lichter entfernt, neue sollten in den nÃ¤chsten Minuten spawnen.

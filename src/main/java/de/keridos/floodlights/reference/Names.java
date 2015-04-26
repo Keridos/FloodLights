@@ -31,6 +31,7 @@ public class Names {
         public static final String WIDE_CONE = "gui.floodlights:wideCone";
         public static final String GUI_MINUTES_SHORT = "gui.floodlights:minutesShort";
         public static final String GUI_SECONDS_SHORT = "gui.floodlights:secondsShort";
+        public static final String CLEARLIGHTS_COMMAND_TEXT = "gui.floodlights:clearLightsCommandText";
     }
 
     public static final class NBT {

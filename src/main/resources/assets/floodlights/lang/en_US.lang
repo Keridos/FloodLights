@@ -16,5 +16,6 @@ gui.floodlights:narrowCone=narrow cone
 gui.floodlights:wideCone=wide cone
 gui.floodlights:minutesShort=m
 gui.floodlights:secondsShort=s
+gui.floodlights:clearLightsCommandText=Successfully removed all lights in the tracker. New lights should spawn within the next few minutes.
 
 
