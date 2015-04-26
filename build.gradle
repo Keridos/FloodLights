@@ -37,7 +37,7 @@ group = "${config.group_id}" // http://maven.apache.org/guides/mini/guide-naming
 archivesBaseName = "${config.mod_id}"
 
 minecraft {
-    version = "${config.minecraft_version}-${config.forge_version}"
+    version = "${config.forge_version}"
     if (file('../run').exists()) {
         runDir = "../run"
     } else {
