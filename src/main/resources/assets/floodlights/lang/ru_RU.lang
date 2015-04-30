@@ -16,3 +16,4 @@ gui.floodlights:narrowCone=узкий конус
 gui.floodlights:wideCone=широкий конус
 gui.floodlights:minutesShort=м
 gui.floodlights:secondsShort=с
+gui.floodlights:clearLightsCommandText=Все источники света на карте успешно удалены. Новые источники света появятся в течение нескольких минут.
