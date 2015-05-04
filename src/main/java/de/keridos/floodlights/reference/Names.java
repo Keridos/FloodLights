@@ -7,6 +7,7 @@ package de.keridos.floodlights.reference;
 public class Names {
     public static final class Blocks {
         public static final String ELECTRIC_FLOODLIGHT = "electricFloodlight";
+        public static final String SMALL_ELECTRIC_FLOODLIGHT = "smallElectricFloodlight";
         public static final String CARBON_FLOODLIGHT = "carbonFloodlight";
         public static final String PHANTOM_LIGHT = "blockLight";
     }

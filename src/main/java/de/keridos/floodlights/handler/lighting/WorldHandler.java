@@ -287,6 +287,40 @@ public class WorldHandler {
         }
     }
 
+    private void smallSource(int sourceX, int sourceY, int sourceZ, ForgeDirection direction, boolean remove) {
+        for (int i = 0; i < 5; i++) {
+            int a = 0;
+            int b = 0;
+            int c = 0;
+            if (i == 0) {
+                a = 1;
+                b = c = 0;
+            } else if (i == 1) {
+                a = c = 0;
+                b = 1;
+            } else if (i == 2) {
+                a = c = 0;
+                b = -1;
+            } else if (i == 3) {
+                a = b = 0;
+                c = 1;
+            } else if (i == 4) {
+                a = b = 0;
+                c = -1;
+            }
+            int[] rotatedCoords = rotate(a, b, c, direction);
+            int x = sourceX + rotatedCoords[0];
+            int y = sourceY + rotatedCoords[1];
+            int z = sourceZ + rotatedCoords[2];
+            LightBlockHandle handler = getFloodlightHandler(x, y, z);
+            if (remove) {
+                lightBlocks.get(lightBlocks.indexOf(handler)).removeSource(sourceX, sourceY, sourceZ);
+            } else if (world.getBlock(x, y, z).isAir(world, x, y, z)) {
+                lightBlocks.get(lightBlocks.indexOf(handler)).addSource(sourceX, sourceY, sourceZ);
+            }
+        }
+    }
+
     public void addSource(int sourceX, int sourceY, int sourceZ, ForgeDirection direction, int sourcetype) {
         if (sourcetype == 0) {
             straightSource(sourceX, sourceY, sourceZ, direction, false);
@@ -294,6 +328,8 @@ public class WorldHandler {
             narrowConeSource(sourceX, sourceY, sourceZ, direction, false);
         } else if (sourcetype == 2) {
             wideConeSource(sourceX, sourceY, sourceZ, direction, false);
+        } else if (sourcetype == 3) {
+            smallSource(sourceX, sourceY, sourceZ, direction, false);
         }
     }
 
@@ -304,6 +340,8 @@ public class WorldHandler {
             narrowConeSource(sourceX, sourceY, sourceZ, direction, true);
         } else if (sourcetype == 2) {
             wideConeSource(sourceX, sourceY, sourceZ, direction, true);
+        } else if (sourcetype == 3) {
+            smallSource(sourceX, sourceY, sourceZ, direction, true);
         }
     }
 

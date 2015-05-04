@@ -1,41 +1,39 @@
 package de.keridos.floodlights.tileentity;
 
-import cofh.api.energy.IEnergyHandler;
+import cpw.mods.fml.common.Optional;
 import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.handler.ConfigHandler;
 import de.keridos.floodlights.handler.lighting.LightHandler;
 import de.keridos.floodlights.reference.Names;
-import ic2.api.energy.tile.IEnergySink;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.Random;
 
-import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
-
 /**
- * Created by Keridos on 01.10.14.
- * This Class is the electric floodlight TileEntity.
+ * Created by Keridos on 04.05.2015.
+ * This Class is the tile entity for the small floodlight
  */
 
-public class TileEntityElectricFloodlight extends TileEntityFLElectric implements IEnergyHandler, IEnergySink {
+@Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink", modid = "IC2")
+public class TileEntitySmallFloodlight extends TileEntityFLElectric {
     private boolean wasActive = false;
     private int timeout;
     private LightHandler lightHandler = LightHandler.getInstance();
     private ConfigHandler configHandler = ConfigHandler.getInstance();
 
-    public TileEntityElectricFloodlight() {
+    public TileEntitySmallFloodlight() {
         super();
         Random rand = new Random();
         timeout = rand.nextInt((500 - 360) + 1) + 360;
+        this.mode = 3;
     }
 
     @Override
     public void readFromNBT(NBTTagCompound nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
+        storage.readFromNBT(nbtTagCompound);
         if (nbtTagCompound.hasKey(Names.NBT.WAS_ACTIVE)) {
             this.wasActive = nbtTagCompound.getBoolean(Names.NBT.WAS_ACTIVE);
         }
@@ -48,13 +46,18 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric implement
         if (nbtTagCompound.hasKey(Names.NBT.STATE)) {
             this.setActive(nbtTagCompound.getInteger(Names.NBT.STATE) == 0 ? false : true);
         }
+        if (nbtTagCompound.hasKey(Names.NBT.STORAGE_EU)) {
+            this.storageEU = nbtTagCompound.getInteger(Names.NBT.STORAGE_EU);
+        }
     }
 
     @Override
     public void writeToNBT(NBTTagCompound nbtTagCompound) {
         super.writeToNBT(nbtTagCompound);
+        storage.writeToNBT(nbtTagCompound);
         nbtTagCompound.setBoolean(Names.NBT.WAS_ACTIVE, wasActive);
         nbtTagCompound.setInteger(Names.NBT.TIMEOUT, timeout);
+        nbtTagCompound.setInteger(Names.NBT.STORAGE_EU, storageEU);
     }
 
     @Override
@@ -71,7 +74,7 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric implement
         }
         if (!world.isRemote) {
             ForgeDirection direction = this.getOrientation();
-            int realEnergyUsage = configHandler.energyUsage / (mode == 0 ? 1 : 2);
+            int realEnergyUsage = configHandler.energyUsageSmallFloodlight;
             if ((active ^ inverted) && (storage.getEnergyStored() >= realEnergyUsage || storageEU >= realEnergyUsage * 4)) {
                 if (!wasActive || world.getTotalWorldTime() % timeout == 0) {
                     if (world.getTotalWorldTime() % timeout == 0) {
@@ -99,18 +102,12 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric implement
         }
     }
 
-    public void changeMode(EntityPlayer player) {
-        World world = this.getWorldObj();
-        if (!world.isRemote) {
-            ForgeDirection direction = this.getOrientation();
-            int realEnergyUsage = configHandler.energyUsage / (mode == 0 ? 1 : 4);
-            lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
-            mode = (mode == 2 ? 0 : mode + 1);
-            if ((active ^ inverted) && (storage.getEnergyStored() >= realEnergyUsage || storageEU >= realEnergyUsage * 4)) {
-                lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
-            }
-            String modeString = (mode == 0 ? Names.Localizations.STRAIGHT : mode == 1 ? Names.Localizations.NARROW_CONE : Names.Localizations.WIDE_CONE);
-            player.addChatMessage(new ChatComponentText(safeLocalize(Names.Localizations.MODE) + ": " + safeLocalize(modeString)));
-        }
+    public void setActive(boolean b) {
+        active = b;
+        this.setState((byte) (this.active ? 1 : 0));
+    }
+
+    public void toggleInverted() {
+        inverted = !inverted;
     }
 }
