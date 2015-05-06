@@ -9,15 +9,15 @@ import net.minecraft.entity.Entity;
  * Small Floodlight - Keridos
  * Created using Tabula 5.0.0
  */
-public class ModelSmallFluorescentFloodlight extends ModelBase {
+public class TileEntitySmallFluorescentLightModel extends ModelBase {
     public ModelRenderer shape1;
 
-    public ModelSmallFluorescentFloodlight() {
+    public TileEntitySmallFluorescentLightModel() {
         this.textureWidth = 64;
         this.textureHeight = 32;
         this.shape1 = new ModelRenderer(this, 0, 0);
-        this.shape1.setRotationPoint(0.0F, 0.0F, 0.0F);
-        this.shape1.addBox(-8.0F, 0.0F, -3.0F, 16, 3, 6, 0.0F);
+        this.shape1.setRotationPoint(0.0F, 16.0F, 0.0F);
+        this.shape1.addBox(-8.0F, 5.0F, -3.0F, 16, 3, 6, 0.0F);
     }
 
     @Override

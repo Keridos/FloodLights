@@ -17,8 +17,8 @@ public class TileEntityFL extends TileEntity {
     protected byte state;
     protected String customName;
     protected String owner;
-    protected int mode = 0;
-    protected boolean inverted = false;
+    protected int mode;
+    protected boolean inverted;
 
     public TileEntityFL() {
         orientation = ForgeDirection.SOUTH;

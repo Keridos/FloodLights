@@ -45,9 +45,9 @@ public class BlockElectricFloodlight extends BlockFL implements ITileEntityProvi
     public void onNeighborBlockChange(World world, int x, int y, int z, Block par5) {
         if (!world.isRemote) {
             if (world.isBlockIndirectlyGettingPowered(x, y, z)) {
-                ((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).setActive(true);
+                ((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).setRedstone(true);
             } else if (!world.isBlockIndirectlyGettingPowered(x, y, z)) {
-                ((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).setActive(false);
+                ((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).setRedstone(false);
             }
         }
     }
@@ -56,9 +56,9 @@ public class BlockElectricFloodlight extends BlockFL implements ITileEntityProvi
     public void onBlockAdded(World world, int x, int y, int z) {
         if (!world.isRemote) {
             if (world.isBlockIndirectlyGettingPowered(x, y, z)) {
-                ((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).setActive(true);
+                ((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).setRedstone(true);
             } else if (!world.isBlockIndirectlyGettingPowered(x, y, z)) {
-                ((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).setActive(false);
+                ((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).setRedstone(false);
             }
         }
     }

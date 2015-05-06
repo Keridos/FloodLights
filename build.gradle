@@ -101,6 +101,8 @@ repositories {
 dependencies {
     // I dont have to specify NEI.. because gradle magic. aka: transitive dependency resolution
     compile "mcp.mobius.waila:Waila:1.5.10_1.7.10"
+    compile "codechicken:CodeChickenLib:${config.minecraft_version}-${config.ccl_version}:dev"
+    compile "codechicken:CodeChickenCore:${config.minecraft_version}-${config.ccc_version}:dev"
 }
 
 // this fixes dev environments for IDEA 14 users.

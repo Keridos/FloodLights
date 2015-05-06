@@ -20,9 +20,7 @@ import net.minecraftforge.common.util.ForgeDirection;
  */
 
 @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink", modid = "IC2")
-public class TileEntityFLElectric extends TileEntityFL implements IEnergyHandler, IEnergySink {
-    protected int timeout;
-    protected boolean active = false;
+public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IEnergyHandler, IEnergySink {
     protected boolean wasAddedToEnergyNet = false;
     protected int storageEU;
     protected EnergyStorage storage = new EnergyStorage(50000);
@@ -121,18 +119,5 @@ public class TileEntityFLElectric extends TileEntityFL implements IEnergyHandler
             EnergyTileUnloadEvent event = new EnergyTileUnloadEvent(this);
             MinecraftForge.EVENT_BUS.post(event);
         }
-    }
-
-    public void setActive(boolean b) {
-        active = b;
-        this.setState((byte) (this.active ? 1 : 0));
-    }
-
-    public void toggleInverted() {
-        inverted = !inverted;
-    }
-
-    public boolean getInverted() {
-        return inverted;
     }
 }

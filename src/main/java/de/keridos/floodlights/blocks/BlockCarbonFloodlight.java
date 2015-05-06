@@ -46,9 +46,9 @@ public class BlockCarbonFloodlight extends BlockFL implements ITileEntityProvide
     public void onNeighborBlockChange(World world, int x, int y, int z, Block par5) {
         if (!world.isRemote) {
             if (world.isBlockIndirectlyGettingPowered(x, y, z)) {
-                ((TileEntityCarbonFloodlight) world.getTileEntity(x, y, z)).setActive(true);
+                ((TileEntityCarbonFloodlight) world.getTileEntity(x, y, z)).setRedstone(true);
             } else if (!world.isBlockIndirectlyGettingPowered(x, y, z)) {
-                ((TileEntityCarbonFloodlight) world.getTileEntity(x, y, z)).setActive(false);
+                ((TileEntityCarbonFloodlight) world.getTileEntity(x, y, z)).setRedstone(false);
             }
         }
     }
@@ -57,9 +57,9 @@ public class BlockCarbonFloodlight extends BlockFL implements ITileEntityProvide
     public void onBlockAdded(World world, int x, int y, int z) {
         if (!world.isRemote) {
             if (world.isBlockIndirectlyGettingPowered(x, y, z)) {
-                ((TileEntityCarbonFloodlight) world.getTileEntity(x, y, z)).setActive(true);
+                ((TileEntityCarbonFloodlight) world.getTileEntity(x, y, z)).setRedstone(true);
             } else if (!world.isBlockIndirectlyGettingPowered(x, y, z)) {
-                ((TileEntityCarbonFloodlight) world.getTileEntity(x, y, z)).setActive(false);
+                ((TileEntityCarbonFloodlight) world.getTileEntity(x, y, z)).setRedstone(false);
             }
         }
     }
