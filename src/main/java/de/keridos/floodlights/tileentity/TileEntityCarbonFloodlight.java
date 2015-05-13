@@ -12,8 +12,6 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import java.util.Random;
-
 import static de.keridos.floodlights.util.GeneralUtil.getBurnTime;
 import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
 
@@ -22,7 +20,6 @@ import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
  * This Class describes the carbon floodlight TileEntity.
  */
 public class TileEntityCarbonFloodlight extends TileEntityMetaFloodlight implements ISidedInventory {
-    private boolean wasActive = false;
     public int timeRemaining;
     private LightHandler lightHandler = LightHandler.getInstance();
     private ConfigHandler configHandler = ConfigHandler.getInstance();
@@ -37,22 +34,12 @@ public class TileEntityCarbonFloodlight extends TileEntityMetaFloodlight impleme
     @Override
     public void readFromNBT(NBTTagCompound nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
-        if (nbtTagCompound.hasKey(Names.NBT.WAS_ACTIVE)) {
-            this.wasActive = nbtTagCompound.getBoolean(Names.NBT.WAS_ACTIVE);
-        }
-        if (nbtTagCompound.hasKey(Names.NBT.TIMEOUT)) {
-            this.timeout = nbtTagCompound.getInteger(Names.NBT.TIMEOUT);
-        } else {
-            Random rand = new Random();
-            timeout = rand.nextInt((500 - 360) + 1) + 360;
-        }
         if (nbtTagCompound.hasKey(Names.NBT.TIME_REMAINING)) {
             this.timeRemaining = nbtTagCompound.getInteger(Names.NBT.TIME_REMAINING);
         }
         NBTTagList list = nbtTagCompound.getTagList(Names.NBT.ITEMS, 10);
         NBTTagCompound item = list.getCompoundTagAt(0);
         int slot = item.getByte(Names.NBT.ITEMS);
-
         if (slot >= 0 && slot < getSizeInventory()) {
             setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(item));
         }
@@ -61,8 +48,6 @@ public class TileEntityCarbonFloodlight extends TileEntityMetaFloodlight impleme
     @Override
     public void writeToNBT(NBTTagCompound nbtTagCompound) {
         super.writeToNBT(nbtTagCompound);
-        nbtTagCompound.setBoolean(Names.NBT.WAS_ACTIVE, wasActive);
-        nbtTagCompound.setInteger(Names.NBT.TIMEOUT, timeout);
         nbtTagCompound.setInteger(Names.NBT.TIME_REMAINING, timeRemaining);
         NBTTagList list = new NBTTagList();
         ItemStack itemstack = getStackInSlot(0);

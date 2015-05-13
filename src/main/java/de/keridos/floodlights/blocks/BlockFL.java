@@ -2,6 +2,7 @@ package de.keridos.floodlights.blocks;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import de.keridos.floodlights.client.gui.CreativeTabFloodlight;
 import de.keridos.floodlights.reference.Textures;
 import de.keridos.floodlights.tileentity.TileEntityFL;
 import net.minecraft.block.Block;
@@ -37,6 +38,9 @@ public class BlockFL extends Block {
         setHardness(hardness);
         setBlockName(unlocName);
         this.unlocName = unlocName;
+        if (unlocName != "blockLight") {
+            this.setCreativeTab(CreativeTabFloodlight.FL_TAB);
+        }
     }
 
     @Override

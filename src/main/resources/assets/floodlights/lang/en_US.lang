@@ -1,11 +1,17 @@
+#Items
 item.floodlights:rawFilament.name=Raw Filament
 item.floodlights:glowingFilament.name=Glowing Filament
 item.floodlights:electricIncandescentLightBulb.name=Electric Incandescent Light Bulb
 item.floodlights:carbonDissolver.name=Fuel Dissolver
 item.floodlights:carbonLantern.name=Non-electric Lantern
 item.floodlights:mantle.name=Mantle
+
+#TileEntities
 tile.floodlights:carbonFloodlight.name=Non-electric Floodlight
 tile.floodlights:electricFloodlight.name=Electric Floodlight
+tile.floodlights:smallFluorescentFloodlight.name=Electric Floodlight
+
+#GUI
 gui.floodlights:nonElectricFloodlightTimeRemaining=Time remaining
 gui.floodlights:invert=Inverted
 gui.floodlights:mode=Mode
@@ -17,5 +23,8 @@ gui.floodlights:wideCone=wide cone
 gui.floodlights:minutesShort=m
 gui.floodlights:secondsShort=s
 gui.floodlights:clearLightsCommandText=Successfully removed all lights in the tracker. New lights should spawn within the next few minutes.
+
+# Creative Tabs
+itemGroup.floodlights=Flood Lights
 
 

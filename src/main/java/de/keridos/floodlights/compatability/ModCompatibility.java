@@ -28,7 +28,6 @@ public class ModCompatibility {
     public static boolean CofhCoreLoaded = false;
     public static boolean NEILoaded = false;
     public static boolean EnderIOLoaded = false;
-
     public static boolean WrenchAvailable = false;
 
     private ModCompatibility() {

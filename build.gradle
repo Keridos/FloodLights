@@ -14,7 +14,6 @@ buildscript {
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
     }
 }
-apply plugin: 'scala'
 apply plugin: 'forge'
 
 // define the properties file
@@ -35,7 +34,7 @@ if (hasProperty('appendBuildNumber')) {
 }
 
 group = "${config.group_id}" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "${config.mod_id}-" + "${config.minecraft_version}"
+archivesBaseName = "${config.mod_id}-${config.minecraft_version}"
 
 minecraft {
     version = "${config.forge_version}"
@@ -46,7 +45,6 @@ minecraft {
     }
 
     replace '@VERSION@', project.version
-
 }
 
 processResources {
@@ -92,6 +90,10 @@ repositories {
     maven { // the repo from which to get NEI and stuff
         name 'CB Repo'
         url "http://chickenbones.net/maven/"
+    }
+    maven { // the repo from which to get EnderIO and tterags mods
+        name 'tterag'
+        url "http://maven.tterrag.com/"
     }
 }
 

@@ -25,9 +25,8 @@ import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
  */
 public class BlockElectricFloodlight extends BlockFL implements ITileEntityProvider {
 
-    public BlockElectricFloodlight(Material material) {
+    public BlockElectricFloodlight() {
         super(Names.Blocks.ELECTRIC_FLOODLIGHT, Material.rock, soundTypeMetal, 2.5F);
-        setCreativeTab(CreativeTabs.tabBlock);
         setHarvestLevel("pickaxe", 1);
     }
 

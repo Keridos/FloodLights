@@ -11,6 +11,7 @@ import java.util.Random;
  */
 public class TileEntityMetaFloodlight extends TileEntityFL {
     protected boolean active;
+    protected boolean wasActive = false;
     protected int timeout;
 
     public TileEntityMetaFloodlight() {
@@ -44,11 +45,15 @@ public class TileEntityMetaFloodlight extends TileEntityFL {
         if (nbtTagCompound.hasKey(Names.NBT.STATE)) {
             this.active = (nbtTagCompound.getInteger(Names.NBT.STATE) != 0);
         }
+        if (nbtTagCompound.hasKey(Names.NBT.WAS_ACTIVE)) {
+            this.wasActive = nbtTagCompound.getBoolean(Names.NBT.WAS_ACTIVE);
+        }
     }
 
     @Override
     public void writeToNBT(NBTTagCompound nbtTagCompound) {
         super.writeToNBT(nbtTagCompound);
         nbtTagCompound.setInteger(Names.NBT.TIMEOUT, timeout);
+        nbtTagCompound.setBoolean(Names.NBT.WAS_ACTIVE, wasActive);
     }
 }

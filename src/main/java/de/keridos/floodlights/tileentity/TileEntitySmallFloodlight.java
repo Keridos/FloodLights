@@ -40,6 +40,11 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
     }
 
     @Override
+    public boolean canConnectEnergy(ForgeDirection from) {
+        return (from.getOpposite().ordinal() == orientation.ordinal());
+    }
+
+    @Override
     public boolean canUpdate() {
         return true;
     }

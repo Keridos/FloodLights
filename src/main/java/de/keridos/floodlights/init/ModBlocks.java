@@ -26,10 +26,10 @@ public class ModBlocks {
     private static ConfigHandler configHandler = ConfigHandler.getInstance();
 
     public static void setupBlocks() {
-        blockElectricLight = new BlockElectricFloodlight(Material.rock);
-        blockCarbonLight = new BlockCarbonFloodlight(Material.rock);
+        blockElectricLight = new BlockElectricFloodlight();
+        blockCarbonLight = new BlockCarbonFloodlight();
         blockFLLight = new BlockPhantomLight();
-        blockSmallElectricLight = new BlockSmallElectricFloodlight(Material.rock);
+        blockSmallElectricLight = new BlockSmallElectricFloodlight();
     }
 
     public static void registerBlocks() {

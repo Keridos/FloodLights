@@ -5,12 +5,9 @@ import de.keridos.floodlights.handler.ConfigHandler;
 import de.keridos.floodlights.handler.lighting.LightHandler;
 import de.keridos.floodlights.reference.Names;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-
-import java.util.Random;
 
 import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
 
@@ -20,29 +17,8 @@ import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
  */
 
 public class TileEntityElectricFloodlight extends TileEntityFLElectric {
-    private boolean wasActive = false;
     private LightHandler lightHandler = LightHandler.getInstance();
     private ConfigHandler configHandler = ConfigHandler.getInstance();
-
-    public TileEntityElectricFloodlight() {
-        super();
-        Random rand = new Random();
-        timeout = rand.nextInt((500 - 360) + 1) + 360;
-    }
-
-    @Override
-    public void readFromNBT(NBTTagCompound nbtTagCompound) {
-        super.readFromNBT(nbtTagCompound);
-        if (nbtTagCompound.hasKey(Names.NBT.WAS_ACTIVE)) {
-            this.wasActive = nbtTagCompound.getBoolean(Names.NBT.WAS_ACTIVE);
-        }
-    }
-
-    @Override
-    public void writeToNBT(NBTTagCompound nbtTagCompound) {
-        super.writeToNBT(nbtTagCompound);
-        nbtTagCompound.setBoolean(Names.NBT.WAS_ACTIVE, wasActive);
-    }
 
     @Override
     public boolean canUpdate() {
