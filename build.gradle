@@ -26,6 +26,16 @@ configFile.withReader {
     project.ext.config = new ConfigSlurper().parse prop
 }
 
+// define the properties file
+ext.configFile = file "curseKey.properties"
+
+configFile.withReader {
+    // read config.  it shall from now on be referenced as simply config or as project.config
+    def prop = new Properties()
+    prop.load(it)
+    project.ext.curse = new ConfigSlurper().parse prop
+}
+
 version = "${config.mod_version}"
 if (hasProperty('appendBuildNumber')) {
     version = version + "-" + appendBuildNumber.toString()
@@ -95,6 +105,14 @@ repositories {
         name 'tterag'
         url "http://maven.tterrag.com/"
     }
+    maven {
+        name = "ic2"
+        url = "http://maven.ic2.player.to/"
+    }
+    maven {
+        name = "CurseForge"
+        url = "https://minecraft.curseforge.com/api/${project.curse.api_key}"
+    }
 }
 
 dependencies {
@@ -103,6 +121,9 @@ dependencies {
     compile "mcp.mobius.waila:Waila:${config.waila_version}"
     compile "codechicken:CodeChickenLib:${config.minecraft_version}-${config.ccl_version}:dev"
     compile "codechicken:CodeChickenCore:${config.minecraft_version}-${config.ccc_version}:dev"
+    compile "net.industrial-craft:industrialcraft-2:${config.ic2_version}:api"
+    compile "com.mod-buildcraft:buildcraft:${config.bc_version}:dev"
+    //compile "cofhcore:CoFHCore-[${config.minecraft_version}]${config.cofhcore_version}:dev"
 }
 
 // this fixes dev environments for IDEA 14 users.

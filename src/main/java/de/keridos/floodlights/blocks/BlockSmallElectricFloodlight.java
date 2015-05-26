@@ -10,13 +10,14 @@ import de.keridos.floodlights.tileentity.TileEntitySmallFloodlight;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import java.util.logging.Logger;
 
 import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
 
@@ -79,11 +80,19 @@ public class BlockSmallElectricFloodlight extends BlockFL implements ITileEntity
                 if (player.isSneaking() && player.getHeldItem().getItem() instanceof IToolWrench) {
                     world.func_147480_a(x, y, z, true);
                     return true;
+                } else if (player.getHeldItem().getItem() instanceof IToolWrench) {
+                    ((TileEntitySmallFloodlight) world.getTileEntity(x, y, z)).toggleRotationState();
+                    Logger.getGlobal().info("toggled rotation state");
+                    return true;
                 }
             }
             if (ModCompatibility.CofhCoreLoaded) {
                 if (player.isSneaking() && player.getHeldItem().getItem() instanceof IToolHammer) {
                     world.func_147480_a(x, y, z, true);
+                    return true;
+                } else if (player.getHeldItem().getItem() instanceof IToolHammer) {
+                    ((TileEntitySmallFloodlight) world.getTileEntity(x, y, z)).toggleRotationState();
+                    Logger.getGlobal().info("toggled rotation state");
                     return true;
                 }
             }
@@ -91,9 +100,17 @@ public class BlockSmallElectricFloodlight extends BlockFL implements ITileEntity
                 if (player.isSneaking() && player.getHeldItem().getItem().getUnlocalizedName().equals("ic2.itemToolWrench")) {
                     world.func_147480_a(x, y, z, true);
                     return true;
+                } else if (player.getHeldItem().getItem().getUnlocalizedName().equals("ic2.itemToolWrench")) {
+                    ((TileEntitySmallFloodlight) world.getTileEntity(x, y, z)).toggleRotationState();
+                    Logger.getGlobal().info("toggled rotation state");
+                    return true;
                 }
                 if (player.isSneaking() && player.getHeldItem().getItem().getUnlocalizedName().equals("ic2.itemToolWrenchElectric")) {
                     world.func_147480_a(x, y, z, true);
+                    return true;
+                } else if (player.isSneaking() && player.getHeldItem().getItem().getUnlocalizedName().equals("ic2.itemToolWrenchElectric")) {
+                    ((TileEntitySmallFloodlight) world.getTileEntity(x, y, z)).toggleRotationState();
+                    Logger.getGlobal().info("toggled rotation state");
                     return true;
                 }
             }

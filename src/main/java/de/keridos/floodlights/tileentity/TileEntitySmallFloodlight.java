@@ -16,13 +16,15 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink", modid = "IC2")
 public class TileEntitySmallFloodlight extends TileEntityFLElectric {
-    private boolean wasActive = false;
+    private boolean wasActive;
+    private boolean rotationState = false;
     private LightHandler lightHandler = LightHandler.getInstance();
     private ConfigHandler configHandler = ConfigHandler.getInstance();
 
     public TileEntitySmallFloodlight() {
         super();
         this.mode = 3;
+        this.wasActive = false;
     }
 
     @Override
@@ -47,6 +49,19 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
     @Override
     public boolean canUpdate() {
         return true;
+    }
+
+    public boolean isWasActive() {
+        return wasActive;
+    }
+
+    public void toggleRotationState() {
+        rotationState = !rotationState;
+        this.worldObj.markBlockForUpdate(this.xCoord,this.yCoord,this.zCoord);
+    }
+
+    public boolean getRotationState() {
+        return rotationState;
     }
 
     @Override

@@ -12,7 +12,6 @@ import de.keridos.floodlights.tileentity.TileEntityCarbonFloodlight;
 import de.keridos.floodlights.tileentity.TileEntityElectricFloodlight;
 import de.keridos.floodlights.tileentity.TileEntitySmallFloodlight;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 
 /**
  * Created by Keridos on 04.10.14.
