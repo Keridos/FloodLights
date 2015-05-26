@@ -47,6 +47,7 @@ public class Names {
         public static final String WAS_ACTIVE = "wasActive";
         public static final String CUSTOM_NAME = "CustomName";
         public static final String DIRECTION = "teDirection";
+        public static final String ROTATION_STATE = "teRotationState";
         public static final String OWNER = "owner";
     }
 }

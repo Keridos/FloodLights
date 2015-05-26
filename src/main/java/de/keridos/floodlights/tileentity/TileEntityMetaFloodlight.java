@@ -11,13 +11,14 @@ import java.util.Random;
  */
 public class TileEntityMetaFloodlight extends TileEntityFL {
     protected boolean active;
-    protected boolean wasActive = false;
+    protected boolean wasActive;
     protected int timeout;
 
     public TileEntityMetaFloodlight() {
         super();
         Random rand = new Random();
         timeout = rand.nextInt((500 - 360) + 1) + 360;
+        this.wasActive = false;
     }
 
     public void setRedstone(boolean b) {
@@ -31,6 +32,10 @@ public class TileEntityMetaFloodlight extends TileEntityFL {
         active = !active;
         this.setState((byte) (this.active ? 1 : 0));
         this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    }
+
+    public boolean isWasActive() {
+        return wasActive;
     }
 
     @Override

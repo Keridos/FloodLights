@@ -16,29 +16,28 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink", modid = "IC2")
 public class TileEntitySmallFloodlight extends TileEntityFLElectric {
-    private boolean wasActive;
-    private boolean rotationState = false;
+    private boolean rotationState;
     private LightHandler lightHandler = LightHandler.getInstance();
     private ConfigHandler configHandler = ConfigHandler.getInstance();
 
     public TileEntitySmallFloodlight() {
         super();
         this.mode = 3;
-        this.wasActive = false;
+        this.rotationState = false;
     }
 
     @Override
     public void readFromNBT(NBTTagCompound nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
-        if (nbtTagCompound.hasKey(Names.NBT.WAS_ACTIVE)) {
-            this.wasActive = nbtTagCompound.getBoolean(Names.NBT.WAS_ACTIVE);
+        if (nbtTagCompound.hasKey(Names.NBT.ROTATION_STATE)) {
+            this.rotationState = nbtTagCompound.getBoolean(Names.NBT.ROTATION_STATE);
         }
     }
 
     @Override
     public void writeToNBT(NBTTagCompound nbtTagCompound) {
         super.writeToNBT(nbtTagCompound);
-        nbtTagCompound.setBoolean(Names.NBT.WAS_ACTIVE, wasActive);
+        nbtTagCompound.setBoolean(Names.NBT.ROTATION_STATE, rotationState);
     }
 
     @Override
@@ -51,10 +50,6 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
         return true;
     }
 
-    public boolean isWasActive() {
-        return wasActive;
-    }
-
     public void toggleRotationState() {
         rotationState = !rotationState;
         this.worldObj.markBlockForUpdate(this.xCoord,this.yCoord,this.zCoord);
@@ -63,8 +58,7 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
     public boolean getRotationState() {
         return rotationState;
     }
-
-    @Override
+    
     public void updateEntity() {
         World world = this.getWorldObj();
         if (ModCompatibility.IC2Loaded && !wasAddedToEnergyNet && !world.isRemote) {
