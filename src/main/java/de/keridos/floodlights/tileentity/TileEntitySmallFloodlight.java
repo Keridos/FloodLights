@@ -52,13 +52,13 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
 
     public void toggleRotationState() {
         rotationState = !rotationState;
-        this.worldObj.markBlockForUpdate(this.xCoord,this.yCoord,this.zCoord);
+        this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
     }
 
     public boolean getRotationState() {
         return rotationState;
     }
-    
+
     public void updateEntity() {
         World world = this.getWorldObj();
         if (ModCompatibility.IC2Loaded && !wasAddedToEnergyNet && !world.isRemote) {

@@ -57,7 +57,7 @@ public class ModCompatibility {
 
     public String getBuildNumber() {
         Map<String, ModContainer> modList = Loader.instance().getIndexedModList();
-        if (modList.get(Reference.MOD_ID).getProcessedVersion().getVersionString().split("-").length >0) {
+        if (modList.get(Reference.MOD_ID).getProcessedVersion().getVersionString().split("-").length > 0) {
             return modList.get(Reference.MOD_ID).getProcessedVersion().getVersionString().split("-")[1];
         } else {
             return "0";

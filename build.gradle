@@ -27,14 +27,14 @@ configFile.withReader {
 }
 
 // define the properties file
-ext.configFile = file "curseKey.properties"
+//ext.configFile = file "curseKey.properties"
 
-configFile.withReader {
+//configFile.withReader {
     // read config.  it shall from now on be referenced as simply config or as project.config
-    def prop = new Properties()
-    prop.load(it)
-    project.ext.curse = new ConfigSlurper().parse prop
-}
+//    def prop = new Properties()
+//    prop.load(it)
+//   project.ext.curse = new ConfigSlurper().parse prop
+//}
 
 version = "${config.mod_version}"
 if (hasProperty('appendBuildNumber')) {
@@ -109,10 +109,10 @@ repositories {
         name = "ic2"
         url = "http://maven.ic2.player.to/"
     }
-    maven {
-        name = "CurseForge"
-        url = "https://minecraft.curseforge.com/api/${project.curse.api_key}"
-    }
+    //maven {
+    //   name = "CurseForge"
+    //   url = "https://minecraft.curseforge.com/api/${project.curse.api_key}"
+    //}
 }
 
 dependencies {

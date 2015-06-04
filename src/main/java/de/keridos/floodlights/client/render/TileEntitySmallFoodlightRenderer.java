@@ -8,13 +8,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
-
-import java.util.logging.Logger;
 
 /**
  * Created by Keridos on 05.05.2015.
@@ -39,7 +36,7 @@ public class TileEntitySmallFoodlightRenderer extends TileEntitySpecialRenderer 
 
         //This is setting the initial location.
         GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
-        if (tileEntitySmallFloodlight.isWasActive()) {
+        if (tileEntitySmallFloodlight.getState() != 0) {
             textures = (new ResourceLocation(Textures.Block.FLUORESCENT_FLOODLIGHT_TEXTURE_ON));
         } else {
             textures = (new ResourceLocation(Textures.Block.FLUORESCENT_FLOODLIGHT_TEXTURE_OFF));
@@ -57,30 +54,30 @@ public class TileEntitySmallFoodlightRenderer extends TileEntitySpecialRenderer 
         float zRotation = 0.0F;
         switch (tileEntitySmallFloodlight.getOrientation()) {
             case DOWN:
-                xRotation = (float)Math.PI;
-                yRotation = (tileEntitySmallFloodlight.getRotationState() ? (float)Math.PI/2 : 0.0F);
+                xRotation = (float) Math.PI;
+                yRotation = (tileEntitySmallFloodlight.getRotationState() ? (float) Math.PI / 2 : 0.0F);
                 break;
             case UP:
-                yRotation = (tileEntitySmallFloodlight.getRotationState() ? (float)Math.PI/2 : 0.0F);
+                yRotation = (tileEntitySmallFloodlight.getRotationState() ? (float) Math.PI / 2 : 0.0F);
                 break;
             case WEST:
-                zRotation = (float)Math.PI/2;
-                yRotation = (tileEntitySmallFloodlight.getRotationState() ? 0.0F : (float)Math.PI/2);
+                zRotation = (float) Math.PI / 2;
+                yRotation = (tileEntitySmallFloodlight.getRotationState() ? 0.0F : (float) Math.PI / 2);
                 break;
             case EAST:
-                zRotation = -(float)Math.PI/2;
-                yRotation = (tileEntitySmallFloodlight.getRotationState() ? 0.0F : (float)Math.PI/2);
+                zRotation = -(float) Math.PI / 2;
+                yRotation = (tileEntitySmallFloodlight.getRotationState() ? 0.0F : (float) Math.PI / 2);
                 break;
             case SOUTH:
-                xRotation = -(float)Math.PI/2;
-                yRotation = (tileEntitySmallFloodlight.getRotationState() ? (float)Math.PI/2 : 0.0F);
+                xRotation = -(float) Math.PI / 2;
+                yRotation = (tileEntitySmallFloodlight.getRotationState() ? (float) Math.PI / 2 : 0.0F);
                 break;
             case NORTH:
-                xRotation = (float)Math.PI/2;
-                yRotation = (tileEntitySmallFloodlight.getRotationState() ? (float)Math.PI/2 : 0.0F);
+                xRotation = (float) Math.PI / 2;
+                yRotation = (tileEntitySmallFloodlight.getRotationState() ? (float) Math.PI / 2 : 0.0F);
                 break;
         }
-        this.model.setRotateAngle(this.model.shape1,xRotation,yRotation,zRotation);
+        this.model.setRotateAngle(this.model.shape1, xRotation, yRotation, zRotation);
 
         this.model.render(null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
         //Tell it to stop rendering for both the PushMatrix's
