@@ -10,7 +10,6 @@ import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergySink;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -73,10 +72,10 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
     @Optional.Method(modid = "IC2")
     @Override
     public double injectEnergy(ForgeDirection forgeDirection, double v, double v1) {
-        if (storage.getMaxEnergyStored() - storage.getEnergyStored() >= MathHelper.truncateDoubleToInt(v * 4)) {
+        if (storage.getMaxEnergyStored() - storage.getEnergyStored() >= MathUtil.truncateDoubleToInt(v * 4)) {
             storage.modifyEnergyStored(MathUtil.truncateDoubleToInt(v * 4));
         } else {
-            storageEU += MathHelper.truncateDoubleToInt(v * 4) - (storage.getMaxEnergyStored() - storage.getEnergyStored());
+            storageEU += MathUtil.truncateDoubleToInt(v * 4) - (storage.getMaxEnergyStored() - storage.getEnergyStored());
             storage.modifyEnergyStored(MathUtil.truncateDoubleToInt(v * 4));
         }
         return 0;

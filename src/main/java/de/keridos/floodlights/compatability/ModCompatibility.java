@@ -52,6 +52,7 @@ public class ModCompatibility {
     private void hideNEIItems() {
         if (NEILoaded) {
             hideItem(new ItemStack(ModBlocks.blockFLLight));
+            hideItem(new ItemStack(ModBlocks.blockSmallElectricLight));
         }
     }
 
