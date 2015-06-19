@@ -102,8 +102,12 @@ repositories {
         url "http://chickenbones.net/maven/"
     }
     maven { // the repo from which to get EnderIO and tterags mods
-        name 'tterag'
+        name 'tterrag'
         url "http://maven.tterrag.com/"
+    }
+    maven {
+        name = "OC repo"
+        url = "http://maven.cil.li/"
     }
     maven {
         name = "ic2"
