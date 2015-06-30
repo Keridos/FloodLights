@@ -59,7 +59,6 @@ public class LightHandler {
             }
         }
         if (!foundWorld) {
-
             worlds.add(new WorldHandler(world));
             getWorldHandler(world).addSource(x, y, z, direction, type);
         }

@@ -347,7 +347,7 @@ public class WorldHandler {
 
     public void updateRun() {
         World activeworld = DimensionManager.getWorld(world.provider.dimensionId);
-        if (activeworld != null) {
+        if (!world.isRemote && activeworld != null) {
             int j = lastPositionInList;
             for (int i = lastPositionInList; i < j + configHandler.refreshRate; i++) {
                 if (i >= lightBlocks.size()) {
@@ -360,14 +360,12 @@ public class WorldHandler {
                 int y = f.getCoords()[1];
                 int z = f.getCoords()[2];
                 if (activeworld.getBlock(x, y, z) != null) {
-                    if (activeworld.getBlock(x, y, z).getUnlocalizedName().contains("blockLight") && f.sourceNumber() == 0) {
+                    if (f.sourceNumber() == 0 && activeworld.getBlock(x, y, z).getUnlocalizedName().contains("blockLight")) {
                         activeworld.setBlockToAir(x, y, z);
                         lightBlocks.remove(i);
                         i--;
                         j--;
-                    }
-
-                    if (f.sourceNumber() > 0 && activeworld.getBlock(x, y, z).isAir(activeworld, x, y, z)) {
+                    } else if (f.sourceNumber() > 0 && activeworld.getBlock(x, y, z).isAir(activeworld, x, y, z)) {
                         activeworld.setBlock(x, y, z, ModBlocks.blockFLLight);
                     }
                 }
@@ -377,7 +375,7 @@ public class WorldHandler {
 
     public void removeAllLights() {
         World activeworld = DimensionManager.getWorld(world.provider.dimensionId);
-        if (activeworld != null) {
+        if (!world.isRemote && activeworld != null) {
             for (int i = 0; i < lightBlocks.size(); i++) {
                 LightBlockHandle f = (lightBlocks.get(i));
                 int x = f.getCoords()[0];

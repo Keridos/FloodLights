@@ -34,8 +34,8 @@ public class TileEntityMetaFloodlight extends TileEntityFL {
         this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 
-    public void setActive(boolean active) {
-        this.active = active;
+    public boolean isWasActive() {
+        return wasActive;
     }
 
     @Override

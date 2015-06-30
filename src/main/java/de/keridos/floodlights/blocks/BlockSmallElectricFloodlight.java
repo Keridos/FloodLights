@@ -13,6 +13,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -70,12 +71,12 @@ public class BlockSmallElectricFloodlight extends BlockFL implements ITileEntity
 
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float p_149727_7_, float p_149727_8_, float p_149727_9_) {
-        if (player.getHeldItem() == null && !world.isRemote && player.isSneaking()) {
+        if (!world.isRemote && player.getHeldItem() == null && player.isSneaking()) {
             ((TileEntitySmallFloodlight) world.getTileEntity(x, y, z)).toggleInverted();
             String invert = (((TileEntitySmallFloodlight) world.getTileEntity(x, y, z)).getInverted() ? Names.Localizations.TRUE : Names.Localizations.FALSE);
             player.addChatMessage(new ChatComponentText(safeLocalize(Names.Localizations.INVERT) + ": " + safeLocalize(invert)));
             return true;
-        } else if (player.getHeldItem() != null && !world.isRemote) {
+        } else if (!world.isRemote && player.getHeldItem() != null) {
             if (ModCompatibility.BCLoaded || ModCompatibility.EnderIOLoaded) {
                 if (player.isSneaking() && player.getHeldItem().getItem() instanceof IToolWrench) {
                     world.func_147480_a(x, y, z, true);
@@ -122,6 +123,12 @@ public class BlockSmallElectricFloodlight extends BlockFL implements ITileEntity
     public TileEntitySmallFloodlight createNewTileEntity(World world, int metadata) {
         return new TileEntitySmallFloodlight();
     }
+
+    @Override
+    public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
+        return null;
+    }
+
 
     @Override
     public void breakBlock(World world, int x, int y, int z, Block block, int par6) {

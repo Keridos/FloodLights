@@ -16,7 +16,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink", modid = "IC2")
 public class TileEntitySmallFloodlight extends TileEntityFLElectric {
-    private boolean rotationState;
+    private boolean rotationState = false;
     private LightHandler lightHandler = LightHandler.getInstance();
     private ConfigHandler configHandler = ConfigHandler.getInstance();
 
@@ -57,6 +57,10 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
 
     public boolean getRotationState() {
         return rotationState;
+    }
+
+    public void setRotationState(boolean rotationState) {
+        this.rotationState = rotationState;
     }
 
     public void updateEntity() {
