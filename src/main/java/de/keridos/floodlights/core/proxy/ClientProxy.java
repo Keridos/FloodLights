@@ -2,12 +2,16 @@ package de.keridos.floodlights.core.proxy;
 
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
-import de.keridos.floodlights.client.render.RotatableBlockRenderer;
-import de.keridos.floodlights.client.render.TileEntitySmallFoodlightRenderer;
+import de.keridos.floodlights.client.render.block.RotatableBlockRenderer;
+import de.keridos.floodlights.client.render.block.TileEntitySmallFoodlightRenderer;
+import de.keridos.floodlights.client.render.item.SmallFloodlightItemRenderer;
 import de.keridos.floodlights.compatability.IGWHandler;
 import de.keridos.floodlights.compatability.ModCompatibility;
+import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.reference.RenderIDs;
 import de.keridos.floodlights.tileentity.TileEntitySmallFloodlight;
+import net.minecraft.item.Item;
+import net.minecraftforge.client.MinecraftForgeClient;
 
 /**
  * Created by Keridos on 28.02.14.
@@ -19,6 +23,8 @@ public class ClientProxy extends CommonProxy {
         RenderIDs.ROTATABLE_BLOCK = RenderingRegistry.getNextAvailableRenderId();
         RenderingRegistry.registerBlockHandler(RenderIDs.ROTATABLE_BLOCK, new RotatableBlockRenderer());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySmallFloodlight.class, new TileEntitySmallFoodlightRenderer());
+        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.blockSmallElectricLight),
+                new SmallFloodlightItemRenderer(new TileEntitySmallFoodlightRenderer(), new TileEntitySmallFloodlight()));
     }
 
     @Override

@@ -2,6 +2,8 @@ package de.keridos.floodlights.blocks;
 
 import buildcraft.api.tools.IToolWrench;
 import cofh.api.item.IToolHammer;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.handler.lighting.LightHandler;
 import de.keridos.floodlights.reference.Names;
@@ -10,6 +12,7 @@ import de.keridos.floodlights.tileentity.TileEntitySmallFloodlight;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -40,6 +43,11 @@ public class BlockSmallElectricFloodlight extends BlockFL implements ITileEntity
 
     public boolean renderAsNormalBlock() {
         return false;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerBlockIcons(IIconRegister iconRegister) {
     }
 
     @Override
@@ -83,7 +91,6 @@ public class BlockSmallElectricFloodlight extends BlockFL implements ITileEntity
                     return true;
                 } else if (player.getHeldItem().getItem() instanceof IToolWrench) {
                     ((TileEntitySmallFloodlight) world.getTileEntity(x, y, z)).toggleRotationState();
-                    Logger.getGlobal().info("toggled rotation state");
                     return true;
                 }
             }
@@ -93,7 +100,6 @@ public class BlockSmallElectricFloodlight extends BlockFL implements ITileEntity
                     return true;
                 } else if (player.getHeldItem().getItem() instanceof IToolHammer) {
                     ((TileEntitySmallFloodlight) world.getTileEntity(x, y, z)).toggleRotationState();
-                    Logger.getGlobal().info("toggled rotation state");
                     return true;
                 }
             }

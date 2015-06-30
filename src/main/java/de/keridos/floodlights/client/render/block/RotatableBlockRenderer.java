@@ -1,4 +1,4 @@
-package de.keridos.floodlights.client.render;
+package de.keridos.floodlights.client.render.block;
 
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.relauncher.Side;

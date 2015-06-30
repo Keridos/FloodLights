@@ -1,4 +1,4 @@
-package de.keridos.floodlights.client.render;
+package de.keridos.floodlights.client.render.block;
 
 import de.keridos.floodlights.client.render.model.TileEntitySmallFluorescentLightModel;
 import de.keridos.floodlights.reference.Textures;
