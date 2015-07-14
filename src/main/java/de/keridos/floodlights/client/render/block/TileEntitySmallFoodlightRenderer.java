@@ -70,11 +70,11 @@ public class TileEntitySmallFoodlightRenderer extends TileEntitySpecialRenderer 
                 break;
             case SOUTH:
                 xRotation = -(float) Math.PI / 2;
-                yRotation = (tileEntitySmallFloodlight.getRotationState() ? (float) Math.PI / 2 : 0.0F);
+                zRotation = (tileEntitySmallFloodlight.getRotationState() ? (float) Math.PI / 2 : 0.0F);
                 break;
             case NORTH:
                 xRotation = (float) Math.PI / 2;
-                yRotation = (tileEntitySmallFloodlight.getRotationState() ? (float) Math.PI / 2 : 0.0F);
+                zRotation = (tileEntitySmallFloodlight.getRotationState() ? (float) Math.PI / 2 : 0.0F);
                 break;
         }
         this.model.setRotateAngle(this.model.shape1, xRotation, yRotation, zRotation);

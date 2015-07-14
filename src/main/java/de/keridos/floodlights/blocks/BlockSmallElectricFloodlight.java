@@ -9,6 +9,7 @@ import de.keridos.floodlights.handler.lighting.LightHandler;
 import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.tileentity.TileEntityFL;
 import de.keridos.floodlights.tileentity.TileEntitySmallFloodlight;
+import de.keridos.floodlights.util.MathUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -135,6 +136,48 @@ public class BlockSmallElectricFloodlight extends BlockFL implements ITileEntity
         return null;
     }
 
+
+    //
+    @Override
+    @SideOnly(Side.CLIENT)
+    public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z) {
+        TileEntitySmallFloodlight tileEntitySmallFloodlight = (TileEntitySmallFloodlight) world.getTileEntity(x, y, z);
+        if (!(tileEntitySmallFloodlight.getRotationState() ^
+                (tileEntitySmallFloodlight.getOrientation() == ForgeDirection.DOWN ||
+                        tileEntitySmallFloodlight.getOrientation() == ForgeDirection.UP))) {
+            this.minX = 0;
+            this.maxX = 0.1875;
+            this.minY = 0.3125;
+            this.maxY = 0.6875;
+            this.minZ = 0;
+            this.maxZ = 1;
+        } else {
+            this.minX = 0;
+            this.maxX = 0.1875;
+            this.minY = 0;
+            this.maxY = 1;
+            this.minZ = 0.3125;
+            this.maxZ = 0.6875;
+        }
+        this.minX = this.minX - 0.5;
+        this.minY = this.minY - 0.5;
+        this.minZ = this.minZ - 0.5;
+        this.maxX = this.maxX - 0.5;
+        this.maxY = this.maxY - 0.5;
+        this.maxZ = this.maxZ - 0.5;
+        double[] newMinTemp = MathUtil.rotateD(minX, minY, minZ, tileEntitySmallFloodlight.getOrientation());
+        double[] newMaxTemp = MathUtil.rotateD(maxX, maxY, maxZ, tileEntitySmallFloodlight.getOrientation());
+        double[] newMax = MathUtil.sortMinMaxToMax(newMinTemp, newMaxTemp);
+        double[] newMin = MathUtil.sortMinMaxToMin(newMinTemp, newMaxTemp);
+        this.minX = newMin[0] + 0.5;
+        this.minY = newMin[1] + 0.5;
+        this.minZ = newMin[2] + 0.5;
+        this.maxX = newMax[0] + 0.5;
+        this.maxY = newMax[1] + 0.5;
+        this.maxZ = newMax[2] + 0.5;
+
+        return AxisAlignedBB.getBoundingBox((double) x + this.minX, (double) y + this.minY, (double) z + this.minZ, (double) x + this.maxX, (double) y + this.maxY, (double) z + this.maxZ);
+    }
 
     @Override
     public void breakBlock(World world, int x, int y, int z, Block block, int par6) {

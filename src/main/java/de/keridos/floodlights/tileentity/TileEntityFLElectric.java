@@ -18,7 +18,10 @@ import net.minecraftforge.common.util.ForgeDirection;
  * This Class
  */
 
-@Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink", modid = "IC2")
+@Optional.InterfaceList({
+        @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink", modid = "IC2"),
+        @Optional.Interface(iface = "gregtech.api.interfaces.tileentity.IEnergyConnected", modid = "GregTech")})
+
 public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IEnergyHandler, IEnergySink {
     protected boolean wasAddedToEnergyNet = false;
     protected int storageEU;
@@ -119,4 +122,6 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
             MinecraftForge.EVENT_BUS.post(event);
         }
     }
+
+
 }
