@@ -35,7 +35,9 @@ public class RecipeHandler {
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.blockElectricLight, 1), "CIC", "IBG", "CIC", 'C', new ItemStack(getMinecraftItem("cobblestone"), 1), 'I', new ItemStack(getMinecraftItem("iron_ingot"), 1), 'B', new ItemStack(ModItems.lightBulb, 1), 'G', new ItemStack(getMinecraftItem("glass"), 1)));
         }
         if (configHandler.smallElectricFloodlight) {
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.blockSmallElectricLight, 2, 0), " G ", "GBG", "III", 'C', new ItemStack(getMinecraftItem("cobblestone"), 1), 'I', new ItemStack(getMinecraftItem("iron_ingot"), 1), 'B', new ItemStack(ModItems.lightBulb, 1), 'G', new ItemStack(getMinecraftItem("glass"), 1)));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.blockSmallElectricLight, 2, 0), " G ", "GBG", "III", 'I', new ItemStack(getMinecraftItem("iron_ingot"), 1), 'B', new ItemStack(ModItems.lightBulb, 1), 'G', new ItemStack(getMinecraftItem("glass"), 1)));
+            GameRegistry.addShapelessRecipe(new ItemStack(ModBlocks.blockSmallElectricLight, 1, 1), new ItemStack(ModBlocks.blockSmallElectricLight, 1, 0));
+            GameRegistry.addShapelessRecipe(new ItemStack(ModBlocks.blockSmallElectricLight, 1, 0), new ItemStack(ModBlocks.blockSmallElectricLight, 1, 1));
         }
         if (configHandler.carbonFloodlight) {
             GameRegistry.addRecipe(new ItemStack(ModItems.carbonDissolver, 1), "GRG", "IGI", 'R', new ItemStack(getMinecraftItem("redstone"), 1), 'G', new ItemStack(getMinecraftItem("glass_pane"), 1), 'I', new ItemStack(getMinecraftItem("iron_ingot"), 1));
