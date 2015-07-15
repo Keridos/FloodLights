@@ -2,6 +2,7 @@ package de.keridos.floodlights.item;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import de.keridos.floodlights.client.gui.CreativeTabFloodlight;
 import de.keridos.floodlights.reference.Textures;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.item.Item;
@@ -18,6 +19,7 @@ public class ItemFL extends Item {
         super();
         this.maxStackSize = 64;
         this.setNoRepair();
+        this.setCreativeTab(CreativeTabFloodlight.FL_TAB);
     }
 
     @Override

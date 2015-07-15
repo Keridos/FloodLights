@@ -12,8 +12,6 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import java.util.Random;
-
 import static de.keridos.floodlights.util.GeneralUtil.getBurnTime;
 import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
 
@@ -21,10 +19,7 @@ import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
  * Created by Keridos on 09/10/2014.
  * This Class describes the carbon floodlight TileEntity.
  */
-public class TileEntityCarbonFloodlight extends TileEntityFL implements ISidedInventory {
-    private boolean active = false;
-    private boolean wasActive = false;
-    private int timeout;
+public class TileEntityCarbonFloodlight extends TileEntityMetaFloodlight implements ISidedInventory {
     public int timeRemaining;
     private LightHandler lightHandler = LightHandler.getInstance();
     private ConfigHandler configHandler = ConfigHandler.getInstance();
@@ -32,8 +27,6 @@ public class TileEntityCarbonFloodlight extends TileEntityFL implements ISidedIn
 
     public TileEntityCarbonFloodlight() {
         super();
-        Random rand = new Random();
-        timeout = rand.nextInt((500 - 360) + 1) + 360;
         inventory = new ItemStack[1];
         timeRemaining = 0;
     }
@@ -41,25 +34,12 @@ public class TileEntityCarbonFloodlight extends TileEntityFL implements ISidedIn
     @Override
     public void readFromNBT(NBTTagCompound nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
-        if (nbtTagCompound.hasKey(Names.NBT.WAS_ACTIVE)) {
-            this.wasActive = nbtTagCompound.getBoolean(Names.NBT.WAS_ACTIVE);
-        }
-        if (nbtTagCompound.hasKey(Names.NBT.TIMEOUT)) {
-            this.timeout = nbtTagCompound.getInteger(Names.NBT.TIMEOUT);
-        } else {
-            Random rand = new Random();
-            timeout = rand.nextInt((500 - 360) + 1) + 360;
-        }
-        if (nbtTagCompound.hasKey(Names.NBT.STATE)) {
-            this.setActive(nbtTagCompound.getInteger(Names.NBT.STATE) == 0 ? false : true);
-        }
         if (nbtTagCompound.hasKey(Names.NBT.TIME_REMAINING)) {
             this.timeRemaining = nbtTagCompound.getInteger(Names.NBT.TIME_REMAINING);
         }
         NBTTagList list = nbtTagCompound.getTagList(Names.NBT.ITEMS, 10);
         NBTTagCompound item = list.getCompoundTagAt(0);
         int slot = item.getByte(Names.NBT.ITEMS);
-
         if (slot >= 0 && slot < getSizeInventory()) {
             setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(item));
         }
@@ -68,8 +48,6 @@ public class TileEntityCarbonFloodlight extends TileEntityFL implements ISidedIn
     @Override
     public void writeToNBT(NBTTagCompound nbtTagCompound) {
         super.writeToNBT(nbtTagCompound);
-        nbtTagCompound.setBoolean(Names.NBT.WAS_ACTIVE, wasActive);
-        nbtTagCompound.setInteger(Names.NBT.TIMEOUT, timeout);
         nbtTagCompound.setInteger(Names.NBT.TIME_REMAINING, timeRemaining);
         NBTTagList list = new NBTTagList();
         ItemStack itemstack = getStackInSlot(0);
@@ -190,7 +168,7 @@ public class TileEntityCarbonFloodlight extends TileEntityFL implements ISidedIn
                 timeRemaining = configHandler.carbonTime * getBurnTime(inventory[0]) / 1600 * (mode == 0 ? 20 : 10);
                 decrStackSize(0, 1);
             }
-            if (((active ^ inverted) && timeRemaining > 0)) {
+            if (active && timeRemaining > 0) {
                 if (!wasActive || world.getTotalWorldTime() % timeout == 0) {
                     if (world.getTotalWorldTime() % timeout == 0) {
                         lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, mode);
@@ -213,19 +191,6 @@ public class TileEntityCarbonFloodlight extends TileEntityFL implements ISidedIn
         }
     }
 
-    public void setActive(boolean b) {
-        active = b;
-        this.setState((byte) (this.active ? 1 : 0));
-    }
-
-    public void toggleInverted() {
-        inverted = !inverted;
-    }
-
-    public boolean getInverted() {
-        return inverted;
-    }
-
     public void changeMode(EntityPlayer player) {
         World world = this.getWorldObj();
         if (!world.isRemote) {
@@ -237,7 +202,7 @@ public class TileEntityCarbonFloodlight extends TileEntityFL implements ISidedIn
             } else if (mode == 0) {
                 timeRemaining *= 4;
             }
-            if (((active ^ inverted) && timeRemaining > 0)) {
+            if (active && timeRemaining > 0) {
                 lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
             }
             String modeString = (mode == 0 ? Names.Localizations.STRAIGHT : mode == 1 ? Names.Localizations.NARROW_CONE : Names.Localizations.WIDE_CONE);

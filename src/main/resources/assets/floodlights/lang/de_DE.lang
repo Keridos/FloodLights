@@ -1,11 +1,19 @@
+#Items
 item.floodlights:rawFilament.name=Rohe Glühwendel
 item.floodlights:glowingFilament.name=Glühwendel
 item.floodlights:electricIncandescentLightBulb.name=Elektrische Glühbirne
 item.floodlights:carbonDissolver.name=Treibstoffzersetzer
 item.floodlights:carbonLantern.name=Nicht-elektrische Laterne
 item.floodlights:mantle.name=Docht
+
+#TileEntities
 tile.floodlights:carbonFloodlight.name=Nicht-elektrisches Flutlicht
 tile.floodlights:electricFloodlight.name=Elektrisches Flutlicht
+tile.floodlights:smallElectricFloodlight.name=Kleines Elektrisches Flutlicht
+tile.floodlights:smallElectricFloodlightMetaBlock_smallFluorescent.name=Kleine Leuchtstofflampe
+tile.floodlights:smallElectricFloodlightMetaBlock_squareFluorescent.name=Quadratische kleine Leuchtstofflampe
+
+#GUI
 gui.floodlights:nonElectricFloodlightTimeRemaining=Verbleibend
 gui.floodlights:invert=Invertiert
 gui.floodlights:mode=Modus
@@ -17,3 +25,6 @@ gui.floodlights:wideCone=weiter Kegel
 gui.floodlights:minutesShort=m
 gui.floodlights:secondsShort=s
 gui.floodlights:clearLightsCommandText=Erfolgreich alle Lichter entfernt, neue sollten in den nächsten Minuten spawnen.
+
+# Creative Tabs
+itemGroup.floodlights=Flood Lights

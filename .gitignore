@@ -13,4 +13,4 @@ eclipse/
 gradle/
 libs/
 out/
-src/api
+curseKey.properties

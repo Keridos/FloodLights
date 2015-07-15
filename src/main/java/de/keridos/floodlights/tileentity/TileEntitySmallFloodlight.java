@@ -1,31 +1,68 @@
 package de.keridos.floodlights.tileentity;
 
+import cpw.mods.fml.common.Optional;
 import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.handler.ConfigHandler;
 import de.keridos.floodlights.handler.lighting.LightHandler;
 import de.keridos.floodlights.reference.Names;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
-
 /**
- * Created by Keridos on 01.10.14.
- * This Class is the electric floodlight TileEntity.
+ * Created by Keridos on 04.05.2015.
+ * This Class is the tile entity for the small floodlight.
  */
 
-public class TileEntityElectricFloodlight extends TileEntityFLElectric {
+@Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink", modid = "IC2")
+public class TileEntitySmallFloodlight extends TileEntityFLElectric {
+    private boolean rotationState = false;
     private LightHandler lightHandler = LightHandler.getInstance();
     private ConfigHandler configHandler = ConfigHandler.getInstance();
+
+    public TileEntitySmallFloodlight() {
+        super();
+        this.mode = 3;
+        this.rotationState = false;
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound nbtTagCompound) {
+        super.readFromNBT(nbtTagCompound);
+        if (nbtTagCompound.hasKey(Names.NBT.ROTATION_STATE)) {
+            this.rotationState = nbtTagCompound.getBoolean(Names.NBT.ROTATION_STATE);
+        }
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound nbtTagCompound) {
+        super.writeToNBT(nbtTagCompound);
+        nbtTagCompound.setBoolean(Names.NBT.ROTATION_STATE, rotationState);
+    }
+
+    @Override
+    public boolean canConnectEnergy(ForgeDirection from) {
+        return (from.getOpposite().ordinal() == orientation.ordinal());
+    }
 
     @Override
     public boolean canUpdate() {
         return true;
     }
 
-    @Override
+    public void toggleRotationState() {
+        rotationState = !rotationState;
+        this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+    }
+
+    public boolean getRotationState() {
+        return rotationState;
+    }
+
+    public void setRotationState(boolean rotationState) {
+        this.rotationState = rotationState;
+    }
+
     public void updateEntity() {
         World world = this.getWorldObj();
         if (ModCompatibility.IC2Loaded && !wasAddedToEnergyNet && !world.isRemote) {
@@ -34,16 +71,14 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric {
         }
         if (!world.isRemote) {
             ForgeDirection direction = this.getOrientation();
-            int realEnergyUsage = configHandler.energyUsage / (mode == 0 ? 1 : 2);
+            int realEnergyUsage = configHandler.energyUsageSmallFloodlight;
             if (active && (storage.getEnergyStored() >= realEnergyUsage || storageEU >= realEnergyUsage * 4)) {
                 if (!wasActive || world.getTotalWorldTime() % timeout == 0) {
                     if (world.getTotalWorldTime() % timeout == 0) {
                         lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
                         lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
-                        world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, this.getOrientation().ordinal() + 6, 2);
                     } else {
                         lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
-                        world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, world.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) + 6, 2);
                     }
                 }
                 if (storageEU >= realEnergyUsage * 4) {
@@ -55,25 +90,9 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric {
             } else {
                 if (wasActive) {
                     lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
-                    world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, world.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) - 6, 2);
                 }
                 wasActive = false;
             }
-        }
-    }
-
-    public void changeMode(EntityPlayer player) {
-        World world = this.getWorldObj();
-        if (!world.isRemote) {
-            ForgeDirection direction = this.getOrientation();
-            int realEnergyUsage = configHandler.energyUsage / (mode == 0 ? 1 : 4);
-            lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
-            mode = (mode == 2 ? 0 : mode + 1);
-            if (active && (storage.getEnergyStored() >= realEnergyUsage || storageEU >= realEnergyUsage * 4)) {
-                lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
-            }
-            String modeString = (mode == 0 ? Names.Localizations.STRAIGHT : mode == 1 ? Names.Localizations.NARROW_CONE : Names.Localizations.WIDE_CONE);
-            player.addChatMessage(new ChatComponentText(safeLocalize(Names.Localizations.MODE) + ": " + safeLocalize(modeString)));
         }
     }
 }

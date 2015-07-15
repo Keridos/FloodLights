@@ -6,6 +6,7 @@ import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import de.keridos.floodlights.tileentity.TileEntityCarbonFloodlight;
 import de.keridos.floodlights.tileentity.TileEntityFL;
+import de.keridos.floodlights.tileentity.TileEntitySmallFloodlight;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.tileentity.TileEntity;
 
@@ -16,6 +17,7 @@ import net.minecraft.tileentity.TileEntity;
 public class MessageTileEntityFL implements IMessage, IMessageHandler<MessageTileEntityFL, IMessage> {
     public int x, y, z, timeRemaining;
     public byte orientation, state;
+    public boolean rotationState;
     public String customName, owner;
 
     public MessageTileEntityFL() {
@@ -27,15 +29,20 @@ public class MessageTileEntityFL implements IMessage, IMessageHandler<MessageTil
             this.x = tileEntityFL.xCoord;
             this.y = tileEntityFL.yCoord;
             this.z = tileEntityFL.zCoord;
+            this.orientation = (byte) tileEntityFL.getOrientation().ordinal();
+            this.state = (byte) tileEntityFL.getState();
+            this.customName = tileEntityFL.getCustomName();
+            this.owner = tileEntityFL.getOwner();
             if (tileEntity instanceof TileEntityCarbonFloodlight) {
                 this.timeRemaining = ((TileEntityCarbonFloodlight) tileEntity).timeRemaining;
             } else {
                 this.timeRemaining = 0;
             }
-            this.orientation = (byte) tileEntityFL.getOrientation().ordinal();
-            this.state = (byte) tileEntityFL.getState();
-            this.customName = tileEntityFL.getCustomName();
-            this.owner = tileEntityFL.getOwner();
+            if (tileEntity instanceof TileEntitySmallFloodlight) {
+                this.rotationState = ((TileEntitySmallFloodlight) tileEntity).getRotationState();
+            } else {
+                this.rotationState = false;
+            }
         }
     }
 
@@ -51,6 +58,7 @@ public class MessageTileEntityFL implements IMessage, IMessageHandler<MessageTil
         this.customName = new String(buf.readBytes(customNameLength).array());
         int ownerLength = buf.readInt();
         this.owner = new String(buf.readBytes(ownerLength).array());
+        this.rotationState = buf.readBoolean();
     }
 
     @Override
@@ -65,6 +73,7 @@ public class MessageTileEntityFL implements IMessage, IMessageHandler<MessageTil
         buf.writeBytes(customName.getBytes());
         buf.writeInt(owner.length());
         buf.writeBytes(owner.getBytes());
+        buf.writeBoolean(rotationState);
     }
 
     @Override
@@ -78,6 +87,9 @@ public class MessageTileEntityFL implements IMessage, IMessageHandler<MessageTil
         }
         if (tileEntity instanceof TileEntityCarbonFloodlight) {
             ((TileEntityCarbonFloodlight) tileEntity).timeRemaining = message.timeRemaining;
+        }
+        if (tileEntity instanceof TileEntitySmallFloodlight) {
+            ((TileEntitySmallFloodlight) tileEntity).setRotationState(message.rotationState);
         }
         return null;
     }

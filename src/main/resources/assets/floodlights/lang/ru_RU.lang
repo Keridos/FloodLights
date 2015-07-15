@@ -1,11 +1,17 @@
+#Items – Предметы
 item.floodlights:rawFilament.name=Заготовка нити накаливания
 item.floodlights:glowingFilament.name=Раскалённая нить накаливания
 item.floodlights:electricIncandescentLightBulb.name=Электрическая лампа накаливания
 item.floodlights:carbonDissolver.name=Поглотитель топлива
 item.floodlights:carbonLantern.name=Лампа
 item.floodlights:mantle.name=Фитиль
+
+#TileEntities
 tile.floodlights:carbonFloodlight.name=Прожектор
 tile.floodlights:electricFloodlight.name=Электрический прожектор
+tile.floodlights:smallFluorescentFloodlight.name=Маленький электрический прожектор
+
+#GUI – ГИП
 gui.floodlights:nonElectricFloodlightTimeRemaining=Осталось времени:
 gui.floodlights:invert=Инвертирован
 gui.floodlights:mode=Режим
@@ -17,3 +23,6 @@ gui.floodlights:wideCone=широкий конус
 gui.floodlights:minutesShort=м
 gui.floodlights:secondsShort=с
 gui.floodlights:clearLightsCommandText=Все источники света на карте успешно удалены. Новые источники света появятся в течение нескольких минут.
+
+# Creative Tabs – Вкладки в режиме творчества
+itemGroup.floodlights=Flood Lights

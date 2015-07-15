@@ -7,6 +7,7 @@ package de.keridos.floodlights.reference;
 public class Names {
     public static final class Blocks {
         public static final String ELECTRIC_FLOODLIGHT = "electricFloodlight";
+        public static final String SMALL_ELECTRIC_FLOODLIGHT = "smallElectricFloodlightMetaBlock";
         public static final String CARBON_FLOODLIGHT = "carbonFloodlight";
         public static final String PHANTOM_LIGHT = "blockLight";
     }
@@ -46,6 +47,7 @@ public class Names {
         public static final String WAS_ACTIVE = "wasActive";
         public static final String CUSTOM_NAME = "CustomName";
         public static final String DIRECTION = "teDirection";
+        public static final String ROTATION_STATE = "teRotationState";
         public static final String OWNER = "owner";
     }
 }

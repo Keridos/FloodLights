@@ -82,11 +82,11 @@ public class WailaTileHandler implements IWailaDataProvider {
         boolean invert = accessor.getNBTData().getBoolean("inverted");
         int mode = accessor.getNBTData().getInteger("teState");
         String inverted = (invert ? Names.Localizations.TRUE : Names.Localizations.FALSE);
-        String modeString = (mode == 0 ? Names.Localizations.STRAIGHT : mode == 1 ? Names.Localizations.NARROW_CONE : Names.Localizations.WIDE_CONE);
-
         currenttip.add(safeLocalize(Names.Localizations.INVERT) + ": " + safeLocalize(inverted));
-        currenttip.add(safeLocalize(Names.Localizations.MODE) + ": " + safeLocalize(modeString));
-
+        if (mode < 3) {
+            String modeString = (mode == 0 ? Names.Localizations.STRAIGHT : mode == 1 ? Names.Localizations.NARROW_CONE : Names.Localizations.WIDE_CONE);
+            currenttip.add(safeLocalize(Names.Localizations.MODE) + ": " + safeLocalize(modeString));
+        }
         return currenttip;
     }
 

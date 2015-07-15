@@ -14,6 +14,7 @@ public class FloodLightsWikiTab extends BaseWikiTab {
     public FloodLightsWikiTab() {
         pageEntries.add("block/floodlights:electricFloodlight");
         pageEntries.add("block/floodlights:carbonFloodlight");
+        pageEntries.add("block/floodlights:smallElectricFloodlight");
     }
 
     @Override

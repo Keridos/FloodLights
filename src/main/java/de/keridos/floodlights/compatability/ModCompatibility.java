@@ -2,8 +2,10 @@ package de.keridos.floodlights.compatability;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModAPIManager;
+import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.event.FMLInterModComms;
 import de.keridos.floodlights.init.ModBlocks;
+import de.keridos.floodlights.reference.Reference;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -24,7 +26,6 @@ public class ModCompatibility {
     public static boolean CofhCoreLoaded = false;
     public static boolean NEILoaded = false;
     public static boolean EnderIOLoaded = false;
-
     public static boolean WrenchAvailable = false;
 
     private ModCompatibility() {
@@ -46,6 +47,7 @@ public class ModCompatibility {
         NEILoaded = Loader.isModLoaded("EnderIO");
     }
 
+    @Optional.Method(modid = "NotEnoughItems")
     private void hideNEIItems() {
         if (NEILoaded) {
             hideItem(new ItemStack(ModBlocks.blockFLLight));
@@ -56,13 +58,17 @@ public class ModCompatibility {
         NBTTagCompound versionchecker = new NBTTagCompound();
         versionchecker.setString("curseProjectName", "224728-floodlights");
         versionchecker.setString("curseFilenameParser", "FloodLights-1.7.10-[]");
+        versionchecker.setString("modDisplayName", "FloodLights");
+        versionchecker.setString("oldVersion", Reference.VERSION);
         FMLInterModComms.sendRuntimeMessage("floodlights", "VersionChecker", "addCurseCheck", versionchecker);
     }
 
     public void performModCompat() {
         checkForMods();
         new IGWSupportNotifier();
-        hideNEIItems();
+        if (NEILoaded) {
+            hideNEIItems();
+        }
         addVersionCheckerInfo();
         FMLInterModComms.sendMessage("Waila", "register", "de.keridos.floodlights.compatability.WailaTileHandler.callbackRegister");
         WrenchAvailable = (BCLoaded || EnderIOLoaded || IC2Loaded || CofhCoreLoaded);

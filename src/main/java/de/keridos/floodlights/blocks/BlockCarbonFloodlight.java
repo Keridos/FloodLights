@@ -11,7 +11,6 @@ import de.keridos.floodlights.tileentity.TileEntityCarbonFloodlight;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
@@ -26,9 +25,8 @@ import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
  */
 public class BlockCarbonFloodlight extends BlockFL implements ITileEntityProvider {
 
-    public BlockCarbonFloodlight(Material material) {
+    public BlockCarbonFloodlight() {
         super(Names.Blocks.CARBON_FLOODLIGHT, Material.rock, soundTypeMetal, 2.5F);
-        setCreativeTab(CreativeTabs.tabBlock);
         setHarvestLevel("pickaxe", 1);
     }
 
@@ -46,9 +44,9 @@ public class BlockCarbonFloodlight extends BlockFL implements ITileEntityProvide
     public void onNeighborBlockChange(World world, int x, int y, int z, Block par5) {
         if (!world.isRemote) {
             if (world.isBlockIndirectlyGettingPowered(x, y, z)) {
-                ((TileEntityCarbonFloodlight) world.getTileEntity(x, y, z)).setActive(true);
+                ((TileEntityCarbonFloodlight) world.getTileEntity(x, y, z)).setRedstone(true);
             } else if (!world.isBlockIndirectlyGettingPowered(x, y, z)) {
-                ((TileEntityCarbonFloodlight) world.getTileEntity(x, y, z)).setActive(false);
+                ((TileEntityCarbonFloodlight) world.getTileEntity(x, y, z)).setRedstone(false);
             }
         }
     }
@@ -57,9 +55,9 @@ public class BlockCarbonFloodlight extends BlockFL implements ITileEntityProvide
     public void onBlockAdded(World world, int x, int y, int z) {
         if (!world.isRemote) {
             if (world.isBlockIndirectlyGettingPowered(x, y, z)) {
-                ((TileEntityCarbonFloodlight) world.getTileEntity(x, y, z)).setActive(true);
+                ((TileEntityCarbonFloodlight) world.getTileEntity(x, y, z)).setRedstone(true);
             } else if (!world.isBlockIndirectlyGettingPowered(x, y, z)) {
-                ((TileEntityCarbonFloodlight) world.getTileEntity(x, y, z)).setActive(false);
+                ((TileEntityCarbonFloodlight) world.getTileEntity(x, y, z)).setRedstone(false);
             }
         }
     }
