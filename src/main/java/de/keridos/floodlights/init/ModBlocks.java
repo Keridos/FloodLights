@@ -6,6 +6,7 @@ import de.keridos.floodlights.blocks.BlockElectricFloodlight;
 import de.keridos.floodlights.blocks.BlockPhantomLight;
 import de.keridos.floodlights.blocks.BlockSmallElectricFloodlight;
 import de.keridos.floodlights.handler.ConfigHandler;
+import de.keridos.floodlights.item.itemBlock.ItemBlockSmallElectricMetaBlock;
 import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.reference.Reference;
 import de.keridos.floodlights.tileentity.TileEntityCarbonFloodlight;
@@ -35,7 +36,7 @@ public class ModBlocks {
         GameRegistry.registerBlock(blockElectricLight, Names.Blocks.ELECTRIC_FLOODLIGHT);
         GameRegistry.registerBlock(blockCarbonLight, Names.Blocks.CARBON_FLOODLIGHT);
         GameRegistry.registerBlock(blockFLLight, Names.Blocks.PHANTOM_LIGHT);
-        GameRegistry.registerBlock(blockSmallElectricLight, Names.Blocks.SMALL_ELECTRIC_FLOODLIGHT);
+        GameRegistry.registerBlock(blockSmallElectricLight, ItemBlockSmallElectricMetaBlock.class, Names.Blocks.SMALL_ELECTRIC_FLOODLIGHT);
     }
 
     public static void registerTileEntities() {

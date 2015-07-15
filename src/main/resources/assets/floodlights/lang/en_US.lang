@@ -9,7 +9,9 @@ item.floodlights:mantle.name=Mantle
 #TileEntities
 tile.floodlights:carbonFloodlight.name=Non-electric Floodlight
 tile.floodlights:electricFloodlight.name=Electric Floodlight
-tile.floodlights:smallFluorescentFloodlight.name=Electric Floodlight
+tile.floodlights:smallElectricFloodlight.name=Small Electric Floodlight
+tile.floodlights:smallElectricFloodlightMetaBlock_smallFluorescent.name=Small Flourescent Light
+tile.floodlights:smallElectricFloodlightMetaBlock_squareFluorescent.name=Square Flourescent Light
 
 #GUI
 gui.floodlights:nonElectricFloodlightTimeRemaining=Time remaining

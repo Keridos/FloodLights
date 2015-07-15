@@ -1,0 +1,9 @@
+This is a floodlight that just lights up the blocks next to it and must be supplied with energy from behind and uses very little energy.
+Can be rotated by 90 degrees with a wrench. This does not change the orientation, only the rotation in the place it is sitting.
+Shift-clicking with an empty hand will make it change its inversion state, just like the other lights.
+
+It comes in different models, so far only 2:
+Small Fluorescent Light
+Square Fluorescent Light
+
+The Fluorescent Lights are a perfect decoration for office/factory lighting.

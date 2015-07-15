@@ -6,6 +6,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.handler.lighting.LightHandler;
+import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.tileentity.TileEntityFL;
 import de.keridos.floodlights.tileentity.TileEntitySmallFloodlight;
@@ -14,14 +15,18 @@ import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
@@ -45,6 +50,7 @@ public class BlockSmallElectricFloodlight extends BlockFL implements ITileEntity
     public boolean renderAsNormalBlock() {
         return false;
     }
+
 
     @Override
     @SideOnly(Side.CLIENT)
@@ -142,22 +148,32 @@ public class BlockSmallElectricFloodlight extends BlockFL implements ITileEntity
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z) {
         TileEntitySmallFloodlight tileEntitySmallFloodlight = (TileEntitySmallFloodlight) world.getTileEntity(x, y, z);
-        if (!(tileEntitySmallFloodlight.getRotationState() ^
-                (tileEntitySmallFloodlight.getOrientation() == ForgeDirection.DOWN ||
-                        tileEntitySmallFloodlight.getOrientation() == ForgeDirection.UP))) {
-            this.minX = 0;
-            this.maxX = 0.1875;
-            this.minY = 0.3125;
-            this.maxY = 0.6875;
-            this.minZ = 0;
-            this.maxZ = 1;
-        } else {
-            this.minX = 0;
-            this.maxX = 0.1875;
-            this.minY = 0;
-            this.maxY = 1;
-            this.minZ = 0.3125;
-            this.maxZ = 0.6875;
+        switch (world.getBlockMetadata(x, y, z)) {
+            case 0:
+                if (!tileEntitySmallFloodlight.getRotationState()) {
+                    this.minX = 0;
+                    this.maxX = 0.1875;
+                    this.minY = 0.3125;
+                    this.maxY = 0.6875;
+                    this.minZ = 0;
+                    this.maxZ = 1;
+                } else {
+                    this.minX = 0;
+                    this.maxX = 0.1875;
+                    this.minY = 0;
+                    this.maxY = 1;
+                    this.minZ = 0.3125;
+                    this.maxZ = 0.6875;
+                }
+                break;
+            case 1:
+                this.minX = 0;
+                this.maxX = 0.1875;
+                this.minY = 0;
+                this.maxY = 1;
+                this.minZ = 0;
+                this.maxZ = 1;
+                break;
         }
         this.minX = this.minX - 0.5;
         this.minY = this.minY - 0.5;
@@ -188,12 +204,33 @@ public class BlockSmallElectricFloodlight extends BlockFL implements ITileEntity
     }
 
     @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLiving, ItemStack itemStack) {
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLiving, ItemStack
+            itemStack) {
         if (world.getTileEntity(x, y, z) instanceof TileEntityFL) {
             if (itemStack.hasDisplayName()) {
                 ((TileEntityFL) world.getTileEntity(x, y, z)).setCustomName(itemStack.getDisplayName());
             }
             ((TileEntityFL) world.getTileEntity(x, y, z)).setOrientation(ForgeDirection.getOrientation(getFacing(entityLiving)));
+        }
+    }
+
+    @Override
+    public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
+        ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
+        drops.add(0, new ItemStack(ModBlocks.blockSmallElectricLight, 1, metadata));
+        return drops;
+    }
+
+    @Override
+    public int damageDropped(int metadata) {
+        return metadata;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void getSubBlocks(Item item, CreativeTabs tab, List subItems) {
+        for (int i = 0; i < 2; i++) {
+            subItems.add(new ItemStack(ModBlocks.blockSmallElectricLight, 1, i));
         }
     }
 }
