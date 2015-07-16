@@ -204,8 +204,7 @@ public class BlockSmallElectricFloodlight extends BlockFL implements ITileEntity
     }
 
     @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLiving, ItemStack
-            itemStack) {
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLiving, ItemStack itemStack) {
         if (world.getTileEntity(x, y, z) instanceof TileEntityFL) {
             if (itemStack.hasDisplayName()) {
                 ((TileEntityFL) world.getTileEntity(x, y, z)).setCustomName(itemStack.getDisplayName());
