@@ -1,4 +1,4 @@
-package de.keridos.floodlights.blocks;
+package de.keridos.floodlights.block;
 
 import buildcraft.api.tools.IToolWrench;
 import cofh.api.item.IToolHammer;

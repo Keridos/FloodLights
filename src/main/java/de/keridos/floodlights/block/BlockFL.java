@@ -1,4 +1,4 @@
-package de.keridos.floodlights.blocks;
+package de.keridos.floodlights.block;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

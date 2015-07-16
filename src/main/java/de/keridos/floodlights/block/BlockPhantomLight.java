@@ -1,4 +1,4 @@
-package de.keridos.floodlights.blocks;
+package de.keridos.floodlights.block;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.util.AxisAlignedBB;

@@ -1,10 +1,10 @@
 package de.keridos.floodlights.init;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import de.keridos.floodlights.blocks.BlockCarbonFloodlight;
-import de.keridos.floodlights.blocks.BlockElectricFloodlight;
-import de.keridos.floodlights.blocks.BlockPhantomLight;
-import de.keridos.floodlights.blocks.BlockSmallElectricFloodlight;
+import de.keridos.floodlights.block.BlockCarbonFloodlight;
+import de.keridos.floodlights.block.BlockElectricFloodlight;
+import de.keridos.floodlights.block.BlockPhantomLight;
+import de.keridos.floodlights.block.BlockSmallElectricFloodlight;
 import de.keridos.floodlights.handler.ConfigHandler;
 import de.keridos.floodlights.item.itemBlock.ItemBlockSmallElectricMetaBlock;
 import de.keridos.floodlights.reference.Names;
