@@ -3,6 +3,7 @@ package de.keridos.floodlights.compatability;
 import cpw.mods.fml.common.Optional;
 import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.tileentity.TileEntityFL;
+import de.keridos.floodlights.tileentity.TileEntitySmallFloodlight;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
@@ -83,7 +84,7 @@ public class WailaTileHandler implements IWailaDataProvider {
         int mode = accessor.getNBTData().getInteger("teState");
         String inverted = (invert ? Names.Localizations.TRUE : Names.Localizations.FALSE);
         currenttip.add(safeLocalize(Names.Localizations.INVERT) + ": " + safeLocalize(inverted));
-        if (mode < 3) {
+        if (mode < 3 && !(accessor.getTileEntity() instanceof TileEntitySmallFloodlight)) {
             String modeString = (mode == 0 ? Names.Localizations.STRAIGHT : mode == 1 ? Names.Localizations.NARROW_CONE : Names.Localizations.WIDE_CONE);
             currenttip.add(safeLocalize(Names.Localizations.MODE) + ": " + safeLocalize(modeString));
         }

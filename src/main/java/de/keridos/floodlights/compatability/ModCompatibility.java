@@ -49,9 +49,7 @@ public class ModCompatibility {
 
     @Optional.Method(modid = "NotEnoughItems")
     private void hideNEIItems() {
-        if (NEILoaded) {
-            hideItem(new ItemStack(ModBlocks.blockFLLight));
-        }
+        hideItem(new ItemStack(ModBlocks.blockFLLight));
     }
 
     private void addVersionCheckerInfo() {
