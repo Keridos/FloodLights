@@ -37,8 +37,8 @@ public class ConfigHandler {
         carbonFloodlight = config.getBoolean("carbonFloodlightEnabled", "blocks", true, "Enables the carbon FloodLight");
 
         config.getCategory("general");
-        energyUsage = config.getInt("energyUsage", "general", 10, 0, 1000, "Energy Usage in RF/t for the electric FloodLight (x4 for the cone floodlights)");
-        energyUsageSmallFloodlight = config.getInt("energyUsageSmallFloodlight", "general", 1, 0, 100, "Energy Usage in RF/t for the small electric FloodLight");
+        energyUsage = config.getInt("energyUsage", "general", 20, 0, 1000, "Energy Usage in RF/t for the electric FloodLight (x4 for the cone floodlights)");
+        energyUsageSmallFloodlight = config.getInt("energyUsageSmallFloodlight", "general", 2, 0, 100, "Energy Usage in RF/t for the small electric FloodLight");
         carbonTime = config.getInt("carbonTime", "general", 300, 0, 1000, "How many seconds should 1 coal last in the carbon floodlight (quarter of that for the cone floodlights)? Default:300");
         rangeStraightFloodlight = config.getInt("rangeStraightFloodlight", "general", 64, 1, 128, "How far should the straight Floodlights go?");
         rangeConeFloodlight = config.getInt("rangeConeFloodlight", "general", 32, 1, 64, "How far should the cone floodlights go (Mind that wide only goes quarter as far as this)? Default:32   ");
