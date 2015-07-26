@@ -12,9 +12,9 @@ import net.minecraft.item.ItemStack;
  */
 public class FloodLightsWikiTab extends BaseWikiTab {
     public FloodLightsWikiTab() {
-        pageEntries.add("block/floodlights:electricFloodlight");
-        pageEntries.add("block/floodlights:carbonFloodlight");
-        pageEntries.add("block/floodlights:smallElectricFloodlight");
+        pageEntries.add("block/electricFloodlight");
+        pageEntries.add("block/carbonFloodlight");
+        pageEntries.add("block/smallElectricFloodlight");
     }
 
     @Override
@@ -30,7 +30,7 @@ public class FloodLightsWikiTab extends BaseWikiTab {
     @Override
     protected String getPageName(String pageEntry) {
         if (pageEntry.startsWith("item") || pageEntry.startsWith("block")) {
-            return I18n.format(pageEntry.replace("/", ".").replace("block", "tile") + ".name");
+            return I18n.format(pageEntry.replace("/", ".").replace("block.", "tile.floodlights:") + ".name");
         } else {
             return I18n.format("igwtab.entry." + pageEntry);
         }
@@ -39,7 +39,7 @@ public class FloodLightsWikiTab extends BaseWikiTab {
     @Override
     protected String getPageLocation(String pageEntry) {
         if (pageEntry.startsWith("item") || pageEntry.startsWith("block"))
-            return pageEntry.replace("/floodlights:", "/");
-        return "menu/" + pageEntry;
+            return pageEntry;
+        return "floodlights:menu/" + pageEntry;
     }
 }
