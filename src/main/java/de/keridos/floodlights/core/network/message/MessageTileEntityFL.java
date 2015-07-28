@@ -15,7 +15,7 @@ import net.minecraft.tileentity.TileEntity;
  * This Class is the Message that the electric floodlights TileEntity uses.
  */
 public class MessageTileEntityFL implements IMessage, IMessageHandler<MessageTileEntityFL, IMessage> {
-    public int x, y, z, timeRemaining;
+    public int x, y, z, timeRemaining, color;
     public byte orientation, state;
     public boolean rotationState;
     public String customName, owner;
@@ -33,6 +33,7 @@ public class MessageTileEntityFL implements IMessage, IMessageHandler<MessageTil
             this.state = (byte) tileEntityFL.getState();
             this.customName = tileEntityFL.getCustomName();
             this.owner = tileEntityFL.getOwner();
+            this.color = tileEntityFL.getColor();
             if (tileEntity instanceof TileEntityCarbonFloodlight) {
                 this.timeRemaining = ((TileEntityCarbonFloodlight) tileEntity).timeRemaining;
             } else {
@@ -59,6 +60,7 @@ public class MessageTileEntityFL implements IMessage, IMessageHandler<MessageTil
         int ownerLength = buf.readInt();
         this.owner = new String(buf.readBytes(ownerLength).array());
         this.rotationState = buf.readBoolean();
+        this.color = buf.readInt();
     }
 
     @Override
@@ -74,6 +76,7 @@ public class MessageTileEntityFL implements IMessage, IMessageHandler<MessageTil
         buf.writeInt(owner.length());
         buf.writeBytes(owner.getBytes());
         buf.writeBoolean(rotationState);
+        buf.writeInt(color);
     }
 
     @Override
@@ -84,6 +87,7 @@ public class MessageTileEntityFL implements IMessage, IMessageHandler<MessageTil
             ((TileEntityFL) tileEntity).setState(message.state);
             ((TileEntityFL) tileEntity).setCustomName(message.customName);
             ((TileEntityFL) tileEntity).setOwner(message.owner);
+            ((TileEntityFL) tileEntity).setColor(message.color);
         }
         if (tileEntity instanceof TileEntityCarbonFloodlight) {
             ((TileEntityCarbonFloodlight) tileEntity).timeRemaining = message.timeRemaining;

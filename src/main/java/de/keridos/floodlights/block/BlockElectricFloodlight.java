@@ -7,10 +7,14 @@ import de.keridos.floodlights.handler.lighting.LightHandler;
 import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.reference.RenderIDs;
 import de.keridos.floodlights.tileentity.TileEntityElectricFloodlight;
+import de.keridos.floodlights.tileentity.TileEntityFL;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -105,6 +109,13 @@ public class BlockElectricFloodlight extends BlockFL implements ITileEntityProvi
                     world.func_147480_a(x, y, z, true);
                     return true;
                 }
+            }
+            if (player.getHeldItem().getItem() == Items.dye) {
+                ((TileEntityFL) world.getTileEntity(x, y, z)).setColor(15 - player.getHeldItem().getItemDamage());
+                return true;
+            } else if (player.getHeldItem().getItem() == Item.getItemFromBlock(Blocks.wool)) {
+                ((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).setColor(16);
+                return true;
             }
         }
 

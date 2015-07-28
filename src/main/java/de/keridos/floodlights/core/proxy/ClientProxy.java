@@ -10,6 +10,7 @@ import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.reference.RenderIDs;
 import de.keridos.floodlights.tileentity.TileEntitySmallFloodlight;
+import de.keridos.floodlights.util.RenderUtil;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.MinecraftForgeClient;
 
@@ -25,6 +26,7 @@ public class ClientProxy extends CommonProxy {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySmallFloodlight.class, new TileEntitySmallFoodlightRenderer());
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.blockSmallElectricLight),
                 new SmallFloodlightItemRenderer(new TileEntitySmallFoodlightRenderer(), new TileEntitySmallFloodlight()));
+        RenderUtil.setupColors();
     }
 
     @Override

@@ -19,12 +19,14 @@ public class TileEntityFL extends TileEntity {
     protected String owner;
     protected int mode;
     protected boolean inverted;
+    protected int color;
 
     public TileEntityFL() {
         orientation = ForgeDirection.SOUTH;
         state = 0;
         customName = "";
         owner = "";
+        color = 16;  //16 is vanilla block color, so no color change in rendering
     }
 
     public ForgeDirection getOrientation() {
@@ -71,6 +73,15 @@ public class TileEntityFL extends TileEntity {
         this.mode = mode;
     }
 
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+        worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+    }
+
     @Override
     public void readFromNBT(NBTTagCompound nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
@@ -92,6 +103,9 @@ public class TileEntityFL extends TileEntity {
         if (nbtTagCompound.hasKey(Names.NBT.MODE)) {
             this.mode = nbtTagCompound.getInteger(Names.NBT.MODE);
         }
+        if (nbtTagCompound.hasKey(Names.NBT.COLOR)) {
+            this.color = nbtTagCompound.getInteger(Names.NBT.COLOR);
+        }
     }
 
     @Override
@@ -101,6 +115,7 @@ public class TileEntityFL extends TileEntity {
         nbtTagCompound.setBoolean(Names.NBT.INVERT, inverted);
         nbtTagCompound.setByte(Names.NBT.STATE, state);
         nbtTagCompound.setInteger(Names.NBT.MODE, mode);
+        nbtTagCompound.setInteger(Names.NBT.COLOR, color);
         if (this.hasCustomName()) {
             nbtTagCompound.setString(Names.NBT.CUSTOM_NAME, customName);
         }

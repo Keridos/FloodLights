@@ -3,8 +3,10 @@ package de.keridos.floodlights.client.render.block;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.reference.RenderIDs;
 import de.keridos.floodlights.tileentity.TileEntityFL;
+import de.keridos.floodlights.util.RenderUtil;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
@@ -55,6 +57,13 @@ public class RotatableBlockRenderer implements ISimpleBlockRenderingHandler {
     public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer) {
         TileEntityFL l = (TileEntityFL) world.getTileEntity(x, y, z);
         int i1 = l.getOrientation().ordinal();
+        int c = l.getColor();
+        float cMult = 1.0F;
+        if (block == ModBlocks.blockCarbonLight) {
+            cMult = 1.0F + (float) Math.log10(255 / 98);
+        } else if (block == ModBlocks.blockElectricLight) {
+            cMult = 1.0F + (float) Math.log10(255 / 143);
+        }
         switch (i1) {
             case 0:
                 renderer.uvRotateEast = 3;
@@ -86,7 +95,11 @@ public class RotatableBlockRenderer implements ISimpleBlockRenderingHandler {
                 renderer.uvRotateTop = 1;
                 renderer.uvRotateBottom = 2;
         }
-        renderer.renderStandardBlock(block, x, y, z);
+        if (c == 16) {
+            renderer.renderStandardBlock(block, x, y, z);
+        } else {
+            renderer.renderStandardBlockWithColorMultiplier(block, x, y, z, RenderUtil.r[c] * cMult, RenderUtil.g[c] * cMult, RenderUtil.b[c] * cMult);
+        }
         renderer.uvRotateEast = 0;
         renderer.uvRotateWest = 0;
         renderer.uvRotateSouth = 0;

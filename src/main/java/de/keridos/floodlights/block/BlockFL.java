@@ -95,6 +95,7 @@ public class BlockFL extends Block {
         }
     }
 
+
     protected void dropInventory(World world, int x, int y, int z) {
         TileEntity tileEntity = world.getTileEntity(x, y, z);
         if (!(tileEntity instanceof IInventory)) {

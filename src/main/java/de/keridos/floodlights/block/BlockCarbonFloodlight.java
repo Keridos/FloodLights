@@ -8,10 +8,14 @@ import de.keridos.floodlights.handler.lighting.LightHandler;
 import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.reference.RenderIDs;
 import de.keridos.floodlights.tileentity.TileEntityCarbonFloodlight;
+import de.keridos.floodlights.tileentity.TileEntityFL;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -64,12 +68,12 @@ public class BlockCarbonFloodlight extends BlockFL implements ITileEntityProvide
 
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float p_149727_7_, float p_149727_8_, float p_149727_9_) {
-        if (player.getHeldItem() == null && player.isSneaking() && !world.isRemote) {
+        if (!world.isRemote && player.getHeldItem() == null && player.isSneaking()) {
             ((TileEntityCarbonFloodlight) world.getTileEntity(x, y, z)).toggleInverted();
             String invert = (((TileEntityCarbonFloodlight) world.getTileEntity(x, y, z)).getInverted() ? Names.Localizations.TRUE : Names.Localizations.FALSE);
             player.addChatMessage(new ChatComponentText(safeLocalize(Names.Localizations.INVERT) + ": " + safeLocalize(invert)));
             return true;
-        } else if (player.getHeldItem() != null && !world.isRemote) {
+        } else if (!world.isRemote && player.getHeldItem() != null) {
             if (!ModCompatibility.WrenchAvailable && player.getHeldItem().getItem() == getMinecraftItem("stick")) {
                 ((TileEntityCarbonFloodlight) world.getTileEntity(x, y, z)).changeMode(player);
             }
@@ -106,6 +110,13 @@ public class BlockCarbonFloodlight extends BlockFL implements ITileEntityProvide
                     world.func_147480_a(x, y, z, true);
                     return true;
                 }
+            }
+            if (player.getHeldItem().getItem() == Items.dye) {
+                ((TileEntityFL) world.getTileEntity(x, y, z)).setColor(15 - player.getHeldItem().getItemDamage());
+                return true;
+            } else if (player.getHeldItem().getItem() == Item.getItemFromBlock(Blocks.wool)) {
+                ((TileEntityFL) world.getTileEntity(x, y, z)).setColor(16);
+                return true;
             }
         }
         if (!world.isRemote) {
