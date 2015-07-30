@@ -4,6 +4,7 @@ import de.keridos.floodlights.client.render.model.TileEntitySmallFluorescentLigh
 import de.keridos.floodlights.client.render.model.TileEntitySquareFluorescentLightModel;
 import de.keridos.floodlights.reference.Textures;
 import de.keridos.floodlights.tileentity.TileEntitySmallFloodlight;
+import de.keridos.floodlights.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
@@ -87,6 +88,11 @@ public class TileEntitySmallFoodlightRenderer extends TileEntitySpecialRenderer 
                 xRotation = (float) Math.PI / 2;
                 zRotation = (tileEntitySmallFloodlight.getRotationState() ? (float) Math.PI / 2 : 0.0F);
                 break;
+        }
+        int c = tileEntitySmallFloodlight.getColor();
+        if (c != 16) {
+            float cMult = 1.21342F;
+            GL11.glColor3f(RenderUtil.r[c] * cMult, RenderUtil.g[c] * cMult, RenderUtil.b[c] * cMult);
         }
         switch (metadata) {
             case 0:

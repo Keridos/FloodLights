@@ -113,12 +113,13 @@ public class BlockElectricFloodlight extends BlockFL implements ITileEntityProvi
             if (player.getHeldItem().getItem() == Items.dye) {
                 ((TileEntityFL) world.getTileEntity(x, y, z)).setColor(15 - player.getHeldItem().getItemDamage());
                 return true;
-            } else if (player.getHeldItem().getItem() == Item.getItemFromBlock(Blocks.wool)) {
-                ((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).setColor(16);
+            } else if (player.getHeldItem().getItem() == Item.getItemFromBlock(Blocks.wool) && !player.isSneaking()) {
+                ((TileEntityFL) world.getTileEntity(x, y, z)).setColor(16);
                 return true;
             }
+        } else if (world.isRemote) {
+            return true;
         }
-
         return false;
     }
 

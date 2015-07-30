@@ -58,12 +58,6 @@ public class RotatableBlockRenderer implements ISimpleBlockRenderingHandler {
         TileEntityFL l = (TileEntityFL) world.getTileEntity(x, y, z);
         int i1 = l.getOrientation().ordinal();
         int c = l.getColor();
-        float cMult = 1.0F;
-        if (block == ModBlocks.blockCarbonLight) {
-            cMult = 1.0F + (float) Math.log10(255 / 98);
-        } else if (block == ModBlocks.blockElectricLight) {
-            cMult = 1.0F + (float) Math.log10(255 / 143);
-        }
         switch (i1) {
             case 0:
                 renderer.uvRotateEast = 3;
@@ -98,6 +92,12 @@ public class RotatableBlockRenderer implements ISimpleBlockRenderingHandler {
         if (c == 16) {
             renderer.renderStandardBlock(block, x, y, z);
         } else {
+            float cMult = 1.0F;
+            if (block == ModBlocks.blockCarbonLight) {
+                cMult = 1.41531F; // 1.0F + (float) Math.log10(255 / 98);
+            } else if (block == ModBlocks.blockElectricLight) {
+                cMult = 1.2512F; // 1.0F + (float) Math.log10(255 / 143);
+            }
             renderer.renderStandardBlockWithColorMultiplier(block, x, y, z, RenderUtil.r[c] * cMult, RenderUtil.g[c] * cMult, RenderUtil.b[c] * cMult);
         }
         renderer.uvRotateEast = 0;

@@ -18,6 +18,8 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
@@ -128,6 +130,15 @@ public class BlockSmallElectricFloodlight extends BlockFL implements ITileEntity
                     return true;
                 }
             }
+            if (player.getHeldItem().getItem() == Items.dye) {
+                ((TileEntityFL) world.getTileEntity(x, y, z)).setColor(15 - player.getHeldItem().getItemDamage());
+                return true;
+            } else if (player.getHeldItem().getItem() == Item.getItemFromBlock(Blocks.wool) && !player.isSneaking()) {
+                ((TileEntityFL) world.getTileEntity(x, y, z)).setColor(16);
+                return true;
+            }
+        } else if (world.isRemote) {
+            return true;
         }
         return false;
     }
