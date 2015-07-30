@@ -24,7 +24,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IEnergyHandler, IEnergySink {
     protected boolean wasAddedToEnergyNet = false;
-    protected int storageEU;
+    protected double storageEU;
     protected EnergyStorage storage = new EnergyStorage(50000);
 
     public TileEntityFLElectric() {
@@ -36,7 +36,7 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
         super.readFromNBT(nbtTagCompound);
         storage.readFromNBT(nbtTagCompound);
         if (nbtTagCompound.hasKey(Names.NBT.STORAGE_EU)) {
-            this.storageEU = nbtTagCompound.getInteger(Names.NBT.STORAGE_EU);
+            this.storageEU = nbtTagCompound.getDouble(Names.NBT.STORAGE_EU);
         }
     }
 
@@ -44,7 +44,7 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
     public void writeToNBT(NBTTagCompound nbtTagCompound) {
         super.writeToNBT(nbtTagCompound);
         storage.writeToNBT(nbtTagCompound);
-        nbtTagCompound.setInteger(Names.NBT.STORAGE_EU, storageEU);
+        nbtTagCompound.setDouble(Names.NBT.STORAGE_EU, storageEU);
     }
 
     @Override
@@ -75,10 +75,10 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
     @Optional.Method(modid = "IC2")
     @Override
     public double injectEnergy(ForgeDirection forgeDirection, double v, double v1) {
-        if (storage.getMaxEnergyStored() - storage.getEnergyStored() >= MathUtil.truncateDoubleToInt(v * 4)) {
+        if (storage.getMaxEnergyStored() - storage.getEnergyStored() >= (v * 4)) {
             storage.modifyEnergyStored(MathUtil.truncateDoubleToInt(v * 4));
         } else {
-            storageEU += MathUtil.truncateDoubleToInt(v * 4) - (storage.getMaxEnergyStored() - storage.getEnergyStored());
+            storageEU += (v * 4) - (storage.getMaxEnergyStored() - storage.getEnergyStored());
             storage.modifyEnergyStored(MathUtil.truncateDoubleToInt(v * 4));
         }
         return 0;

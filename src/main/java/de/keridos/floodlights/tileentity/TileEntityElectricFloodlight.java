@@ -35,7 +35,7 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric {
         if (!world.isRemote) {
             ForgeDirection direction = this.getOrientation();
             int realEnergyUsage = configHandler.energyUsage / (mode == 0 ? 1 : 2);
-            if (active && (storage.getEnergyStored() >= realEnergyUsage || storageEU >= realEnergyUsage * 4)) {
+            if (active && (storage.getEnergyStored() >= realEnergyUsage || storageEU >= realEnergyUsage / 8)) {
                 if (!wasActive || world.getTotalWorldTime() % timeout == 0) {
                     if (world.getTotalWorldTime() % timeout == 0) {
                         lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
@@ -46,8 +46,8 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric {
                         world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, world.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) + 6, 2);
                     }
                 }
-                if (storageEU >= realEnergyUsage * 4) {
-                    storageEU -= realEnergyUsage * 4;
+                if (storageEU >= realEnergyUsage / 8) {
+                    storageEU -= realEnergyUsage / 8;
                 } else {
                     storage.modifyEnergyStored(-realEnergyUsage);
                 }
