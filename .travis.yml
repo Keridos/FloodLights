@@ -11,7 +11,7 @@ jdk:
 before_install:
   - chmod a+x gradlew
   - mkdir libs
-  - rm libs
+  - rm -rf libs
   - mkdir libs
   - cd libs
   - wget https://www.ironhide.de/~fuffzehn/stuff/minecraft/FLlibs.zip
