@@ -11,11 +11,11 @@ jdk:
 before_install:
   - chmod a+x gradlew
   - mkdir libs
-  - rm -rf libs
-  - mkdir libs
   - cd libs
   - wget https://www.ironhide.de/~fuffzehn/stuff/minecraft/FLlibs.zip
   - unzip FLlibs.zip
   - rm FLlibs.zip
   - cd ..
 script: gradle clean check
+after_script:
+  - rm -rf libs/
