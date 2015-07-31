@@ -20,8 +20,7 @@ public class LightBlockHandle {
     }
 
     public int[] getCoords() {
-        int[] coords = {this.x, this.y, this.z};
-        return coords;
+        return new int[]{this.x, this.y, this.z};
     }
 
     public void addSource(int xcord, int ycord, int zcord) {

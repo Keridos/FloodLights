@@ -34,10 +34,6 @@ public class TileEntityMetaFloodlight extends TileEntityFL {
         this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 
-    public boolean isWasActive() {
-        return wasActive;
-    }
-
     @Override
     public void readFromNBT(NBTTagCompound nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);

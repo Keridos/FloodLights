@@ -21,26 +21,26 @@ public class DiskIO {
         Path fullpath = Paths.get(DimensionManager.getCurrentSaveRootDirectory().toString() + "/floodlights/LightHandler.sav");
         try {
             if (Files.notExists(path)) {
-                path.toFile().mkdir();
+                if (path.toFile().mkdir()) {
+                    throw new Exception("Failed to create dir");
+                }
             }
-
             FileOutputStream saveFile = new FileOutputStream(fullpath.toFile());
             ObjectOutputStream save = new ObjectOutputStream(saveFile);
             save.writeObject(input);
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
     }
 
     public static LightHandler loadFromDisk() {
         LightHandler input = null;
         try {
-
             FileInputStream saveFile = new FileInputStream("world/floodlights/LightHandler.sav");
             ObjectInputStream save = new ObjectInputStream(saveFile);
             input = (LightHandler) save.readObject();
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
         return input;
     }

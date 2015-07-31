@@ -18,7 +18,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 public class TileEntitySmallFloodlight extends TileEntityFLElectric {
     private boolean rotationState = false;
     private LightHandler lightHandler = LightHandler.getInstance();
-    private ConfigHandler configHandler = ConfigHandler.getInstance();
 
     public TileEntitySmallFloodlight() {
         super();
@@ -71,7 +70,7 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
         }
         if (!world.isRemote) {
             ForgeDirection direction = this.getOrientation();
-            int realEnergyUsage = configHandler.energyUsageSmallFloodlight;
+            int realEnergyUsage = ConfigHandler.energyUsageSmallFloodlight;
             if (active && (storage.getEnergyStored() >= realEnergyUsage || storageEU >= realEnergyUsage / 8)) {
                 if (!wasActive || world.getTotalWorldTime() % timeout == 0) {
                     if (world.getTotalWorldTime() % timeout == 0) {

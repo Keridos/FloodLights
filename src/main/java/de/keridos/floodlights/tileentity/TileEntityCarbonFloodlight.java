@@ -22,7 +22,6 @@ import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
 public class TileEntityCarbonFloodlight extends TileEntityMetaFloodlight implements ISidedInventory {
     public int timeRemaining;
     private LightHandler lightHandler = LightHandler.getInstance();
-    private ConfigHandler configHandler = ConfigHandler.getInstance();
     private ItemStack[] inventory;
 
     public TileEntityCarbonFloodlight() {
@@ -62,8 +61,7 @@ public class TileEntityCarbonFloodlight extends TileEntityMetaFloodlight impleme
 
     @Override
     public int[] getAccessibleSlotsFromSide(int par1) {
-        int[] slots = {0};
-        return slots;
+        return new int[]{0};
     }
 
     @Override
@@ -78,10 +76,7 @@ public class TileEntityCarbonFloodlight extends TileEntityMetaFloodlight impleme
 
     @Override
     public boolean canInsertItem(int i, ItemStack itemstack, int j) {
-        if (i == 0 && getBurnTime(itemstack) > 0) {
-            return true;
-        }
-        return false;
+        return (i == 0 && getBurnTime(itemstack) > 0);
     }
 
     @Override
@@ -153,10 +148,7 @@ public class TileEntityCarbonFloodlight extends TileEntityMetaFloodlight impleme
 
     @Override
     public boolean isItemValidForSlot(int i, ItemStack itemstack) {
-        if (getBurnTime(itemstack) > 0) {
-            return true;
-        }
-        return false;
+        return (getBurnTime(itemstack) > 0);
     }
 
     @Override
@@ -165,7 +157,7 @@ public class TileEntityCarbonFloodlight extends TileEntityMetaFloodlight impleme
         if (!world.isRemote) {
             ForgeDirection direction = this.getOrientation();
             if (timeRemaining == 0 && inventory[0] != null) {
-                timeRemaining = configHandler.carbonTime * getBurnTime(inventory[0]) / 1600 * (mode == 0 ? 20 : 10);
+                timeRemaining = ConfigHandler.carbonTime * getBurnTime(inventory[0]) / 1600 * (mode == 0 ? 20 : 10);
                 decrStackSize(0, 1);
             }
             if (active && timeRemaining > 0) {

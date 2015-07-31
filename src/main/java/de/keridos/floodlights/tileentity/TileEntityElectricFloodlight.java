@@ -18,7 +18,6 @@ import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
 
 public class TileEntityElectricFloodlight extends TileEntityFLElectric {
     private LightHandler lightHandler = LightHandler.getInstance();
-    private ConfigHandler configHandler = ConfigHandler.getInstance();
 
     @Override
     public boolean canUpdate() {
@@ -34,7 +33,7 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric {
         }
         if (!world.isRemote) {
             ForgeDirection direction = this.getOrientation();
-            int realEnergyUsage = configHandler.energyUsage / (mode == 0 ? 1 : 2);
+            int realEnergyUsage = ConfigHandler.energyUsage / (mode == 0 ? 1 : 2);
             if (active && (storage.getEnergyStored() >= realEnergyUsage || storageEU >= realEnergyUsage / 8)) {
                 if (!wasActive || world.getTotalWorldTime() % timeout == 0) {
                     if (world.getTotalWorldTime() % timeout == 0) {
@@ -66,7 +65,7 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric {
         World world = this.getWorldObj();
         if (!world.isRemote) {
             ForgeDirection direction = this.getOrientation();
-            int realEnergyUsage = configHandler.energyUsage / (mode == 0 ? 1 : 4);
+            int realEnergyUsage = ConfigHandler.energyUsage / (mode == 0 ? 1 : 4);
             lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
             mode = (mode == 2 ? 0 : mode + 1);
             if (active && (storage.getEnergyStored() >= realEnergyUsage || storageEU >= realEnergyUsage * 4)) {

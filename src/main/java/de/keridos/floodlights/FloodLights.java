@@ -41,7 +41,7 @@ public class FloodLights {
     private ConfigHandler configHandler = ConfigHandler.getInstance();
     private static RecipeHandler recipeHandler = RecipeHandler.getInstance();
     private static ModCompatibility modCompatibility = ModCompatibility.getInstance();
-    private static GuiHandler Gui = null;
+    private static GuiHandler Gui;
 
     @NetworkCheckHandler()
     public boolean matchModVersions(Map<String, String> remoteVersions, Side side) {

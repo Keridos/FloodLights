@@ -49,7 +49,7 @@ public class WorldHandler {
     }
 
     private void straightSource(int sourceX, int sourceY, int sourceZ, ForgeDirection direction, boolean remove) {
-        for (int i = 1; i <= configHandler.rangeStraightFloodlight; i++) {
+        for (int i = 1; i <= ConfigHandler.rangeStraightFloodlight; i++) {
             int x = sourceX + direction.offsetX * i;
             int y = sourceY + direction.offsetY * i;
             int z = sourceZ + direction.offsetZ * i;
@@ -68,7 +68,7 @@ public class WorldHandler {
         boolean[] failedBeams = new boolean[9];    // for the additional beam to cancel when the main beams fail.
         for (int j = 0; j <= 16; j++) {
             if (j <= 8) {     // This is the main beams
-                for (int i = 1; i <= configHandler.rangeConeFloodlight / 2; i++) {
+                for (int i = 1; i <= ConfigHandler.rangeConeFloodlight / 2; i++) {
                     // for 1st light:
                     if (i == 1) {
                         LightBlockHandle handler = getFloodlightHandler(sourceX + direction.offsetX, sourceY + direction.offsetY, sourceZ + direction.offsetZ);
@@ -123,14 +123,14 @@ public class WorldHandler {
                     } else if (world.getBlock(x, y, z).isAir(world, x, y, z)) {
                         lightBlocks.get(lightBlocks.indexOf(handler)).addSource(sourceX, sourceY, sourceZ);
                     } else if (world.getBlock(x, y, z).isOpaqueCube()) {
-                        if (i < configHandler.rangeConeFloodlight / 4) {   //This is for canceling the long rangs beams
+                        if (i < ConfigHandler.rangeConeFloodlight / 4) {   //This is for canceling the long rangs beams
                             failedBeams[j] = true;
                         }
                         break;
                     }
                 }
             } else if (!failedBeams[j - 9] || remove) { // This is for the inner beams at longer range
-                for (int i = configHandler.rangeConeFloodlight / 4; i <= configHandler.rangeConeFloodlight / 2; i++) {
+                for (int i = ConfigHandler.rangeConeFloodlight / 4; i <= ConfigHandler.rangeConeFloodlight / 2; i++) {
                     int a = 2 * i;
                     int b = 0;
                     int c = 0;
@@ -185,8 +185,7 @@ public class WorldHandler {
         boolean[] failedBeams = new boolean[9];
         for (int j = 0; j <= 16; j++) {
             if (j <= 8) {
-                for (int i = 1; i <= configHandler.rangeConeFloodlight / 2; i++) {
-                    int a = i;
+                for (int i = 1; i <= ConfigHandler.rangeConeFloodlight / 2; i++) {
                     int b = 0;
                     int c = 0;
                     switch (j) {
@@ -219,7 +218,7 @@ public class WorldHandler {
                             c -= i;
                             break;
                     }
-                    int[] rotatedCoords = rotate(a, b, c, direction);
+                    int[] rotatedCoords = rotate(i, b, c, direction);
                     int x = sourceX + rotatedCoords[0];
                     int y = sourceY + rotatedCoords[1];
                     int z = sourceZ + rotatedCoords[2];
@@ -229,15 +228,14 @@ public class WorldHandler {
                     } else if (world.getBlock(x, y, z).isAir(world, x, y, z)) {
                         lightBlocks.get(lightBlocks.indexOf(handler)).addSource(sourceX, sourceY, sourceZ);
                     } else if (world.getBlock(x, y, z).isOpaqueCube()) {
-                        if (i < configHandler.rangeConeFloodlight / 4) {   //This is for canceling the long rangs beams
+                        if (i < ConfigHandler.rangeConeFloodlight / 4) {   //This is for canceling the long rangs beams
                             failedBeams[j] = true;
                         }
                         break;
                     }
                 }
             } else if (!failedBeams[j - 9] || remove) { // This is for the inner beams at longer range
-                for (int i = configHandler.rangeConeFloodlight / 4; i <= configHandler.rangeConeFloodlight / 2; i++) {
-                    int a = i;
+                for (int i = ConfigHandler.rangeConeFloodlight / 4; i <= ConfigHandler.rangeConeFloodlight / 2; i++) {
                     int b = 0;
                     int c = 0;
                     switch (j) {
@@ -270,7 +268,7 @@ public class WorldHandler {
                             c -= i / 2;
                             break;
                     }
-                    int[] rotatedCoords = rotate(a, b, c, direction);
+                    int[] rotatedCoords = rotate(i, b, c, direction);
                     int x = sourceX + rotatedCoords[0];
                     int y = sourceY + rotatedCoords[1];
                     int z = sourceZ + rotatedCoords[2];
@@ -349,7 +347,7 @@ public class WorldHandler {
         World activeworld = DimensionManager.getWorld(world.provider.dimensionId);
         if (!world.isRemote && activeworld != null) {
             int j = lastPositionInList;
-            for (int i = lastPositionInList; i < j + configHandler.refreshRate; i++) {
+            for (int i = lastPositionInList; i < j + ConfigHandler.refreshRate; i++) {
                 if (i >= lightBlocks.size()) {
                     lastPositionInList = 0;
                     break;

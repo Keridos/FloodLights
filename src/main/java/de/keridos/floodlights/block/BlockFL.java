@@ -38,7 +38,7 @@ public class BlockFL extends Block {
         setHardness(hardness);
         setBlockName(unlocName);
         this.unlocName = unlocName;
-        if (unlocName != "blockLight") {
+        if (!unlocName.equals("blockLight")) {
             this.setCreativeTab(CreativeTabFloodlight.FL_TAB);
         }
     }
