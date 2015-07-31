@@ -10,8 +10,8 @@ jdk:
   - oraclejdk8
 before_install:
   - chmod a+x gradlew
-  - rm libs
   - mkdir libs
+  - rm libs/*
   - cd libs
   - wget https://www.ironhide.de/~fuffzehn/stuff/minecraft/FLlibs.zip
   - unzip FLlibs.zip
