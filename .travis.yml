@@ -10,4 +10,11 @@ jdk:
   - oraclejdk8
 before_install:
   - chmod a+x gradlew
+  - rm libs
+  - mkdir libs
+  - cd libs
+  - wget https://www.ironhide.de/~fuffzehn/stuff/minecraft/FLlibs.zip
+  - unzip FLlibs.zip
+  - rm FLlibs.zip
+  - cd ..
 script: gradle clean check
