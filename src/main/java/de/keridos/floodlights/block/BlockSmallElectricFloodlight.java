@@ -238,6 +238,7 @@ public class BlockSmallElectricFloodlight extends BlockFL implements ITileEntity
 
     @Override
     @SideOnly(Side.CLIENT)
+    @SuppressWarnings("unchecked")
     public void getSubBlocks(Item item, CreativeTabs tab, List subItems) {
         for (int i = 0; i < 2; i++) {
             subItems.add(new ItemStack(ModBlocks.blockSmallElectricLight, 1, i));
