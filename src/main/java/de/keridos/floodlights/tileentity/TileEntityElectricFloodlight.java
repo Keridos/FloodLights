@@ -68,7 +68,7 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric {
             int realEnergyUsage = ConfigHandler.energyUsage / (mode == 0 ? 1 : 4);
             lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
             mode = (mode == 2 ? 0 : mode + 1);
-            if (active && (storage.getEnergyStored() >= realEnergyUsage || storageEU >= realEnergyUsage * 4)) {
+            if (active && (storage.getEnergyStored() >= realEnergyUsage || storageEU >= realEnergyUsage / 8)) {
                 lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
             }
             String modeString = (mode == 0 ? Names.Localizations.STRAIGHT : mode == 1 ? Names.Localizations.NARROW_CONE : Names.Localizations.WIDE_CONE);
