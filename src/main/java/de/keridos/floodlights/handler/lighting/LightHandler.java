@@ -4,13 +4,14 @@ import de.keridos.floodlights.util.DiskIO;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by Keridos on 03.10.14.
  * This Class is the main handler for all lights, stores the handler for each world.
  */
-public class LightHandler {
+public class LightHandler implements Serializable {
     private static LightHandler instance = null;
     private ArrayList<WorldHandler> worlds = new ArrayList<WorldHandler>();
 

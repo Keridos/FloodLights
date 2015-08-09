@@ -1,5 +1,6 @@
 package de.keridos.floodlights.handler.lighting;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -7,7 +8,7 @@ import java.util.Iterator;
  * Created by Keridos on 03.10.14.
  * This Class is what each Phantom Light has "appended" to it, it stores the coordinates of all source blocks for it.
  */
-public class LightBlockHandle {
+public class LightBlockHandle implements Serializable {
     private ArrayList<int[]> sources = new ArrayList<int[]>();
     private int x;
     private int y;

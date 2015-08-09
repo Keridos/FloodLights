@@ -6,6 +6,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import static de.keridos.floodlights.util.MathUtil.rotate;
@@ -15,8 +16,7 @@ import static de.keridos.floodlights.util.MathUtil.rotate;
  * This Class stores every lighting block in its designated world and manages them.
  * Currently all algorithms for placing the lights are in this class.
  */
-public class WorldHandler {
-    private ConfigHandler configHandler = ConfigHandler.getInstance();
+public class WorldHandler implements Serializable {
     private ArrayList<LightBlockHandle> lightBlocks = new ArrayList<LightBlockHandle>();
     private World world;
     private int lastPositionInList = 0;
