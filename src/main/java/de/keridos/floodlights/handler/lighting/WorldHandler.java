@@ -18,7 +18,7 @@ import static de.keridos.floodlights.util.MathUtil.rotate;
  */
 public class WorldHandler implements Serializable {
     private ArrayList<LightBlockHandle> lightBlocks = new ArrayList<LightBlockHandle>();
-    private World world;
+    private transient World world;
     private int lastPositionInList = 0;
 
     public WorldHandler(World worldinput) {
