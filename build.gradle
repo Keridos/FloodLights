@@ -131,7 +131,7 @@ dependencies {
     compile "codechicken:CodeChickenCore:${config.minecraft_version}-${config.ccc_version}:dev"
     compile "net.industrial-craft:industrialcraft-2:${config.ic2_version}:dev"
     compile "com.mod-buildcraft:buildcraft:${config.bc_version}:dev"
-    compile "coloredlightscore:ColoredLightsCore:${config.coloredlightcore_version}:deobf"
+    compile "coloredlightscore:ColoredLightsCore:${config.coloredlightcore_version}:api"
     //compile "cofhcore:CoFHCore-[${config.minecraft_version}]${config.cofhcore_version}:dev"
 }
 
