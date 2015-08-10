@@ -78,7 +78,7 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
             if (inventory[0] != null) {
                 if (ModCompatibility.IC2Loaded) {
                     if (inventory[0].getItem() instanceof IElectricItem) {
-                        double dischargeValue = (storage.getMaxEnergyStored() - storage.getEnergyStored()) / 8;
+                        double dischargeValue = (storage.getMaxEnergyStored() - (double) storage.getEnergyStored()) / 8.0D;
                         storage.modifyEnergyStored(MathUtil.truncateDoubleToInt(8 * ElectricItem.manager.discharge(inventory[0], dischargeValue, 4, false, true, false)));
                     }
                 }
@@ -97,8 +97,8 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
                         lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
                     }
                 }
-                if (storageEU >= realEnergyUsage / 8) {
-                    storageEU -= realEnergyUsage / 8;
+                if (storageEU >= (double) realEnergyUsage / 8.0D) {
+                    storageEU -= (double) realEnergyUsage / 8.0D;
                 } else {
                     storage.modifyEnergyStored(-realEnergyUsage);
                 }
