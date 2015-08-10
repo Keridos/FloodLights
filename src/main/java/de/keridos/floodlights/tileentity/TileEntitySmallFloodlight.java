@@ -71,7 +71,7 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
         if (!world.isRemote) {
             ForgeDirection direction = this.getOrientation();
             int realEnergyUsage = ConfigHandler.energyUsageSmallFloodlight;
-            if (active && (storage.getEnergyStored() >= realEnergyUsage || storageEU >= realEnergyUsage / 8)) {
+            if (active && (storage.getEnergyStored() >= realEnergyUsage || storageEU >= (double) realEnergyUsage / 8.0D)) {
                 if (!wasActive || world.getTotalWorldTime() % timeout == 0) {
                     if (world.getTotalWorldTime() % timeout == 0) {
                         lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
@@ -80,8 +80,8 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
                         lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
                     }
                 }
-                if (storageEU >= realEnergyUsage / 8) {
-                    storageEU -= realEnergyUsage / 8;
+                if (storageEU >= (double) realEnergyUsage / 8.0D) {
+                    storageEU -= (double) realEnergyUsage / 8.0D;
                 } else {
                     storage.modifyEnergyStored(-realEnergyUsage);
                 }
