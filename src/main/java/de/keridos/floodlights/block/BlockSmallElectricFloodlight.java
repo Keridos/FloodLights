@@ -4,6 +4,7 @@ import buildcraft.api.tools.IToolWrench;
 import cofh.api.item.IToolHammer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import de.keridos.floodlights.FloodLights;
 import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.handler.lighting.LightHandler;
 import de.keridos.floodlights.init.ModBlocks;
@@ -137,8 +138,9 @@ public class BlockSmallElectricFloodlight extends BlockFL implements ITileEntity
                 ((TileEntityFL) world.getTileEntity(x, y, z)).setColor(16);
                 return true;
             }
-        } else if (world.isRemote) {
-            return true;
+        }
+        if (!world.isRemote) {
+            player.openGui(FloodLights.instance, 1, world, x, y, z);
         }
         return false;
     }

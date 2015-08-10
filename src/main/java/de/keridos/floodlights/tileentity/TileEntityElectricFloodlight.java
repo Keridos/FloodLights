@@ -1,14 +1,21 @@
 package de.keridos.floodlights.tileentity;
 
+import cofh.api.energy.IEnergyContainerItem;
 import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.handler.ConfigHandler;
 import de.keridos.floodlights.handler.lighting.LightHandler;
 import de.keridos.floodlights.reference.Names;
+import de.keridos.floodlights.util.MathUtil;
+import ic2.api.item.ElectricItem;
+import ic2.api.item.IElectricItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import static de.keridos.floodlights.util.GeneralUtil.isItemStackValidElectrical;
 import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
 
 /**
@@ -16,8 +23,18 @@ import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
  * This Class is the electric floodlight TileEntity.
  */
 
-public class TileEntityElectricFloodlight extends TileEntityFLElectric {
+public class TileEntityElectricFloodlight extends TileEntityFLElectric implements ISidedInventory {
     private LightHandler lightHandler = LightHandler.getInstance();
+
+    @Override
+    public boolean isItemValidForSlot(int i, ItemStack itemstack) {
+        return isItemStackValidElectrical(itemstack);
+    }
+
+    @Override
+    public boolean canInsertItem(int i, ItemStack itemstack, int j) {
+        return isItemStackValidElectrical(itemstack);
+    }
 
     @Override
     public boolean canUpdate() {
@@ -34,7 +51,20 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric {
         if (!world.isRemote) {
             ForgeDirection direction = this.getOrientation();
             int realEnergyUsage = ConfigHandler.energyUsage / (mode == 0 ? 1 : 2);
-            if (active && (storage.getEnergyStored() >= realEnergyUsage || storageEU >= realEnergyUsage / 8)) {
+            if (inventory[0] != null) {
+                if (ModCompatibility.IC2Loaded) {
+                    if (inventory[0].getItem() instanceof IElectricItem) {
+                        double dischargeValue = (storage.getMaxEnergyStored() - storage.getEnergyStored()) / 8;
+                        storage.modifyEnergyStored(MathUtil.truncateDoubleToInt(8 * ElectricItem.manager.discharge(inventory[0], dischargeValue, 4, false, true, false)));
+                    }
+                }
+                if (inventory[0].getItem() instanceof IEnergyContainerItem) {
+                    IEnergyContainerItem item = (IEnergyContainerItem) inventory[0].getItem();
+                    int dischargeValue = Math.min(item.getEnergyStored(inventory[0]), (storage.getMaxEnergyStored() - storage.getEnergyStored()));
+                    storage.modifyEnergyStored(item.extractEnergy(inventory[0], dischargeValue, false));
+                }
+            }
+            if (active && (storage.getEnergyStored() >= realEnergyUsage || storageEU >= (double) realEnergyUsage / 8.0D)) {
                 if (!wasActive || world.getTotalWorldTime() % timeout == 0) {
                     if (world.getTotalWorldTime() % timeout == 0) {
                         lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);

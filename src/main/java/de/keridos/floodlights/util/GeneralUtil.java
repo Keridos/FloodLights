@@ -1,13 +1,18 @@
 package de.keridos.floodlights.util;
 
+import cofh.api.energy.IEnergyContainerItem;
 import cpw.mods.fml.common.registry.GameData;
 import cpw.mods.fml.common.registry.GameRegistry;
+import de.keridos.floodlights.compatability.ModCompatibility;
+import ic2.api.item.IElectricItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.*;
 import net.minecraft.util.StatCollector;
+
+import java.util.logging.Logger;
 
 /**
  * Created by Keridos on 28/11/2014.
@@ -56,5 +61,16 @@ public class GeneralUtil {
         if (item == Item.getItemFromBlock(Blocks.sapling)) return 100;
         if (item == Items.blaze_rod) return 2400;
         return GameRegistry.getFuelValue(itemStack);
+    }
+
+    public static boolean isItemStackValidElectrical(ItemStack itemStack) {
+        Item item = itemStack.getItem();
+        if (ModCompatibility.IC2Loaded) {
+            Logger.getGlobal().info((item instanceof IElectricItem) ? "true" : "false");
+            if (item instanceof IElectricItem) {
+                return ((IElectricItem) item).canProvideEnergy(itemStack);
+            }
+        }
+        return item instanceof IEnergyContainerItem;
     }
 }

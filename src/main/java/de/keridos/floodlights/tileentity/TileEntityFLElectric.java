@@ -72,6 +72,10 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
         return storage.getMaxEnergyStored();
     }
 
+    public void setEnergyStored(int energyStored) {
+        storage.setEnergyStored(energyStored);
+    }
+
     @Optional.Method(modid = "IC2")
     @Override
     public double injectEnergy(ForgeDirection forgeDirection, double v, double v1) {

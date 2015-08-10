@@ -15,6 +15,7 @@ tile.floodlights:smallElectricFloodlightMetaBlock_squareFluorescent.name=Square 
 
 #GUI
 gui.floodlights:nonElectricFloodlightTimeRemaining=Time remaining
+gui.floodlights:RFStorage=RF Storage
 gui.floodlights:invert=Inverted
 gui.floodlights:mode=Mode
 gui.floodlights:true=true

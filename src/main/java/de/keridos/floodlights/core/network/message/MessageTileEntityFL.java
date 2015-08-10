@@ -4,20 +4,19 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import de.keridos.floodlights.tileentity.TileEntityCarbonFloodlight;
-import de.keridos.floodlights.tileentity.TileEntityFL;
-import de.keridos.floodlights.tileentity.TileEntitySmallFloodlight;
+import de.keridos.floodlights.tileentity.*;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * Created by Keridos on 05.10.14.
  * This Class is the Message that the electric floodlights TileEntity uses.
  */
 public class MessageTileEntityFL implements IMessage, IMessageHandler<MessageTileEntityFL, IMessage> {
-    public int x, y, z, timeRemaining, color;
+    public int x, y, z, timeRemaining, color, rfStorage;
     public byte orientation, state;
-    public boolean rotationState;
+    public boolean rotationState, wasActive;
     public String customName, owner;
 
     public MessageTileEntityFL() {
@@ -44,6 +43,16 @@ public class MessageTileEntityFL implements IMessage, IMessageHandler<MessageTil
             } else {
                 this.rotationState = false;
             }
+            if (tileEntity instanceof TileEntityFLElectric) {
+                this.rfStorage = ((TileEntityFLElectric) tileEntity).getEnergyStored(ForgeDirection.UNKNOWN);
+            } else {
+                this.rfStorage = 0;
+            }
+            if (tileEntity instanceof TileEntityMetaFloodlight) {
+                this.wasActive = ((TileEntityMetaFloodlight) tileEntity).getWasActive();
+            } else {
+                this.wasActive = false;
+            }
         }
     }
 
@@ -61,6 +70,8 @@ public class MessageTileEntityFL implements IMessage, IMessageHandler<MessageTil
         this.owner = new String(buf.readBytes(ownerLength).array());
         this.rotationState = buf.readBoolean();
         this.color = buf.readInt();
+        this.rfStorage = buf.readInt();
+        this.wasActive = buf.readBoolean();
     }
 
     @Override
@@ -77,6 +88,8 @@ public class MessageTileEntityFL implements IMessage, IMessageHandler<MessageTil
         buf.writeBytes(owner.getBytes());
         buf.writeBoolean(rotationState);
         buf.writeInt(color);
+        buf.writeInt(rfStorage);
+        buf.writeBoolean(wasActive);
     }
 
     @Override
@@ -94,6 +107,12 @@ public class MessageTileEntityFL implements IMessage, IMessageHandler<MessageTil
         }
         if (tileEntity instanceof TileEntitySmallFloodlight) {
             ((TileEntitySmallFloodlight) tileEntity).setRotationState(message.rotationState);
+        }
+        if (tileEntity instanceof TileEntityFLElectric) {
+            ((TileEntityFLElectric) tileEntity).setEnergyStored(message.rfStorage);
+        }
+        if (tileEntity instanceof TileEntityMetaFloodlight) {
+            ((TileEntityMetaFloodlight) tileEntity).setWasActive(message.wasActive);
         }
         return null;
     }

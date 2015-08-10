@@ -27,7 +27,7 @@ public class ModCompatibility {
     public static boolean NEILoaded = false;
     public static boolean EnderIOLoaded = false;
     public static boolean WrenchAvailable = false;
-    public static boolean ColoredLightCoreAvailable = false;
+    public static boolean ColoredLightCoreLoaded = false;
 
     private ModCompatibility() {
     }
@@ -46,7 +46,7 @@ public class ModCompatibility {
         CofhCoreLoaded = ModAPIManager.INSTANCE.hasAPI("CoFHAPI|item");
         NEILoaded = Loader.isModLoaded("NotEnoughItems");
         NEILoaded = Loader.isModLoaded("EnderIO");
-        ColoredLightCoreAvailable = Loader.isModLoaded("coloredlightscore");
+        ColoredLightCoreLoaded = Loader.isModLoaded("coloredlightcore");
     }
 
     @Optional.Method(modid = "NotEnoughItems")

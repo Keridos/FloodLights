@@ -2,6 +2,7 @@ package de.keridos.floodlights.block;
 
 import buildcraft.api.tools.IToolWrench;
 import cofh.api.item.IToolHammer;
+import de.keridos.floodlights.FloodLights;
 import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.handler.lighting.LightHandler;
 import de.keridos.floodlights.reference.Names;
@@ -72,7 +73,7 @@ public class BlockElectricFloodlight extends BlockFL implements ITileEntityProvi
             String invert = (((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).getInverted() ? Names.Localizations.TRUE : Names.Localizations.FALSE);
             player.addChatMessage(new ChatComponentText(safeLocalize(Names.Localizations.INVERT) + ": " + safeLocalize(invert)));
             return true;
-        } else if (player.getHeldItem() != null && !world.isRemote) {
+        } else if (!world.isRemote && player.getHeldItem() != null) {
             if (!ModCompatibility.WrenchAvailable && player.getHeldItem().getItem() == getMinecraftItem("stick")) {
                 ((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).changeMode(player);
             }
@@ -117,8 +118,9 @@ public class BlockElectricFloodlight extends BlockFL implements ITileEntityProvi
                 ((TileEntityFL) world.getTileEntity(x, y, z)).setColor(16);
                 return true;
             }
-        } else if (world.isRemote) {
-            return true;
+        }
+        if (!world.isRemote) {
+            player.openGui(FloodLights.instance, 1, world, x, y, z);
         }
         return false;
     }
