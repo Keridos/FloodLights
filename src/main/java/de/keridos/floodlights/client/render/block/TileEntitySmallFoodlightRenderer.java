@@ -39,7 +39,7 @@ public class TileEntitySmallFoodlightRenderer extends TileEntitySpecialRenderer 
         GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
         switch (metadata) {
             case 0:
-                if (tileEntitySmallFloodlight.getState() != 0) {
+                if (tileEntitySmallFloodlight.getWasActive()) {
                     textures = (new ResourceLocation(Textures.Block.SMALL_FLUORESCENT_FLOODLIGHT_TEXTURE_ON));
                 } else {
                     textures = (new ResourceLocation(Textures.Block.SMALL_FLUORESCENT_FLOODLIGHT_TEXTURE_OFF));
@@ -47,7 +47,7 @@ public class TileEntitySmallFoodlightRenderer extends TileEntitySpecialRenderer 
                 Minecraft.getMinecraft().renderEngine.bindTexture(textures);
                 break;
             case 1:
-                if (tileEntitySmallFloodlight.getState() != 0) {
+                if (tileEntitySmallFloodlight.getWasActive()) {
                     textures = (new ResourceLocation(Textures.Block.SQUARE_FLUORESCENT_FLOODLIGHT_TEXTURE_ON));
                 } else {
                     textures = (new ResourceLocation(Textures.Block.SQUARE_FLUORESCENT_FLOODLIGHT_TEXTURE_OFF));
