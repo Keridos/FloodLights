@@ -12,8 +12,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.*;
 import net.minecraft.util.StatCollector;
 
-import java.util.logging.Logger;
-
 /**
  * Created by Keridos on 28/11/2014.
  * This Class
@@ -66,7 +64,6 @@ public class GeneralUtil {
     public static boolean isItemStackValidElectrical(ItemStack itemStack) {
         Item item = itemStack.getItem();
         if (ModCompatibility.IC2Loaded) {
-            Logger.getGlobal().info((item instanceof IElectricItem) ? "true" : "false");
             if (item instanceof IElectricItem) {
                 return ((IElectricItem) item).canProvideEnergy(itemStack);
             }
