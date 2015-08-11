@@ -6,6 +6,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 /**
  * Created by Keridos on 03.10.14.
@@ -45,15 +46,37 @@ public class LightHandler implements Serializable {
         return getWorldHandler(world);
     }
 
+    public void removeDuplicateWorlds() {
+        if (worlds != null && worlds.size() > 0) {
+            for (int i = 0; i < worlds.size(); i++) {
+                for (int j = 0; j < worlds.size(); j++) {
+                    WorldHandler worldHandler = worlds.get(i);
+                    WorldHandler worldHandler2 = worlds.get(j);
+                    if (worldHandler.getDimensionID() == worldHandler2.getDimensionID() && i == j) {
+                        worldHandler2.removeAllLights();
+                        worlds.remove(worldHandler2);
+                        worldHandler.removeAllLights();
+                        worlds.remove(worldHandler);
+                        Logger.getGlobal().info("removed duplicate worldhandlers");
+                    }
+                }
+            }
+        }
+    }
+
+    public void removeWorldHandler(WorldHandler worldHandler) {
+        worlds.remove(worldHandler);
+    }
+
     public void addSource(World world, int x, int y, int z, ForgeDirection direction, int type) {
         boolean foundWorld = false;
         if (worlds == null) {
             worlds.add(getWorldHandler(world));
         }
-        for (Object worldIterator : worlds) {
+        for (WorldHandler worldIterator : worlds) {
             if (worldIterator != null) {
-                if (((WorldHandler) worldIterator).getDimensionID() == world.provider.dimensionId) {
-                    ((WorldHandler) worldIterator).addSource(x, y, z, direction, type);
+                if (worldIterator.getDimensionID() == world.provider.dimensionId) {
+                    worldIterator.addSource(x, y, z, direction, type);
                     foundWorld = true;
                     break;
                 }
@@ -69,10 +92,10 @@ public class LightHandler implements Serializable {
         if (worlds == null) {
             worlds.add(getWorldHandler(world));
         }
-        for (Object worldIterator : worlds) {
+        for (WorldHandler worldIterator : worlds) {
             if (worldIterator != null) {
-                if (((WorldHandler) worldIterator).getDimensionID() == world.provider.dimensionId) {
-                    ((WorldHandler) worldIterator).removeSource(x, y, z, direction, type);
+                if (worldIterator.getDimensionID() == world.provider.dimensionId) {
+                    worldIterator.removeSource(x, y, z, direction, type);
                     break;
                 }
             }

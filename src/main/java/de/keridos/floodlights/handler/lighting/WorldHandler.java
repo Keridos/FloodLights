@@ -18,10 +18,10 @@ import static de.keridos.floodlights.util.MathUtil.rotate;
  * This Class stores every lighting block in its designated world and manages them.
  * Currently all algorithms for placing the lights are in this class.
  */
-public class WorldHandler implements Serializable {
+public class WorldHandler implements Serializable, Cloneable {
     private ArrayList<LightBlockHandle> lightBlocks = new ArrayList<LightBlockHandle>();
     private transient World world;
-    private int dimensionID = 0;
+    private int dimensionID;
     private int lastPositionInList = 0;
 
     public WorldHandler(World worldinput) {
@@ -38,6 +38,11 @@ public class WorldHandler implements Serializable {
     private void writeObject(java.io.ObjectOutputStream stream) throws IOException {
         this.dimensionID = world.provider.dimensionId;
         stream.defaultWriteObject();
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 
     public int getDimensionID() {
@@ -358,7 +363,11 @@ public class WorldHandler implements Serializable {
     }
 
     public void updateRun() {
-        World activeworld = DimensionManager.getWorld(world.provider.dimensionId);
+        if (world != null) {
+            LightHandler.getInstance().removeWorldHandler(this);
+            return;
+        }
+        World activeworld = DimensionManager.getWorld(this.dimensionID);
         if (!world.isRemote && activeworld != null) {
             int j = lastPositionInList;
             for (int i = lastPositionInList; i < j + ConfigHandler.refreshRate; i++) {

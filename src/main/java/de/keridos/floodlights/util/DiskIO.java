@@ -39,6 +39,7 @@ public class DiskIO {
             FileInputStream saveFile = new FileInputStream("world/floodlights/LightHandler.sav");
             ObjectInputStream save = new ObjectInputStream(saveFile);
             input = (LightHandler) save.readObject();
+            input.removeDuplicateWorlds();
         } catch (Exception e) {
             e.printStackTrace();
         }
