@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  */
 public class LightHandler implements Serializable {
     private static LightHandler instance = null;
-    private ArrayList<WorldHandler> worlds = new ArrayList<>();
+    private ArrayList<WorldHandler> worlds = new ArrayList<WorldHandler>();
     private String version = "";
 
     private LightHandler() {
