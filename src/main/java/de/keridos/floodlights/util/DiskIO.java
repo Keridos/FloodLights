@@ -25,11 +25,19 @@ public class DiskIO {
                     throw new Exception("Failed to create dir");
                 }
             }
+            Files.deleteIfExists(fullpath);
             FileOutputStream saveFile = new FileOutputStream(fullpath.toFile());
             ObjectOutputStream save = new ObjectOutputStream(saveFile);
             save.writeObject(input);
+            save.close();
+            saveFile.close();
         } catch (Exception e) {
             e.printStackTrace();
+            try {
+                Files.deleteIfExists(fullpath);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
         }
     }
 
@@ -40,6 +48,11 @@ public class DiskIO {
             ObjectInputStream save = new ObjectInputStream(saveFile);
             input = (LightHandler) save.readObject();
             input.removeDuplicateWorlds();
+            if (input.wrongVersion()) {
+                input = null;
+            }
+            save.close();
+            saveFile.close();
         } catch (Exception e) {
             e.printStackTrace();
         }

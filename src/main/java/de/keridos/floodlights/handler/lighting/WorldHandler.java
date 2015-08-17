@@ -18,7 +18,7 @@ import static de.keridos.floodlights.util.MathUtil.rotate;
  * This Class stores every lighting block in its designated world and manages them.
  * Currently all algorithms for placing the lights are in this class.
  */
-public class WorldHandler implements Serializable, Cloneable {
+public class WorldHandler implements Serializable {
     private ArrayList<LightBlockHandle> lightBlocks = new ArrayList<LightBlockHandle>();
     private transient World world;
     private int dimensionID;

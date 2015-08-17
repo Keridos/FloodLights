@@ -1,7 +1,7 @@
 package de.keridos.floodlights.tileentity;
 
+import de.keridos.floodlights.core.EventListener;
 import de.keridos.floodlights.handler.ConfigHandler;
-import de.keridos.floodlights.handler.lighting.LightHandler;
 import de.keridos.floodlights.reference.Names;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
@@ -21,7 +21,6 @@ import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
  */
 public class TileEntityCarbonFloodlight extends TileEntityMetaFloodlight implements ISidedInventory {
     public int timeRemaining;
-    private LightHandler lightHandler = LightHandler.getInstance();
     private ItemStack[] inventory;
 
     public TileEntityCarbonFloodlight() {
@@ -163,11 +162,11 @@ public class TileEntityCarbonFloodlight extends TileEntityMetaFloodlight impleme
             if (active && timeRemaining > 0) {
                 if (!wasActive || world.getTotalWorldTime() % timeout == 0) {
                     if (world.getTotalWorldTime() % timeout == 0) {
-                        lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, mode);
-                        lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, mode);
+                        EventListener.lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, mode);
+                        EventListener.lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, mode);
                         world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, this.getOrientation().ordinal() + 6, 2);
                     } else {
-                        lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, mode);
+                        EventListener.lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, mode);
                         world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, this.getOrientation().ordinal() + 6, 2);
                     }
                 }
@@ -175,7 +174,7 @@ public class TileEntityCarbonFloodlight extends TileEntityMetaFloodlight impleme
                 wasActive = true;
             } else {
                 if (wasActive) {
-                    lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, mode);
+                    EventListener.lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, mode);
                     world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, world.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) - 6, 2);
                 }
                 wasActive = false;
@@ -187,7 +186,7 @@ public class TileEntityCarbonFloodlight extends TileEntityMetaFloodlight impleme
         World world = this.getWorldObj();
         if (!world.isRemote) {
             ForgeDirection direction = this.getOrientation();
-            lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
+            EventListener.lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
             mode = (mode == 2 ? 0 : mode + 1);
             if (mode == 1) {
                 timeRemaining /= 4;
@@ -195,7 +194,7 @@ public class TileEntityCarbonFloodlight extends TileEntityMetaFloodlight impleme
                 timeRemaining *= 4;
             }
             if (active && timeRemaining > 0) {
-                lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
+                EventListener.lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
             }
             String modeString = (mode == 0 ? Names.Localizations.STRAIGHT : mode == 1 ? Names.Localizations.NARROW_CONE : Names.Localizations.WIDE_CONE);
             player.addChatMessage(new ChatComponentText(safeLocalize(Names.Localizations.MODE) + ": " + safeLocalize(modeString)));

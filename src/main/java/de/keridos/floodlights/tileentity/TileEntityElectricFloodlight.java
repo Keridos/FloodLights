@@ -1,8 +1,8 @@
 package de.keridos.floodlights.tileentity;
 
 import de.keridos.floodlights.compatability.ModCompatibility;
+import de.keridos.floodlights.core.EventListener;
 import de.keridos.floodlights.handler.ConfigHandler;
-import de.keridos.floodlights.handler.lighting.LightHandler;
 import de.keridos.floodlights.reference.Names;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
@@ -17,7 +17,6 @@ import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
  */
 
 public class TileEntityElectricFloodlight extends TileEntityFLElectric {
-    private LightHandler lightHandler = LightHandler.getInstance();
 
     @Override
     public boolean canUpdate() {
@@ -37,11 +36,11 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric {
             if (active && (storage.getEnergyStored() >= realEnergyUsage || storageEU >= (double) realEnergyUsage / 8.0D)) {
                 if (!wasActive || world.getTotalWorldTime() % timeout == 0) {
                     if (world.getTotalWorldTime() % timeout == 0) {
-                        lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
-                        lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
+                        EventListener.lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
+                        EventListener.lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
                         world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, this.getOrientation().ordinal() + 6, 2);
                     } else {
-                        lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
+                        EventListener.lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
                         world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, world.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) + 6, 2);
                     }
                 }
@@ -53,7 +52,7 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric {
                 wasActive = true;
             } else {
                 if (wasActive) {
-                    lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
+                    EventListener.lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
                     world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, world.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) - 6, 2);
                 }
                 wasActive = false;
@@ -66,10 +65,10 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric {
         if (!world.isRemote) {
             ForgeDirection direction = this.getOrientation();
             int realEnergyUsage = ConfigHandler.energyUsage / (mode == 0 ? 1 : 4);
-            lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
+            EventListener.lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
             mode = (mode == 2 ? 0 : mode + 1);
             if (active && (storage.getEnergyStored() >= realEnergyUsage || storageEU >= realEnergyUsage / 8)) {
-                lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
+                EventListener.lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
             }
             String modeString = (mode == 0 ? Names.Localizations.STRAIGHT : mode == 1 ? Names.Localizations.NARROW_CONE : Names.Localizations.WIDE_CONE);
             player.addChatMessage(new ChatComponentText(safeLocalize(Names.Localizations.MODE) + ": " + safeLocalize(modeString)));

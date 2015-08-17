@@ -11,6 +11,7 @@ import net.minecraftforge.event.world.WorldEvent;
  */
 public class EventListener {
     private static EventListener instance = null;
+    public static LightHandler lightHandler;
 
     private EventListener() {
     }
@@ -29,6 +30,6 @@ public class EventListener {
 
     @SubscribeEvent
     public void onWorldLoad(WorldEvent.Load event) {
-        LightHandler.getInstance();
+        lightHandler = LightHandler.getInstance();
     }
 }

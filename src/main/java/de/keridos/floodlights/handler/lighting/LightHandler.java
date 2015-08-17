@@ -1,5 +1,7 @@
 package de.keridos.floodlights.handler.lighting;
 
+import com.sun.xml.internal.ws.util.VersionUtil;
+import de.keridos.floodlights.reference.Reference;
 import de.keridos.floodlights.util.DiskIO;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -14,9 +16,11 @@ import java.util.logging.Logger;
  */
 public class LightHandler implements Serializable {
     private static LightHandler instance = null;
-    private ArrayList<WorldHandler> worlds = new ArrayList<WorldHandler>();
+    private ArrayList<WorldHandler> worlds = new ArrayList<>();
+    private String version = "";
 
     private LightHandler() {
+        this.version = Reference.VERSION;
     }
 
     public static LightHandler getInstance() {
@@ -27,6 +31,10 @@ public class LightHandler implements Serializable {
             }
         }
         return instance;
+    }
+
+    public boolean wrongVersion() {
+        return VersionUtil.compare(this.version, Reference.VERSION) != 0;
     }
 
     public WorldHandler getWorldHandler(World world) {
@@ -47,12 +55,13 @@ public class LightHandler implements Serializable {
     }
 
     public void removeDuplicateWorlds() {
+        Logger.getGlobal().info("TEEEEEEEEEEEEEEEEEEST");
         if (worlds != null && worlds.size() > 0) {
             for (int i = 0; i < worlds.size(); i++) {
                 for (int j = 0; j < worlds.size(); j++) {
                     WorldHandler worldHandler = worlds.get(i);
                     WorldHandler worldHandler2 = worlds.get(j);
-                    if (worldHandler.getDimensionID() == worldHandler2.getDimensionID() && i == j) {
+                    if (worldHandler.getDimensionID() == worldHandler2.getDimensionID() && i != j) {
                         worldHandler2.removeAllLights();
                         worlds.remove(worldHandler2);
                         worldHandler.removeAllLights();
@@ -103,17 +112,21 @@ public class LightHandler implements Serializable {
     }
 
     public void updateLights() {
-        if (worlds != null) {
-            for (Object world : worlds) {
-                ((WorldHandler) world).updateRun();
+        try {
+            if (worlds != null) {
+                for (WorldHandler world : worlds) {
+                    world.updateRun();
+                }
             }
+        } catch (Exception e) {
+            instance = null;
         }
     }
 
     public void removeAllLights() {
         if (worlds != null) {
-            for (Object world : worlds) {
-                ((WorldHandler) world).removeAllLights();
+            for (WorldHandler world : worlds) {
+                world.removeAllLights();
             }
         }
     }
