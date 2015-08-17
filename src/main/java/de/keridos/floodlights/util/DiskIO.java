@@ -25,7 +25,6 @@ public class DiskIO {
                     throw new Exception("Failed to create dir");
                 }
             }
-            Files.deleteIfExists(fullpath);
             FileOutputStream saveFile = new FileOutputStream(fullpath.toFile());
             ObjectOutputStream save = new ObjectOutputStream(saveFile);
             save.writeObject(input);
