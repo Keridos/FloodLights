@@ -3,8 +3,8 @@ package de.keridos.floodlights.tileentity;
 import cofh.api.energy.IEnergyContainerItem;
 import cpw.mods.fml.common.Optional;
 import de.keridos.floodlights.compatability.ModCompatibility;
+import de.keridos.floodlights.core.EventListener;
 import de.keridos.floodlights.handler.ConfigHandler;
-import de.keridos.floodlights.handler.lighting.LightHandler;
 import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.util.MathUtil;
 import ic2.api.item.ElectricItem;
@@ -21,7 +21,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink", modid = "IC2")
 public class TileEntitySmallFloodlight extends TileEntityFLElectric {
     private boolean rotationState = false;
-    private LightHandler lightHandler = LightHandler.getInstance();
 
     public TileEntitySmallFloodlight() {
         super();
@@ -91,10 +90,10 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
             if (active && (storage.getEnergyStored() >= realEnergyUsage || storageEU >= (double) realEnergyUsage / 8.0D)) {
                 if (!wasActive || world.getTotalWorldTime() % timeout == 0) {
                     if (world.getTotalWorldTime() % timeout == 0) {
-                        lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
-                        lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
+                        EventListener.lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
+                        EventListener.lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
                     } else {
-                        lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
+                        EventListener.lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
                     }
                 }
                 if (storageEU >= (double) realEnergyUsage / 8.0D) {
@@ -105,7 +104,7 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
                 wasActive = true;
             } else {
                 if (wasActive) {
-                    lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
+                    EventListener.lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
                 }
                 wasActive = false;
             }

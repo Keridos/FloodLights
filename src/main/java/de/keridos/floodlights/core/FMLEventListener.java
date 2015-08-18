@@ -2,7 +2,6 @@ package de.keridos.floodlights.core;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
-import de.keridos.floodlights.handler.lighting.LightHandler;
 
 /**
  * Created by Keridos on 05.10.14.
@@ -10,7 +9,6 @@ import de.keridos.floodlights.handler.lighting.LightHandler;
  */
 public class FMLEventListener {
     private static FMLEventListener instance = null;
-    private static LightHandler lightHandler = LightHandler.getInstance();
 
     private FMLEventListener() {
     }
@@ -36,7 +34,7 @@ public class FMLEventListener {
     //Called when the server ticks. Usually 20 ticks a second.
     @SubscribeEvent
     public void onServerTick(TickEvent.ServerTickEvent event) {
-        lightHandler.updateLights();
+        EventListener.lightHandler.updateLights();
     }
 
     //Called when a new frame is displayed (See fps)

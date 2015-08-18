@@ -59,10 +59,10 @@ public class FloodLights {
         ModBlocks.registerBlocks();
         ModBlocks.registerTileEntities();
         ModItems.init();
-        registerEventListeners();
         PacketHandler.init();
         recipeHandler.initRecipes();
         modCompatibility.performModCompat();
+        registerEventListeners();
         proxy.initRenderers();
         proxy.initSounds();
         proxy.initHandlers();

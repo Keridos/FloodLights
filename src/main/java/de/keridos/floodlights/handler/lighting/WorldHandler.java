@@ -6,6 +6,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -19,13 +21,25 @@ import static de.keridos.floodlights.util.MathUtil.rotate;
 public class WorldHandler implements Serializable {
     private ArrayList<LightBlockHandle> lightBlocks = new ArrayList<LightBlockHandle>();
     private transient World world;
+    private int dimensionID;
     private int lastPositionInList = 0;
 
     public WorldHandler(World worldinput) {
         this.world = worldinput;
         this.lastPositionInList = 0;
+        this.dimensionID = world.provider.dimensionId;
     }
 
+    private void readObject(ObjectInputStream inputStream) throws IOException, ClassNotFoundException {
+        inputStream.defaultReadObject();
+        this.world = DimensionManager.getWorld(this.dimensionID);
+    }
+
+    private void writeObject(java.io.ObjectOutputStream stream) throws IOException {
+        this.dimensionID = world.provider.dimensionId;
+        stream.defaultWriteObject();
+    }
+    
     public int getDimensionID() {
         return this.world.provider.dimensionId;
     }
@@ -344,7 +358,11 @@ public class WorldHandler implements Serializable {
     }
 
     public void updateRun() {
-        World activeworld = DimensionManager.getWorld(world.provider.dimensionId);
+        if (world != null) {
+            LightHandler.getInstance().removeWorldHandler(this);
+            return;
+        }
+        World activeworld = DimensionManager.getWorld(this.dimensionID);
         if (!world.isRemote && activeworld != null) {
             int j = lastPositionInList;
             for (int i = lastPositionInList; i < j + ConfigHandler.refreshRate; i++) {

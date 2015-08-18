@@ -28,17 +28,28 @@ public class DiskIO {
             FileOutputStream saveFile = new FileOutputStream(fullpath.toFile());
             ObjectOutputStream save = new ObjectOutputStream(saveFile);
             save.writeObject(input);
+            save.close();
+            saveFile.close();
         } catch (Exception e) {
             e.printStackTrace();
+            try {
+                Files.deleteIfExists(fullpath);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
         }
     }
 
     public static LightHandler loadFromDisk() {
         LightHandler input = null;
         try {
-            FileInputStream saveFile = new FileInputStream("world/floodlights/LightHandler.sav");
+            Path fullpath = Paths.get(DimensionManager.getCurrentSaveRootDirectory().toString() + "/floodlights/LightHandler.sav");
+            FileInputStream saveFile = new FileInputStream(fullpath.toFile());
             ObjectInputStream save = new ObjectInputStream(saveFile);
             input = (LightHandler) save.readObject();
+            input.removeDuplicateWorlds();
+            save.close();
+            saveFile.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
