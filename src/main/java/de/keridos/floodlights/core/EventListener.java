@@ -10,7 +10,7 @@ import net.minecraftforge.event.world.WorldEvent;
  * This Class Listens for normal forge events.
  */
 public class EventListener {
-    private static EventListener instance = null;
+    private static EventListener instance;
     public static LightHandler lightHandler;
 
     private EventListener() {
@@ -25,7 +25,7 @@ public class EventListener {
 
     @SubscribeEvent
     public void onWorldSave(WorldEvent.Save event) {
-        DiskIO.saveToDisk(LightHandler.getInstance());
+        DiskIO.saveToDisk(lightHandler);
     }
 
     @SubscribeEvent

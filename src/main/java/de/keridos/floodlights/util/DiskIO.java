@@ -25,7 +25,7 @@ public class DiskIO {
                     throw new Exception("Failed to create dir");
                 }
             }
-            FileOutputStream saveFile = new FileOutputStream(fullpath.toString());
+            FileOutputStream saveFile = new FileOutputStream(fullpath.toFile());
             ObjectOutputStream save = new ObjectOutputStream(saveFile);
             save.writeObject(input);
             save.close();
@@ -43,13 +43,11 @@ public class DiskIO {
     public static LightHandler loadFromDisk() {
         LightHandler input = null;
         try {
-            FileInputStream saveFile = new FileInputStream("world/floodlights/LightHandler.sav");
+            Path fullpath = Paths.get(DimensionManager.getCurrentSaveRootDirectory().toString() + "/floodlights/LightHandler.sav");
+            FileInputStream saveFile = new FileInputStream(fullpath.toFile());
             ObjectInputStream save = new ObjectInputStream(saveFile);
             input = (LightHandler) save.readObject();
             input.removeDuplicateWorlds();
-            if (input.wrongVersion()) {
-                input = null;
-            }
             save.close();
             saveFile.close();
         } catch (Exception e) {
