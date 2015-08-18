@@ -24,7 +24,6 @@ import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
  */
 
 public class TileEntityElectricFloodlight extends TileEntityFLElectric implements ISidedInventory {
-    private LightHandler lightHandler = LightHandler.getInstance();
 
     @Override
     public boolean isItemValidForSlot(int i, ItemStack itemstack) {
