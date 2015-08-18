@@ -6,10 +6,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
+import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import static de.keridos.floodlights.util.MathUtil.rotate;
 
@@ -30,23 +30,13 @@ public class WorldHandler implements Serializable {
         this.dimensionID = world.provider.dimensionId;
     }
 
-    private void readObject(ObjectInputStream inputStream) throws IOException, ClassNotFoundException {
-        inputStream.defaultReadObject();
+    private Object readResolve() throws ObjectStreamException {
         this.world = DimensionManager.getWorld(this.dimensionID);
-    }
-
-    private void writeObject(java.io.ObjectOutputStream stream) throws IOException {
-        this.dimensionID = world.provider.dimensionId;
-        stream.defaultWriteObject();
-    }
-
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
+        return this;
     }
 
     public int getDimensionID() {
-        return this.world.provider.dimensionId;
+        return this.dimensionID;
     }
 
     public LightBlockHandle getFloodlightHandler(int x, int y, int z) {
@@ -363,8 +353,9 @@ public class WorldHandler implements Serializable {
     }
 
     public void updateRun() {
-        if (world != null) {
+        if (world == null) {
             LightHandler.getInstance().removeWorldHandler(this);
+            Logger.getGlobal().info("removed world " + this.dimensionID);
             return;
         }
         World activeworld = DimensionManager.getWorld(this.dimensionID);

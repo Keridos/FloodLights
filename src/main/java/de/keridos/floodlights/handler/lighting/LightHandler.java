@@ -6,6 +6,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.logging.Logger;
 
 /**
@@ -13,8 +14,9 @@ import java.util.logging.Logger;
  * This Class is the main handler for all lights, stores the handler for each world.
  */
 public class LightHandler implements Serializable {
-    private static LightHandler instance = null;
+    private static LightHandler instance;
     private ArrayList<WorldHandler> worlds = new ArrayList<WorldHandler>();
+    private ArrayList<Integer> toBeRemoved = new ArrayList<Integer>();
 
     private LightHandler() {
     }
@@ -65,7 +67,7 @@ public class LightHandler implements Serializable {
     }
 
     public void removeWorldHandler(WorldHandler worldHandler) {
-        worlds.remove(worldHandler);
+        toBeRemoved.add(worlds.indexOf(worldHandler));
     }
 
     public void addSource(World world, int x, int y, int z, ForgeDirection direction, int type) {
@@ -105,12 +107,19 @@ public class LightHandler implements Serializable {
     public void updateLights() {
         try {
             if (worlds != null) {
+                Iterator<Integer> i = toBeRemoved.iterator();
+                while (i.hasNext()) {
+                    worlds.remove((int) i.next());
+                    i.remove();
+                }
                 for (WorldHandler world : worlds) {
                     world.updateRun();
                 }
             }
         } catch (Exception e) {
+            Logger.getGlobal().warning("removed Lighthandler");
             instance = null;
+            e.printStackTrace();
         }
     }
 

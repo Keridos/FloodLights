@@ -75,8 +75,10 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
                     if (world.getTotalWorldTime() % timeout == 0) {
                         EventListener.lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
                         EventListener.lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
+                        world.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
                     } else {
                         EventListener.lightHandler.addSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
+                        world.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
                     }
                 }
                 if (storageEU >= (double) realEnergyUsage / 8.0D) {
@@ -88,6 +90,7 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
             } else {
                 if (wasActive) {
                     EventListener.lightHandler.removeSource(world, this.xCoord, this.yCoord, this.zCoord, direction, this.mode);
+                    world.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
                 }
                 wasActive = false;
             }

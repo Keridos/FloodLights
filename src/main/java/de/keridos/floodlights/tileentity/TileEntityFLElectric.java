@@ -75,11 +75,13 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
     @Optional.Method(modid = "IC2")
     @Override
     public double injectEnergy(ForgeDirection forgeDirection, double v, double v1) {
-        if (storage.getMaxEnergyStored() - storage.getEnergyStored() >= (v * 8.0D)) {
+        if ((double) (storage.getMaxEnergyStored() - storage.getEnergyStored()) >= (v * 8.0D)) {
+            storage.modifyEnergyStored(MathUtil.truncateDoubleToInt(v * 8.0D));
+        } else if (storageEU < 4000D) {
+            storageEU += v - ((double) (storage.getMaxEnergyStored() - storage.getEnergyStored()) / 8.0D);
             storage.modifyEnergyStored(MathUtil.truncateDoubleToInt(v * 8.0D));
         } else {
-            storageEU += v - (storage.getMaxEnergyStored() - storage.getEnergyStored() / 8.0D);
-            storage.modifyEnergyStored(MathUtil.truncateDoubleToInt(v * 8.0D));
+            return v;
         }
         return 0;
     }
@@ -93,10 +95,7 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
     @Optional.Method(modid = "IC2")
     @Override
     public double getDemandedEnergy() {
-        if (storageEU < 4000D) {
-            return 8192.0D;
-        }
-        return 0.0D;
+        return 8192.0D;
     }
 
     @Optional.Method(modid = "IC2")
