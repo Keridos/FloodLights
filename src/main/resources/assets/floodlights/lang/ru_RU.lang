@@ -10,6 +10,8 @@ item.floodlights:mantle.name=Фитиль
 tile.floodlights:carbonFloodlight.name=Прожектор
 tile.floodlights:electricFloodlight.name=Электрический прожектор
 tile.floodlights:smallFluorescentFloodlight.name=Маленький электрический прожектор
+tile.floodlights:smallElectricFloodlightMetaBlock_smallFluorescent.name=Маленькая флуоресцентная лампа
+tile.floodlights:smallElectricFloodlightMetaBlock_squareFluorescent.name=Квадратная флуоресцентная лампа
 
 #GUI – ГИП
 gui.floodlights:nonElectricFloodlightTimeRemaining=Осталось времени:
