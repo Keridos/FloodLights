@@ -16,13 +16,12 @@ import java.util.Random;
 public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInventory {
     protected boolean active;
     protected boolean wasActive;
-    protected int timeout;
+    protected boolean update;
     protected ItemStack[] inventory;
 
     public TileEntityMetaFloodlight() {
         super();
         Random rand = new Random();
-        timeout = rand.nextInt((500 - 360) + 1) + 360;
         this.wasActive = false;
         inventory = new ItemStack[1];
     }
@@ -48,14 +47,17 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
         this.wasActive = wasActive;
     }
 
+    public void toggleUpdateRun() {
+        update = true;
+    }
+
     @Override
     public void readFromNBT(NBTTagCompound nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
-        if (nbtTagCompound.hasKey(Names.NBT.TIMEOUT)) {
-            this.timeout = nbtTagCompound.getInteger(Names.NBT.TIMEOUT);
+        if (nbtTagCompound.hasKey(Names.NBT.UPDATE)) {
+            this.update = nbtTagCompound.getBoolean(Names.NBT.UPDATE);
         } else {
-            Random rand = new Random();
-            timeout = rand.nextInt((500 - 360) + 1) + 360;
+            update = false;
         }
         if (nbtTagCompound.hasKey(Names.NBT.STATE)) {
             this.active = (nbtTagCompound.getInteger(Names.NBT.STATE) != 0);
@@ -76,7 +78,7 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
     @Override
     public void writeToNBT(NBTTagCompound nbtTagCompound) {
         super.writeToNBT(nbtTagCompound);
-        nbtTagCompound.setInteger(Names.NBT.TIMEOUT, timeout);
+        nbtTagCompound.setBoolean(Names.NBT.UPDATE, update);
         nbtTagCompound.setBoolean(Names.NBT.WAS_ACTIVE, wasActive);
         NBTTagList list = new NBTTagList();
         ItemStack itemstack = getStackInSlot(0);

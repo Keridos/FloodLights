@@ -1,5 +1,7 @@
 package de.keridos.floodlights.block;
 
+import de.keridos.floodlights.tileentity.TileEntityPhantomLight;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
@@ -11,7 +13,7 @@ import java.util.Random;
  * Created by Keridos on 01.10.14.
  * This Class implements the invislbe light block the mod uses to light up areas.
  */
-public class BlockPhantomLight extends BlockFL {
+public class BlockPhantomLight extends BlockFL implements ITileEntityProvider {
     public BlockPhantomLight() {
         super("blockLight", Material.air, soundTypeCloth, 0.0F);
     }
@@ -74,5 +76,10 @@ public class BlockPhantomLight extends BlockFL {
     @Override
     public int getLightValue() {
         return 15;
+    }
+
+    @Override
+    public TileEntityPhantomLight createNewTileEntity(World world, int metadata) {
+        return new TileEntityPhantomLight();
     }
 }

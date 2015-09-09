@@ -39,7 +39,7 @@ public class Names {
     public static final class NBT {
         public static final String ITEMS = "Items";
         public static final String INVERT = "inverted";
-        public static final String TIMEOUT = "timeout";
+        public static final String UPDATE = "updateTrigger";
         public static final String TIME_REMAINING = "timeRemaining";
         public static final String STORAGE_EU = "storageEU";
         public static final String COLOR = "color";
@@ -50,5 +50,6 @@ public class Names {
         public static final String DIRECTION = "teDirection";
         public static final String ROTATION_STATE = "teRotationState";
         public static final String OWNER = "owner";
+        public static final String SOURCES = "sources";
     }
 }

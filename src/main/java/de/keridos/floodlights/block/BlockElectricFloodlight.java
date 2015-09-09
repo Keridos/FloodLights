@@ -4,7 +4,6 @@ import buildcraft.api.tools.IToolWrench;
 import cofh.api.item.IToolHammer;
 import de.keridos.floodlights.FloodLights;
 import de.keridos.floodlights.compatability.ModCompatibility;
-import de.keridos.floodlights.handler.lighting.LightHandler;
 import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.reference.RenderIDs;
 import de.keridos.floodlights.tileentity.TileEntityElectricFloodlight;
@@ -18,7 +17,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import static de.keridos.floodlights.util.GeneralUtil.getMinecraftItem;
 import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
@@ -132,9 +130,7 @@ public class BlockElectricFloodlight extends BlockFL implements ITileEntityProvi
 
     @Override
     public void breakBlock(World world, int x, int y, int z, Block block, int par6) {
-        ForgeDirection direction = ((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).getOrientation();
-        int mode = ((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).getMode();
-        LightHandler.getInstance().removeSource(world, x, y, z, direction, mode);
+        ((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).removeSource(-1);
         super.breakBlock(world, x, y, z, block, par6);
     }
 }

@@ -6,7 +6,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import de.keridos.floodlights.FloodLights;
 import de.keridos.floodlights.compatability.ModCompatibility;
-import de.keridos.floodlights.handler.lighting.LightHandler;
 import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.tileentity.TileEntityFL;
@@ -210,9 +209,7 @@ public class BlockSmallElectricFloodlight extends BlockFL implements ITileEntity
 
     @Override
     public void breakBlock(World world, int x, int y, int z, Block block, int par6) {
-        ForgeDirection direction = ((TileEntitySmallFloodlight) world.getTileEntity(x, y, z)).getOrientation();
-        int mode = ((TileEntitySmallFloodlight) world.getTileEntity(x, y, z)).getMode();
-        LightHandler.getInstance().removeSource(world, x, y, z, direction, mode);
+        ((TileEntitySmallFloodlight) world.getTileEntity(x, y, z)).smallSource(true);
         super.breakBlock(world, x, y, z, block, par6);
     }
 
