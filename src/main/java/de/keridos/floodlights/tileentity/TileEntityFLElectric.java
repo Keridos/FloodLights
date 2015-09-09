@@ -99,7 +99,7 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
     @Optional.Method(modid = "IC2")
     @Override
     public double getDemandedEnergy() {
-        return 8192.0D;
+        return Math.max(4000D - storageEU, 0.0D);
     }
 
     @Optional.Method(modid = "IC2")
