@@ -139,16 +139,16 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
                         world.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
                     }
                 }
+                if (storageEU >= (double) realEnergyUsage / 8.0D) {
+                    storageEU -= (double) realEnergyUsage / 8.0D;
+                } else {
+                    storage.modifyEnergyStored(-realEnergyUsage);
+                }
             } else if ((!active || (storage.getEnergyStored() < realEnergyUsage && storageEU < (double) realEnergyUsage / 8.0D)) && wasActive) {
                 smallSource(true);
                 world.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
                 wasActive = false;
             }
-            if (storageEU >= (double) realEnergyUsage / 8.0D) {
-                storageEU -= (double) realEnergyUsage / 8.0D;
-            } else {
-                storage.modifyEnergyStored(-realEnergyUsage);
-            }
+        }
         }
     }
-}

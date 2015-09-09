@@ -45,7 +45,9 @@ public class TileEntityPhantomLight extends TileEntity {
     public void updateAllSources() {
         for (int[] source : sources) {
             TileEntityMetaFloodlight te = (TileEntityMetaFloodlight) worldObj.getTileEntity(source[0], source[1], source[2]);
-            te.toggleUpdateRun();
+            if (te != null && te instanceof TileEntityMetaFloodlight) {
+                te.toggleUpdateRun();
+            }
         }
     }
 
