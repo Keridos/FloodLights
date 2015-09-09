@@ -49,7 +49,6 @@ public class TileEntityPhantomLight extends TileEntity {
         }
     }
 
-
     @Override
     public void readFromNBT(NBTTagCompound nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
