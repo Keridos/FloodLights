@@ -16,7 +16,7 @@ import java.util.Random;
 public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInventory {
     protected boolean active;
     protected boolean wasActive;
-    protected boolean update;
+    protected boolean update = true;
     protected ItemStack[] inventory;
 
     public TileEntityMetaFloodlight() {
@@ -54,11 +54,6 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
     @Override
     public void readFromNBT(NBTTagCompound nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
-        if (nbtTagCompound.hasKey(Names.NBT.UPDATE)) {
-            this.update = nbtTagCompound.getBoolean(Names.NBT.UPDATE);
-        } else {
-            update = false;
-        }
         if (nbtTagCompound.hasKey(Names.NBT.STATE)) {
             this.active = (nbtTagCompound.getInteger(Names.NBT.STATE) != 0);
         }
@@ -78,7 +73,6 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
     @Override
     public void writeToNBT(NBTTagCompound nbtTagCompound) {
         super.writeToNBT(nbtTagCompound);
-        nbtTagCompound.setBoolean(Names.NBT.UPDATE, update);
         nbtTagCompound.setBoolean(Names.NBT.WAS_ACTIVE, wasActive);
         NBTTagList list = new NBTTagList();
         ItemStack itemstack = getStackInSlot(0);
