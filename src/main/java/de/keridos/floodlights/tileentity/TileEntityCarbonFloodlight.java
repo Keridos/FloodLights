@@ -74,9 +74,11 @@ public class TileEntityCarbonFloodlight extends TileEntityMetaFloodlight impleme
             int x = this.xCoord + this.orientation.offsetX * i;
             int y = this.yCoord + this.orientation.offsetY * i;
             int z = this.zCoord + this.orientation.offsetZ * i;
-            if (remove && worldObj.getBlock(x, y, z) == ModBlocks.blockFLLight) {
-                TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
-                light.removeSource(this.xCoord, this.yCoord, this.zCoord);
+            if (remove) {
+                if (worldObj.getBlock(x, y, z) == ModBlocks.blockFLLight) {
+                    TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
+                    light.removeSource(this.xCoord, this.yCoord, this.zCoord);
+                }
             } else if (worldObj.getBlock(x, y, z).isAir(worldObj, x, y, z)) {
                 worldObj.setBlock(x, y, z, ModBlocks.blockFLLight);
                 TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
@@ -131,9 +133,11 @@ public class TileEntityCarbonFloodlight extends TileEntityMetaFloodlight impleme
                     int x = this.xCoord + rotatedCoords[0];
                     int y = this.yCoord + rotatedCoords[1];
                     int z = this.zCoord + rotatedCoords[2];
-                    if (remove && worldObj.getBlock(x, y, z) == ModBlocks.blockFLLight) {
-                        TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
-                        light.removeSource(this.xCoord, this.yCoord, this.zCoord);
+                    if (remove) {
+                        if (worldObj.getBlock(x, y, z) == ModBlocks.blockFLLight) {
+                            TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
+                            light.removeSource(this.xCoord, this.yCoord, this.zCoord);
+                        }
                     } else if (worldObj.getBlock(x, y, z).isAir(worldObj, x, y, z)) {
                         worldObj.setBlock(x, y, z, ModBlocks.blockFLLight);
                         TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
@@ -186,9 +190,11 @@ public class TileEntityCarbonFloodlight extends TileEntityMetaFloodlight impleme
                     int x = this.xCoord + rotatedCoords[0];
                     int y = this.yCoord + rotatedCoords[1];
                     int z = this.zCoord + rotatedCoords[2];
-                    if (remove && worldObj.getBlock(x, y, z) == ModBlocks.blockFLLight) {
-                        TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
-                        light.removeSource(this.xCoord, this.yCoord, this.zCoord);
+                    if (remove) {
+                        if (worldObj.getBlock(x, y, z) == ModBlocks.blockFLLight) {
+                            TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
+                            light.removeSource(this.xCoord, this.yCoord, this.zCoord);
+                        }
                     } else if (worldObj.getBlock(x, y, z).isAir(worldObj, x, y, z)) {
                         worldObj.setBlock(x, y, z, ModBlocks.blockFLLight);
                         TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
@@ -214,9 +220,11 @@ public class TileEntityCarbonFloodlight extends TileEntityMetaFloodlight impleme
                         int x = this.xCoord + this.orientation.offsetX;
                         int y = this.xCoord + this.orientation.offsetY;
                         int z = this.xCoord + this.orientation.offsetZ;
-                        if (remove && worldObj.getBlock(x, y, z) == ModBlocks.blockFLLight) {
-                            TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
-                            light.removeSource(this.xCoord, this.yCoord, this.zCoord);
+                        if (remove) {
+                            if (worldObj.getBlock(x, y, z) == ModBlocks.blockFLLight) {
+                                TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
+                                light.removeSource(this.xCoord, this.yCoord, this.zCoord);
+                            }
                         } else if (worldObj.getBlock(x, y, z).isAir(worldObj, x, y, z)) {
                             worldObj.setBlock(x, y, z, ModBlocks.blockFLLight);
                             TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
@@ -265,9 +273,11 @@ public class TileEntityCarbonFloodlight extends TileEntityMetaFloodlight impleme
                     int x = this.xCoord + rotatedCoords[0];
                     int y = this.yCoord + rotatedCoords[1];
                     int z = this.zCoord + rotatedCoords[2];
-                    if (remove && worldObj.getBlock(x, y, z) == ModBlocks.blockFLLight) {
-                        TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
-                        light.removeSource(this.xCoord, this.yCoord, this.zCoord);
+                    if (remove) {
+                        if (worldObj.getBlock(x, y, z) == ModBlocks.blockFLLight) {
+                            TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
+                            light.removeSource(this.xCoord, this.yCoord, this.zCoord);
+                        }
                     } else if (worldObj.getBlock(x, y, z).isAir(worldObj, x, y, z)) {
                         worldObj.setBlock(x, y, z, ModBlocks.blockFLLight);
                         TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
@@ -321,9 +331,11 @@ public class TileEntityCarbonFloodlight extends TileEntityMetaFloodlight impleme
                     int x = this.xCoord + rotatedCoords[0];
                     int y = this.yCoord + rotatedCoords[1];
                     int z = this.zCoord + rotatedCoords[2];
-                    if (remove && worldObj.getBlock(x, y, z) == ModBlocks.blockFLLight) {
-                        TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
-                        light.removeSource(this.xCoord, this.yCoord, this.zCoord);
+                    if (remove) {
+                        if (worldObj.getBlock(x, y, z) == ModBlocks.blockFLLight) {
+                            TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
+                            light.removeSource(this.xCoord, this.yCoord, this.zCoord);
+                        }
                     } else if (worldObj.getBlock(x, y, z).isAir(worldObj, x, y, z)) {
                         worldObj.setBlock(x, y, z, ModBlocks.blockFLLight);
                         TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
@@ -353,6 +365,7 @@ public class TileEntityCarbonFloodlight extends TileEntityMetaFloodlight impleme
                         removeSource(this.mode);
                         addSource(this.mode);
                         world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, this.getOrientation().ordinal() + 6, 2);
+                        update = false;
                     } else {
                         addSource(this.mode);
                         world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, this.getOrientation().ordinal() + 6, 2);

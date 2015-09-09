@@ -13,7 +13,6 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import static de.keridos.floodlights.util.GeneralUtil.isItemStackValidElectrical;
 import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
@@ -45,9 +44,11 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric implement
             int x = this.xCoord + this.orientation.offsetX * i;
             int y = this.yCoord + this.orientation.offsetY * i;
             int z = this.zCoord + this.orientation.offsetZ * i;
-            if (remove && worldObj.getBlock(x, y, z) == ModBlocks.blockFLLight) {
-                TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
-                light.removeSource(this.xCoord, this.yCoord, this.zCoord);
+            if (remove) {
+                if (worldObj.getBlock(x, y, z) == ModBlocks.blockFLLight) {
+                    TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
+                    light.removeSource(this.xCoord, this.yCoord, this.zCoord);
+                }
             } else if (worldObj.getBlock(x, y, z).isAir(worldObj, x, y, z)) {
                 worldObj.setBlock(x, y, z, ModBlocks.blockFLLight);
                 TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
@@ -102,9 +103,11 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric implement
                     int x = this.xCoord + rotatedCoords[0];
                     int y = this.yCoord + rotatedCoords[1];
                     int z = this.zCoord + rotatedCoords[2];
-                    if (remove && worldObj.getBlock(x, y, z) == ModBlocks.blockFLLight) {
-                        TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
-                        light.removeSource(this.xCoord, this.yCoord, this.zCoord);
+                    if (remove) {
+                        if (worldObj.getBlock(x, y, z) == ModBlocks.blockFLLight) {
+                            TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
+                            light.removeSource(this.xCoord, this.yCoord, this.zCoord);
+                        }
                     } else if (worldObj.getBlock(x, y, z).isAir(worldObj, x, y, z)) {
                         worldObj.setBlock(x, y, z, ModBlocks.blockFLLight);
                         TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
@@ -157,9 +160,11 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric implement
                     int x = this.xCoord + rotatedCoords[0];
                     int y = this.yCoord + rotatedCoords[1];
                     int z = this.zCoord + rotatedCoords[2];
-                    if (remove && worldObj.getBlock(x, y, z) == ModBlocks.blockFLLight) {
-                        TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
-                        light.removeSource(this.xCoord, this.yCoord, this.zCoord);
+                    if (remove) {
+                        if (worldObj.getBlock(x, y, z) == ModBlocks.blockFLLight) {
+                            TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
+                            light.removeSource(this.xCoord, this.yCoord, this.zCoord);
+                        }
                     } else if (worldObj.getBlock(x, y, z).isAir(worldObj, x, y, z)) {
                         worldObj.setBlock(x, y, z, ModBlocks.blockFLLight);
                         TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
@@ -185,9 +190,11 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric implement
                         int x = this.xCoord + this.orientation.offsetX;
                         int y = this.xCoord + this.orientation.offsetY;
                         int z = this.xCoord + this.orientation.offsetZ;
-                        if (remove && worldObj.getBlock(x, y, z) == ModBlocks.blockFLLight) {
-                            TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
-                            light.removeSource(this.xCoord, this.yCoord, this.zCoord);
+                        if (remove) {
+                            if (worldObj.getBlock(x, y, z) == ModBlocks.blockFLLight) {
+                                TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
+                                light.removeSource(this.xCoord, this.yCoord, this.zCoord);
+                            }
                         } else if (worldObj.getBlock(x, y, z).isAir(worldObj, x, y, z)) {
                             worldObj.setBlock(x, y, z, ModBlocks.blockFLLight);
                             TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
@@ -236,9 +243,11 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric implement
                     int x = this.xCoord + rotatedCoords[0];
                     int y = this.yCoord + rotatedCoords[1];
                     int z = this.zCoord + rotatedCoords[2];
-                    if (remove && worldObj.getBlock(x, y, z) == ModBlocks.blockFLLight) {
-                        TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
-                        light.removeSource(this.xCoord, this.yCoord, this.zCoord);
+                    if (remove) {
+                        if (worldObj.getBlock(x, y, z) == ModBlocks.blockFLLight) {
+                            TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
+                            light.removeSource(this.xCoord, this.yCoord, this.zCoord);
+                        }
                     } else if (worldObj.getBlock(x, y, z).isAir(worldObj, x, y, z)) {
                         worldObj.setBlock(x, y, z, ModBlocks.blockFLLight);
                         TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
@@ -292,9 +301,11 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric implement
                     int x = this.xCoord + rotatedCoords[0];
                     int y = this.yCoord + rotatedCoords[1];
                     int z = this.zCoord + rotatedCoords[2];
-                    if (remove && worldObj.getBlock(x, y, z) == ModBlocks.blockFLLight) {
-                        TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
-                        light.removeSource(this.xCoord, this.yCoord, this.zCoord);
+                    if (remove) {
+                        if (worldObj.getBlock(x, y, z) == ModBlocks.blockFLLight) {
+                            TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
+                            light.removeSource(this.xCoord, this.yCoord, this.zCoord);
+                        }
                     } else if (worldObj.getBlock(x, y, z).isAir(worldObj, x, y, z)) {
                         worldObj.setBlock(x, y, z, ModBlocks.blockFLLight);
                         TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
@@ -338,6 +349,7 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric implement
                         removeSource(this.mode);
                         addSource(this.mode);
                         world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, this.getOrientation().ordinal() + 6, 2);
+                        update = false;
                     } else {
                         addSource(this.mode);
                         world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, world.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) + 6, 2);
@@ -388,7 +400,6 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric implement
     public void changeMode(EntityPlayer player) {
         World world = this.getWorldObj();
         if (!world.isRemote) {
-            ForgeDirection direction = this.getOrientation();
             int realEnergyUsage = ConfigHandler.energyUsage / (mode == 0 ? 1 : 4);
             removeSource(this.mode);
             mode = (mode == 2 ? 0 : mode + 1);

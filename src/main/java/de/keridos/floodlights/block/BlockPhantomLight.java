@@ -1,6 +1,7 @@
 package de.keridos.floodlights.block;
 
 import de.keridos.floodlights.tileentity.TileEntityPhantomLight;
+import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.AxisAlignedBB;
@@ -81,5 +82,11 @@ public class BlockPhantomLight extends BlockFL implements ITileEntityProvider {
     @Override
     public TileEntityPhantomLight createNewTileEntity(World world, int metadata) {
         return new TileEntityPhantomLight();
+    }
+
+    @Override
+    public void breakBlock(World world, int x, int y, int z, Block block, int par6) {
+        ((TileEntityPhantomLight) world.getTileEntity(x, y, z)).updateAllSources();
+        super.breakBlock(world, x, y, z, block, par6);
     }
 }
