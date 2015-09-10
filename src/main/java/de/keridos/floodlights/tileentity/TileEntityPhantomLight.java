@@ -1,7 +1,6 @@
 package de.keridos.floodlights.tileentity;
 
 import de.keridos.floodlights.reference.Names;
-import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
@@ -38,15 +37,15 @@ public class TileEntityPhantomLight extends TileEntity {
             }
         }
         if (sources.isEmpty()) {
-            worldObj.setBlock(this.xCoord, this.yCoord, this.zCoord, Blocks.air);
+            worldObj.setBlockToAir(this.xCoord, this.yCoord, this.zCoord);
         }
     }
 
     public void updateAllSources() {
         for (int[] source : sources) {
-            TileEntityMetaFloodlight te = (TileEntityMetaFloodlight) worldObj.getTileEntity(source[0], source[1], source[2]);
+            TileEntity te = worldObj.getTileEntity(source[0], source[1], source[2]);
             if (te != null && te instanceof TileEntityMetaFloodlight) {
-                te.toggleUpdateRun();
+                ((TileEntityMetaFloodlight) te).toggleUpdateRun();
             }
         }
     }
