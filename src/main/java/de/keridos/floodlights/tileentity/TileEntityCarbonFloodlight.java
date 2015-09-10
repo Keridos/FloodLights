@@ -360,16 +360,15 @@ public class TileEntityCarbonFloodlight extends TileEntityMetaFloodlight impleme
                 decrStackSize(0, 1);
             }
             if (active && timeRemaining > 0) {
-                if (!wasActive || update) {
-                    if (update) {
-                        removeSource(this.mode);
-                        addSource(this.mode);
-                        world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, this.getOrientation().ordinal() + 6, 2);
-                        update = false;
-                    } else {
-                        addSource(this.mode);
-                        world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, this.getOrientation().ordinal() + 6, 2);
-                    }
+                if (update) {
+                    removeSource(this.mode);
+                    addSource(this.mode);
+                    world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, this.getOrientation().ordinal() + 6, 2);
+                    update = false;
+                } else if (!wasActive) {
+                    addSource(this.mode);
+                    world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, world.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) + 6, 2);
+
                 }
                 timeRemaining--;
                 wasActive = true;

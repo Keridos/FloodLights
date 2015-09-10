@@ -344,16 +344,15 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric implement
                 }
             }
             if (active && (storage.getEnergyStored() >= realEnergyUsage || storageEU >= (double) realEnergyUsage / 8.0D)) {
-                if (!wasActive || update) {
-                    if (update) {
-                        removeSource(this.mode);
-                        addSource(this.mode);
-                        world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, this.getOrientation().ordinal() + 6, 2);
-                        update = false;
-                    } else {
-                        addSource(this.mode);
-                        world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, world.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) + 6, 2);
-                    }
+                if (update) {
+                    removeSource(this.mode);
+                    addSource(this.mode);
+                    world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, this.getOrientation().ordinal() + 6, 2);
+                    update = false;
+                } else if (!wasActive) {
+                    addSource(this.mode);
+                    world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, world.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) + 6, 2);
+
                 }
                 if (storageEU >= (double) realEnergyUsage / 8.0D) {
                     storageEU -= (double) realEnergyUsage / 8.0D;
