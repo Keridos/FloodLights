@@ -140,6 +140,7 @@ public class BlockSmallElectricFloodlight extends BlockFL implements ITileEntity
         }
         if (!world.isRemote) {
             player.openGui(FloodLights.instance, 1, world, x, y, z);
+            return true;
         }
         return false;
     }
