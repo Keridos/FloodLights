@@ -81,13 +81,11 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
     public double injectEnergy(ForgeDirection forgeDirection, double v, double v1) {
         if ((double) (storage.getMaxEnergyStored() - storage.getEnergyStored()) >= (v * 8.0D)) {
             storage.modifyEnergyStored(MathUtil.truncateDoubleToInt(v * 8.0D));
-        } else if (storageEU < 4000D) {
+        } else {
             storageEU += v - ((double) (storage.getMaxEnergyStored() - storage.getEnergyStored()) / 8.0D);
             storage.modifyEnergyStored(MathUtil.truncateDoubleToInt(v * 8.0D));
-        } else {
-            return v;
         }
-        return 0;
+        return 0.0D;
     }
 
     @Optional.Method(modid = "IC2")
