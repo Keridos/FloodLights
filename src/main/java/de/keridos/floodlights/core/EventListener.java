@@ -1,7 +1,6 @@
 package de.keridos.floodlights.core;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import de.keridos.floodlights.handler.lighting.LightHandler;
 import de.keridos.floodlights.tileentity.TileEntityMetaFloodlight;
 import de.keridos.floodlights.tileentity.TileEntityPhantomLight;
 import net.minecraft.tileentity.TileEntity;
@@ -14,7 +13,6 @@ import net.minecraftforge.event.world.WorldEvent;
  */
 public class EventListener {
     private static EventListener instance;
-    public static LightHandler lightHandler;
 
     private EventListener() {
     }

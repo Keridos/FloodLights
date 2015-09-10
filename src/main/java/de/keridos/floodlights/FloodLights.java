@@ -19,7 +19,6 @@ import de.keridos.floodlights.handler.RecipeHandler;
 import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.init.ModItems;
 import de.keridos.floodlights.reference.Reference;
-import de.keridos.floodlights.util.ClearLightCommand;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 
@@ -71,7 +70,7 @@ public class FloodLights {
 
     @Mod.EventHandler
     public static void postInit(FMLServerStartingEvent event) {
-        event.registerServerCommand(new ClearLightCommand());
+
     }
 
     public void registerEventListeners() {
