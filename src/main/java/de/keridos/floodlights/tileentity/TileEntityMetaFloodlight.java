@@ -1,5 +1,6 @@
 package de.keridos.floodlights.tileentity;
 
+import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.reference.Names;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
@@ -49,6 +50,13 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
 
     public void toggleUpdateRun() {
         update = true;
+    }
+
+    public void setLight(int x, int y, int z) {
+        if (worldObj.setBlock(x, y, z, ModBlocks.blockFLLight)) {
+            TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
+            light.addSource(this.xCoord, this.yCoord, this.zCoord);
+        }
     }
 
     @Override
