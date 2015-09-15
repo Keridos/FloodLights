@@ -30,7 +30,7 @@ public class TileEntityUVLightBlock extends TileEntityPhantomLight {
     @Override
     @SuppressWarnings("unchecked")
     public void updateEntity() {
-        if (!worldObj.isRemote && worldObj.getWorldTime() % 10 == 0) {
+        if (!worldObj.isRemote && worldObj.getWorldTime() % 20 == 0) {
             AxisAlignedBB axisAlignedBB = this.getBoundingBox();
             List<EntityLivingBase> entityList = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, axisAlignedBB);
             ListIterator iterator = entityList.listIterator();
