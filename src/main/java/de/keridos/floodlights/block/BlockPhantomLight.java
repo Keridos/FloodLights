@@ -1,5 +1,6 @@
 package de.keridos.floodlights.block;
 
+import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.tileentity.TileEntityPhantomLight;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
@@ -16,7 +17,12 @@ import java.util.Random;
  */
 public class BlockPhantomLight extends BlockFL implements ITileEntityProvider {
     public BlockPhantomLight() {
-        super("blockLight", Material.air, soundTypeCloth, 0.0F);
+        super(Names.Blocks.PHANTOM_LIGHT, Material.air, soundTypeCloth, 0.0F);
+    }
+
+    public BlockPhantomLight(String name, Material material, SoundType soundType, float hardness) {
+        super(name, material, soundType, hardness);
+        setHarvestLevel("pickaxe", 1);
     }
 
     @Override

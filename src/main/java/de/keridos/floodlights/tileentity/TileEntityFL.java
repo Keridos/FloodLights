@@ -33,12 +33,12 @@ public class TileEntityFL extends TileEntity {
         return orientation;
     }
 
-    public void setOrientation(ForgeDirection orientation) {
-        this.orientation = orientation;
-    }
-
     public void setOrientation(int orientation) {
         this.orientation = ForgeDirection.getOrientation(orientation);
+    }
+
+    public void setOrientation(ForgeDirection orientation) {
+        this.orientation = orientation;
     }
 
     public short getState() {

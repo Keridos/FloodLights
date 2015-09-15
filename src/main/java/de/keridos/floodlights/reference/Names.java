@@ -9,7 +9,9 @@ public class Names {
         public static final String ELECTRIC_FLOODLIGHT = "electricFloodlight";
         public static final String SMALL_ELECTRIC_FLOODLIGHT = "smallElectricFloodlightMetaBlock";
         public static final String CARBON_FLOODLIGHT = "carbonFloodlight";
-        public static final String PHANTOM_LIGHT = "tilePhantomLight";
+        public static final String PHANTOM_LIGHT = "tilePhantomLight2";
+        public static final String UV_LIGHTBLOCK = "tileUVLight";
+        public static final String UV_FLOODLIGHT = "uvFloodlight";
     }
 
     public static final class Items {
@@ -33,13 +35,11 @@ public class Names {
         public static final String WIDE_CONE = "gui.floodlights:wideCone";
         public static final String GUI_MINUTES_SHORT = "gui.floodlights:minutesShort";
         public static final String GUI_SECONDS_SHORT = "gui.floodlights:secondsShort";
-        public static final String CLEARLIGHTS_COMMAND_TEXT = "gui.floodlights:clearLightsCommandText";
     }
 
     public static final class NBT {
         public static final String ITEMS = "Items";
         public static final String INVERT = "inverted";
-        public static final String UPDATE = "updateTrigger";
         public static final String TIME_REMAINING = "timeRemaining";
         public static final String STORAGE_EU = "storageEU";
         public static final String COLOR = "color";

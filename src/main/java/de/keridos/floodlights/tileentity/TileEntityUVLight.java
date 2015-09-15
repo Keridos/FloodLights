@@ -3,23 +3,50 @@ package de.keridos.floodlights.tileentity;
 import cofh.api.energy.IEnergyContainerItem;
 import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.handler.ConfigHandler;
-import de.keridos.floodlights.reference.Names;
+import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.util.MathUtil;
 import ic2.api.item.ElectricItem;
 import ic2.api.item.IElectricItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 
-import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
-
 /**
- * Created by Keridos on 01.10.14.
- * This Class is the electric floodlight TileEntity.
+ * Created by Keridos on 15/09/2015.
+ * This Class
  */
+public class TileEntityUVLight extends TileEntityFLElectric {
 
-public class TileEntityElectricFloodlight extends TileEntityFLElectric implements ISidedInventory {
+    public TileEntityUVLight() {
+        super();
+    }
+
+    public void setLightUV(int x, int y, int z) {
+        if (worldObj.setBlock(x, y, z, ModBlocks.blockUVLightBlock)) {
+            TileEntityUVLightBlock light = (TileEntityUVLightBlock) worldObj.getTileEntity(x, y, z);
+            light.addSource(this.xCoord, this.yCoord, this.zCoord);
+        }
+    }
+
+    public void UVSource(boolean remove) {
+        for (int i = 1; i <= ConfigHandler.rangeUVFloodlight; i++) {
+            int x = this.xCoord + this.orientation.offsetX * i;
+            int y = this.yCoord + this.orientation.offsetY * i;
+            int z = this.zCoord + this.orientation.offsetZ * i;
+            if (remove) {
+                if (worldObj.getBlock(x, y, z) == ModBlocks.blockUVLightBlock) {
+                    TileEntityUVLightBlock light = (TileEntityUVLightBlock) worldObj.getTileEntity(x, y, z);
+                    light.removeSource(this.xCoord, this.yCoord, this.zCoord);
+                }
+            } else if (worldObj.getBlock(x, y, z).isAir(worldObj, x, y, z)) {
+                setLightUV(x, y, z);
+            } else if (worldObj.getBlock(x, y, z) == ModBlocks.blockUVLightBlock) {
+                TileEntityUVLightBlock light = (TileEntityUVLightBlock) worldObj.getTileEntity(x, y, z);
+                light.addSource(this.xCoord, this.yCoord, this.zCoord);
+            } else if (worldObj.getBlock(x, y, z).isOpaqueCube()) {
+                break;
+            }
+        }
+    }
+
     @Override
     public void updateEntity() {
         World world = this.getWorldObj();
@@ -28,7 +55,7 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric implement
             wasAddedToEnergyNet = true;
         }
         if (!world.isRemote) {
-            int realEnergyUsage = ConfigHandler.energyUsage / (mode == 0 ? 1 : 2);
+            int realEnergyUsage = ConfigHandler.energyUsageUVFloodlight;
             if (inventory[0] != null) {
                 if (ModCompatibility.IC2Loaded) {
                     if (inventory[0].getItem() instanceof IElectricItem) {
@@ -44,12 +71,12 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric implement
             }
             if (active && (storage.getEnergyStored() >= realEnergyUsage || storageEU >= (double) realEnergyUsage / 8.0D)) {
                 if (update) {
-                    removeSource(this.mode);
-                    addSource(this.mode);
+                    UVSource(true);
+                    UVSource(false);
                     world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, this.getOrientation().ordinal() + 6, 2);
                     update = false;
                 } else if (!wasActive) {
-                    addSource(this.mode);
+                    UVSource(false);
                     world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, world.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) + 6, 2);
 
                 }
@@ -61,51 +88,11 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric implement
                 wasActive = true;
             } else {
                 if (wasActive) {
-                    removeSource(this.mode);
+                    UVSource(true);
                     world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, world.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) - 6, 2);
                 }
                 wasActive = false;
             }
-        }
-    }
-
-    public void addSource(int mode) {
-        if (mode == -1) {
-            mode = this.mode;
-        }
-        if (mode == 0) {
-            straightSource(false);
-        } else if (mode == 1) {
-            narrowConeSource(false);
-        } else if (mode == 2) {
-            wideConeSource(false);
-        }
-    }
-
-    public void removeSource(int mode) {
-        if (mode == -1) {
-            mode = this.mode;
-        }
-        if (mode == 0) {
-            straightSource(true);
-        } else if (mode == 1) {
-            narrowConeSource(true);
-        } else if (mode == 2) {
-            wideConeSource(true);
-        }
-    }
-
-    public void changeMode(EntityPlayer player) {
-        World world = this.getWorldObj();
-        if (!world.isRemote) {
-            int realEnergyUsage = ConfigHandler.energyUsage / (mode == 0 ? 1 : 4);
-            removeSource(this.mode);
-            mode = (mode == 2 ? 0 : mode + 1);
-            if (active && (storage.getEnergyStored() >= realEnergyUsage || storageEU >= realEnergyUsage / 8.0D)) {
-                addSource(this.mode);
-            }
-            String modeString = (mode == 0 ? Names.Localizations.STRAIGHT : mode == 1 ? Names.Localizations.NARROW_CONE : Names.Localizations.WIDE_CONE);
-            player.addChatMessage(new ChatComponentText(safeLocalize(Names.Localizations.MODE) + ": " + safeLocalize(modeString)));
         }
     }
 }

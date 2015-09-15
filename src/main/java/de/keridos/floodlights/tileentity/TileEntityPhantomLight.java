@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * This Class is the base for all TileEntities within this mod.
  */
 public class TileEntityPhantomLight extends TileEntity {
-    private ArrayList<int[]> sources = new ArrayList<int[]>();
+    protected ArrayList<int[]> sources = new ArrayList<int[]>();
 
     public TileEntityPhantomLight() {
         super();

@@ -14,10 +14,13 @@ public class ConfigHandler {
     public static boolean carbonFloodlight;
     public static int energyUsage;
     public static int energyUsageSmallFloodlight;
+    public static int energyUsageUVFloodlight;
     public static int carbonTime;
     public static int rangeStraightFloodlight;
     public static int rangeConeFloodlight;
-    public static int refreshRate;
+    public static int rangeUVFloodlight;
+
+    public static float damageUVFloodlight;
 
     private ConfigHandler() {
     }
@@ -39,10 +42,12 @@ public class ConfigHandler {
         config.getCategory("general");
         energyUsage = config.getInt("energyUsage", "general", 20, 0, 1000, "Energy Usage in RF/t for the electric FloodLight (x4 for the cone floodlights)");
         energyUsageSmallFloodlight = config.getInt("energyUsageSmallFloodlight", "general", 2, 0, 100, "Energy Usage in RF/t for the small electric FloodLight");
+        energyUsageUVFloodlight = config.getInt("energyUsageUVFloodlight", "general", 80, 0, 800, "Energy Usage in RF/t for the UV FloodLight");
         carbonTime = config.getInt("carbonTime", "general", 300, 0, 1000, "How many seconds should 1 coal last in the carbon floodlight (quarter of that for the cone floodlights)? Default:300");
         rangeStraightFloodlight = config.getInt("rangeStraightFloodlight", "general", 64, 1, 128, "How far should the straight Floodlights go?");
         rangeConeFloodlight = config.getInt("rangeConeFloodlight", "general", 32, 1, 64, "How far should the cone floodlights go (Mind that wide only goes quarter as far as this)? Default:32   ");
-        refreshRate = config.getInt("refreshRate", "general", 8, 0, 100, "How many invisible lights should be updated per tick (20 ticks = 1 second)");
+        rangeUVFloodlight = config.getInt("rangeUVFloodlight", "general", 8, 1, 32, "How far should the UV Floodlights go?");
+        damageUVFloodlight = config.getFloat("damageUVFloodlight", "general", 4.0F, 1.0F, 16.0F, "How mcuh damage should the UV Floodlights do per hit (twice a second)?");
         config.save();
     }
 }

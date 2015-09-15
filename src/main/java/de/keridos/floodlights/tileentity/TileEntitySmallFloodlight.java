@@ -1,7 +1,6 @@
 package de.keridos.floodlights.tileentity;
 
 import cofh.api.energy.IEnergyContainerItem;
-import cpw.mods.fml.common.Optional;
 import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.handler.ConfigHandler;
 import de.keridos.floodlights.init.ModBlocks;
@@ -20,7 +19,6 @@ import static de.keridos.floodlights.util.MathUtil.rotate;
  * This Class is the tile entity for the small floodlight.
  */
 
-@Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink", modid = "IC2")
 public class TileEntitySmallFloodlight extends TileEntityFLElectric {
     private boolean rotationState = false;
 
@@ -47,11 +45,6 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
     @Override
     public boolean canConnectEnergy(ForgeDirection from) {
         return (from.getOpposite().ordinal() == orientation.ordinal());
-    }
-
-    @Override
-    public boolean canUpdate() {
-        return true;
     }
 
     public void toggleRotationState() {
