@@ -216,7 +216,7 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
         boolean[] failedBeams = new boolean[9];
         for (int j = 0; j <= 16; j++) {
             if (j <= 8) {
-                for (int i = 1; i <= ConfigHandler.rangeConeFloodlight / 2; i++) {
+                for (int i = 1; i <= ConfigHandler.rangeConeFloodlight / 4; i++) {
                     int b = 0;
                     int c = 0;
                     switch (j) {
@@ -271,7 +271,7 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
                     }
                 }
             } else if (!failedBeams[j - 9] || remove) { // This is for the inner beams at longer range
-                for (int i = ConfigHandler.rangeConeFloodlight / 4; i <= ConfigHandler.rangeConeFloodlight / 2; i++) {
+                for (int i = ConfigHandler.rangeConeFloodlight / 9; i <= ConfigHandler.rangeConeFloodlight / 4; i++) {
                     int b = 0;
                     int c = 0;
                     switch (j) {
@@ -330,7 +330,7 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
         boolean[] failedBeams = new boolean[9];    // for the additional beam to cancel when the main beams fail.
         for (int j = 0; j <= 16; j++) {
             if (j <= 8) {     // This is the main beams
-                for (int i = 1; i <= ConfigHandler.rangeConeFloodlight / 2; i++) {
+                for (int i = 1; i <= ConfigHandler.rangeConeFloodlight; i++) {
                     // for 1st light:
                     if (i == 1) {
                         int x = this.xCoord + this.orientation.offsetX;
@@ -405,7 +405,7 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
                     }
                 }
             } else if (!failedBeams[j - 9] || remove) { // This is for the inner beams at longer range
-                for (int i = ConfigHandler.rangeConeFloodlight / 4; i <= ConfigHandler.rangeConeFloodlight / 2; i++) {
+                for (int i = ConfigHandler.rangeConeFloodlight / 2; i <= ConfigHandler.rangeConeFloodlight; i++) {
                     int a = 2 * i;
                     int b = 0;
                     int c = 0;

@@ -9,7 +9,7 @@ public class Names {
         public static final String ELECTRIC_FLOODLIGHT = "electricFloodlight";
         public static final String SMALL_ELECTRIC_FLOODLIGHT = "smallElectricFloodlightMetaBlock";
         public static final String CARBON_FLOODLIGHT = "carbonFloodlight";
-        public static final String PHANTOM_LIGHT = "tilePhantomLight2";
+        public static final String PHANTOM_LIGHT = "tilePhantomLight";
         public static final String UV_LIGHTBLOCK = "tileUVLight";
         public static final String UV_FLOODLIGHT = "uvFloodlight";
     }
