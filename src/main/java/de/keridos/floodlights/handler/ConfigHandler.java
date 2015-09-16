@@ -12,6 +12,7 @@ public class ConfigHandler {
     public static boolean electricFloodlight;
     public static boolean smallElectricFloodlight;
     public static boolean carbonFloodlight;
+    public static boolean uvFloodlight;
     public static int energyUsage;
     public static int energyUsageSmallFloodlight;
     public static int energyUsageUVFloodlight;
@@ -39,6 +40,7 @@ public class ConfigHandler {
         electricFloodlight = config.getBoolean("electricFloodlightEnabled", "blocks", true, "Enables the electric FloodLight");
         smallElectricFloodlight = config.getBoolean("smallElectricFloodlightEnabled", "blocks", true, "Enables the small electric FloodLight");
         carbonFloodlight = config.getBoolean("carbonFloodlightEnabled", "blocks", true, "Enables the carbon FloodLight");
+        uvFloodlight = config.getBoolean("uvFloodlightEnabled", "blocks", true, "Enables the UV FloodLight");
 
         config.getCategory("general");
         energyUsage = config.getInt("energyUsage", "general", 20, 0, 1000, "Energy Usage in RF/t for the electric FloodLight (x4 for the cone floodlights)");

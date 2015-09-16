@@ -52,6 +52,7 @@ public class ModCompatibility {
     @Optional.Method(modid = "NotEnoughItems")
     private void hideNEIItems() {
         hideItem(new ItemStack(ModBlocks.blockFLLight));
+        hideItem(new ItemStack(ModBlocks.blockUVLightBlock));
     }
 
     private void addVersionCheckerInfo() {

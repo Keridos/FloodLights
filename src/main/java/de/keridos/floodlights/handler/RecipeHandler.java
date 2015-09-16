@@ -15,8 +15,6 @@ import static de.keridos.floodlights.util.GeneralUtil.getMinecraftItem;
  */
 public class RecipeHandler {
     private static RecipeHandler instance = null;
-    private ConfigHandler configHandler = ConfigHandler.getInstance();
-
     private RecipeHandler() {
     }
 
@@ -44,6 +42,9 @@ public class RecipeHandler {
             GameRegistry.addRecipe(new ItemStack(ModItems.mantle, 1), "SSS", "SRS", "SSS", 'R', new ItemStack(getMinecraftItem("redstone"), 1), 'S', new ItemStack(getMinecraftItem("string"), 1));
             GameRegistry.addRecipe(new ItemStack(ModItems.carbonLantern, 1), " G ", "GMG", "DFI", 'G', new ItemStack(getMinecraftItem("glass_pane"), 1), 'M', new ItemStack(ModItems.mantle, 1), 'I', new ItemStack(getMinecraftItem("iron_ingot"), 1), 'D', new ItemStack(ModItems.carbonDissolver, 1), 'F', new ItemStack(getMinecraftItem("flint_and_steel"), 1));
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.blockCarbonLight, 1), "CIC", "IBG", "CIC", 'C', new ItemStack(getMinecraftItem("cobblestone"), 1), 'I', new ItemStack(getMinecraftItem("iron_ingot"), 1), 'B', new ItemStack(ModItems.carbonLantern, 1), 'G', new ItemStack(getMinecraftItem("glass"), 1)));
+        }
+        if (ConfigHandler.uvFloodlight) {
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.blockUVLight, 1), "CIC", "IBG", "CIC", 'C', new ItemStack(getMinecraftItem("cobblestone"), 1), 'I', new ItemStack(getMinecraftItem("iron_ingot"), 1), 'B', new ItemStack(ModItems.lightBulb, 1), 'G', new ItemStack(getMinecraftItem("stained_glass"), 1, 15)));
         }
     }
 }
