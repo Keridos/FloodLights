@@ -8,10 +8,13 @@ import de.keridos.floodlights.util.MathUtil;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergySink;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import static de.keridos.floodlights.util.GeneralUtil.isItemStackValidElectrical;
 
 /**
  * Created by Keridos on 04.05.2015.
@@ -72,18 +75,20 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
         return storage.getMaxEnergyStored();
     }
 
+    public void setEnergyStored(int energyStored) {
+        storage.setEnergyStored(energyStored);
+    }
+
     @Optional.Method(modid = "IC2")
     @Override
     public double injectEnergy(ForgeDirection forgeDirection, double v, double v1) {
         if ((double) (storage.getMaxEnergyStored() - storage.getEnergyStored()) >= (v * 8.0D)) {
             storage.modifyEnergyStored(MathUtil.truncateDoubleToInt(v * 8.0D));
-        } else if (storageEU < 4000D) {
+        } else {
             storageEU += v - ((double) (storage.getMaxEnergyStored() - storage.getEnergyStored()) / 8.0D);
             storage.modifyEnergyStored(MathUtil.truncateDoubleToInt(v * 8.0D));
-        } else {
-            return v;
         }
-        return 0;
+        return 0.0D;
     }
 
     @Optional.Method(modid = "IC2")
@@ -122,5 +127,13 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
         }
     }
 
+    @Override
+    public boolean isItemValidForSlot(int i, ItemStack itemstack) {
+        return isItemStackValidElectrical(itemstack);
+    }
 
+    @Override
+    public boolean canInsertItem(int i, ItemStack itemstack, int j) {
+        return isItemStackValidElectrical(itemstack);
+    }
 }

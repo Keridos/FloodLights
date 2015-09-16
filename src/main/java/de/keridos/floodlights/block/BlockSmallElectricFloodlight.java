@@ -4,11 +4,12 @@ import buildcraft.api.tools.IToolWrench;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import crazypants.enderio.api.tool.ITool;
+import de.keridos.floodlights.FloodLights;
 import de.keridos.floodlights.compatability.ModCompatibility;
-import de.keridos.floodlights.handler.lighting.LightHandler;
 import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.tileentity.TileEntityFL;
+import de.keridos.floodlights.tileentity.TileEntityMetaFloodlight;
 import de.keridos.floodlights.tileentity.TileEntitySmallFloodlight;
 import de.keridos.floodlights.util.MathUtil;
 import net.minecraft.block.Block;
@@ -29,6 +30,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
 
@@ -71,6 +73,7 @@ public class BlockSmallElectricFloodlight extends BlockFL implements ITileEntity
             } else if (!world.isBlockIndirectlyGettingPowered(x, y, z)) {
                 ((TileEntitySmallFloodlight) world.getTileEntity(x, y, z)).setRedstone(false);
             }
+            ((TileEntityMetaFloodlight) world.getTileEntity(x, y, z)).toggleUpdateRun();
         }
     }
 
@@ -97,8 +100,7 @@ public class BlockSmallElectricFloodlight extends BlockFL implements ITileEntity
                 if (player.isSneaking() && player.getHeldItem().getItem() instanceof IToolWrench) {
                     world.func_147480_a(x, y, z, true);
                     return true;
-                }
-                if (!player.isSneaking() && player.getHeldItem().getItem() instanceof IToolWrench) {
+                } else if (player.getHeldItem().getItem() instanceof IToolWrench) {
                     ((TileEntitySmallFloodlight) world.getTileEntity(x, y, z)).toggleRotationState();
                     return true;
                 }
@@ -107,8 +109,7 @@ public class BlockSmallElectricFloodlight extends BlockFL implements ITileEntity
                 if (player.isSneaking() && player.getHeldItem().getItem() instanceof ITool) {
                     world.func_147480_a(x, y, z, true);
                     return true;
-                }
-                if (!player.isSneaking() && player.getHeldItem().getItem() instanceof ITool) {
+                } else if (player.getHeldItem().getItem() instanceof ITool) {
                     ((TileEntitySmallFloodlight) world.getTileEntity(x, y, z)).toggleRotationState();
                     return true;
                 }
@@ -117,15 +118,17 @@ public class BlockSmallElectricFloodlight extends BlockFL implements ITileEntity
                 if (player.isSneaking() && player.getHeldItem().getItem().getUnlocalizedName().equals("ic2.itemToolWrench")) {
                     world.func_147480_a(x, y, z, true);
                     return true;
-                } else if (!player.getHeldItem().getItem().getUnlocalizedName().equals("ic2.itemToolWrench")) {
+                } else if (player.getHeldItem().getItem().getUnlocalizedName().equals("ic2.itemToolWrench")) {
                     ((TileEntitySmallFloodlight) world.getTileEntity(x, y, z)).toggleRotationState();
+                    Logger.getGlobal().info("toggled rotation state");
                     return true;
                 }
                 if (player.isSneaking() && player.getHeldItem().getItem().getUnlocalizedName().equals("ic2.itemToolWrenchElectric")) {
                     world.func_147480_a(x, y, z, true);
                     return true;
-                } else if (!player.isSneaking() && player.getHeldItem().getItem().getUnlocalizedName().equals("ic2.itemToolWrenchElectric")) {
+                } else if (player.isSneaking() && player.getHeldItem().getItem().getUnlocalizedName().equals("ic2.itemToolWrenchElectric")) {
                     ((TileEntitySmallFloodlight) world.getTileEntity(x, y, z)).toggleRotationState();
+                    Logger.getGlobal().info("toggled rotation state");
                     return true;
                 }
             }
@@ -136,7 +139,9 @@ public class BlockSmallElectricFloodlight extends BlockFL implements ITileEntity
                 ((TileEntityFL) world.getTileEntity(x, y, z)).setColor(16);
                 return true;
             }
-        } else if (world.isRemote) {
+        }
+        if (!world.isRemote) {
+            player.openGui(FloodLights.instance, 1, world, x, y, z);
             return true;
         }
         return false;
@@ -207,9 +212,7 @@ public class BlockSmallElectricFloodlight extends BlockFL implements ITileEntity
 
     @Override
     public void breakBlock(World world, int x, int y, int z, Block block, int par6) {
-        ForgeDirection direction = ((TileEntitySmallFloodlight) world.getTileEntity(x, y, z)).getOrientation();
-        int mode = ((TileEntitySmallFloodlight) world.getTileEntity(x, y, z)).getMode();
-        LightHandler.getInstance().removeSource(world, x, y, z, direction, mode);
+        ((TileEntitySmallFloodlight) world.getTileEntity(x, y, z)).smallSource(true);
         super.breakBlock(world, x, y, z, block, par6);
     }
 

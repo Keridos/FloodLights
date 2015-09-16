@@ -1,10 +1,14 @@
-package de.keridos.floodlights.client.gui;
+package de.keridos.floodlights.handler;
 
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import de.keridos.floodlights.FloodLights;
+import de.keridos.floodlights.client.gui.GuiCarbonFloodlight;
+import de.keridos.floodlights.client.gui.GuiElectricFloodlight;
 import de.keridos.floodlights.client.gui.container.ContainerCarbonFloodlight;
+import de.keridos.floodlights.client.gui.container.ContainerElectricFloodlight;
 import de.keridos.floodlights.tileentity.TileEntityCarbonFloodlight;
+import de.keridos.floodlights.tileentity.TileEntityFLElectric;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -38,6 +42,12 @@ public class GuiHandler implements IGuiHandler {
                 } else {
                     return null;
                 }
+            case 1:
+                if (entity != null && entity instanceof TileEntityFLElectric) {
+                    return new ContainerElectricFloodlight(player.inventory, (TileEntityFLElectric) entity);
+                } else {
+                    return null;
+                }
             default:
                 return null;
         }
@@ -51,6 +61,12 @@ public class GuiHandler implements IGuiHandler {
             case 0:
                 if (entity != null && entity instanceof TileEntityCarbonFloodlight) {
                     return new GuiCarbonFloodlight(player.inventory, (TileEntityCarbonFloodlight) entity);
+                } else {
+                    return null;
+                }
+            case 1:
+                if (entity != null && entity instanceof TileEntityFLElectric) {
+                    return new GuiElectricFloodlight(player.inventory, (TileEntityFLElectric) entity);
                 } else {
                     return null;
                 }

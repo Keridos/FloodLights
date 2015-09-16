@@ -10,11 +10,13 @@ item.floodlights:mantle.name=Mantle
 tile.floodlights:carbonFloodlight.name=Non-electric Floodlight
 tile.floodlights:electricFloodlight.name=Electric Floodlight
 tile.floodlights:smallElectricFloodlight.name=Small Electric Floodlight
-tile.floodlights:smallElectricFloodlightMetaBlock_smallFluorescent.name=Small Fluorescent Light
-tile.floodlights:smallElectricFloodlightMetaBlock_squareFluorescent.name=Square Fluorescent Light
+tile.floodlights:uvFloodlight.name=UV Floodlight
+tile.floodlights:smallElectricFloodlightMetaBlock_smallFluorescent.name=Small Flourescent Light
+tile.floodlights:smallElectricFloodlightMetaBlock_squareFluorescent.name=Square Flourescent Light
 
 #GUI
 gui.floodlights:nonElectricFloodlightTimeRemaining=Time remaining
+gui.floodlights:RFStorage=RF Storage
 gui.floodlights:invert=Inverted
 gui.floodlights:mode=Mode
 gui.floodlights:true=true

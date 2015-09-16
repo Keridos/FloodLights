@@ -3,12 +3,13 @@ package de.keridos.floodlights.block;
 import buildcraft.api.tools.IToolWrench;
 import cofh.api.item.IToolHammer;
 import crazypants.enderio.api.tool.ITool;
+import de.keridos.floodlights.FloodLights;
 import de.keridos.floodlights.compatability.ModCompatibility;
-import de.keridos.floodlights.handler.lighting.LightHandler;
 import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.reference.RenderIDs;
 import de.keridos.floodlights.tileentity.TileEntityElectricFloodlight;
 import de.keridos.floodlights.tileentity.TileEntityFL;
+import de.keridos.floodlights.tileentity.TileEntityMetaFloodlight;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -18,7 +19,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import static de.keridos.floodlights.util.GeneralUtil.getMinecraftItem;
 import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
@@ -33,6 +33,7 @@ public class BlockElectricFloodlight extends BlockFL implements ITileEntityProvi
         super(Names.Blocks.ELECTRIC_FLOODLIGHT, Material.rock, soundTypeMetal, 2.5F);
         setHarvestLevel("pickaxe", 1);
     }
+
 
     @Override
     public int getRenderType() {
@@ -52,6 +53,7 @@ public class BlockElectricFloodlight extends BlockFL implements ITileEntityProvi
             } else if (!world.isBlockIndirectlyGettingPowered(x, y, z)) {
                 ((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).setRedstone(false);
             }
+            ((TileEntityMetaFloodlight) world.getTileEntity(x, y, z)).toggleUpdateRun();
         }
     }
 
@@ -68,12 +70,12 @@ public class BlockElectricFloodlight extends BlockFL implements ITileEntityProvi
 
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float p_149727_7_, float p_149727_8_, float p_149727_9_) {
-        if (player.getHeldItem() == null && !world.isRemote && player.isSneaking()) {
+        if (!world.isRemote && player.getHeldItem() == null && player.isSneaking()) {
             ((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).toggleInverted();
             String invert = (((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).getInverted() ? Names.Localizations.TRUE : Names.Localizations.FALSE);
             player.addChatMessage(new ChatComponentText(safeLocalize(Names.Localizations.INVERT) + ": " + safeLocalize(invert)));
             return true;
-        } else if (player.getHeldItem() != null && !world.isRemote) {
+        } else if (!world.isRemote && player.getHeldItem() != null) {
             if (!ModCompatibility.WrenchAvailable && player.getHeldItem().getItem() == getMinecraftItem("stick")) {
                 ((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).changeMode(player);
             }
@@ -127,7 +129,9 @@ public class BlockElectricFloodlight extends BlockFL implements ITileEntityProvi
                 ((TileEntityFL) world.getTileEntity(x, y, z)).setColor(16);
                 return true;
             }
-        } else if (world.isRemote) {
+        }
+        if (!world.isRemote) {
+            player.openGui(FloodLights.instance, 1, world, x, y, z);
             return true;
         }
         return false;
@@ -140,9 +144,7 @@ public class BlockElectricFloodlight extends BlockFL implements ITileEntityProvi
 
     @Override
     public void breakBlock(World world, int x, int y, int z, Block block, int par6) {
-        ForgeDirection direction = ((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).getOrientation();
-        int mode = ((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).getMode();
-        LightHandler.getInstance().removeSource(world, x, y, z, direction, mode);
+        ((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).removeSource(-1);
         super.breakBlock(world, x, y, z, block, par6);
     }
 }

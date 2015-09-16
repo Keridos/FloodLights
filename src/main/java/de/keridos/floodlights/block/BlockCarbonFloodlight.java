@@ -5,11 +5,11 @@ import cofh.api.item.IToolHammer;
 import crazypants.enderio.api.tool.ITool;
 import de.keridos.floodlights.FloodLights;
 import de.keridos.floodlights.compatability.ModCompatibility;
-import de.keridos.floodlights.handler.lighting.LightHandler;
 import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.reference.RenderIDs;
 import de.keridos.floodlights.tileentity.TileEntityCarbonFloodlight;
 import de.keridos.floodlights.tileentity.TileEntityFL;
+import de.keridos.floodlights.tileentity.TileEntityMetaFloodlight;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -19,7 +19,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import static de.keridos.floodlights.util.GeneralUtil.getMinecraftItem;
 import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
@@ -53,7 +52,9 @@ public class BlockCarbonFloodlight extends BlockFL implements ITileEntityProvide
             } else if (!world.isBlockIndirectlyGettingPowered(x, y, z)) {
                 ((TileEntityCarbonFloodlight) world.getTileEntity(x, y, z)).setRedstone(false);
             }
+            ((TileEntityMetaFloodlight) world.getTileEntity(x, y, z)).toggleUpdateRun();
         }
+
     }
 
     @Override
@@ -131,6 +132,7 @@ public class BlockCarbonFloodlight extends BlockFL implements ITileEntityProvide
         }
         if (!world.isRemote) {
             player.openGui(FloodLights.instance, 0, world, x, y, z);
+            return true;
         }
         return true;
     }
@@ -142,9 +144,7 @@ public class BlockCarbonFloodlight extends BlockFL implements ITileEntityProvide
 
     @Override
     public void breakBlock(World world, int x, int y, int z, Block block, int par6) {
-        ForgeDirection direction = ((TileEntityCarbonFloodlight) world.getTileEntity(x, y, z)).getOrientation();
-        int mode = ((TileEntityCarbonFloodlight) world.getTileEntity(x, y, z)).getMode();
-        LightHandler.getInstance().removeSource(world, x, y, z, direction, mode);
+        ((TileEntityCarbonFloodlight) world.getTileEntity(x, y, z)).removeSource(-1);
         super.breakBlock(world, x, y, z, block, par6);
     }
 }

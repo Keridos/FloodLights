@@ -34,7 +34,7 @@ public class FMLEventListener {
     //Called when the server ticks. Usually 20 ticks a second.
     @SubscribeEvent
     public void onServerTick(TickEvent.ServerTickEvent event) {
-        EventListener.lightHandler.updateLights();
+        //EventListener.lightHandler.updateLights();
     }
 
     //Called when a new frame is displayed (See fps)
