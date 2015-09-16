@@ -1,9 +1,9 @@
 package de.keridos.floodlights.block;
 
 import buildcraft.api.tools.IToolWrench;
-import cofh.api.item.IToolHammer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import crazypants.enderio.api.tool.ITool;
 import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.handler.lighting.LightHandler;
 import de.keridos.floodlights.init.ModBlocks;
@@ -94,21 +94,15 @@ public class BlockSmallElectricFloodlight extends BlockFL implements ITileEntity
             player.addChatMessage(new ChatComponentText(safeLocalize(Names.Localizations.INVERT) + ": " + safeLocalize(invert)));
             return true;
         } else if (!world.isRemote && player.getHeldItem() != null) {
-            if (ModCompatibility.BCLoaded || ModCompatibility.EnderIOLoaded) {
+            if (ModCompatibility.BCLoaded) {
                 if (player.isSneaking() && player.getHeldItem().getItem() instanceof IToolWrench) {
                     world.func_147480_a(x, y, z, true);
                     return true;
-                } else if (player.getHeldItem().getItem() instanceof IToolWrench) {
-                    ((TileEntitySmallFloodlight) world.getTileEntity(x, y, z)).toggleRotationState();
-                    return true;
                 }
             }
-            if (ModCompatibility.CofhCoreLoaded) {
-                if (player.isSneaking() && player.getHeldItem().getItem() instanceof IToolHammer) {
+            if (ModCompatibility.EnderIOLoaded) {
+                if (player.isSneaking() && player.getHeldItem().getItem() instanceof ITool) {
                     world.func_147480_a(x, y, z, true);
-                    return true;
-                } else if (player.getHeldItem().getItem() instanceof IToolHammer) {
-                    ((TileEntitySmallFloodlight) world.getTileEntity(x, y, z)).toggleRotationState();
                     return true;
                 }
             }

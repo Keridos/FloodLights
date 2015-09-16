@@ -132,6 +132,7 @@ dependencies {
     compile "net.industrial-craft:industrialcraft-2:${config.ic2_version}:dev"
     compile "com.mod-buildcraft:buildcraft:${config.bc_version}:dev"
     compile "coloredlightscore:ColoredLightsCore:${config.coloredlightcore_version}:api"
+    compile "com.enderio:EnderIO:${config.minecraft_version}-${config.enderio_version}:dev"
     //compile "cofhcore:CoFHCore-[${config.minecraft_version}]${config.cofhcore_version}:dev"
 }
 
