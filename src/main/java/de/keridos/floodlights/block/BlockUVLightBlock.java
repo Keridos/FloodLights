@@ -4,7 +4,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.tileentity.TileEntityUVLightBlock;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.util.IIcon;
@@ -17,7 +16,7 @@ import net.minecraft.world.World;
 public class BlockUVLightBlock extends BlockPhantomLight {
 
     public BlockUVLightBlock() {
-        super(Names.Blocks.UV_LIGHTBLOCK, Material.air, soundTypeCloth, 0.0F);
+        super(Names.Blocks.UV_LIGHTBLOCK, Material.glass, soundTypeCloth, 0.0F);
     }
 
     @Override
@@ -38,17 +37,11 @@ public class BlockUVLightBlock extends BlockPhantomLight {
 
     @Override
     public boolean renderAsNormalBlock() {
-        return true;
+        return false;
     }
 
     @Override
     public int getLightValue() {
         return 4;
-    }
-
-    @Override
-    public void breakBlock(World world, int x, int y, int z, Block block, int par6) {
-        ((TileEntityUVLightBlock) world.getTileEntity(x, y, z)).updateAllSources();
-        super.breakBlock(world, x, y, z, block, par6);
     }
 }

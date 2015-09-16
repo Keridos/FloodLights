@@ -19,6 +19,7 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
     protected boolean active;
     protected boolean wasActive;
     protected boolean update = true;
+    protected int timeout;
     protected ItemStack[] inventory;
 
     public TileEntityMetaFloodlight() {
@@ -217,6 +218,9 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
 
     public void wideConeSource(boolean remove) {
         boolean[] failedBeams = new boolean[9];
+        if (!remove && worldObj.getBlock(this.xCoord + this.orientation.offsetX, this.yCoord + this.orientation.offsetY, this.zCoord + this.orientation.offsetZ).isOpaqueCube()) {
+            return;
+        }
         for (int j = 0; j <= 16; j++) {
             if (j <= 8) {
                 for (int i = 1; i <= ConfigHandler.rangeConeFloodlight / 4; i++) {
@@ -337,8 +341,8 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
                     // for 1st light:
                     if (i == 1) {
                         int x = this.xCoord + this.orientation.offsetX;
-                        int y = this.xCoord + this.orientation.offsetY;
-                        int z = this.xCoord + this.orientation.offsetZ;
+                        int y = this.yCoord + this.orientation.offsetY;
+                        int z = this.zCoord + this.orientation.offsetZ;
                         if (remove) {
                             if (worldObj.getBlock(x, y, z) == ModBlocks.blockFLLight) {
                                 TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);

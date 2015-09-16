@@ -19,6 +19,7 @@ public class ConfigHandler {
     public static int rangeStraightFloodlight;
     public static int rangeConeFloodlight;
     public static int rangeUVFloodlight;
+    public static int timeoutFloodlights;
 
     public static float damageUVFloodlight;
 
@@ -47,6 +48,7 @@ public class ConfigHandler {
         rangeStraightFloodlight = config.getInt("rangeStraightFloodlight", "general", 64, 1, 128, "How far should the straight Floodlights go?");
         rangeConeFloodlight = config.getInt("rangeConeFloodlight", "general", 32, 1, 64, "How far should the cone floodlights go? (mind that wide only goes quarter as far) Default:32   ");
         rangeUVFloodlight = config.getInt("rangeUVFloodlight", "general", 8, 1, 32, "How far should the UV Floodlights go?");
+        timeoutFloodlights = config.getInt("timeoutFloodlights", "general", 40, 1, 240, "How long should the timeout for turning on floodlights again be?");
         damageUVFloodlight = config.getFloat("damageUVFloodlight", "general", 4.0F, 1.0F, 16.0F, "How much damage should the UV Floodlights do per second?");
         config.save();
     }

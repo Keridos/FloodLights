@@ -124,6 +124,8 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
                     smallSource(false);
                     world.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
                     update = false;
+                } else if (timeout > 0) {
+                    return;
                 } else if (!wasActive) {
                     smallSource(false);
                     world.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
@@ -138,6 +140,8 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
                 smallSource(true);
                 world.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
                 wasActive = false;
+                timeout = ConfigHandler.timeoutFloodlights;
+                update = false;
             }
         }
     }

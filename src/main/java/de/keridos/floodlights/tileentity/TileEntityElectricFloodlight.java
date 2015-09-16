@@ -12,6 +12,8 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 
+import java.util.logging.Logger;
+
 import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
 
 /**
@@ -29,6 +31,9 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric implement
         }
         if (!world.isRemote) {
             int realEnergyUsage = ConfigHandler.energyUsage / (mode == 0 ? 1 : 2);
+            if (timeout > 0) {
+                timeout--;
+            }
             if (inventory[0] != null) {
                 if (ModCompatibility.IC2Loaded) {
                     if (inventory[0].getItem() instanceof IElectricItem) {
@@ -48,6 +53,9 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric implement
                     addSource(this.mode);
                     world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, this.getOrientation().ordinal() + 6, 2);
                     update = false;
+                } else if (timeout > 0) {
+                    Logger.getGlobal().info("timeout: " + timeout);
+                    return;
                 } else if (!wasActive) {
                     addSource(this.mode);
                     world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, world.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) + 6, 2);
@@ -63,8 +71,10 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric implement
                 if (wasActive) {
                     removeSource(this.mode);
                     world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, world.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) - 6, 2);
+                    wasActive = false;
+                    timeout = ConfigHandler.timeoutFloodlights;
+                    update = false;
                 }
-                wasActive = false;
             }
         }
     }

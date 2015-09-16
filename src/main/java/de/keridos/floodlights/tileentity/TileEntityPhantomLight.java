@@ -38,6 +38,7 @@ public class TileEntityPhantomLight extends TileEntity {
         }
         if (sources.isEmpty()) {
             worldObj.setBlockToAir(this.xCoord, this.yCoord, this.zCoord);
+            worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
         }
     }
 

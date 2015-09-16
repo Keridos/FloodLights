@@ -8,6 +8,7 @@ import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.reference.RenderIDs;
 import de.keridos.floodlights.tileentity.TileEntityElectricFloodlight;
 import de.keridos.floodlights.tileentity.TileEntityFL;
+import de.keridos.floodlights.tileentity.TileEntityMetaFloodlight;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -51,6 +52,7 @@ public class BlockElectricFloodlight extends BlockFL implements ITileEntityProvi
             } else if (!world.isBlockIndirectlyGettingPowered(x, y, z)) {
                 ((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).setRedstone(false);
             }
+            ((TileEntityMetaFloodlight) world.getTileEntity(x, y, z)).toggleUpdateRun();
         }
     }
 

@@ -1,10 +1,12 @@
 package de.keridos.floodlights.block;
 
 import de.keridos.floodlights.reference.Names;
+import de.keridos.floodlights.tileentity.TileEntityMetaFloodlight;
 import de.keridos.floodlights.tileentity.TileEntityPhantomLight;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -76,11 +78,6 @@ public class BlockPhantomLight extends BlockFL implements ITileEntityProvider {
     }
 
     @Override
-    public boolean isAir(IBlockAccess world, int x, int y, int z) {
-        return true;
-    }
-
-    @Override
     public int getLightValue() {
         return 15;
     }
@@ -91,8 +88,29 @@ public class BlockPhantomLight extends BlockFL implements ITileEntityProvider {
     }
 
     @Override
+    public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
+        ((TileEntityPhantomLight) world.getTileEntity(x, y, z)).updateAllSources();
+        super.onNeighborBlockChange(world, x, y, z, block);
+    }
+
+    @Override
     public void breakBlock(World world, int x, int y, int z, Block block, int par6) {
         ((TileEntityPhantomLight) world.getTileEntity(x, y, z)).updateAllSources();
+        for (int i = -1; i < 2; i++) {
+            for (int j = -1; j < 2; j++) {
+                for (int k = -1; k < 2; k++) {
+                    int newX = x + i;
+                    int newY = y + j;
+                    int newZ = z + k;
+                    TileEntity te = world.getTileEntity(newX, newY, newZ);
+                    if (te != null && te instanceof TileEntityPhantomLight) {
+                        ((TileEntityPhantomLight) te).updateAllSources();
+                    } else if (te != null && te instanceof TileEntityMetaFloodlight) {
+                        ((TileEntityMetaFloodlight) te).toggleUpdateRun();
+                    }
+                }
+            }
+        }
         super.breakBlock(world, x, y, z, block, par6);
     }
 }

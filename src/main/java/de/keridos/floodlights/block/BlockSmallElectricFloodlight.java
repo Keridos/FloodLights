@@ -9,6 +9,7 @@ import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.tileentity.TileEntityFL;
+import de.keridos.floodlights.tileentity.TileEntityMetaFloodlight;
 import de.keridos.floodlights.tileentity.TileEntitySmallFloodlight;
 import de.keridos.floodlights.util.MathUtil;
 import net.minecraft.block.Block;
@@ -72,6 +73,7 @@ public class BlockSmallElectricFloodlight extends BlockFL implements ITileEntity
             } else if (!world.isBlockIndirectlyGettingPowered(x, y, z)) {
                 ((TileEntitySmallFloodlight) world.getTileEntity(x, y, z)).setRedstone(false);
             }
+            ((TileEntityMetaFloodlight) world.getTileEntity(x, y, z)).toggleUpdateRun();
         }
     }
 

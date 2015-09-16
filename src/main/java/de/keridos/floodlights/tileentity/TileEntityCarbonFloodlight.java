@@ -78,6 +78,8 @@ public class TileEntityCarbonFloodlight extends TileEntityMetaFloodlight {
                     addSource(this.mode);
                     world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, this.getOrientation().ordinal() + 6, 2);
                     update = false;
+                } else if (timeout > 0) {
+                    return;
                 } else if (!wasActive) {
                     addSource(this.mode);
                     world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, world.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) + 6, 2);
@@ -89,8 +91,10 @@ public class TileEntityCarbonFloodlight extends TileEntityMetaFloodlight {
                 if (wasActive) {
                     removeSource(this.mode);
                     world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, world.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) - 6, 2);
+                    wasActive = false;
+                    timeout = ConfigHandler.timeoutFloodlights;
+                    update = false;
                 }
-                wasActive = false;
             }
         }
     }
