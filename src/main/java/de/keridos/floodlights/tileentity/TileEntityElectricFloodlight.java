@@ -12,8 +12,6 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 
-import java.util.logging.Logger;
-
 import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
 
 /**
@@ -54,7 +52,6 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric implement
                     world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, this.getOrientation().ordinal() + 6, 2);
                     update = false;
                 } else if (timeout > 0) {
-                    Logger.getGlobal().info("timeout: " + timeout);
                     return;
                 } else if (!wasActive) {
                     addSource(this.mode);
