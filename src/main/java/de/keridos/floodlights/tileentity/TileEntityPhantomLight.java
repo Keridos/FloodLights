@@ -38,7 +38,6 @@ public class TileEntityPhantomLight extends TileEntity {
         }
         if (sources.isEmpty()) {
             worldObj.setBlockToAir(this.xCoord, this.yCoord, this.zCoord);
-            worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
         }
     }
 
@@ -47,6 +46,8 @@ public class TileEntityPhantomLight extends TileEntity {
             TileEntity te = worldObj.getTileEntity(source[0], source[1], source[2]);
             if (te != null && te instanceof TileEntityMetaFloodlight) {
                 ((TileEntityMetaFloodlight) te).toggleUpdateRun();
+            } else {
+                this.removeSource(source[0], source[1], source[2]);
             }
         }
     }

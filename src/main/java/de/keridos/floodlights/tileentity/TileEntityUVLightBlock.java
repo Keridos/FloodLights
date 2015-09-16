@@ -7,6 +7,7 @@ import net.minecraft.util.DamageSource;
 
 import java.util.List;
 import java.util.ListIterator;
+import java.util.logging.Logger;
 
 /**
  * Created by Keridos on 15/09/2015.
@@ -30,12 +31,13 @@ public class TileEntityUVLightBlock extends TileEntityPhantomLight {
     @Override
     @SuppressWarnings("unchecked")
     public void updateEntity() {
-        if (!worldObj.isRemote && worldObj.getWorldTime() % 20 == 0) {
+        if (!worldObj.isRemote && worldObj.getWorldTime() % 20 == 5) {
+            Logger.getGlobal().info("tick tock UV light!");
             AxisAlignedBB axisAlignedBB = this.getBoundingBox();
             List<EntityLivingBase> entityList = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, axisAlignedBB);
             ListIterator iterator = entityList.listIterator();
             while (iterator.hasNext()) {
-                ((EntityLivingBase) iterator.next()).attackEntityFrom(DamageSource.inFire, ConfigHandler.damageUVFloodlight);
+                ((EntityLivingBase) iterator.next()).attackEntityFrom(DamageSource.cactus, ConfigHandler.damageUVFloodlight);
             }
         }
     }

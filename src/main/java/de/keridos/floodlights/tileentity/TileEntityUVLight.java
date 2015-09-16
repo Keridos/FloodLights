@@ -80,7 +80,6 @@ public class TileEntityUVLight extends TileEntityFLElectric {
                 } else if (!wasActive) {
                     UVSource(false);
                     world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, world.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) + 6, 2);
-
                 }
                 if (storageEU >= (double) realEnergyUsage / 8.0D) {
                     storageEU -= (double) realEnergyUsage / 8.0D;
@@ -88,13 +87,12 @@ public class TileEntityUVLight extends TileEntityFLElectric {
                     storage.modifyEnergyStored(-realEnergyUsage);
                 }
                 wasActive = true;
-            } else {
-                if (wasActive) {
-                    UVSource(true);
-                    world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, world.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) - 6, 2);
-                }
+            } else if ((!active || (storage.getEnergyStored() < realEnergyUsage && storageEU < (double) realEnergyUsage / 8.0D)) && wasActive) {
+                UVSource(true);
+                world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, world.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) - 6, 2);
                 wasActive = false;
             }
         }
     }
 }
+
