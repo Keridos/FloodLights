@@ -1,11 +1,11 @@
 package de.keridos.floodlights.block;
 
-import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.tileentity.TileEntityPhantomLight;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -88,10 +88,9 @@ public class BlockPhantomLight extends BlockFL implements ITileEntityProvider {
 
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
-        if (block != ModBlocks.blockUVLightBlock || block != ModBlocks.blockFLLight) {
+        if (!(block instanceof BlockFL) && block != Blocks.air) {
             ((TileEntityPhantomLight) world.getTileEntity(x, y, z)).updateAllSources();
         }
-        super.onNeighborBlockChange(world, x, y, z, block);
     }
 
     @Override

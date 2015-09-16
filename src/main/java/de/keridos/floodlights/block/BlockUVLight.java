@@ -7,6 +7,7 @@ import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.reference.RenderIDs;
 import de.keridos.floodlights.tileentity.TileEntityFL;
+import de.keridos.floodlights.tileentity.TileEntityMetaFloodlight;
 import de.keridos.floodlights.tileentity.TileEntityUVLight;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
@@ -47,12 +48,15 @@ public class BlockUVLight extends BlockFL implements ITileEntityProvider {
     }
 
     @Override
-    public void onNeighborBlockChange(World world, int x, int y, int z, Block par5) {
+    public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
         if (!world.isRemote) {
             if (world.isBlockIndirectlyGettingPowered(x, y, z)) {
                 ((TileEntityUVLight) world.getTileEntity(x, y, z)).setRedstone(true);
             } else if (!world.isBlockIndirectlyGettingPowered(x, y, z)) {
                 ((TileEntityUVLight) world.getTileEntity(x, y, z)).setRedstone(false);
+            }
+            if (!(block instanceof BlockFL) && block != Blocks.air) {
+                ((TileEntityMetaFloodlight) world.getTileEntity(x, y, z)).toggleUpdateRun();
             }
         }
     }

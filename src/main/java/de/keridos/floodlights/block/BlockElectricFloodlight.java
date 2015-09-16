@@ -46,14 +46,16 @@ public class BlockElectricFloodlight extends BlockFL implements ITileEntityProvi
     }
 
     @Override
-    public void onNeighborBlockChange(World world, int x, int y, int z, Block par5) {
+    public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
         if (!world.isRemote) {
             if (world.isBlockIndirectlyGettingPowered(x, y, z)) {
                 ((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).setRedstone(true);
             } else if (!world.isBlockIndirectlyGettingPowered(x, y, z)) {
                 ((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).setRedstone(false);
             }
-            ((TileEntityMetaFloodlight) world.getTileEntity(x, y, z)).toggleUpdateRun();
+            if (!(block instanceof BlockFL) && block != Blocks.air) {
+                ((TileEntityMetaFloodlight) world.getTileEntity(x, y, z)).toggleUpdateRun();
+            }
         }
     }
 
