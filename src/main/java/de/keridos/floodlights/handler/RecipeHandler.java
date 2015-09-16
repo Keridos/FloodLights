@@ -15,6 +15,7 @@ import static de.keridos.floodlights.util.GeneralUtil.getMinecraftItem;
  */
 public class RecipeHandler {
     private static RecipeHandler instance = null;
+
     private RecipeHandler() {
     }
 
@@ -26,10 +27,12 @@ public class RecipeHandler {
     }
 
     public void initRecipes() {
-        if (ConfigHandler.electricFloodlight) {
+        if (ConfigHandler.electricFloodlight || ConfigHandler.smallElectricFloodlight || ConfigHandler.uvFloodlight) {
             GameRegistry.addRecipe(new ItemStack(ModItems.rawFilament, 1), " L ", "RGR", " L ", 'R', new ItemStack(getMinecraftItem("redstone"), 1), 'G', new ItemStack(getMinecraftItem("gold_ingot"), 1), 'L', new ItemStack(getMinecraftItem("glowstone_dust"), 1));
             FurnaceRecipes.smelting().func_151394_a(new ItemStack(ModItems.rawFilament, 1), new ItemStack(ModItems.glowingFilament, 1), 0.1F);
             GameRegistry.addRecipe(new ItemStack(ModItems.lightBulb, 1), " G ", "GFG", " I ", 'G', new ItemStack(getMinecraftItem("glass_pane"), 1), 'F', new ItemStack(ModItems.glowingFilament, 1), 'I', new ItemStack(getMinecraftItem("iron_ingot"), 1));
+        }
+        if (ConfigHandler.electricFloodlight) {
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.blockElectricLight, 1), "CIC", "IBG", "CIC", 'C', new ItemStack(getMinecraftItem("cobblestone"), 1), 'I', new ItemStack(getMinecraftItem("iron_ingot"), 1), 'B', new ItemStack(ModItems.lightBulb, 1), 'G', new ItemStack(getMinecraftItem("glass"), 1)));
         }
         if (ConfigHandler.smallElectricFloodlight) {
