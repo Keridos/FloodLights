@@ -2,6 +2,7 @@ package de.keridos.floodlights.block;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.tileentity.TileEntityUVLightBlock;
 import net.minecraft.block.material.Material;
@@ -38,12 +39,12 @@ public class BlockUVLightBlock extends BlockPhantomLight {
 
     @Override
     public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side) {
-        return side == 0 || !world.getBlock(x, y, z).isOpaqueCube();
+        return side == 0 || (!world.getBlock(x, y, z).isOpaqueCube() && world.getBlock(x, y, z) != ModBlocks.blockUVLightBlock);
     }
 
     @Override
     public boolean renderAsNormalBlock() {
-        return false;
+        return true;
     }
 
     @Override
