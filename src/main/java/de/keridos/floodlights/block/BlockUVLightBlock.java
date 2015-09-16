@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 public class BlockUVLightBlock extends BlockPhantomLight {
 
     public BlockUVLightBlock() {
-        super(Names.Blocks.UV_LIGHTBLOCK, Material.rock, soundTypeMetal, 2.5F);
+        super(Names.Blocks.UV_LIGHTBLOCK, Material.air, soundTypeCloth, 0.0F);
     }
 
     @Override

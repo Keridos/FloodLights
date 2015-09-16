@@ -53,6 +53,9 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
     }
 
     public void setLight(int x, int y, int z) {
+        if (worldObj.getBlock(x, y, z) == ModBlocks.blockUVLightBlock) {
+            return;
+        }
         if (worldObj.setBlock(x, y, z, ModBlocks.blockFLLight)) {
             TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
             light.addSource(this.xCoord, this.yCoord, this.zCoord);
