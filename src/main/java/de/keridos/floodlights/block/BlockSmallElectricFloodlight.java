@@ -1,6 +1,7 @@
 package de.keridos.floodlights.block;
 
 import buildcraft.api.tools.IToolWrench;
+import cofh.api.item.IToolHammer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import crazypants.enderio.api.tool.ITool;
@@ -30,7 +31,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
 
@@ -114,21 +114,28 @@ public class BlockSmallElectricFloodlight extends BlockFL implements ITileEntity
                     return true;
                 }
             }
+            if (ModCompatibility.CofhCoreLoaded) {
+                if (player.isSneaking() && player.getHeldItem().getItem() instanceof IToolHammer) {
+                    world.func_147480_a(x, y, z, true);
+                    return true;
+                } else if (player.getHeldItem().getItem() instanceof IToolHammer) {
+                    ((TileEntitySmallFloodlight) world.getTileEntity(x, y, z)).toggleRotationState();
+                    return true;
+                }
+            }
             if (ModCompatibility.IC2Loaded) {
                 if (player.isSneaking() && player.getHeldItem().getItem().getUnlocalizedName().equals("ic2.itemToolWrench")) {
                     world.func_147480_a(x, y, z, true);
                     return true;
                 } else if (player.getHeldItem().getItem().getUnlocalizedName().equals("ic2.itemToolWrench")) {
                     ((TileEntitySmallFloodlight) world.getTileEntity(x, y, z)).toggleRotationState();
-                    Logger.getGlobal().info("toggled rotation state");
                     return true;
                 }
                 if (player.isSneaking() && player.getHeldItem().getItem().getUnlocalizedName().equals("ic2.itemToolWrenchElectric")) {
                     world.func_147480_a(x, y, z, true);
                     return true;
-                } else if (player.isSneaking() && player.getHeldItem().getItem().getUnlocalizedName().equals("ic2.itemToolWrenchElectric")) {
+                } else if (player.getHeldItem().getItem().getUnlocalizedName().equals("ic2.itemToolWrenchElectric")) {
                     ((TileEntitySmallFloodlight) world.getTileEntity(x, y, z)).toggleRotationState();
-                    Logger.getGlobal().info("toggled rotation state");
                     return true;
                 }
             }

@@ -26,7 +26,6 @@ gui.floodlights:narrowCone=enger Kegel
 gui.floodlights:wideCone=weiter Kegel
 gui.floodlights:minutesShort=m
 gui.floodlights:secondsShort=s
-gui.floodlights:clearLightsCommandText=Erfolgreich alle Lichter entfernt, neue sollten in den nächsten Minuten spawnen.
 
 # Creative Tabs
 itemGroup.floodlights=Flood Lights
