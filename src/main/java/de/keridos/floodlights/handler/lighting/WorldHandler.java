@@ -77,7 +77,7 @@ public class WorldHandler implements Serializable {
         boolean[] failedBeams = new boolean[9];    // for the additional beam to cancel when the main beams fail.
         for (int j = 0; j <= 16; j++) {
             if (j <= 8) {     // This is the main beams
-                for (int i = 1; i <= ConfigHandler.rangeConeFloodlight / 2; i++) {
+                for (int i = 1; i <= ConfigHandler.rangeConeFloodlight; i++) {
                     // for 1st light:
                     if (i == 1) {
                         LightBlockHandle handler = getFloodlightHandler(sourceX + direction.offsetX, sourceY + direction.offsetY, sourceZ + direction.offsetZ);
@@ -139,7 +139,7 @@ public class WorldHandler implements Serializable {
                     }
                 }
             } else if (!failedBeams[j - 9] || remove) { // This is for the inner beams at longer range
-                for (int i = ConfigHandler.rangeConeFloodlight / 4; i <= ConfigHandler.rangeConeFloodlight / 2; i++) {
+                for (int i = ConfigHandler.rangeConeFloodlight / 4; i <= ConfigHandler.rangeConeFloodlight; i++) {
                     int a = 2 * i;
                     int b = 0;
                     int c = 0;
@@ -194,7 +194,7 @@ public class WorldHandler implements Serializable {
         boolean[] failedBeams = new boolean[9];
         for (int j = 0; j <= 16; j++) {
             if (j <= 8) {
-                for (int i = 1; i <= ConfigHandler.rangeConeFloodlight / 2; i++) {
+                for (int i = 1; i <= ConfigHandler.rangeConeFloodlight / 4; i++) {
                     int b = 0;
                     int c = 0;
                     switch (j) {
@@ -244,7 +244,7 @@ public class WorldHandler implements Serializable {
                     }
                 }
             } else if (!failedBeams[j - 9] || remove) { // This is for the inner beams at longer range
-                for (int i = ConfigHandler.rangeConeFloodlight / 4; i <= ConfigHandler.rangeConeFloodlight / 2; i++) {
+                for (int i = ConfigHandler.rangeConeFloodlight / 8; i <= ConfigHandler.rangeConeFloodlight / 4; i++) {
                     int b = 0;
                     int c = 0;
                     switch (j) {
