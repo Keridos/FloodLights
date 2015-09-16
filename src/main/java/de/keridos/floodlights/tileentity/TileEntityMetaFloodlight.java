@@ -412,7 +412,7 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
                     }
                 }
             } else if (!failedBeams[j - 9] || remove) { // This is for the inner beams at longer range
-                for (int i = ConfigHandler.rangeConeFloodlight / 2; i <= ConfigHandler.rangeConeFloodlight; i++) {
+                for (int i = ConfigHandler.rangeConeFloodlight / 4; i <= ConfigHandler.rangeConeFloodlight; i++) {
                     int a = 2 * i;
                     int b = 0;
                     int c = 0;

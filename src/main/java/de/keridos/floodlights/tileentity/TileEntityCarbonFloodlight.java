@@ -72,14 +72,16 @@ public class TileEntityCarbonFloodlight extends TileEntityMetaFloodlight {
                 timeRemaining = ConfigHandler.carbonTime * getBurnTime(inventory[0]) / 1600 * (mode == 0 ? 20 : 10);
                 decrStackSize(0, 1);
             }
+            if (timeout > 0) {
+                timeout--;
+                return;
+            }
             if (active && timeRemaining > 0) {
                 if (update) {
                     removeSource(this.mode);
                     addSource(this.mode);
                     world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, this.getOrientation().ordinal() + 6, 2);
                     update = false;
-                } else if (timeout > 0) {
-                    return;
                 } else if (!wasActive) {
                     addSource(this.mode);
                     world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, world.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) + 6, 2);

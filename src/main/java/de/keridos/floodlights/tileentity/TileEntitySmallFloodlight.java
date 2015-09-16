@@ -24,7 +24,6 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
 
     public TileEntitySmallFloodlight() {
         super();
-        this.mode = 3;
         this.rotationState = false;
     }
 
@@ -85,9 +84,11 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
             int x = this.xCoord + rotatedCoords[0];
             int y = this.yCoord + rotatedCoords[1];
             int z = this.zCoord + rotatedCoords[2];
-            if (remove && worldObj.getBlock(x, y, z) == ModBlocks.blockFLLight) {
-                TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
-                light.removeSource(this.xCoord, this.yCoord, this.zCoord);
+            if (remove) {
+                if (worldObj.getBlock(x, y, z) == ModBlocks.blockFLLight) {
+                    TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
+                    light.removeSource(this.xCoord, this.yCoord, this.zCoord);
+                }
             } else if (worldObj.getBlock(x, y, z).isAir(worldObj, x, y, z)) {
                 setLight(x, y, z);
             } else if (worldObj.getBlock(x, y, z) == ModBlocks.blockFLLight) {
@@ -118,14 +119,16 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
                     storage.modifyEnergyStored(item.extractEnergy(inventory[0], dischargeValue, false));
                 }
             }
+            if (timeout > 0) {
+                timeout--;
+                return;
+            }
             if (active && (storage.getEnergyStored() >= realEnergyUsage || storageEU >= (double) realEnergyUsage / 8.0D)) {
                 if (update) {
                     smallSource(true);
                     smallSource(false);
                     world.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
                     update = false;
-                } else if (timeout > 0) {
-                    return;
                 } else if (!wasActive) {
                     smallSource(false);
                     world.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);

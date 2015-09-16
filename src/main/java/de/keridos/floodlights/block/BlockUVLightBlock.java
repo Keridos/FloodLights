@@ -7,6 +7,7 @@ import de.keridos.floodlights.tileentity.TileEntityUVLightBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.util.IIcon;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 /**
@@ -33,6 +34,11 @@ public class BlockUVLightBlock extends BlockPhantomLight {
     @SideOnly(Side.CLIENT)
     public IIcon getIcon(int side, int meta) {
         return topIcon;
+    }
+
+    @Override
+    public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side) {
+        return side == 0 || !world.getBlock(x, y, z).isOpaqueCube();
     }
 
     @Override

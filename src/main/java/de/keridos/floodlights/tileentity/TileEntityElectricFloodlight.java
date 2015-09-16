@@ -29,9 +29,6 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric implement
         }
         if (!world.isRemote) {
             int realEnergyUsage = ConfigHandler.energyUsage / (mode == 0 ? 1 : 2);
-            if (timeout > 0) {
-                timeout--;
-            }
             if (inventory[0] != null) {
                 if (ModCompatibility.IC2Loaded) {
                     if (inventory[0].getItem() instanceof IElectricItem) {
@@ -45,18 +42,19 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric implement
                     storage.modifyEnergyStored(item.extractEnergy(inventory[0], dischargeValue, false));
                 }
             }
+            if (timeout > 0) {
+                timeout--;
+                return;
+            }
             if (active && (storage.getEnergyStored() >= realEnergyUsage || storageEU >= (double) realEnergyUsage / 8.0D)) {
                 if (update) {
                     removeSource(this.mode);
                     addSource(this.mode);
                     world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, this.getOrientation().ordinal() + 6, 2);
                     update = false;
-                } else if (timeout > 0) {
-                    return;
                 } else if (!wasActive) {
                     addSource(this.mode);
                     world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, world.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) + 6, 2);
-
                 }
                 if (storageEU >= (double) realEnergyUsage / 8.0D) {
                     storageEU -= (double) realEnergyUsage / 8.0D;
@@ -64,14 +62,12 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric implement
                     storage.modifyEnergyStored(-realEnergyUsage);
                 }
                 wasActive = true;
-            } else {
-                if (wasActive) {
-                    removeSource(this.mode);
-                    world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, world.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) - 6, 2);
-                    wasActive = false;
-                    timeout = ConfigHandler.timeoutFloodlights;
-                    update = false;
-                }
+            } else if ((!active || (storage.getEnergyStored() < realEnergyUsage && storageEU < (double) realEnergyUsage / 8.0D)) && wasActive) {
+                removeSource(this.mode);
+                world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, world.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) - 6, 2);
+                wasActive = false;
+                timeout = ConfigHandler.timeoutFloodlights;
+                update = false;
             }
         }
     }
