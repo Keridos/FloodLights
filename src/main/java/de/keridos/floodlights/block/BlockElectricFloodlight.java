@@ -2,6 +2,7 @@ package de.keridos.floodlights.block;
 
 import buildcraft.api.tools.IToolWrench;
 import cofh.api.item.IToolHammer;
+import crazypants.enderio.api.tool.ITool;
 import de.keridos.floodlights.FloodLights;
 import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.reference.Names;
@@ -69,7 +70,7 @@ public class BlockElectricFloodlight extends BlockFL implements ITileEntityProvi
 
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float p_149727_7_, float p_149727_8_, float p_149727_9_) {
-        if (player.getHeldItem() == null && !world.isRemote && player.isSneaking()) {
+        if (!world.isRemote && player.getHeldItem() == null && player.isSneaking()) {
             ((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).toggleInverted();
             String invert = (((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).getInverted() ? Names.Localizations.TRUE : Names.Localizations.FALSE);
             player.addChatMessage(new ChatComponentText(safeLocalize(Names.Localizations.INVERT) + ": " + safeLocalize(invert)));
@@ -78,11 +79,20 @@ public class BlockElectricFloodlight extends BlockFL implements ITileEntityProvi
             if (!ModCompatibility.WrenchAvailable && player.getHeldItem().getItem() == getMinecraftItem("stick")) {
                 ((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).changeMode(player);
             }
-            if (ModCompatibility.BCLoaded || ModCompatibility.EnderIOLoaded) {
+            if (ModCompatibility.BCLoaded) {
                 if (!player.isSneaking() && player.getHeldItem().getItem() instanceof IToolWrench) {
                     ((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).changeMode(player);
                     return true;
                 } else if (player.isSneaking() && player.getHeldItem().getItem() instanceof IToolWrench) {
+                    world.func_147480_a(x, y, z, true);
+                    return true;
+                }
+            }
+            if (ModCompatibility.EnderIOLoaded) {
+                if (!player.isSneaking() && player.getHeldItem().getItem() instanceof ITool) {
+                    ((TileEntityElectricFloodlight) world.getTileEntity(x, y, z)).changeMode(player);
+                    return true;
+                } else if (player.isSneaking() && player.getHeldItem().getItem() instanceof ITool) {
                     world.func_147480_a(x, y, z, true);
                     return true;
                 }
