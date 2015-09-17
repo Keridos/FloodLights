@@ -38,5 +38,6 @@ public class TileEntityUVLightBlock extends TileEntityPhantomLight {
                 ((EntityLivingBase) iterator.next()).attackEntityFrom(DamageSource.cactus, ConfigHandler.damageUVFloodlight);
             }
         }
+        super.updateEntity();
     }
 }
