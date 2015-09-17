@@ -2,6 +2,7 @@ package de.keridos.floodlights.block;
 
 import buildcraft.api.tools.IToolWrench;
 import cofh.api.item.IToolHammer;
+import crazypants.enderio.api.tool.ITool;
 import de.keridos.floodlights.FloodLights;
 import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.reference.Names;
@@ -86,6 +87,12 @@ public class BlockUVLight extends BlockFL implements ITileEntityProvider {
                     return true;
                 }
             }
+            if (ModCompatibility.EnderIOLoaded) {
+                if (player.isSneaking() && player.getHeldItem().getItem() instanceof ITool) {
+                    world.func_147480_a(x, y, z, true);
+                    return true;
+                }
+            }
             if (ModCompatibility.CofhCoreLoaded) {
                 if (player.isSneaking() && player.getHeldItem().getItem() instanceof IToolHammer) {
                     world.func_147480_a(x, y, z, true);
@@ -113,8 +120,9 @@ public class BlockUVLight extends BlockFL implements ITileEntityProvider {
         if (!world.isRemote) {
             player.openGui(FloodLights.instance, 1, world, x, y, z);
             return true;
+        } else {
+            return true;
         }
-        return false;
     }
 
     @Override

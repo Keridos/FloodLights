@@ -135,8 +135,9 @@ public class BlockElectricFloodlight extends BlockFL implements ITileEntityProvi
         if (!world.isRemote) {
             player.openGui(FloodLights.instance, 1, world, x, y, z);
             return true;
+        } else {
+            return true;
         }
-        return false;
     }
 
     @Override

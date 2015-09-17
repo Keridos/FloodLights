@@ -97,6 +97,8 @@ public class RotatableBlockRenderer implements ISimpleBlockRenderingHandler {
                 cMult = 1.41531F; // 1.0F + (float) Math.log10(255 / 98);
             } else if (block == ModBlocks.blockElectricLight) {
                 cMult = 1.2512F; // 1.0F + (float) Math.log10(255 / 143);
+            } else if (block == ModBlocks.blockUVLight) {
+                cMult = 1.273F; // 1.0F + (float) Math.log10(255 / 137);
             }
             renderer.renderStandardBlockWithColorMultiplier(block, x, y, z, RenderUtil.r[c] * cMult, RenderUtil.g[c] * cMult, RenderUtil.b[c] * cMult);
         }
