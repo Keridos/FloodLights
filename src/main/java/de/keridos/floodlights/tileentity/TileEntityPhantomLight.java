@@ -15,6 +15,7 @@ import java.util.ArrayList;
  */
 public class TileEntityPhantomLight extends TileEntity {
     protected ArrayList<int[]> sources = new ArrayList<int[]>();
+    protected boolean update = true;
 
     public TileEntityPhantomLight() {
         super();
@@ -37,7 +38,9 @@ public class TileEntityPhantomLight extends TileEntity {
             }
         }
         if (sources.isEmpty()) {
-            worldObj.setBlockToAir(this.xCoord, this.yCoord, this.zCoord);
+            if (!worldObj.setBlockToAir(this.xCoord, this.yCoord, this.zCoord)) {
+                update = true;
+            }
         }
     }
 
@@ -77,6 +80,17 @@ public class TileEntityPhantomLight extends TileEntity {
 
     @Override
     public boolean canUpdate() {
-        return false;
+        return update;
+    }
+
+    @Override
+    public void updateEntity() {
+        if (sources.isEmpty()) {
+            if (!worldObj.setBlockToAir(this.xCoord, this.yCoord, this.zCoord)) {
+                update = false;
+            }
+        } else {
+            update = false;
+        }
     }
 }
