@@ -85,9 +85,9 @@ public class TileEntityPhantomLight extends TileEntity {
 
     @Override
     public void updateEntity() {
-        if (!worldObj.isRemote) {
+        if (!worldObj.isRemote && worldObj.getWorldTime() % 20 == 11) {
             if (sources.isEmpty()) {
-                if (!worldObj.setBlockToAir(this.xCoord, this.yCoord, this.zCoord)) {
+                if (worldObj.setBlockToAir(this.xCoord, this.yCoord, this.zCoord)) {
                     update = false;
                 }
             } else {
