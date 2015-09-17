@@ -15,6 +15,7 @@ public class ModItems {
     public static final ItemFL carbonDissolver = new ItemCarbonDissolver();
     public static final ItemFL carbonLantern = new ItemCarbonLantern();
     public static final ItemFL mantle = new ItemMantle();
+    public static final ItemFL lightDebugTool = new ItemLightDebugTool();
 
     public static void init() {
         GameRegistry.registerItem(rawFilament, Names.Items.RAW_FILAMENT);
@@ -23,5 +24,6 @@ public class ModItems {
         GameRegistry.registerItem(carbonDissolver, Names.Items.CARBON_DISSOLVER);
         GameRegistry.registerItem(carbonLantern, Names.Items.CARBON_LANTERN);
         GameRegistry.registerItem(mantle, Names.Items.MANTLE);
+        GameRegistry.registerItem(lightDebugTool, Names.Items.LIGHT_DEBUG_TOOL);
     }
 }

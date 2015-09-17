@@ -28,6 +28,11 @@ public class BlockUVLightBlock extends BlockPhantomLight {
     }
 
     @Override
+    public int getRenderType() {
+        return 0;
+    }
+
+    @Override
     @SideOnly(Side.CLIENT)
     public void registerBlockIcons(IIconRegister iconRegister) {
         topIcon = iconRegister.registerIcon(getUnwrappedUnlocalizedName(this.getUnlocalizedName()));

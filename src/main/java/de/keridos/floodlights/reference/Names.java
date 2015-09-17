@@ -21,6 +21,7 @@ public class Names {
         public static final String CARBON_DISSOLVER = "carbonDissolver";
         public static final String CARBON_LANTERN = "carbonLantern";
         public static final String MANTLE = "mantle";
+        public static final String LIGHT_DEBUG_TOOL = "lightDebugTool";
     }
 
     public static final class Localizations {
