@@ -135,8 +135,9 @@ public class BlockCarbonFloodlight extends BlockFL implements ITileEntityProvide
         if (!world.isRemote) {
             player.openGui(FloodLights.instance, 0, world, x, y, z);
             return true;
+        } else {
+            return true;
         }
-        return true;
     }
 
     @Override
