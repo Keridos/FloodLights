@@ -99,7 +99,7 @@ public class MathUtil {
         return newMin;
     }
 
-    public static int truncateDoubleToInt(double x) {
-        return (int) Math.floor(x);
+    public static int truncateDoubleToInt(double number) {
+        return (int) Math.floor(number);
     }
 }

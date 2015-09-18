@@ -357,37 +357,37 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
                             return;
                         }
                     }
-                    int a = 2 * i;
+                    int a = i;
                     int b = 0;
                     int c = 0;
                     switch (j) {
                         case 0:
-                            b += i;
+                            b += i / 2;
                             break;
                         case 1:
-                            b -= i;
+                            b -= i / 2;
                             break;
                         case 2:
-                            c += i;
+                            c += i / 2;
                             break;
                         case 3:
-                            c -= i;
+                            c -= i / 2;
                             break;
                         case 4:
-                            b += i;
-                            c += i;
+                            b += i / 2;
+                            c += i / 2;
                             break;
                         case 5:
-                            b += i;
-                            c -= i;
+                            b += i / 2;
+                            c -= i / 2;
                             break;
                         case 6:
-                            b -= i;
-                            c += i;
+                            b -= i / 2;
+                            c += i / 2;
                             break;
                         case 7:
-                            b -= i;
-                            c -= i;
+                            b -= i / 2;
+                            c -= i / 2;
                             break;
                     }
                     int[] rotatedCoords = rotate(a, b, c, this.orientation); // rotate the coordinate to the correct spot in the real world :)
@@ -413,37 +413,37 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
                 }
             } else if (!failedBeams[j - 9] || remove) { // This is for the inner beams at longer range
                 for (int i = 8; i <= ConfigHandler.rangeConeFloodlight; i++) {
-                    int a = 2 * i;
+                    int a = i;
                     int b = 0;
                     int c = 0;
                     switch (j) {
                         case 9:
-                            b += i / 2;
+                            b += i / 4;
                             break;
                         case 10:
-                            b -= i / 2;
+                            b -= i / 4;
                             break;
                         case 11:
-                            c += i / 2;
+                            c += i / 4;
                             break;
                         case 12:
-                            c -= i / 2;
+                            c -= i / 4;
                             break;
                         case 13:
-                            b += i / 2;
-                            c += i / 2;
+                            b += i / 4;
+                            c += i / 4;
                             break;
                         case 14:
-                            b += i / 2;
-                            c -= i / 2;
+                            b += i / 4;
+                            c -= i / 4;
                             break;
                         case 15:
-                            b -= i / 2;
-                            c += i / 2;
+                            b -= i / 4;
+                            c += i / 4;
                             break;
                         case 16:
-                            b -= i / 2;
-                            c -= i / 2;
+                            b -= i / 4;
+                            c -= i / 4;
                             break;
                     }
                     int[] rotatedCoords = rotate(a, b, c, this.orientation);
