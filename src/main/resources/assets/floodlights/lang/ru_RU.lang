@@ -9,12 +9,14 @@ item.floodlights:mantle.name=Фитиль
 #TileEntities
 tile.floodlights:carbonFloodlight.name=Прожектор
 tile.floodlights:electricFloodlight.name=Электрический прожектор
-tile.floodlights:smallFluorescentFloodlight.name=Маленький электрический прожектор
+tile.floodlights:smallElectricFloodlight.name=Маленький электрический прожектор
+tile.floodlights:uvFloodlight.name=Ультрафиолетовый прожектор
 tile.floodlights:smallElectricFloodlightMetaBlock_smallFluorescent.name=Маленькая флуоресцентная лампа
 tile.floodlights:smallElectricFloodlightMetaBlock_squareFluorescent.name=Квадратная флуоресцентная лампа
 
 #GUI – ГИП
 gui.floodlights:nonElectricFloodlightTimeRemaining=Осталось времени:
+gui.floodlights:RFStorage=Хранилище RF #Если кто-то может перевести лучше – переведите. If someone can translate this line better – translate it.
 gui.floodlights:invert=Инвертирован
 gui.floodlights:mode=Режим
 gui.floodlights:true=да
