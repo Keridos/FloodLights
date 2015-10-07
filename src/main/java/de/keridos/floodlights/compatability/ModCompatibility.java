@@ -45,7 +45,7 @@ public class ModCompatibility {
         BCLoaded = ModAPIManager.INSTANCE.hasAPI("BuildCraftAPI|tools");
         CofhCoreLoaded = ModAPIManager.INSTANCE.hasAPI("CoFHAPI|item");
         NEILoaded = Loader.isModLoaded("NotEnoughItems");
-        NEILoaded = Loader.isModLoaded("EnderIO");
+        EnderIOLoaded = Loader.isModLoaded("EnderIO");
         ColoredLightCoreLoaded = Loader.isModLoaded("coloredlightcore");
     }
 
