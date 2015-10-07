@@ -36,7 +36,7 @@ public class TileEntityUVLight extends TileEntityFLElectric {
                     TileEntityUVLightBlock light = (TileEntityUVLightBlock) worldObj.getTileEntity(x, y, z);
                     light.removeSource(this.xCoord, this.yCoord, this.zCoord);
                 }
-            } else if (worldObj.getBlock(x, y, z).isAir(worldObj, x, y, z) || worldObj.getBlock(x, y, z) == ModBlocks.blockFLLight) {
+            } else if (worldObj.getBlock(x, y, z).isAir(worldObj, x, y, z) || worldObj.getBlock(x, y, z) == ModBlocks.blockPhantomLight) {
                 worldObj.setBlockToAir(x, y, z);
                 worldObj.removeTileEntity(x, y, z);
                 setLightUV(x, y, z);

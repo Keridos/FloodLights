@@ -15,7 +15,7 @@ import net.minecraft.block.Block;
 public class ModBlocks {
     public static Block blockElectricLight;
     public static Block blockCarbonLight;
-    public static Block blockFLLight;
+    public static Block blockPhantomLight;
     public static Block blockSmallElectricLight;
     public static Block blockUVLight;
     public static Block blockUVLightBlock;
@@ -23,7 +23,7 @@ public class ModBlocks {
     public static void setupBlocks() {
         blockElectricLight = new BlockElectricFloodlight();
         blockCarbonLight = new BlockCarbonFloodlight();
-        blockFLLight = new BlockPhantomLight();
+        blockPhantomLight = new BlockPhantomLight();
         blockSmallElectricLight = new BlockSmallElectricFloodlight();
         blockUVLight = new BlockUVLight();
         blockUVLightBlock = new BlockUVLightBlock();
@@ -32,7 +32,7 @@ public class ModBlocks {
     public static void registerBlocks() {
         GameRegistry.registerBlock(blockElectricLight, Names.Blocks.ELECTRIC_FLOODLIGHT);
         GameRegistry.registerBlock(blockCarbonLight, Names.Blocks.CARBON_FLOODLIGHT);
-        GameRegistry.registerBlock(blockFLLight, Names.Blocks.PHANTOM_LIGHT);
+        GameRegistry.registerBlock(blockPhantomLight, Names.Blocks.PHANTOM_LIGHT);
         GameRegistry.registerBlock(blockSmallElectricLight, ItemBlockSmallElectricMetaBlock.class, Names.Blocks.SMALL_ELECTRIC_FLOODLIGHT);
         GameRegistry.registerBlock(blockUVLight, Names.Blocks.UV_FLOODLIGHT);
         GameRegistry.registerBlock(blockUVLightBlock, Names.Blocks.UV_LIGHTBLOCK);

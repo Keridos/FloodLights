@@ -3,9 +3,9 @@ package de.keridos.floodlights.client.render.block;
 import de.keridos.floodlights.item.ItemLightDebugTool;
 import de.keridos.floodlights.tileentity.TileEntityUVLightBlock;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import org.lwjgl.opengl.GL11;
@@ -61,20 +61,19 @@ public class TileEntityPhantomLightRenderer extends TileEntitySpecialRenderer {
 
     @Override
     public void renderTileEntityAt(TileEntity te, double x, double y, double z, float scale) {
-        EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
+        EntityPlayer player = Minecraft.getMinecraft().thePlayer;
         if (player.getHeldItem() == null || !(player.getHeldItem().getItem() instanceof ItemLightDebugTool) || te instanceof TileEntityUVLightBlock) {
             return;
         }
         try {
             GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
             GL11.glPushMatrix();
-            GL11.glColor3f(1f, 1f, 0.0f);
-            GL11.glLineWidth(1.0F);
+            GL11.glColor3f(1F, 1F, 0.0F);
+            GL11.glLineWidth(2.0F);
+            GL11.glDisable(GL11.GL_TEXTURE_2D);
             GL11.glTranslatef((float) x, (float) y, (float) z);
-            AxisAlignedBB boundingBox = AxisAlignedBB.getBoundingBox(0.0001, 0.0001, 0.0001, 0.9999, 0.9999, 0.9999);
+            AxisAlignedBB boundingBox = AxisAlignedBB.getBoundingBox(0.002D, 0.002D, 0.002D, 0.998D, 0.998D, 0.998D);
             drawCube(boundingBox);
-
-
         } finally {
             GL11.glPopMatrix();
             GL11.glPopAttrib();

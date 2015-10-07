@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class TileEntityPhantomLight extends TileEntity {
     protected ArrayList<int[]> sources = new ArrayList<int[]>();
     protected boolean update = true;
-    protected boolean triggerAtStartup = true;
+    protected boolean removeLightOnUpdate = true;
 
     public TileEntityPhantomLight() {
         super();
@@ -29,7 +29,8 @@ public class TileEntityPhantomLight extends TileEntity {
             }
         }
         sources.add(new int[]{x, y, z});
-        triggerAtStartup = false;
+        removeLightOnUpdate = false;
+        update = false;
     }
 
     public void removeSource(int x, int y, int z) {
@@ -42,6 +43,8 @@ public class TileEntityPhantomLight extends TileEntity {
         if (sources.isEmpty()) {
             if (!worldObj.setBlockToAir(this.xCoord, this.yCoord, this.zCoord)) {
                 update = true;
+            } else {
+                worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
             }
         }
     }
@@ -88,13 +91,15 @@ public class TileEntityPhantomLight extends TileEntity {
     @Override
     public void updateEntity() {
         if (!worldObj.isRemote && worldObj.getWorldTime() % 20 == 11) {
-            if (triggerAtStartup) {
+            if (removeLightOnUpdate) {
                 if (worldObj.setBlockToAir(this.xCoord, this.yCoord, this.zCoord)) {
-                    update = false;
+                    worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+                    return;
                 }
             }
             if (sources.isEmpty()) {
                 if (worldObj.setBlockToAir(this.xCoord, this.yCoord, this.zCoord)) {
+                    worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
                     update = false;
                 }
             } else {

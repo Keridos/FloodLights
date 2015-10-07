@@ -85,13 +85,13 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
             int y = this.yCoord + rotatedCoords[1];
             int z = this.zCoord + rotatedCoords[2];
             if (remove) {
-                if (worldObj.getBlock(x, y, z) == ModBlocks.blockFLLight) {
+                if (worldObj.getBlock(x, y, z) == ModBlocks.blockPhantomLight) {
                     TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
                     light.removeSource(this.xCoord, this.yCoord, this.zCoord);
                 }
             } else if (worldObj.getBlock(x, y, z).isAir(worldObj, x, y, z)) {
                 setLight(x, y, z);
-            } else if (worldObj.getBlock(x, y, z) == ModBlocks.blockFLLight) {
+            } else if (worldObj.getBlock(x, y, z) == ModBlocks.blockPhantomLight) {
                 TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
                 light.addSource(this.xCoord, this.yCoord, this.zCoord);
             }
