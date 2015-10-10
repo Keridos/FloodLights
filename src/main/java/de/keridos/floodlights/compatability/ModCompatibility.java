@@ -4,6 +4,7 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModAPIManager;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.event.FMLInterModComms;
+import de.keridos.floodlights.handler.ConfigHandler;
 import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.reference.Reference;
 import net.minecraft.item.ItemStack;
@@ -66,7 +67,9 @@ public class ModCompatibility {
 
     public void performModCompat() {
         checkForMods();
-        new IGWSupportNotifier();
+        if (ConfigHandler.IGWNotifierEnabled) {
+            new IGWSupportNotifier();
+        }
         if (NEILoaded) {
             hideNEIItems();
         }
