@@ -7,7 +7,6 @@ import crazypants.enderio.api.tool.ITool;*/
 import de.keridos.floodlights.FloodLights;
 import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.reference.Names;
-import de.keridos.floodlights.reference.RenderIDs;
 import de.keridos.floodlights.tileentity.TileEntityCarbonFloodlight;
 import de.keridos.floodlights.tileentity.TileEntityFL;
 import de.keridos.floodlights.tileentity.TileEntityMetaFloodlight;
@@ -24,6 +23,8 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
+import java.util.logging.Logger;
+
 import static de.keridos.floodlights.util.GeneralUtil.getMinecraftItem;
 import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
 
@@ -36,11 +37,6 @@ public class BlockCarbonFloodlight extends BlockFLColorableMachine implements IT
     public BlockCarbonFloodlight() {
         super(Names.Blocks.CARBON_FLOODLIGHT, Material.rock, soundTypeMetal, 2.5F);
         setHarvestLevel("pickaxe", 1);
-    }
-
-    @Override
-    public int getRenderType() {
-        return RenderIDs.ROTATABLE_BLOCK;
     }
 
     @Override
@@ -57,7 +53,7 @@ public class BlockCarbonFloodlight extends BlockFLColorableMachine implements IT
             } else if (world.isBlockIndirectlyGettingPowered(pos) == 0) {
                 ((TileEntityCarbonFloodlight) world.getTileEntity(pos)).setRedstone(false);
             }
-            if (!(neighborBlock instanceof BlockFL) && neighborBlock != Blocks.air) {
+            if (!(neighborBlock instanceof BlockFL) && neighborBlock == Blocks.air) {
                 ((TileEntityMetaFloodlight) world.getTileEntity(pos)).toggleUpdateRun();
             }
         }
@@ -79,6 +75,7 @@ public class BlockCarbonFloodlight extends BlockFLColorableMachine implements IT
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState blockState, EntityPlayer player, EnumFacing side, float p_149727_7_, float p_149727_8_, float p_149727_9_) {
         if (!world.isRemote && player.getHeldItem() == null && player.isSneaking()) {
             ((TileEntityCarbonFloodlight) world.getTileEntity(pos)).toggleInverted();
+            world.markBlockForUpdate(pos);
             String invert = (((TileEntityCarbonFloodlight) world.getTileEntity(pos)).getInverted() ? Names.Localizations.TRUE : Names.Localizations.FALSE);
             player.addChatMessage(new ChatComponentText(safeLocalize(Names.Localizations.INVERT) + ": " + safeLocalize(invert)));
             return true;
@@ -130,7 +127,8 @@ public class BlockCarbonFloodlight extends BlockFLColorableMachine implements IT
                 }
             }*/
             if (player.getHeldItem().getItem() == Items.dye) {
-                ((TileEntityFL) world.getTileEntity(pos)).setColor(15 - player.getHeldItem().getItemDamage());
+                Logger.getGlobal().info("dyedata" +player.getHeldItem().getMetadata());
+                ((TileEntityFL) world.getTileEntity(pos)).setColor(15 - player.getHeldItem().getMetadata());
                 return true;
             } else if (player.getHeldItem().getItem() == Item.getItemFromBlock(Blocks.wool) && !player.isSneaking()) {
                 ((TileEntityFL) world.getTileEntity(pos)).setColor(16);

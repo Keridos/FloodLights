@@ -5,12 +5,12 @@ package de.keridos.floodlights.util;
  * This Class
  */
 public class RenderUtil {
-    public static float[] r = new float[16];
-    public static float[] g = new float[16];
-    public static float[] b = new float[16];
+    public static float[] r = new float[17];
+    public static float[] g = new float[17];
+    public static float[] b = new float[17];
 
     public static void setupColors() {   // 0-15 minecraft colors;
-        for (int i = 0; i < 16; i++) {
+        for (int i = 0; i <= 16; i++) {
             switch (i) {
                 case 0:
                     r[0] = 1.0F;
@@ -92,7 +92,17 @@ public class RenderUtil {
                     g[15] = 0.09804F;
                     b[15] = 0.09804F;
                     break;
+                case 16:
+                    r[16] = 1.0F;
+                    g[16] = 1.0F;
+                    b[16] = 1.0F;
+                    break;
             }
         }
+    }
+
+    public static int getColorAsInt(int colorvalue) {
+        return Math.round(255 * r[colorvalue]) + Math.round(256 * 255 * g[colorvalue]) + Math.round(256 * 256 * 255 * b[colorvalue]);
+
     }
 }

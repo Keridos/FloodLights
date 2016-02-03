@@ -4,31 +4,29 @@
 		"model": "FloodLights:colorable_cube_bottom_top", // might be top_bottom, I don't remember. You probably need a copy of this model with all the faces specifying tintindex so that colormultiplier will work (see the gist for more info)
 		"transform": "forge:default-block",
 		"textures": {
-			"top": "FloodLights:blocks/carbonFloodlight_top",
+			"bottom": "FloodLights:blocks/carbonFloodlight_bot",
 			"side": "FloodLights:blocks/carbonFloodlight_side",
-			"bottom": "FloodLights:blocks/carbonFloodlight_bot" // set some default textures, that cascade down to all variants below
+			"top": "FloodLights:blocks/carbonFloodlight_top_on" // set some default textures, that cascade down to all variants below
 		}
 	},
 	"variants": {
-		"normal": [{}],
-		"inventory": [{}],
 		"facing": {
-			"down": { "x": 180 },
-			"up": { }, // 90 and 270 might be flipped, I don't remember :p
-			"north": { "x": 90 },
-			"south": { "x": 270 },
-			"west": { "z": 270 },
-			"east": { "z": 90 }
+			"down": { "x": 270 },
+			"up": { "x": 90 }, // 90 and 270 might be flipped, I don't remember :p
+			"north": {},
+			"south": { "y": 180 },
+			"west": { "y": 270 },
+			"east": { "y": 90 }
 		},
 		"active": {
 			"true": {
 				"textures": {
-					"top": "FloodLights:blocks/carbonFloodlight_top_on"
+					"top": "FloodLights:blocks/carbonFloodlight_top_on" // override default texture
 				}
 			},
 			"false": {
 				"textures": {
-					"top": "FloodLights:blocks/carbonFloodlight_top"
+					"top": "FloodLights:blocks/carbonFloodlight_top" // override default texture
 				}
 			}
 		},

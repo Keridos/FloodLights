@@ -11,6 +11,8 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
 
+import static de.keridos.floodlights.util.RenderUtil.getColorAsInt;
+
 /**
  * Created by Keridos on 02/02/2016.
  * This Class
@@ -54,5 +56,13 @@ public class BlockFLColorableMachine extends BlockFL {
     protected BlockState createBlockState()
     {
         return new BlockState(this, FACING,ACTIVE,COLOR);
+    }
+
+    @Override
+    public int colorMultiplier(IBlockAccess worldIn, BlockPos pos, int renderPass) {
+            if (worldIn.getBlockState(pos).getValue(COLOR) != null) {
+                return getColorAsInt(worldIn.getBlockState(pos).getValue(COLOR));
+            }
+        return super.colorMultiplier(worldIn, pos, renderPass);
     }
 }

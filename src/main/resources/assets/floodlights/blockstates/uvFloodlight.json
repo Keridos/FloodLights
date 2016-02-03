@@ -4,14 +4,18 @@
 		"model": "floodlights:colorable_cube_bottom_top", // might be top_bottom, I don't remember. You probably need a copy of this model with all the faces specifying tintindex so that colormultiplier will work (see the gist for more info)
 		"transform": "forge:default-block",
 		"textures": {
-			"top": "floodlights:blocks/electricFloodlight_top",
-			"side":	"floodlights:blocks/electricFloodlight_side",
-			"bottom": "floodlights:blocks/electricFloodlight_bot" // set some default textures, that cascade down to all variants below
+			"top": "floodlights:blocks/uvFloodlight_top",
+			"side": "floodlights:blocks/uvFloodlight_side",
+			"bottom": "floodlights:blocks/uvFloodlight_bot" // set some default textures, that cascade down to all variants below
 		}
 	},
 	"variants": {
-		"normal": [{}],
-		"inventory": [{}],
+		"normal": [
+			{}
+		],
+		"inventory": [
+			{}
+		],
 		"facing": {
 			"down": { "x": 180 },
 			"up": { }, // 90 and 270 might be flipped, I don't remember :p
@@ -23,33 +27,33 @@
 		"active": {
 			"true": {
 				"textures": {
-					"top": "floodlights:blocks/electricFloodlight_top_on"
+					"top": "floodlights:blocks/uvFloodlight_top_on"
 				}
 			},
 			"false": {
 				"textures": {
-					"top": "floodlights:blocks/electricFloodlight_top"
+					"top": "floodlights:blocks/uvFloodlight_top"
 				}
 			}
-		},
-		"color": {
-			"0": {},
-			"1": {},
-			"2": {},
-			"3": {},
-			"4": {},
-			"5": {},
-			"6": {},
-			"7": {},
-			"8": {},
-			"9": {},
-			"10": {},
-			"11": {},
-			"12": {},
-			"13": {},
-			"14": {},
-			"15": {},
-			"16": {}
 		}
+	},
+	"color": {
+		"0": {},
+		"1": {},
+		"2": {},
+		"3": {},
+		"4": {},
+		"5": {},
+		"6": {},
+		"7": {},
+		"8": {},
+		"9": {},
+		"10": {},
+		"11": {},
+		"12": {},
+		"13": {},
+		"14": {},
+		"15": {},
+		"16": {}
 	}
 }

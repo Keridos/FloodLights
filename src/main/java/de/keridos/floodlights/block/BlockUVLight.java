@@ -2,7 +2,6 @@ package de.keridos.floodlights.block;
 
 import de.keridos.floodlights.FloodLights;
 import de.keridos.floodlights.reference.Names;
-import de.keridos.floodlights.reference.RenderIDs;
 import de.keridos.floodlights.tileentity.TileEntityFL;
 import de.keridos.floodlights.tileentity.TileEntityMetaFloodlight;
 import de.keridos.floodlights.tileentity.TileEntityUVLight;
@@ -30,11 +29,6 @@ public class BlockUVLight extends BlockFLColorableMachine implements ITileEntity
     public BlockUVLight() {
         super(Names.Blocks.UV_FLOODLIGHT, Material.rock, soundTypeMetal, 2.5F);
         setHarvestLevel("pickaxe", 1);
-    }
-
-    @Override
-    public int getRenderType() {
-        return RenderIDs.ROTATABLE_BLOCK;
     }
 
     @Override

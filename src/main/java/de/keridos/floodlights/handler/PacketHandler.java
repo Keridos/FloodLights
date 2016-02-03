@@ -1,4 +1,4 @@
-package de.keridos.floodlights.core.network;
+package de.keridos.floodlights.handler;
 
 
 import de.keridos.floodlights.core.network.message.MessageTileEntityFL;

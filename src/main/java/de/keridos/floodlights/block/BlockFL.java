@@ -20,6 +20,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 import java.util.Random;
+import java.util.logging.Logger;
 
 /**
  * Created by Keridos on 28.02.14.
@@ -27,7 +28,6 @@ import java.util.Random;
  */
 public class BlockFL extends Block {
     protected String unlocName;
-    //TODO: implement Blockstate functions in blocks
 
     protected BlockFL(String unlocName, Material material, SoundType type, float hardness) {
         super(material);
@@ -58,13 +58,13 @@ public class BlockFL extends Block {
 
     @Override
     public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-        if (world.getTileEntity(pos) instanceof TileEntityFL) {
+        if (!world.isRemote && world.getTileEntity(pos) instanceof TileEntityFL) {
             if (stack.hasDisplayName()) {
                 ((TileEntityFL) world.getTileEntity(pos)).setCustomName(stack.getDisplayName());
             }
-            ((TileEntityFL) world.getTileEntity(pos)).setOrientation(
-                    getFacing(placer));
-            world.setBlockState(pos, this.getStateFromMeta(getFacing(placer)), 2);
+            ((TileEntityFL) world.getTileEntity(pos)).setOrientation(getFacing(placer));
+            world.setBlockState(pos, this.getStateFromMeta(getFacing(placer).ordinal()), 2);
+            Logger.getGlobal().info("rotation: " + getFacing(placer).toString() );
         }
     }
 
@@ -96,11 +96,11 @@ public class BlockFL extends Block {
         }
     }
 
-    public int getFacing(EntityLivingBase entityLiving) {
+    public EnumFacing getFacing(EntityLivingBase entityLiving) {
         float rotationYaw = MathHelper.wrapAngleTo180_float(entityLiving.rotationYaw);
         float rotationPitch = (entityLiving.rotationPitch);
         int result = (rotationPitch < -45.0F ? 1 : (rotationPitch > 45.0F ? 0 : ((MathHelper.floor_double(rotationYaw * 4.0F / 360.0F + 0.5D) & 3) + 2)));
         EnumFacing[] direction = {EnumFacing.UP, EnumFacing.DOWN, EnumFacing.NORTH, EnumFacing.EAST, EnumFacing.SOUTH, EnumFacing.WEST};
-        return direction[result].ordinal();
+        return direction[result];
     }
 }

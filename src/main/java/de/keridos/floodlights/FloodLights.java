@@ -3,7 +3,7 @@ package de.keridos.floodlights;
 import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.core.EventListener;
 import de.keridos.floodlights.core.FMLEventListener;
-import de.keridos.floodlights.core.network.PacketHandler;
+import de.keridos.floodlights.handler.PacketHandler;
 import de.keridos.floodlights.core.proxy.CommonProxy;
 import de.keridos.floodlights.handler.ConfigHandler;
 import de.keridos.floodlights.handler.GuiHandler;
@@ -11,6 +11,7 @@ import de.keridos.floodlights.handler.RecipeHandler;
 import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.init.ModItems;
 import de.keridos.floodlights.reference.Reference;
+import de.keridos.floodlights.util.RenderUtil;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -65,6 +66,7 @@ public class FloodLights {
         proxy.initRenderers();
         proxy.initSounds();
         proxy.initHandlers();
+        RenderUtil.setupColors();
         Gui = GuiHandler.getInstance();
     }
 

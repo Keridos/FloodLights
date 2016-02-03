@@ -2,6 +2,7 @@ package de.keridos.floodlights.core.network.message;
 
 import de.keridos.floodlights.tileentity.*;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
@@ -95,26 +96,32 @@ public class MessageTileEntityFL implements IMessage, IMessageHandler<MessageTil
 
     @Override
     public IMessage onMessage(MessageTileEntityFL message, MessageContext ctx) {
-        TileEntity tileEntity = FMLClientHandler.instance().getClient().theWorld.getTileEntity(new BlockPos(message.x, message.y, message.z));
-        if (tileEntity instanceof TileEntityFL) {
-            ((TileEntityFL) tileEntity).setOrientation(message.orientation);
-            ((TileEntityFL) tileEntity).setState(message.state);
-            ((TileEntityFL) tileEntity).setCustomName(message.customName);
-            ((TileEntityFL) tileEntity).setOwner(message.owner);
-            ((TileEntityFL) tileEntity).setColor(message.color);
-        }
-        if (tileEntity instanceof TileEntityCarbonFloodlight) {
-            ((TileEntityCarbonFloodlight) tileEntity).timeRemaining = message.timeRemaining;
-        }
-        if (tileEntity instanceof TileEntitySmallFloodlight) {
-            ((TileEntitySmallFloodlight) tileEntity).setRotationState(message.rotationState);
-        }
-        if (tileEntity instanceof TileEntityFLElectric) {
-            ((TileEntityFLElectric) tileEntity).setEnergyStored(message.rfStorage);
-        }
-        if (tileEntity instanceof TileEntityMetaFloodlight) {
-            ((TileEntityMetaFloodlight) tileEntity).setWasActive(message.wasActive);
-        }
+        Minecraft.getMinecraft().addScheduledTask(new Runnable() {
+            @Override
+            public void run() {
+                TileEntity tileEntity = FMLClientHandler.instance().getClient().theWorld.getTileEntity(new BlockPos(message.x, message.y, message.z));
+                if (tileEntity instanceof TileEntityFL) {
+                    ((TileEntityFL) tileEntity).setOrientation(message.orientation);
+                    ((TileEntityFL) tileEntity).setState(message.state);
+                    ((TileEntityFL) tileEntity).setCustomName(message.customName);
+                    ((TileEntityFL) tileEntity).setOwner(message.owner);
+                    ((TileEntityFL) tileEntity).setColor(message.color);
+                }
+                if (tileEntity instanceof TileEntityCarbonFloodlight) {
+                    ((TileEntityCarbonFloodlight) tileEntity).timeRemaining = message.timeRemaining;
+                }
+                if (tileEntity instanceof TileEntitySmallFloodlight) {
+                    ((TileEntitySmallFloodlight) tileEntity).setRotationState(message.rotationState);
+                }
+                if (tileEntity instanceof TileEntityFLElectric) {
+                    ((TileEntityFLElectric) tileEntity).setEnergyStored(message.rfStorage);
+                }
+                if (tileEntity instanceof TileEntityMetaFloodlight) {
+                    ((TileEntityMetaFloodlight) tileEntity).setWasActive(message.wasActive);
+                }
+
+            }
+        });
         return null;
     }
 

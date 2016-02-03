@@ -3,7 +3,6 @@ package de.keridos.floodlights.block;
 import de.keridos.floodlights.FloodLights;
 import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.reference.Names;
-import de.keridos.floodlights.reference.RenderIDs;
 import de.keridos.floodlights.tileentity.TileEntityElectricFloodlight;
 import de.keridos.floodlights.tileentity.TileEntityFL;
 import de.keridos.floodlights.tileentity.TileEntityMetaFloodlight;
@@ -34,12 +33,6 @@ public class BlockElectricFloodlight extends BlockFLColorableMachine implements 
         setHarvestLevel("pickaxe", 1);
     }
 
-
-    @Override
-    public int getRenderType() {
-        return RenderIDs.ROTATABLE_BLOCK;
-    }
-
     @Override
     public boolean isOpaqueCube() {
         return true;
@@ -53,7 +46,7 @@ public class BlockElectricFloodlight extends BlockFLColorableMachine implements 
             } else if (world.isBlockIndirectlyGettingPowered(pos) == 0) {
                 ((TileEntityElectricFloodlight) world.getTileEntity(pos)).setRedstone(false);
             }
-            if (!(block instanceof BlockFL) && block != Blocks.air) {
+            if (!(block instanceof BlockFL) && block == Blocks.air) {
                 ((TileEntityMetaFloodlight) world.getTileEntity(pos)).toggleUpdateRun();
             }
         }

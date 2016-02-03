@@ -75,19 +75,20 @@ public class GeneralUtil {
         return item instanceof IEnergyContainerItem;
     }
 
-    public static EnumFacing getFacingFromEntity(Entity entity){
+    public static EnumFacing getFacingFromEntity(Entity entity) {
         return null; //TODO: implement!
     }
-    
-    public static BlockPos getPosFromPosFacing(BlockPos pos, EnumFacing facing){
+
+    public static BlockPos getPosFromPosFacing(BlockPos pos, EnumFacing facing) {
         return new BlockPos(pos.getX() + facing.getFrontOffsetX(),
-                            pos.getY() + facing.getFrontOffsetY(),
-                            pos.getZ() + facing.getFrontOffsetZ());
+                pos.getY() + facing.getFrontOffsetY(),
+                pos.getZ() + facing.getFrontOffsetZ());
     }
 
     public static BlockPos getPosFromIntArray(int[] array) {
         return (new BlockPos(array[0], array[1], array[2]));
     }
+
     public static int[] getIntArrayFromPos(BlockPos pos) {
         return new int[]{pos.getX(), pos.getY(), pos.getZ()};
     }
