@@ -1,14 +1,12 @@
 package de.keridos.floodlights.block;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import de.keridos.floodlights.handler.ConfigHandler;
 import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.tileentity.TileEntityUVLightBlock;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -33,24 +31,8 @@ public class BlockUVLightBlock extends BlockPhantomLight {
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void registerBlockIcons(IIconRegister iconRegister) {
-        topIcon = iconRegister.registerIcon(getUnwrappedUnlocalizedName(this.getUnlocalizedName()));
-    }
-
-    @SideOnly(Side.CLIENT)
-    public IIcon getIcon(int side, int meta) {
-        return topIcon;
-    }
-
-    @Override
-    public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side) {
-        return ConfigHandler.uvLightRendered && (side == 0 || (!world.getBlock(x, y, z).isOpaqueCube() && world.getBlock(x, y, z) != ModBlocks.blockUVLightBlock));
-    }
-
-    @Override
-    public boolean renderAsNormalBlock() {
-        return false;
+    public boolean shouldSideBeRendered(IBlockAccess world, BlockPos pos, EnumFacing side) {
+        return ConfigHandler.uvLightRendered && (side.getIndex() == 0 || (!world.getBlockState(pos).getBlock().isOpaqueCube() && world.getBlockState(pos).getBlock() != ModBlocks.blockUVLightBlock));
     }
 
     @Override

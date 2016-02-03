@@ -1,4 +1,4 @@
-/*
+
 // For those who want the bleeding edge
 buildscript {
     repositories {
@@ -9,17 +9,17 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.0-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
-*/
 
-// for people who want stable
+/*
+// for people who want stable - not yet functional for MC 1.8.8 - we require the forgegradle 2.1 snapshot
 plugins {
-    id "net.minecraftforge.gradle.forge" version "2.0.1"
+    id "net.minecraftforge.gradle.forge" version "2.0.2"
 }
-
+*/
 if (new File("curseKey.properties").exists()) {
     // define the properties file
     ext.configFile = file "curseKey.properties"
@@ -65,6 +65,9 @@ repositories {
         name = "buildcraft"
         url = "http://mod-buildcraft.com"
     }
+    maven { // JEI
+        url "http://dvs1.progwml6.com/files/maven"
+    }
     if (new File("curseKey.properties").exists()) {
         maven {
             name = "CurseForge"
@@ -98,12 +101,12 @@ archivesBaseName = "${config.mod_id}-${config.minecraft_version}"
 
 minecraft {
     version = "${config.forge_version}"
-    if (file('../run').exists()) {
+    if (file('../run2').exists()) {
         runDir = "../run"
     } else {
         runDir = "assets"
     }
-    mappings = "snapshot_20141130"
+    mappings = "stable_20"
     replace '@VERSION@', project.version
 }
 
@@ -157,10 +160,11 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
     // I dont have to specify NEI.. because gradle magic. aka: transitive dependency resolution
+    compile "mezz.jei:jei_${config.minecraft_version}:${config.jei_version}"
     compile "igwmod:IGW-Mod-${config.minecraft_version}:${config.igwmod_version}:userdev"
     compile "mcp.mobius.waila:Waila:${config.waila_version}"
-    compile "codechicken:CodeChickenCore:${config.minecraft_version}-${config.ccc_version}:dev"
-    compile "net.industrial-craft:industrialcraft-2:${config.ic2_version}:dev"
+    //compile "codechicken:CodeChickenCore:${config.minecraft_version}-${config.ccc_version}:dev"
+    //compile "net.industrial-craft:industrialcraft-2:${config.ic2_version}:dev"
     //compile "com.mod-buildcraft:buildcraft:${config.bc_version}:dev"
     //compile "com.enderio:EnderIO:${config.minecraft_version}-${config.enderio_version}:dev"
     if (new File("curseKey.properties").exists()) {

@@ -1,6 +1,7 @@
 package de.keridos.floodlights.util;
 
-import net.minecraftforge.common.util.ForgeDirection;
+
+import net.minecraft.util.EnumFacing;
 
 /**
  * Created by Keridos on 28/11/2014.
@@ -9,7 +10,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 public class MathUtil {
 
     // This is for rotation a coordinate from the +x direction to another axis around (0, 0, 0)
-    public static double[] rotateD(double x, double y, double z, ForgeDirection direction) {
+    public static double[] rotateD(double x, double y, double z, EnumFacing direction) {
         double[] result = new double[3];
         switch (direction) {
             case DOWN:
@@ -46,7 +47,7 @@ public class MathUtil {
         return result;
     }
 
-    public static int[] rotate(int x, int y, int z, ForgeDirection direction) {
+    public static int[] rotate(int x, int y, int z, EnumFacing direction) {
         int[] result = new int[3];
         switch (direction) {
             case DOWN:

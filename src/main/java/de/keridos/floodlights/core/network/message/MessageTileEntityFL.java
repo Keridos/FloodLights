@@ -1,13 +1,14 @@
 package de.keridos.floodlights.core.network.message;
 
-import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import de.keridos.floodlights.tileentity.*;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 /**
  * Created by Keridos on 05.10.14.
@@ -25,9 +26,9 @@ public class MessageTileEntityFL implements IMessage, IMessageHandler<MessageTil
     public MessageTileEntityFL(TileEntity tileEntity) {
         if (tileEntity instanceof TileEntityFL) {
             TileEntityFL tileEntityFL = (TileEntityFL) tileEntity;
-            this.x = tileEntityFL.xCoord;
-            this.y = tileEntityFL.yCoord;
-            this.z = tileEntityFL.zCoord;
+            this.x = tileEntityFL.getPos().getX();
+            this.y = tileEntityFL.getPos().getY();
+            this.z = tileEntityFL.getPos().getZ();
             this.orientation = (byte) tileEntityFL.getOrientation().ordinal();
             this.state = (byte) tileEntityFL.getState();
             this.customName = tileEntityFL.getCustomName();
@@ -44,7 +45,7 @@ public class MessageTileEntityFL implements IMessage, IMessageHandler<MessageTil
                 this.rotationState = false;
             }
             if (tileEntity instanceof TileEntityFLElectric) {
-                this.rfStorage = ((TileEntityFLElectric) tileEntity).getEnergyStored(ForgeDirection.UNKNOWN);
+                this.rfStorage = ((TileEntityFLElectric) tileEntity).getEnergyStored(EnumFacing.UP);
             } else {
                 this.rfStorage = 0;
             }
@@ -94,7 +95,7 @@ public class MessageTileEntityFL implements IMessage, IMessageHandler<MessageTil
 
     @Override
     public IMessage onMessage(MessageTileEntityFL message, MessageContext ctx) {
-        TileEntity tileEntity = FMLClientHandler.instance().getClient().theWorld.getTileEntity(message.x, message.y, message.z);
+        TileEntity tileEntity = FMLClientHandler.instance().getClient().theWorld.getTileEntity(new BlockPos(message.x, message.y, message.z));
         if (tileEntity instanceof TileEntityFL) {
             ((TileEntityFL) tileEntity).setOrientation(message.orientation);
             ((TileEntityFL) tileEntity).setState(message.state);

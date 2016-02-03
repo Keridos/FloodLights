@@ -18,18 +18,13 @@ public class TileEntityUVLightBlock extends TileEntityPhantomLight {
         super();
     }
 
-    @Override
-    public boolean canUpdate() {
-        return true;
-    }
-
     public AxisAlignedBB getBoundingBox() {
-        return AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1);
+        return new AxisAlignedBB(this.pos.getX(), this.pos.getY(), this.pos.getZ(), this.pos.getX() + 1, this.pos.getY() + 1, this.pos.getZ() + 1);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public void updateEntity() {
+    public void update() {
         if (!worldObj.isRemote && worldObj.getWorldTime() % 20 == 5) {
             AxisAlignedBB axisAlignedBB = this.getBoundingBox();
             List<EntityLivingBase> entityList = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, axisAlignedBB);
@@ -38,6 +33,6 @@ public class TileEntityUVLightBlock extends TileEntityPhantomLight {
                 ((EntityLivingBase) iterator.next()).attackEntityFrom(DamageSource.cactus, ConfigHandler.damageUVFloodlight);
             }
         }
-        super.updateEntity();
+        super.update();
     }
 }

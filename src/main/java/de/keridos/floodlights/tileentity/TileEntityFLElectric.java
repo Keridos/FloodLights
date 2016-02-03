@@ -2,17 +2,10 @@ package de.keridos.floodlights.tileentity;
 
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyHandler;
-import cpw.mods.fml.common.Optional;
 import de.keridos.floodlights.reference.Names;
-import de.keridos.floodlights.util.MathUtil;
-import ic2.api.energy.event.EnergyTileLoadEvent;
-import ic2.api.energy.event.EnergyTileUnloadEvent;
-import ic2.api.energy.tile.IEnergySink;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import static de.keridos.floodlights.util.GeneralUtil.isItemStackValidElectrical;
 
@@ -21,11 +14,8 @@ import static de.keridos.floodlights.util.GeneralUtil.isItemStackValidElectrical
  * This Class
  */
 
-@Optional.InterfaceList({
-        @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink", modid = "IC2"),
-        @Optional.Interface(iface = "gregtech.api.interfaces.tileentity.IEnergyConnected", modid = "GregTech")})
 
-public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IEnergyHandler, IEnergySink {
+public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IEnergyHandler {
     protected boolean wasAddedToEnergyNet = false;
     protected double storageEU;
     protected EnergyStorage storage = new EnergyStorage(50000);
@@ -51,27 +41,27 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
     }
 
     @Override
-    public boolean canConnectEnergy(ForgeDirection from) {
+    public boolean canConnectEnergy(EnumFacing facing) {
         return true;
     }
 
     @Override
-    public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
+    public int receiveEnergy(EnumFacing facing, int maxReceive, boolean simulate) {
         return storage.receiveEnergy(maxReceive, simulate);
     }
 
     @Override
-    public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate) {
+    public int extractEnergy(EnumFacing facing, int maxExtract, boolean simulate) {
         return storage.extractEnergy(maxExtract, simulate);
     }
 
     @Override
-    public int getEnergyStored(ForgeDirection from) {
+    public int getEnergyStored(EnumFacing facing) {
         return storage.getEnergyStored();
     }
 
     @Override
-    public int getMaxEnergyStored(ForgeDirection from) {
+    public int getMaxEnergyStored(EnumFacing facing) {
         return storage.getMaxEnergyStored();
     }
 
@@ -79,9 +69,9 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
         storage.setEnergyStored(energyStored);
     }
 
-    @Optional.Method(modid = "IC2")
+    /*@Optional.Method(modid = "IC2")
     @Override
-    public double injectEnergy(ForgeDirection forgeDirection, double v, double v1) {
+    public double injectEnergy(EnumFacing forgeDirection, double v, double v1) {
         if ((double) (storage.getMaxEnergyStored() - storage.getEnergyStored()) >= (v * 8.0D)) {
             storage.modifyEnergyStored(MathUtil.truncateDoubleToInt(v * 8.0D));
         } else {
@@ -105,7 +95,7 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
 
     @Optional.Method(modid = "IC2")
     @Override
-    public boolean acceptsEnergyFrom(TileEntity tileEntity, ForgeDirection forgeDirection) {
+    public boolean acceptsEnergyFrom(TileEntity tileEntity, EnumFacing forgeDirection) {
         return true;
     }
 
@@ -125,7 +115,7 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
             EnergyTileUnloadEvent event = new EnergyTileUnloadEvent(this);
             MinecraftForge.EVENT_BUS.post(event);
         }
-    }
+    }*/
 
     @Override
     public boolean isItemValidForSlot(int i, ItemStack itemstack) {
@@ -133,7 +123,7 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
     }
 
     @Override
-    public boolean canInsertItem(int i, ItemStack itemstack, int j) {
+    public boolean canInsertItem(int i, ItemStack itemstack, EnumFacing facing) {
         return isItemStackValidElectrical(itemstack);
     }
 }

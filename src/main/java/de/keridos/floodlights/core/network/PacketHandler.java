@@ -1,10 +1,11 @@
 package de.keridos.floodlights.core.network;
 
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import cpw.mods.fml.relauncher.Side;
+
 import de.keridos.floodlights.core.network.message.MessageTileEntityFL;
 import de.keridos.floodlights.reference.Reference;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * Created by Keridos on 05.10.14.

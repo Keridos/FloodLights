@@ -1,14 +1,10 @@
 package de.keridos.floodlights.block;
 
-import buildcraft.api.tools.IToolWrench;
-import cofh.api.item.IToolHammer;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import crazypants.enderio.api.tool.ITool;
 import de.keridos.floodlights.FloodLights;
 import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.reference.Names;
+import de.keridos.floodlights.tileentity.TileEntityElectricFloodlight;
 import de.keridos.floodlights.tileentity.TileEntityFL;
 import de.keridos.floodlights.tileentity.TileEntityMetaFloodlight;
 import de.keridos.floodlights.tileentity.TileEntitySmallFloodlight;
@@ -16,7 +12,7 @@ import de.keridos.floodlights.util.MathUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,20 +21,25 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static de.keridos.floodlights.util.GeneralUtil.getMinecraftItem;
 import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
 
 /**
  * Created by Keridos on 01.10.14.
  * This Class defines the block properties of the electric floodlight.
  */
-public class BlockSmallElectricFloodlight extends BlockFL implements ITileEntityProvider {
+public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implements ITileEntityProvider {
 
     public BlockSmallElectricFloodlight() {
         super(Names.Blocks.SMALL_ELECTRIC_FLOODLIGHT, Material.rock, soundTypeMetal, 2.5F);
@@ -49,16 +50,8 @@ public class BlockSmallElectricFloodlight extends BlockFL implements ITileEntity
     public int getRenderType() {
         return -1;
     }
-
-    public boolean renderAsNormalBlock() {
-        return false;
-    }
-
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerBlockIcons(IIconRegister iconRegister) {
-    }
+    
+    
 
     @Override
     public boolean isOpaqueCube() {
@@ -66,91 +59,94 @@ public class BlockSmallElectricFloodlight extends BlockFL implements ITileEntity
     }
 
     @Override
-    public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
+    public void onNeighborBlockChange(World world, BlockPos pos, IBlockState blockState, Block block) {
         if (!world.isRemote) {
-            if (world.isBlockIndirectlyGettingPowered(x, y, z)) {
-                ((TileEntitySmallFloodlight) world.getTileEntity(x, y, z)).setRedstone(true);
-            } else if (!world.isBlockIndirectlyGettingPowered(x, y, z)) {
-                ((TileEntitySmallFloodlight) world.getTileEntity(x, y, z)).setRedstone(false);
+            if (world.isBlockIndirectlyGettingPowered(pos) != 0) {
+                ((TileEntitySmallFloodlight) world.getTileEntity(pos)).setRedstone(true);
+            } else if (world.isBlockIndirectlyGettingPowered(pos) == 0) {
+                ((TileEntitySmallFloodlight) world.getTileEntity(pos)).setRedstone(false);
             }
             if (!(block instanceof BlockFL) && block != Blocks.air) {
-                ((TileEntityMetaFloodlight) world.getTileEntity(x, y, z)).toggleUpdateRun();
+                ((TileEntityMetaFloodlight) world.getTileEntity(pos)).toggleUpdateRun();
             }
         }
     }
 
     @Override
-    public void onBlockAdded(World world, int x, int y, int z) {
+    public void onBlockAdded(World world, BlockPos pos, IBlockState block) {
         if (!world.isRemote) {
-            if (world.isBlockIndirectlyGettingPowered(x, y, z)) {
-                ((TileEntitySmallFloodlight) world.getTileEntity(x, y, z)).setRedstone(true);
-            } else if (!world.isBlockIndirectlyGettingPowered(x, y, z)) {
-                ((TileEntitySmallFloodlight) world.getTileEntity(x, y, z)).setRedstone(false);
+            if (world.isBlockIndirectlyGettingPowered(pos) != 0) {
+                ((TileEntitySmallFloodlight) world.getTileEntity(pos)).setRedstone(true);
+            } else if (world.isBlockIndirectlyGettingPowered(pos) == 0) {
+                ((TileEntitySmallFloodlight) world.getTileEntity(pos)).setRedstone(false);
             }
         }
     }
 
     @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float p_149727_7_, float p_149727_8_, float p_149727_9_) {
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState block, EntityPlayer player, EnumFacing side, float p_149727_7_, float p_149727_8_, float p_149727_9_) {
         if (!world.isRemote && player.getHeldItem() == null && player.isSneaking()) {
-            ((TileEntitySmallFloodlight) world.getTileEntity(x, y, z)).toggleInverted();
-            String invert = (((TileEntitySmallFloodlight) world.getTileEntity(x, y, z)).getInverted() ? Names.Localizations.TRUE : Names.Localizations.FALSE);
+            ((TileEntitySmallFloodlight) world.getTileEntity(pos)).toggleInverted();
+            String invert = (((TileEntitySmallFloodlight) world.getTileEntity(pos)).getInverted() ? Names.Localizations.TRUE : Names.Localizations.FALSE);
             player.addChatMessage(new ChatComponentText(safeLocalize(Names.Localizations.INVERT) + ": " + safeLocalize(invert)));
             return true;
         } else if (!world.isRemote && player.getHeldItem() != null) {
-            if (ModCompatibility.BCLoaded) {
+            if (!ModCompatibility.WrenchAvailable && player.getHeldItem().getItem() == getMinecraftItem("stick")) {
+                ((TileEntityElectricFloodlight) world.getTileEntity(pos)).changeMode(player);
+            }
+            /*if (ModCompatibility.BCLoaded) {
                 if (player.isSneaking() && player.getHeldItem().getItem() instanceof IToolWrench) {
-                    world.func_147480_a(x, y, z, true);
+                    world.func_147480_a(pos, true);
                     return true;
                 } else if (player.getHeldItem().getItem() instanceof IToolWrench) {
-                    ((TileEntitySmallFloodlight) world.getTileEntity(x, y, z)).toggleRotationState();
+                    ((TileEntitySmallFloodlight) world.getTileEntity(pos)).toggleRotationState();
                     return true;
                 }
             }
             if (ModCompatibility.EnderIOLoaded) {
                 if (player.isSneaking() && player.getHeldItem().getItem() instanceof ITool) {
-                    world.func_147480_a(x, y, z, true);
+                    world.func_147480_a(pos, true);
                     return true;
                 } else if (player.getHeldItem().getItem() instanceof ITool) {
-                    ((TileEntitySmallFloodlight) world.getTileEntity(x, y, z)).toggleRotationState();
+                    ((TileEntitySmallFloodlight) world.getTileEntity(pos)).toggleRotationState();
                     return true;
                 }
             }
             if (ModCompatibility.CofhCoreLoaded) {
                 if (player.isSneaking() && player.getHeldItem().getItem() instanceof IToolHammer) {
-                    world.func_147480_a(x, y, z, true);
+                    world.func_147480_a(pos, true);
                     return true;
                 } else if (player.getHeldItem().getItem() instanceof IToolHammer) {
-                    ((TileEntitySmallFloodlight) world.getTileEntity(x, y, z)).toggleRotationState();
+                    ((TileEntitySmallFloodlight) world.getTileEntity(pos)).toggleRotationState();
                     return true;
                 }
             }
             if (ModCompatibility.IC2Loaded) {
                 if (player.isSneaking() && player.getHeldItem().getItem().getUnlocalizedName().equals("ic2.itemToolWrench")) {
-                    world.func_147480_a(x, y, z, true);
+                    world.func_147480_a(pos, true);
                     return true;
                 } else if (player.getHeldItem().getItem().getUnlocalizedName().equals("ic2.itemToolWrench")) {
-                    ((TileEntitySmallFloodlight) world.getTileEntity(x, y, z)).toggleRotationState();
+                    ((TileEntitySmallFloodlight) world.getTileEntity(pos)).toggleRotationState();
                     return true;
                 }
                 if (player.isSneaking() && player.getHeldItem().getItem().getUnlocalizedName().equals("ic2.itemToolWrenchElectric")) {
-                    world.func_147480_a(x, y, z, true);
+                    world.func_147480_a(pos, true);
                     return true;
                 } else if (player.getHeldItem().getItem().getUnlocalizedName().equals("ic2.itemToolWrenchElectric")) {
-                    ((TileEntitySmallFloodlight) world.getTileEntity(x, y, z)).toggleRotationState();
+                    ((TileEntitySmallFloodlight) world.getTileEntity(pos)).toggleRotationState();
                     return true;
                 }
-            }
+            }*/
             if (player.getHeldItem().getItem() == Items.dye) {
-                ((TileEntityFL) world.getTileEntity(x, y, z)).setColor(15 - player.getHeldItem().getItemDamage());
+                ((TileEntityFL) world.getTileEntity(pos)).setColor(15 - player.getHeldItem().getItemDamage());
                 return true;
             } else if (player.getHeldItem().getItem() == Item.getItemFromBlock(Blocks.wool) && !player.isSneaking()) {
-                ((TileEntityFL) world.getTileEntity(x, y, z)).setColor(16);
+                ((TileEntityFL) world.getTileEntity(pos)).setColor(16);
                 return true;
             }
         }
         if (!world.isRemote) {
-            player.openGui(FloodLights.instance, 1, world, x, y, z);
+            player.openGui(FloodLights.instance, 1, world, pos.getX(), pos.getY(), pos.getZ());
             return true;
         }
         return false;
@@ -160,19 +156,18 @@ public class BlockSmallElectricFloodlight extends BlockFL implements ITileEntity
     public TileEntitySmallFloodlight createNewTileEntity(World world, int metadata) {
         return new TileEntitySmallFloodlight();
     }
+    
 
     @Override
-    public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
+    public AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state) {
         return null;
     }
-
-
-    //
+    
     @Override
     @SideOnly(Side.CLIENT)
-    public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z) {
-        TileEntitySmallFloodlight tileEntitySmallFloodlight = (TileEntitySmallFloodlight) world.getTileEntity(x, y, z);
-        switch (world.getBlockMetadata(x, y, z)) {
+    public AxisAlignedBB getSelectedBoundingBox(World world, BlockPos pos) {
+        TileEntitySmallFloodlight tileEntitySmallFloodlight = (TileEntitySmallFloodlight) world.getTileEntity(pos);
+        switch (this.getMetaFromState(world.getBlockState(pos))) {
             case 0:
                 if (!tileEntitySmallFloodlight.getRotationState()) {
                     this.minX = 0;
@@ -216,36 +211,45 @@ public class BlockSmallElectricFloodlight extends BlockFL implements ITileEntity
         this.maxY = newMax[1] + 0.5;
         this.maxZ = newMax[2] + 0.5;
 
-        return AxisAlignedBB.getBoundingBox((double) x + this.minX, (double) y + this.minY, (double) z + this.minZ, (double) x + this.maxX, (double) y + this.maxY, (double) z + this.maxZ);
+        return new AxisAlignedBB((double) pos.getX() + this.minX,
+                                 (double) pos.getY() + this.minY,
+                                 (double) pos.getZ() + this.minZ,
+                                 (double) pos.getX() + this.maxX,
+                                 (double) pos.getY() + this.maxY,
+                                 (double) pos.getZ() + this.maxZ);
     }
 
     @Override
-    public void breakBlock(World world, int x, int y, int z, Block block, int par6) {
-        ((TileEntitySmallFloodlight) world.getTileEntity(x, y, z)).smallSource(true);
-        super.breakBlock(world, x, y, z, block, par6);
+    public void breakBlock(World world, BlockPos pos, IBlockState blockState) {
+        ((TileEntitySmallFloodlight) world.getTileEntity(pos)).smallSource(true);
+        super.breakBlock(world, pos, blockState);
     }
 
     @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLiving, ItemStack itemStack) {
-        if (world.getTileEntity(x, y, z) instanceof TileEntityFL) {
-            if (itemStack.hasDisplayName()) {
-                ((TileEntityFL) world.getTileEntity(x, y, z)).setCustomName(itemStack.getDisplayName());
+    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack){
+        if (world.getTileEntity(pos) instanceof TileEntityFL) {
+            if (stack.hasDisplayName()) {
+                ((TileEntityFL) world.getTileEntity(pos)).setCustomName(stack.getDisplayName());
             }
-            ((TileEntityFL) world.getTileEntity(x, y, z)).setOrientation(ForgeDirection.getOrientation(getFacing(entityLiving)));
+            ((TileEntityFL) world.getTileEntity(pos)).setOrientation(
+                    getFacing(placer));
         }
     }
 
+
+
     @Override
-    public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
+    public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
         ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
-        drops.add(0, new ItemStack(ModBlocks.blockSmallElectricLight, 1, metadata));
+        drops.add(0, new ItemStack(ModBlocks.blockSmallElectricLight, 1, this.getMetaFromState(state)));
         return drops;
     }
 
     @Override
-    public int damageDropped(int metadata) {
-        return metadata;
+    public int damageDropped(IBlockState state) {
+        return super.damageDropped(state);
     }
+
 
     @Override
     @SideOnly(Side.CLIENT)

@@ -153,4 +153,5 @@ public class EnergyStorage implements IEnergyStorage {
 
         return capacity;
     }
+
 }

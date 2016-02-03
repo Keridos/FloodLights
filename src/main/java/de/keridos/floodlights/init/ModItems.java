@@ -1,6 +1,6 @@
 package de.keridos.floodlights.init;
 
-import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import de.keridos.floodlights.item.*;
 import de.keridos.floodlights.reference.Names;
 

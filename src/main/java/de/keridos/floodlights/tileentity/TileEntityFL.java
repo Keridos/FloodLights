@@ -6,14 +6,14 @@ import de.keridos.floodlights.reference.Names;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 /**
  * Created by Keridos on 01.10.14.
  * This Class is the base for all TileEntities within this mod.
  */
 public class TileEntityFL extends TileEntity {
-    protected ForgeDirection orientation;
+    protected EnumFacing orientation;
     protected byte state;
     protected String customName;
     protected String owner;
@@ -22,22 +22,22 @@ public class TileEntityFL extends TileEntity {
     protected int color;
 
     public TileEntityFL() {
-        orientation = ForgeDirection.SOUTH;
+        orientation = EnumFacing.SOUTH;
         state = 0;
         customName = "";
         owner = "";
         color = 16;  //16 is vanilla block color, so no color change in rendering
     }
 
-    public ForgeDirection getOrientation() {
+    public EnumFacing getOrientation() {
         return orientation;
     }
 
     public void setOrientation(int orientation) {
-        this.orientation = ForgeDirection.getOrientation(orientation);
+        this.orientation = EnumFacing.getFront(orientation);
     }
 
-    public void setOrientation(ForgeDirection orientation) {
+    public void setOrientation(EnumFacing orientation) {
         this.orientation = orientation;
     }
 
@@ -79,14 +79,14 @@ public class TileEntityFL extends TileEntity {
 
     public void setColor(int color) {
         this.color = color;
-        worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+        worldObj.markBlockForUpdate(this.pos);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
         if (nbtTagCompound.hasKey(Names.NBT.DIRECTION)) {
-            this.orientation = ForgeDirection.getOrientation(nbtTagCompound.getByte(Names.NBT.DIRECTION));
+            this.orientation = EnumFacing.getFront(nbtTagCompound.getByte(Names.NBT.DIRECTION));
         }
         if (nbtTagCompound.hasKey(Names.NBT.INVERT)) {
             this.inverted = nbtTagCompound.getBoolean(Names.NBT.INVERT);

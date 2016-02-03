@@ -6,8 +6,8 @@ import de.keridos.floodlights.reference.Textures;
 import de.keridos.floodlights.tileentity.TileEntityFLElectric;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
 import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
@@ -30,9 +30,9 @@ public class GuiElectricFloodlight extends GuiContainer {
     @Override
     protected void drawGuiContainerForegroundLayer(int par1, int par2) {
         String guiText = safeLocalize(Names.Localizations.RF_STORAGE) + ": "
-                + tileEntityFLElectric.getEnergyStored(ForgeDirection.UNKNOWN) / 1000 + "."
-                + tileEntityFLElectric.getEnergyStored(ForgeDirection.UNKNOWN) % 1000 / 100 + "k/"
-                + tileEntityFLElectric.getMaxEnergyStored(ForgeDirection.UNKNOWN) / 1000 + "k";
+                + tileEntityFLElectric.getEnergyStored(EnumFacing.DOWN) / 1000 + "."
+                + tileEntityFLElectric.getEnergyStored(EnumFacing.DOWN) % 1000 / 100 + "k/"
+                + tileEntityFLElectric.getMaxEnergyStored(EnumFacing.DOWN) / 1000 + "k";
         fontRendererObj.drawString(guiText, 50, 26, 0x000000);
     }
 

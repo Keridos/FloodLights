@@ -1,0 +1,49 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "floodlights:ColorableCubeBottomTop", // might be top_bottom, I don't remember. You probably need a copy of this model with all the faces specifying tintindex so that colormultiplier will work (see the gist for more info)
+		"transform": "forge:default-block",
+		"textures": {
+			"top":		{"texture": "floodlights:blocks/uvFloodlight_top" },
+			"side":		{"texture": "floodlights:blocks/uvFloodlight_side" },
+			"bottom":	{"texture": "floodlights:blocks/uvFloodlight_bot" } // set some default textures, that cascade down to all variants below
+		}
+	},
+	"variants": {
+		"facing": {
+			"down": {
+				"x": 270
+			},
+			"up": {
+				"x": 90
+			},
+			// 90 and 270 might be flipped, I don't remember :p
+			"north": {},
+			"south": {
+				"y": 180
+			},
+			"west": {
+				"y": 270
+			},
+			"east": {
+				"y": 90
+			}
+		},
+		"active": {
+			"true": {
+				"textures": {
+					"top": {
+						"texture": "floodlights:blocks/uvFloodlight_top_on"
+					}
+				},
+				"false": {
+					"textures": {
+						"top": {
+							"texture": "floodlights:blocks/uvFloodlight_top"
+						}
+					}
+				}
+			}
+		}
+	}
+}

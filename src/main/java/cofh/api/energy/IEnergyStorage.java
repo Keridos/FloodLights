@@ -37,4 +37,5 @@ public interface IEnergyStorage {
      * Returns the maximum amount of energy that can be stored.
      */
     int getMaxEnergyStored();
+
 }

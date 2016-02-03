@@ -1,24 +1,23 @@
 package de.keridos.floodlights.block;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+
 import de.keridos.floodlights.client.gui.CreativeTabFloodlight;
 import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.reference.Textures;
 import de.keridos.floodlights.tileentity.TileEntityFL;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.Random;
 
@@ -28,16 +27,13 @@ import java.util.Random;
  */
 public class BlockFL extends Block {
     protected String unlocName;
-    public IIcon topIcon;
-    public IIcon topOnIcon;
-    public IIcon sideIcon;
-    public IIcon botIcon;
+    //TODO: implement Blockstate functions in blocks
 
     protected BlockFL(String unlocName, Material material, SoundType type, float hardness) {
         super(material);
         setStepSound(type);
         setHardness(hardness);
-        setBlockName(unlocName);
+        setUnlocalizedName(unlocName);
         this.unlocName = unlocName;
         if (!unlocName.equals(Names.Blocks.PHANTOM_LIGHT) && !unlocName.equals(Names.Blocks.UV_LIGHTBLOCK)) {
             this.setCreativeTab(CreativeTabFloodlight.FL_TAB);
@@ -49,56 +45,32 @@ public class BlockFL extends Block {
         return String.format("tile.%s%s", Textures.RESOURCE_PREFIX, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
     }
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerBlockIcons(IIconRegister iconRegister) {
-        topIcon = iconRegister.registerIcon(String.format("%s", getUnwrappedUnlocalizedName(this.getUnlocalizedName() + "_top")));
-        topOnIcon = iconRegister.registerIcon(String.format("%s", getUnwrappedUnlocalizedName(this.getUnlocalizedName() + "_top_on")));
-        botIcon = iconRegister.registerIcon(String.format("%s", getUnwrappedUnlocalizedName(this.getUnlocalizedName() + "_bot")));
-        sideIcon = iconRegister.registerIcon(String.format("%s", getUnwrappedUnlocalizedName(this.getUnlocalizedName() + "_side")));
-    }
-
-    // For rotatable block, topIcon is front, botIcon is rear.
-    @SideOnly(Side.CLIENT)
-    public IIcon getIcon(int side, int meta) {
-        if (side == meta - 6) {
-            return topOnIcon;
-        } else if (meta > 5) {
-            meta -= 6;
-        }
-        if (side == meta) {
-            return topIcon;
-        } else if (side == ForgeDirection.getOrientation(meta).getOpposite().ordinal()) {
-            return botIcon;
-        } else {
-            return sideIcon;
-        }
-    }
 
     protected String getUnwrappedUnlocalizedName(String unlocalizedName) {
         return unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
     }
 
     @Override
-    public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
-        dropInventory(world, x, y, z);
-        super.breakBlock(world, x, y, z, block, 0);
+    public void breakBlock(World world, BlockPos pos, IBlockState blockState) {
+        dropInventory(world, pos);
+        super.breakBlock(world, pos, blockState);
     }
 
     @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLiving, ItemStack itemStack) {
-        if (world.getTileEntity(x, y, z) instanceof TileEntityFL) {
-            if (itemStack.hasDisplayName()) {
-                ((TileEntityFL) world.getTileEntity(x, y, z)).setCustomName(itemStack.getDisplayName());
+    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+        if (world.getTileEntity(pos) instanceof TileEntityFL) {
+            if (stack.hasDisplayName()) {
+                ((TileEntityFL) world.getTileEntity(pos)).setCustomName(stack.getDisplayName());
             }
-            ((TileEntityFL) world.getTileEntity(x, y, z)).setOrientation(ForgeDirection.getOrientation(getFacing(entityLiving)));
-            world.setBlockMetadataWithNotify(x, y, z, getFacing(entityLiving), 2);
+            ((TileEntityFL) world.getTileEntity(pos)).setOrientation(
+                    getFacing(placer));
+            world.setBlockState(pos, this.getStateFromMeta(getFacing(placer)), 2);
         }
     }
 
 
-    protected void dropInventory(World world, int x, int y, int z) {
-        TileEntity tileEntity = world.getTileEntity(x, y, z);
+    protected void dropInventory(World world,BlockPos pos) {
+        TileEntity tileEntity = world.getTileEntity(pos);
         if (!(tileEntity instanceof IInventory)) {
             return;
         }
@@ -110,7 +82,7 @@ public class BlockFL extends Block {
                 float dX = rand.nextFloat() * 0.8F + 0.1F;
                 float dY = rand.nextFloat() * 0.8F + 0.1F;
                 float dZ = rand.nextFloat() * 0.8F + 0.1F;
-                EntityItem entityItem = new EntityItem(world, x + dX, y + dY, z + dZ, itemStack.copy());
+                EntityItem entityItem = new EntityItem(world, pos.getX() + dX, pos.getY() + dY, pos.getZ() + dZ, itemStack.copy());
                 if (itemStack.hasTagCompound()) {
                     entityItem.getEntityItem().setTagCompound((NBTTagCompound) itemStack.getTagCompound().copy());
                 }
@@ -128,7 +100,7 @@ public class BlockFL extends Block {
         float rotationYaw = MathHelper.wrapAngleTo180_float(entityLiving.rotationYaw);
         float rotationPitch = (entityLiving.rotationPitch);
         int result = (rotationPitch < -45.0F ? 1 : (rotationPitch > 45.0F ? 0 : ((MathHelper.floor_double(rotationYaw * 4.0F / 360.0F + 0.5D) & 3) + 2)));
-        ForgeDirection[] direction = {ForgeDirection.UP, ForgeDirection.DOWN, ForgeDirection.NORTH, ForgeDirection.EAST, ForgeDirection.SOUTH, ForgeDirection.WEST};
+        EnumFacing[] direction = {EnumFacing.UP, EnumFacing.DOWN, EnumFacing.NORTH, EnumFacing.EAST, EnumFacing.SOUTH, EnumFacing.WEST};
         return direction[result].ordinal();
     }
 }

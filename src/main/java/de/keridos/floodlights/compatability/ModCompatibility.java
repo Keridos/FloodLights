@@ -1,16 +1,12 @@
 package de.keridos.floodlights.compatability;
 
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.ModAPIManager;
-import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.common.event.FMLInterModComms;
 import de.keridos.floodlights.handler.ConfigHandler;
-import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.reference.Reference;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-
-import static codechicken.nei.api.API.hideItem;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.ModAPIManager;
+import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.common.event.FMLInterModComms;
 
 /**
  * Created by Keridos on 28.02.14.
@@ -52,14 +48,14 @@ public class ModCompatibility {
 
     @Optional.Method(modid = "NotEnoughItems")
     private void hideNEIItems() {
-        hideItem(new ItemStack(ModBlocks.blockPhantomLight));
-        hideItem(new ItemStack(ModBlocks.blockUVLightBlock));
+        //hideItem(new ItemStack(ModBlocks.blockPhantomLight));
+        //hideItem(new ItemStack(ModBlocks.blockUVLightBlock));
     }
 
     private void addVersionCheckerInfo() {
         NBTTagCompound versionchecker = new NBTTagCompound();
         versionchecker.setString("curseProjectName", "224728-floodlights");
-        versionchecker.setString("curseFilenameParser", "FloodLights-1.7.10-[]");
+        versionchecker.setString("curseFilenameParser", "FloodLights-@MCVERSION@-[]");
         versionchecker.setString("modDisplayName", "FloodLights");
         versionchecker.setString("oldVersion", Reference.VERSION);
         FMLInterModComms.sendRuntimeMessage("floodlights", "VersionChecker", "addCurseCheck", versionchecker);

@@ -5,16 +5,19 @@ import de.keridos.floodlights.tileentity.TileEntityPhantomLight;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
-import net.minecraft.init.Blocks;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import java.util.Random;
+import java.util.logging.Logger;
 
 /**
  * Created by Keridos on 01.10.14.
- * This Class implements the invislbe light block the mod uses to light up areas.
+ * This Class implements the invisible light block the mod uses to light up areas.
  */
 public class BlockPhantomLight extends BlockFL implements ITileEntityProvider {
     public BlockPhantomLight() {
@@ -32,12 +35,12 @@ public class BlockPhantomLight extends BlockFL implements ITileEntityProvider {
     }
 
     @Override
-    public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int par2, int par3, int par4) {
+    public AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state) {
         return null;
     }
 
     @Override
-    public boolean isBlockSolid(IBlockAccess par1IBlockAccess, int par2, int par3, int par4, int par5) {
+    public boolean isBlockSolid(IBlockAccess worldIn, BlockPos pos, EnumFacing side) {
         return false;
     }
 
@@ -47,7 +50,7 @@ public class BlockPhantomLight extends BlockFL implements ITileEntityProvider {
     }
 
     @Override
-    public boolean canCollideCheck(int par1, boolean par2) {
+    public boolean canCollideCheck(IBlockState state, boolean hitIfLiquid) {
         return this.isCollidable();
     }
 
@@ -67,17 +70,7 @@ public class BlockPhantomLight extends BlockFL implements ITileEntityProvider {
     }
 
     @Override
-    public boolean isReplaceable(IBlockAccess world, int x, int y, int z) {
-        return true;
-    }
-
-    @Override
-    public boolean renderAsNormalBlock() {
-        return false;
-    }
-
-    @Override
-    public boolean canBeReplacedByLeaves(IBlockAccess world, int x, int y, int z) {
+    public boolean canBeReplacedByLeaves(IBlockAccess world, BlockPos pos) {
         return true;
     }
 
@@ -92,15 +85,16 @@ public class BlockPhantomLight extends BlockFL implements ITileEntityProvider {
     }
 
     @Override
-    public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
-        if (!(block instanceof BlockFL) && block != Blocks.air) {
-            ((TileEntityPhantomLight) world.getTileEntity(x, y, z)).updateAllSources();
+    public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock) {
+        if (!(neighborBlock instanceof BlockPhantomLight) && neighborBlock.isAir(worldIn,pos)) { //TODO: rework this to be less laggy
+            Logger.getGlobal().info("detected change in neighbour to phantomlight");
+            ((TileEntityPhantomLight) worldIn.getTileEntity(pos)).updateAllSources();
         }
     }
 
     @Override
-    public void breakBlock(World world, int x, int y, int z, Block block, int par6) {
-        ((TileEntityPhantomLight) world.getTileEntity(x, y, z)).updateAllSources();
-        super.breakBlock(world, x, y, z, block, par6);
+    public void breakBlock(World world, BlockPos pos, IBlockState blockState) {
+        ((TileEntityPhantomLight) world.getTileEntity(pos)).updateAllSources();
+        super.breakBlock(world, pos, blockState);
     }
 }

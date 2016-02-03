@@ -1,7 +1,8 @@
 package de.keridos.floodlights.handler;
 
-import cpw.mods.fml.common.network.IGuiHandler;
-import cpw.mods.fml.common.network.NetworkRegistry;
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.fml.common.network.IGuiHandler;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import de.keridos.floodlights.FloodLights;
 import de.keridos.floodlights.client.gui.GuiCarbonFloodlight;
 import de.keridos.floodlights.client.gui.GuiElectricFloodlight;
@@ -33,7 +34,7 @@ public class GuiHandler implements IGuiHandler {
 
     @Override
     public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
-        TileEntity entity = world.getTileEntity(x, y, z);
+        TileEntity entity = world.getTileEntity(new BlockPos(x,y,z));
 
         switch (id) {
             case 0:
@@ -55,7 +56,7 @@ public class GuiHandler implements IGuiHandler {
 
     @Override
     public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
-        TileEntity entity = world.getTileEntity(x, y, z);
+        TileEntity entity = world.getTileEntity(new BlockPos(x,y,z));
 
         switch (id) {
             case 0:

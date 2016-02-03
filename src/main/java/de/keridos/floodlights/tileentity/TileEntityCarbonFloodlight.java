@@ -7,8 +7,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import static de.keridos.floodlights.util.GeneralUtil.getBurnTime;
 import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
@@ -55,7 +55,7 @@ public class TileEntityCarbonFloodlight extends TileEntityMetaFloodlight {
     }
 
     @Override
-    public boolean canInsertItem(int i, ItemStack itemstack, int j) {
+    public boolean canInsertItem(int i, ItemStack itemstack, EnumFacing facing) {
         return (i == 0 && getBurnTime(itemstack) > 0);
     }
 
@@ -65,8 +65,8 @@ public class TileEntityCarbonFloodlight extends TileEntityMetaFloodlight {
     }
 
     @Override
-    public void updateEntity() {
-        World world = this.getWorldObj();
+    public void update() {
+        World world = this.getWorld();
         if (!world.isRemote) {
             if (timeRemaining == 0 && inventory[0] != null) {
                 timeRemaining = ConfigHandler.carbonTime * getBurnTime(inventory[0]) / 1600 * (mode == 0 ? 20 : 10);
@@ -80,11 +80,11 @@ public class TileEntityCarbonFloodlight extends TileEntityMetaFloodlight {
                 if (update) {
                     removeSource(this.mode);
                     addSource(this.mode);
-                    world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, this.getOrientation().ordinal() + 6, 2);
+                    world.setBlockState(this.pos, world.getBlockState(this.pos).getBlock().getStateFromMeta(this.getOrientation().ordinal() + 6), 2);
                     update = false;
                 } else if (!wasActive) {
                     addSource(this.mode);
-                    world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, world.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) + 6, 2);
+                    world.setBlockState(this.pos, world.getBlockState(this.pos).getBlock().getStateFromMeta(this.getOrientation().ordinal() + 6), 2);
 
                 }
                 timeRemaining--;
@@ -92,7 +92,7 @@ public class TileEntityCarbonFloodlight extends TileEntityMetaFloodlight {
             } else {
                 if (wasActive) {
                     removeSource(this.mode);
-                    world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, world.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) - 6, 2);
+                    world.setBlockState(this.pos, world.getBlockState(this.pos).getBlock().getStateFromMeta(this.getOrientation().ordinal()), 2);
                     wasActive = false;
                     timeout = ConfigHandler.timeoutFloodlights;
                     update = false;
@@ -128,9 +128,8 @@ public class TileEntityCarbonFloodlight extends TileEntityMetaFloodlight {
     }
 
     public void changeMode(EntityPlayer player) {
-        World world = this.getWorldObj();
+        World world = this.getWorld();
         if (!world.isRemote) {
-            ForgeDirection direction = this.getOrientation();
             removeSource(this.mode);
             mode = (mode == 2 ? 0 : mode + 1);
             if (mode == 1) {

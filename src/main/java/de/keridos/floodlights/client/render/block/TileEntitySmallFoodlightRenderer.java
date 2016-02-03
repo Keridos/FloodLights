@@ -28,7 +28,7 @@ public class TileEntitySmallFoodlightRenderer extends TileEntitySpecialRenderer 
     }
 
     @Override
-    public void renderTileEntityAt(TileEntity te, double x, double y, double z, float scale) {
+    public void renderTileEntityAt(TileEntity te, double x, double y, double z,  float partialTicks, int destroyStage) {
         ResourceLocation textures;
         TileEntitySmallFloodlight tileEntitySmallFloodlight = (TileEntitySmallFloodlight) te;
         int metadata = te.getBlockMetadata();

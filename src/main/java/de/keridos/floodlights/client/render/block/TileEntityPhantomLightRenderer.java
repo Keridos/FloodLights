@@ -4,7 +4,9 @@ import de.keridos.floodlights.item.ItemLightDebugTool;
 import de.keridos.floodlights.tileentity.TileEntityUVLightBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
@@ -28,39 +30,40 @@ public class TileEntityPhantomLightRenderer extends TileEntitySpecialRenderer {
         double za = cube.minZ;
         double zb = cube.maxZ;
 
+        Tessellator tessellator = Tessellator.getInstance();
+        WorldRenderer worldRenderer = Tessellator.getInstance().getWorldRenderer();
+        worldRenderer.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION_COLOR);
+        worldRenderer.pos(xa, ya, za).endVertex();
+        worldRenderer.pos(xa, yb, za).endVertex();
+        worldRenderer.pos(xb, yb, za).endVertex();
+        worldRenderer.pos(xb, ya, za).endVertex();
+        worldRenderer.pos(xa, ya, za).endVertex();
 
-        Tessellator tessellator = Tessellator.instance;
-        tessellator.startDrawing(GL11.GL_LINE_STRIP);
-        tessellator.addVertex(xa, ya, za);
-        tessellator.addVertex(xa, yb, za);
-        tessellator.addVertex(xb, yb, za);
-        tessellator.addVertex(xb, ya, za);
-        tessellator.addVertex(xa, ya, za);
-
-        tessellator.addVertex(xa, ya, zb);
-        tessellator.addVertex(xa, yb, zb);
-        tessellator.addVertex(xb, yb, zb);
-        tessellator.addVertex(xb, ya, zb);
-        tessellator.addVertex(xa, ya, zb);
+        worldRenderer.pos(xa, ya, zb).endVertex();
+        worldRenderer.pos(xa, yb, zb).endVertex();
+        worldRenderer.pos(xb, yb, zb).endVertex();
+        worldRenderer.pos(xb, ya, zb).endVertex();
+        worldRenderer.pos(xa, ya, zb).endVertex();
         tessellator.draw();
 
-        tessellator.startDrawing(GL11.GL_LINES);
-        tessellator.addVertex(xa, ya, za);
-        tessellator.addVertex(xa, ya, zb);
+        worldRenderer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
+        worldRenderer.pos(xa, ya, za).endVertex();
+        worldRenderer.pos(xa, ya, zb).endVertex();
 
-        tessellator.addVertex(xa, yb, za);
-        tessellator.addVertex(xa, yb, zb);
+        worldRenderer.pos(xa, yb, za).endVertex();
+        worldRenderer.pos(xa, yb, zb).endVertex();
 
-        tessellator.addVertex(xb, ya, za);
-        tessellator.addVertex(xb, ya, zb);
+        worldRenderer.pos(xb, ya, za).endVertex();
+        worldRenderer.pos(xb, ya, zb).endVertex();
 
-        tessellator.addVertex(xb, yb, za);
-        tessellator.addVertex(xb, yb, zb);
+        worldRenderer.pos(xb, yb, za).endVertex();
+        worldRenderer.pos(xb, yb, zb).endVertex();
         tessellator.draw();
     }
 
+
     @Override
-    public void renderTileEntityAt(TileEntity te, double x, double y, double z, float scale) {
+    public void renderTileEntityAt(TileEntity te, double x, double y, double z,  float partialTicks, int destroyStage) {
         EntityPlayer player = Minecraft.getMinecraft().thePlayer;
         if (player.getHeldItem() == null || !(player.getHeldItem().getItem() instanceof ItemLightDebugTool) || te instanceof TileEntityUVLightBlock) {
             return;
@@ -72,7 +75,7 @@ public class TileEntityPhantomLightRenderer extends TileEntitySpecialRenderer {
             GL11.glLineWidth(2.0F);
             GL11.glDisable(GL11.GL_TEXTURE_2D);
             GL11.glTranslatef((float) x, (float) y, (float) z);
-            AxisAlignedBB boundingBox = AxisAlignedBB.getBoundingBox(0.002D, 0.002D, 0.002D, 0.998D, 0.998D, 0.998D);
+            AxisAlignedBB boundingBox = new AxisAlignedBB(0.002D, 0.002D, 0.002D, 0.998D, 0.998D, 0.998D);
             drawCube(boundingBox);
         } finally {
             GL11.glPopMatrix();

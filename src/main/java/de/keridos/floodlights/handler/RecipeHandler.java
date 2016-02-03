@@ -1,6 +1,6 @@
 package de.keridos.floodlights.handler;
 
-import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.init.ModItems;
 import net.minecraft.item.ItemStack;
@@ -29,7 +29,7 @@ public class RecipeHandler {
     public void initRecipes() {
         if (ConfigHandler.electricFloodlight || ConfigHandler.smallElectricFloodlight || ConfigHandler.uvFloodlight) {
             GameRegistry.addRecipe(new ItemStack(ModItems.rawFilament, 1), " L ", "RGR", " L ", 'R', new ItemStack(getMinecraftItem("redstone"), 1), 'G', new ItemStack(getMinecraftItem("gold_ingot"), 1), 'L', new ItemStack(getMinecraftItem("glowstone_dust"), 1));
-            FurnaceRecipes.smelting().func_151394_a(new ItemStack(ModItems.rawFilament, 1), new ItemStack(ModItems.glowingFilament, 1), 0.1F);
+            FurnaceRecipes.instance().addSmeltingRecipe(new ItemStack(ModItems.rawFilament, 1), new ItemStack(ModItems.glowingFilament, 1), 0.1F);
             GameRegistry.addRecipe(new ItemStack(ModItems.lightBulb, 1), " G ", "GFG", " I ", 'G', new ItemStack(getMinecraftItem("glass_pane"), 1), 'F', new ItemStack(ModItems.glowingFilament, 1), 'I', new ItemStack(getMinecraftItem("iron_ingot"), 1));
         }
         if (ConfigHandler.electricFloodlight) {
