@@ -52,20 +52,16 @@ repositories {
         name = "ic2"
         url = "http://maven.ic2.player.to/"
     }
-    maven {
-        name 'ColoredLightCore'
-        url "http://coloredlightscore.us.to/maven/clc/"
+    ivy {
+        name "BuildCraft"
+        artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
     }
-    maven {
-        name = "buildcraft"
-        url = "http://mod-buildcraft.com"
-    }
-    if (new File("curseKey.properties").exists()) {
-        maven {
-            name = "CurseForge"
-            url = "https://minecraft.curseforge.com/api/${project.curse.api_key}"
-        }
-    }
+    //if (new File("curseKey.properties").exists()) {
+    //    maven {
+    //        name = "CurseForge"
+    //        url = "https://minecraft.curseforge.com/api/${project.curse.api_key}"
+    //    }
+    //}
 }
 
 apply plugin: 'forge'
@@ -139,10 +135,10 @@ dependencies {
     compile "codechicken:CodeChickenLib:${config.minecraft_version}-${config.ccl_version}:dev"
     compile "codechicken:CodeChickenCore:${config.minecraft_version}-${config.ccc_version}:dev"
     compile "net.industrial-craft:industrialcraft-2:${config.ic2_version}:dev"
-    compile "com.mod-buildcraft:buildcraft:${config.bc_version}:dev"
+    compile name: "buildcraft", version: "${config.bc_version}", classifier: "dev"
     compile "com.enderio:EnderIO:${config.minecraft_version}-${config.enderio_version}:dev"
     if (new File("curseKey.properties").exists()) {
-        compile "cofhcore:CoFHCore-[${config.minecraft_version}]${config.cofhcore_version}:latest:dev"
+        //compile "cofhcore:CoFHCore-[${config.minecraft_version}]${config.cofhcore_version}:latest:dev"
     }
 }
 
