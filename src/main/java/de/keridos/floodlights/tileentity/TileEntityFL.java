@@ -3,10 +3,13 @@ package de.keridos.floodlights.tileentity;
 import de.keridos.floodlights.core.network.message.MessageTileEntityFL;
 import de.keridos.floodlights.handler.PacketHandler;
 import de.keridos.floodlights.reference.Names;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.world.World;
 
 /**
  * Created by Keridos on 01.10.14.
@@ -79,7 +82,6 @@ public class TileEntityFL extends TileEntity {
 
     public void setColor(int color) {
         this.color = color;
-        worldObj.markBlockForUpdate(this.pos);
     }
 
     @Override
@@ -134,6 +136,11 @@ public class TileEntityFL extends TileEntity {
 
     public boolean getInverted() {
         return this.inverted;
+    }
+
+    @Override
+    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate) {
+        return false;
     }
 
     @Override

@@ -6,7 +6,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
@@ -87,15 +86,15 @@ public class BlockPhantomLight extends BlockFL implements ITileEntityProvider {
 
     @Override
     public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock) {
-        if (!(neighborBlock instanceof BlockPhantomLight) && neighborBlock != Blocks.air) { //TODO: rework this to be less laggy
+        if (!(neighborBlock instanceof BlockFL)) { //TODO: rework this to be less laggy
             Logger.getGlobal().info("detected change in neighbour to phantomlight");
-            ((TileEntityPhantomLight) worldIn.getTileEntity(pos)).updateAllSources();
+            ((TileEntityPhantomLight) worldIn.getTileEntity(pos)).updateAllSources(true);
         }
     }
 
     @Override
     public void breakBlock(World world, BlockPos pos, IBlockState blockState) {
-        ((TileEntityPhantomLight) world.getTileEntity(pos)).updateAllSources();
-        super.breakBlock(world, pos, blockState);
+        ((TileEntityPhantomLight) world.getTileEntity(pos)).updateAllSources(false);
+        super.breakBlock(world,pos,blockState);
     }
 }

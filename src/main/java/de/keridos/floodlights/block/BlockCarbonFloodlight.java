@@ -127,11 +127,13 @@ public class BlockCarbonFloodlight extends BlockFLColorableMachine implements IT
                 }
             }*/
             if (player.getHeldItem().getItem() == Items.dye) {
-                Logger.getGlobal().info("dyedata" +player.getHeldItem().getMetadata());
                 ((TileEntityFL) world.getTileEntity(pos)).setColor(15 - player.getHeldItem().getMetadata());
+                world.setBlockState(pos, blockState.withProperty(COLOR, 15 - player.getHeldItem().getMetadata()), 2);
+                Logger.getGlobal().info("colorset: " + (15 - player.getHeldItem().getMetadata()) );
                 return true;
             } else if (player.getHeldItem().getItem() == Item.getItemFromBlock(Blocks.wool) && !player.isSneaking()) {
                 ((TileEntityFL) world.getTileEntity(pos)).setColor(16);
+                world.setBlockState(pos, blockState.withProperty(COLOR, 16), 2);
                 return true;
             }
         }

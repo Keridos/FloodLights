@@ -1,14 +1,16 @@
 package de.keridos.floodlights.tileentity;
 
+import de.keridos.floodlights.block.BlockFLColorableMachine;
 import de.keridos.floodlights.handler.ConfigHandler;
 import de.keridos.floodlights.reference.Names;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+
+import java.util.logging.Logger;
 
 import static de.keridos.floodlights.util.GeneralUtil.getBurnTime;
 import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
@@ -31,27 +33,12 @@ public class TileEntityCarbonFloodlight extends TileEntityMetaFloodlight {
         if (nbtTagCompound.hasKey(Names.NBT.TIME_REMAINING)) {
             this.timeRemaining = nbtTagCompound.getInteger(Names.NBT.TIME_REMAINING);
         }
-        NBTTagList list = nbtTagCompound.getTagList(Names.NBT.ITEMS, 10);
-        NBTTagCompound item = list.getCompoundTagAt(0);
-        int slot = item.getByte(Names.NBT.ITEMS);
-        if (slot >= 0 && slot < getSizeInventory()) {
-            setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(item));
-        }
     }
 
     @Override
     public void writeToNBT(NBTTagCompound nbtTagCompound) {
         super.writeToNBT(nbtTagCompound);
         nbtTagCompound.setInteger(Names.NBT.TIME_REMAINING, timeRemaining);
-        NBTTagList list = new NBTTagList();
-        ItemStack itemstack = getStackInSlot(0);
-        if (itemstack != null) {
-            NBTTagCompound item = new NBTTagCompound();
-            item.setByte(Names.NBT.ITEMS, (byte) 0);
-            itemstack.writeToNBT(item);
-            list.appendTag(item);
-        }
-        nbtTagCompound.setTag(Names.NBT.ITEMS, list);
     }
 
     @Override
@@ -80,19 +67,19 @@ public class TileEntityCarbonFloodlight extends TileEntityMetaFloodlight {
                 if (update) {
                     removeSource(this.mode);
                     addSource(this.mode);
-                    world.setBlockState(this.pos, world.getBlockState(this.pos).getBlock().getStateFromMeta(this.getOrientation().ordinal() + 6), 2);
+                    world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, true), 2);
                     update = false;
                 } else if (!wasActive) {
                     addSource(this.mode);
-                    world.setBlockState(this.pos, world.getBlockState(this.pos).getBlock().getStateFromMeta(this.getOrientation().ordinal() + 6), 2);
-
+                    Logger.getGlobal().info("rotation: "+this.orientation.toString());
+                    world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, true), 2);
                 }
                 timeRemaining--;
                 wasActive = true;
             } else {
                 if (wasActive) {
                     removeSource(this.mode);
-                    world.setBlockState(this.pos, world.getBlockState(this.pos).getBlock().getStateFromMeta(this.getOrientation().ordinal()), 2);
+                    world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, false), 2);
                     wasActive = false;
                     timeout = ConfigHandler.timeoutFloodlights;
                     update = false;

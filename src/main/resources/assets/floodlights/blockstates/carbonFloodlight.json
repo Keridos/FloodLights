@@ -1,24 +1,42 @@
 {
 	"forge_marker": 1,
 	"defaults": {
-		"model": "FloodLights:colorable_cube_bottom_top", // might be top_bottom, I don't remember. You probably need a copy of this model with all the faces specifying tintindex so that colormultiplier will work (see the gist for more info)
+		"model": "FloodLights:colorable_cube_bottom_top",
+		// might be top_bottom, I don't remember. You probably need a copy of this model with all the faces specifying tintindex so that colormultiplier will work (see the gist for more info)
 		"transform": "forge:default-block",
 		"textures": {
 			"top": "FloodLights:blocks/carbonFloodlight_top",
 			"side": "FloodLights:blocks/carbonFloodlight_side",
-			"bottom": "FloodLights:blocks/carbonFloodlight_bot" // set some default textures, that cascade down to all variants below
+			"bottom": "FloodLights:blocks/carbonFloodlight_bot"
+			// set some default textures, that cascade down to all variants below
 		}
 	},
 	"variants": {
-		"normal": [{}],
-		"inventory": [{}],
+		"normal": [
+			{}
+		],
+		"inventory": [
+			{}
+		],
 		"facing": {
-			"down": { "x": 180 },
-			"up": { }, // 90 and 270 might be flipped, I don't remember :p
-			"north": { "x": 90 },
-			"south": { "x": 270 },
-			"west": { "z": 270 },
-			"east": { "z": 90 }
+			"down": {
+				"x": 180
+			},
+			"up": {},
+			"north": {
+				"x": 90
+			},
+			"south": {
+				"x": 270
+			},
+			"west": {
+				"x": 90,
+				"y": 270
+			},
+			"east": {
+				"x": 90,
+				"y": 90
+			}
 		},
 		"active": {
 			"true": {

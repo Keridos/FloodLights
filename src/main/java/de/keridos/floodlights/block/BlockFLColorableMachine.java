@@ -11,6 +11,8 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
 
+import java.util.logging.Logger;
+
 import static de.keridos.floodlights.util.RenderUtil.getColorAsInt;
 
 /**
@@ -47,9 +49,9 @@ public class BlockFLColorableMachine extends BlockFL {
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
         if (worldIn.getTileEntity(pos) instanceof TileEntityFL) {
-            return super.getActualState(state, worldIn, pos).withProperty(COLOR, ((TileEntityFL) worldIn.getTileEntity(
+            return worldIn.getBlockState(pos).withProperty(COLOR, ((TileEntityFL) worldIn.getTileEntity(
                     pos)).getColor());
-        } else return super.getActualState(state, worldIn, pos).withProperty(COLOR, 16);
+        } else return worldIn.getBlockState(pos).withProperty(COLOR, 16);
     }
 
     @Override
@@ -61,6 +63,7 @@ public class BlockFLColorableMachine extends BlockFL {
     @Override
     public int colorMultiplier(IBlockAccess worldIn, BlockPos pos, int renderPass) {
             if (worldIn.getBlockState(pos).getValue(COLOR) != null) {
+                Logger.getGlobal().info("color: "+ worldIn.getBlockState(pos).getValue(COLOR));
                 return getColorAsInt(worldIn.getBlockState(pos).getValue(COLOR));
             }
         return super.colorMultiplier(worldIn, pos, renderPass);

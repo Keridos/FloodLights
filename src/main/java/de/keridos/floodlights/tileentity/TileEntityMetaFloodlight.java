@@ -498,5 +498,4 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
             }
         }
     }
-
 }
