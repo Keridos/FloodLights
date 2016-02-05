@@ -50,6 +50,7 @@ public class BlockSmallElectricFloodlight extends BlockFL implements ITileEntity
         return -1;
     }
 
+    @Override
     public boolean renderAsNormalBlock() {
         return false;
     }
