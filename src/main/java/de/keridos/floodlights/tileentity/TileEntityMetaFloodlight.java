@@ -57,10 +57,14 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
         if (worldObj.getBlock(x, y, z) == ModBlocks.blockUVLightBlock) {
             return;
         }
-        if (worldObj.setBlock(x, y, z, ModBlocks.blockFLLight)) {
+        if (worldObj.setBlock(x, y, z, ModBlocks.blockPhantomLight)) {
             TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
             light.addSource(this.xCoord, this.yCoord, this.zCoord);
+            worldObj.markBlockRangeForRenderUpdate(x, y, z, x, y, z);
+        } else {
+            this.toggleUpdateRun();
         }
+
     }
 
     @Override
@@ -201,13 +205,13 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
             int y = this.yCoord + this.orientation.offsetY * i;
             int z = this.zCoord + this.orientation.offsetZ * i;
             if (remove) {
-                if (worldObj.getBlock(x, y, z) == ModBlocks.blockFLLight) {
+                if (worldObj.getBlock(x, y, z) == ModBlocks.blockPhantomLight) {
                     TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
                     light.removeSource(this.xCoord, this.yCoord, this.zCoord);
                 }
             } else if (worldObj.getBlock(x, y, z).isAir(worldObj, x, y, z)) {
                 setLight(x, y, z);
-            } else if (worldObj.getBlock(x, y, z) == ModBlocks.blockFLLight) {
+            } else if (worldObj.getBlock(x, y, z) == ModBlocks.blockPhantomLight) {
                 TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
                 light.addSource(this.xCoord, this.yCoord, this.zCoord);
             } else if (worldObj.getBlock(x, y, z).isOpaqueCube()) {
@@ -261,17 +265,17 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
                     int y = this.yCoord + rotatedCoords[1];
                     int z = this.zCoord + rotatedCoords[2];
                     if (remove) {
-                        if (worldObj.getBlock(x, y, z) == ModBlocks.blockFLLight) {
+                        if (worldObj.getBlock(x, y, z) == ModBlocks.blockPhantomLight) {
                             TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
                             light.removeSource(this.xCoord, this.yCoord, this.zCoord);
                         }
                     } else if (worldObj.getBlock(x, y, z).isAir(worldObj, x, y, z)) {
                         setLight(x, y, z);
-                    } else if (worldObj.getBlock(x, y, z) == ModBlocks.blockFLLight) {
+                    } else if (worldObj.getBlock(x, y, z) == ModBlocks.blockPhantomLight) {
                         TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
                         light.addSource(this.xCoord, this.yCoord, this.zCoord);
                     } else if (worldObj.getBlock(x, y, z).isOpaqueCube()) {
-                        if (i < ConfigHandler.rangeConeFloodlight / 4) {   //This is for canceling the long rangs beams
+                        if (i < 4) {   //This is for canceling the long rangs beams
                             failedBeams[j] = true;
                         }
                         break;
@@ -316,13 +320,13 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
                     int y = this.yCoord + rotatedCoords[1];
                     int z = this.zCoord + rotatedCoords[2];
                     if (remove) {
-                        if (worldObj.getBlock(x, y, z) == ModBlocks.blockFLLight) {
+                        if (worldObj.getBlock(x, y, z) == ModBlocks.blockPhantomLight) {
                             TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
                             light.removeSource(this.xCoord, this.yCoord, this.zCoord);
                         }
                     } else if (worldObj.getBlock(x, y, z).isAir(worldObj, x, y, z)) {
                         setLight(x, y, z);
-                    } else if (worldObj.getBlock(x, y, z) == ModBlocks.blockFLLight) {
+                    } else if (worldObj.getBlock(x, y, z) == ModBlocks.blockPhantomLight) {
                         TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
                         light.addSource(this.xCoord, this.yCoord, this.zCoord);
                     } else if (worldObj.getBlock(x, y, z).isOpaqueCube()) {
@@ -344,50 +348,50 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
                         int y = this.yCoord + this.orientation.offsetY;
                         int z = this.zCoord + this.orientation.offsetZ;
                         if (remove) {
-                            if (worldObj.getBlock(x, y, z) == ModBlocks.blockFLLight) {
+                            if (worldObj.getBlock(x, y, z) == ModBlocks.blockPhantomLight) {
                                 TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
                                 light.removeSource(this.xCoord, this.yCoord, this.zCoord);
                             }
                         } else if (worldObj.getBlock(x, y, z).isAir(worldObj, x, y, z)) {
                             setLight(x, y, z);
-                        } else if (worldObj.getBlock(x, y, z) == ModBlocks.blockFLLight) {
+                        } else if (worldObj.getBlock(x, y, z) == ModBlocks.blockPhantomLight) {
                             TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
                             light.addSource(this.xCoord, this.yCoord, this.zCoord);
                         } else if (worldObj.getBlock(x, y, z).isOpaqueCube()) {
                             return;
                         }
                     }
-                    int a = 2 * i;
+                    int a = i;
                     int b = 0;
                     int c = 0;
                     switch (j) {
                         case 0:
-                            b += i;
+                            b += i / 2;
                             break;
                         case 1:
-                            b -= i;
+                            b -= i / 2;
                             break;
                         case 2:
-                            c += i;
+                            c += i / 2;
                             break;
                         case 3:
-                            c -= i;
+                            c -= i / 2;
                             break;
                         case 4:
-                            b += i;
-                            c += i;
+                            b += i / 2;
+                            c += i / 2;
                             break;
                         case 5:
-                            b += i;
-                            c -= i;
+                            b += i / 2;
+                            c -= i / 2;
                             break;
                         case 6:
-                            b -= i;
-                            c += i;
+                            b -= i / 2;
+                            c += i / 2;
                             break;
                         case 7:
-                            b -= i;
-                            c -= i;
+                            b -= i / 2;
+                            c -= i / 2;
                             break;
                     }
                     int[] rotatedCoords = rotate(a, b, c, this.orientation); // rotate the coordinate to the correct spot in the real world :)
@@ -395,17 +399,17 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
                     int y = this.yCoord + rotatedCoords[1];
                     int z = this.zCoord + rotatedCoords[2];
                     if (remove) {
-                        if (worldObj.getBlock(x, y, z) == ModBlocks.blockFLLight) {
+                        if (worldObj.getBlock(x, y, z) == ModBlocks.blockPhantomLight) {
                             TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
                             light.removeSource(this.xCoord, this.yCoord, this.zCoord);
                         }
                     } else if (worldObj.getBlock(x, y, z).isAir(worldObj, x, y, z)) {
                         setLight(x, y, z);
-                    } else if (worldObj.getBlock(x, y, z) == ModBlocks.blockFLLight) {
+                    } else if (worldObj.getBlock(x, y, z) == ModBlocks.blockPhantomLight) {
                         TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
                         light.addSource(this.xCoord, this.yCoord, this.zCoord);
                     } else if (worldObj.getBlock(x, y, z).isOpaqueCube()) {
-                        if (i < ConfigHandler.rangeConeFloodlight / 4) {   //This is for canceling the long rangs beams
+                        if (i < 8) {   //This is for canceling the long rangs beams
                             failedBeams[j] = true;
                         }
                         break;
@@ -413,37 +417,37 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
                 }
             } else if (!failedBeams[j - 9] || remove) { // This is for the inner beams at longer range
                 for (int i = 8; i <= ConfigHandler.rangeConeFloodlight; i++) {
-                    int a = 2 * i;
+                    int a = i;
                     int b = 0;
                     int c = 0;
                     switch (j) {
                         case 9:
-                            b += i / 2;
+                            b += i / 4;
                             break;
                         case 10:
-                            b -= i / 2;
+                            b -= i / 4;
                             break;
                         case 11:
-                            c += i / 2;
+                            c += i / 4;
                             break;
                         case 12:
-                            c -= i / 2;
+                            c -= i / 4;
                             break;
                         case 13:
-                            b += i / 2;
-                            c += i / 2;
+                            b += i / 4;
+                            c += i / 4;
                             break;
                         case 14:
-                            b += i / 2;
-                            c -= i / 2;
+                            b += i / 4;
+                            c -= i / 4;
                             break;
                         case 15:
-                            b -= i / 2;
-                            c += i / 2;
+                            b -= i / 4;
+                            c += i / 4;
                             break;
                         case 16:
-                            b -= i / 2;
-                            c -= i / 2;
+                            b -= i / 4;
+                            c -= i / 4;
                             break;
                     }
                     int[] rotatedCoords = rotate(a, b, c, this.orientation);
@@ -451,13 +455,13 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
                     int y = this.yCoord + rotatedCoords[1];
                     int z = this.zCoord + rotatedCoords[2];
                     if (remove) {
-                        if (worldObj.getBlock(x, y, z) == ModBlocks.blockFLLight) {
+                        if (worldObj.getBlock(x, y, z) == ModBlocks.blockPhantomLight) {
                             TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
                             light.removeSource(this.xCoord, this.yCoord, this.zCoord);
                         }
                     } else if (worldObj.getBlock(x, y, z).isAir(worldObj, x, y, z)) {
                         setLight(x, y, z);
-                    } else if (worldObj.getBlock(x, y, z) == ModBlocks.blockFLLight) {
+                    } else if (worldObj.getBlock(x, y, z) == ModBlocks.blockPhantomLight) {
                         TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
                         light.addSource(this.xCoord, this.yCoord, this.zCoord);
                     } else if (worldObj.getBlock(x, y, z).isOpaqueCube()) {

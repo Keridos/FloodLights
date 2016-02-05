@@ -14,6 +14,56 @@ buildscript {
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
     }
 }
+
+if (new File("curseKey.properties").exists()) {
+    // define the properties file
+    ext.configFile = file "curseKey.properties"
+
+    configFile.withReader {
+        // read config.  it shall from now on be referenced as simply config or as project.config
+        def prop = new Properties()
+        prop.load(it)
+        project.ext.curse = new ConfigSlurper().parse prop
+    }
+}
+
+repositories {
+    maven {
+        name = "IGW"
+        url = "http://maven.k-4u.nl/"
+    }
+    maven { // The repo from which to get waila
+        name "Mobius Repo"
+        url "http://mobiusstrip.eu/maven"
+    }
+    maven { // the repo from which to get NEI and stuff
+        name 'CB Repo'
+        url "http://chickenbones.net/maven/"
+    }
+    maven { // the repo from which to get EnderIO and tterags mods
+        name 'tterrag'
+        url "http://maven.tterrag.com/"
+    }
+    maven {
+        name = "OC repo"
+        url = "http://maven.cil.li/"
+    }
+    maven {
+        name = "ic2"
+        url = "http://maven.ic2.player.to/"
+    }
+    ivy {
+        name "BuildCraft"
+        artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
+    }
+    //if (new File("curseKey.properties").exists()) {
+    //    maven {
+    //        name = "CurseForge"
+    //        url = "https://minecraft.curseforge.com/api/${project.curse.api_key}"
+    //    }
+    //}
+}
+
 apply plugin: 'forge'
 
 // define the properties file
@@ -25,16 +75,6 @@ configFile.withReader {
     prop.load(it)
     project.ext.config = new ConfigSlurper().parse prop
 }
-
-// define the properties file
-//ext.configFile = file "curseKey.properties"
-
-//configFile.withReader {
-    // read config.  it shall from now on be referenced as simply config or as project.config
-//    def prop = new Properties()
-//    prop.load(it)
-//   project.ext.curse = new ConfigSlurper().parse prop
-//}
 
 version = "${config.mod_version}"
 if (hasProperty('appendBuildNumber')) {
@@ -88,41 +128,6 @@ task deobfJar(type: Jar) {
 
 build.dependsOn sourceJar, deobfJar
 
-repositories {
-    maven {
-        name = "IGW"
-        url = "http://maven.k-4u.nl/"
-    }
-    maven { // The repo from which to get waila
-        name "Mobius Repo"
-        url "http://mobiusstrip.eu/maven"
-    }
-    maven { // the repo from which to get NEI and stuff
-        name 'CB Repo'
-        url "http://chickenbones.net/maven/"
-    }
-    maven { // the repo from which to get EnderIO and tterags mods
-        name 'tterrag'
-        url "http://maven.tterrag.com/"
-    }
-    maven {
-        name = "OC repo"
-        url = "http://maven.cil.li/"
-    }
-    maven {
-        name = "ic2"
-        url = "http://maven.ic2.player.to/"
-    }
-    maven {
-        name 'ColoredLightCore'
-        url "http://coloredlightscore.us.to/maven/clc/"
-    }
-    //maven {
-    //   name = "CurseForge"
-    //   url = "https://minecraft.curseforge.com/api/${project.curse.api_key}"
-    //}
-}
-
 dependencies {
     // I dont have to specify NEI.. because gradle magic. aka: transitive dependency resolution
     compile "igwmod:IGW-Mod-${config.minecraft_version}:${config.igwmod_version}:userdev"
@@ -130,10 +135,11 @@ dependencies {
     compile "codechicken:CodeChickenLib:${config.minecraft_version}-${config.ccl_version}:dev"
     compile "codechicken:CodeChickenCore:${config.minecraft_version}-${config.ccc_version}:dev"
     compile "net.industrial-craft:industrialcraft-2:${config.ic2_version}:dev"
-    compile "com.mod-buildcraft:buildcraft:${config.bc_version}:dev"
-    //compile "coloredlightscore:ColoredLightsCore:${config.coloredlightcore_version}:api"
+    compile name: "buildcraft", version: "${config.bc_version}", classifier: "dev"
     compile "com.enderio:EnderIO:${config.minecraft_version}-${config.enderio_version}:dev"
-    //compile "cofhcore:CoFHCore-[${config.minecraft_version}]${config.cofhcore_version}:dev"
+    if (new File("curseKey.properties").exists()) {
+        //compile "cofhcore:CoFHCore-[${config.minecraft_version}]${config.cofhcore_version}:latest:dev"
+    }
 }
 
 // this fixes dev environments for IDEA 14 users.

@@ -6,4 +6,5 @@ package de.keridos.floodlights.reference;
  */
 public class RenderIDs {
     public static int ROTATABLE_BLOCK;
+    public static int PHANTOM_LIGHT;
 }

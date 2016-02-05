@@ -16,6 +16,7 @@ import java.util.ArrayList;
 public class TileEntityPhantomLight extends TileEntity {
     protected ArrayList<int[]> sources = new ArrayList<int[]>();
     protected boolean update = true;
+    protected boolean removeLightOnUpdate = true;
 
     public TileEntityPhantomLight() {
         super();
@@ -28,6 +29,8 @@ public class TileEntityPhantomLight extends TileEntity {
             }
         }
         sources.add(new int[]{x, y, z});
+        removeLightOnUpdate = false;
+        update = false;
     }
 
     public void removeSource(int x, int y, int z) {
@@ -40,6 +43,8 @@ public class TileEntityPhantomLight extends TileEntity {
         if (sources.isEmpty()) {
             if (!worldObj.setBlockToAir(this.xCoord, this.yCoord, this.zCoord)) {
                 update = true;
+            } else {
+                worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
             }
         }
     }
@@ -59,7 +64,7 @@ public class TileEntityPhantomLight extends TileEntity {
     public void readFromNBT(NBTTagCompound nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
         if (nbtTagCompound.hasKey(Names.NBT.SOURCES)) {
-            NBTTagList list = nbtTagCompound.getTagList(Names.NBT.ITEMS, Constants.NBT.TAG_INT_ARRAY);
+            NBTTagList list = nbtTagCompound.getTagList(Names.NBT.SOURCES, Constants.NBT.TAG_INT_ARRAY);
             for (int i = 0; i < list.tagCount(); i++) {
                 sources.add(list.func_150306_c(i));
             }
@@ -86,8 +91,15 @@ public class TileEntityPhantomLight extends TileEntity {
     @Override
     public void updateEntity() {
         if (!worldObj.isRemote && worldObj.getWorldTime() % 20 == 11) {
+            if (removeLightOnUpdate) {
+                if (worldObj.setBlockToAir(this.xCoord, this.yCoord, this.zCoord)) {
+                    worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+                    return;
+                }
+            }
             if (sources.isEmpty()) {
                 if (worldObj.setBlockToAir(this.xCoord, this.yCoord, this.zCoord)) {
+                    worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
                     update = false;
                 }
             } else {
