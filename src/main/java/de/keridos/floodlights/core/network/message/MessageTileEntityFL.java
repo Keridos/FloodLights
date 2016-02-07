@@ -13,13 +13,40 @@ import net.minecraftforge.common.util.ForgeDirection;
  * Created by Keridos on 05.10.14.
  * This Class is the Message that the electric floodlights TileEntity uses.
  */
-public class MessageTileEntityFL implements IMessage, IMessageHandler<MessageTileEntityFL, IMessage> {
+public class MessageTileEntityFL implements IMessage {
     public int x, y, z, timeRemaining, color, rfStorage;
     public byte orientation, state;
     public boolean rotationState, wasActive;
     public String customName, owner;
 
     public MessageTileEntityFL() {
+    }
+
+    public static class MessageHandlerTileEntityFL implements IMessageHandler<MessageTileEntityFL, IMessage> {
+        @Override
+        public IMessage onMessage(MessageTileEntityFL message, MessageContext ctx) {
+            TileEntity tileEntity = FMLClientHandler.instance().getClient().theWorld.getTileEntity(message.x, message.y, message.z);
+            if (tileEntity instanceof TileEntityFL) {
+                ((TileEntityFL) tileEntity).setOrientation(message.orientation);
+                ((TileEntityFL) tileEntity).setState(message.state);
+                ((TileEntityFL) tileEntity).setCustomName(message.customName);
+                ((TileEntityFL) tileEntity).setOwner(message.owner);
+                ((TileEntityFL) tileEntity).setColor(message.color);
+            }
+            if (tileEntity instanceof TileEntityCarbonFloodlight) {
+                ((TileEntityCarbonFloodlight) tileEntity).timeRemaining = message.timeRemaining;
+            }
+            if (tileEntity instanceof TileEntitySmallFloodlight) {
+                ((TileEntitySmallFloodlight) tileEntity).setRotationState(message.rotationState);
+            }
+            if (tileEntity instanceof TileEntityFLElectric) {
+                ((TileEntityFLElectric) tileEntity).setEnergyStored(message.rfStorage);
+            }
+            if (tileEntity instanceof TileEntityMetaFloodlight) {
+                ((TileEntityMetaFloodlight) tileEntity).setWasActive(message.wasActive);
+            }
+            return null;
+        }
     }
 
     public MessageTileEntityFL(TileEntity tileEntity) {
@@ -90,31 +117,6 @@ public class MessageTileEntityFL implements IMessage, IMessageHandler<MessageTil
         buf.writeInt(color);
         buf.writeInt(rfStorage);
         buf.writeBoolean(wasActive);
-    }
-
-    @Override
-    public IMessage onMessage(MessageTileEntityFL message, MessageContext ctx) {
-        TileEntity tileEntity = FMLClientHandler.instance().getClient().theWorld.getTileEntity(message.x, message.y, message.z);
-        if (tileEntity instanceof TileEntityFL) {
-            ((TileEntityFL) tileEntity).setOrientation(message.orientation);
-            ((TileEntityFL) tileEntity).setState(message.state);
-            ((TileEntityFL) tileEntity).setCustomName(message.customName);
-            ((TileEntityFL) tileEntity).setOwner(message.owner);
-            ((TileEntityFL) tileEntity).setColor(message.color);
-        }
-        if (tileEntity instanceof TileEntityCarbonFloodlight) {
-            ((TileEntityCarbonFloodlight) tileEntity).timeRemaining = message.timeRemaining;
-        }
-        if (tileEntity instanceof TileEntitySmallFloodlight) {
-            ((TileEntitySmallFloodlight) tileEntity).setRotationState(message.rotationState);
-        }
-        if (tileEntity instanceof TileEntityFLElectric) {
-            ((TileEntityFLElectric) tileEntity).setEnergyStored(message.rfStorage);
-        }
-        if (tileEntity instanceof TileEntityMetaFloodlight) {
-            ((TileEntityMetaFloodlight) tileEntity).setWasActive(message.wasActive);
-        }
-        return null;
     }
 
     @Override

@@ -5,6 +5,7 @@ item.floodlights:electricIncandescentLightBulb.name=Elektrische Glühbirne
 item.floodlights:carbonDissolver.name=Treibstoffzersetzer
 item.floodlights:carbonLantern.name=Nicht-elektrische Laterne
 item.floodlights:mantle.name=Docht
+item.floodlights:lightDebugTool.name=Lichtblock Debug Werkzeug
 
 #TileEntities
 tile.floodlights:carbonFloodlight.name=Nicht-elektrisches Flutlicht

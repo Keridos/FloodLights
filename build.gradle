@@ -56,15 +56,14 @@ repositories {
         name "BuildCraft"
         artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
     }
-    //if (new File("curseKey.properties").exists()) {
-    //    maven {
-    //        name = "CurseForge"
-    //        url = "https://minecraft.curseforge.com/api/${project.curse.api_key}"
-    //    }
-    //}
+    ivy {
+        name "CoFHCore"
+        artifactPattern "http://addons-origin.cursecdn.com/files/2277/479/[module]-[revision]-[classifier].[ext]"
+    }
 }
-
 apply plugin: 'forge'
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
 
 // define the properties file
 ext.configFile = file "project.properties"
@@ -137,9 +136,7 @@ dependencies {
     compile "net.industrial-craft:industrialcraft-2:${config.ic2_version}:dev"
     compile name: "buildcraft", version: "${config.bc_version}", classifier: "dev"
     compile "com.enderio:EnderIO:${config.minecraft_version}-${config.enderio_version}:dev"
-    if (new File("curseKey.properties").exists()) {
-        //compile "cofhcore:CoFHCore-[${config.minecraft_version}]${config.cofhcore_version}:latest:dev"
-    }
+    compile name: "CoFHCore", version: "[${config.minecraft_version}]${config.cofhcore_version}", classifier: "dev", ext: "jar"
 }
 
 // this fixes dev environments for IDEA 14 users.

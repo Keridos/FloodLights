@@ -5,6 +5,7 @@ item.floodlights:electricIncandescentLightBulb.name=Electric Incandescent Light 
 item.floodlights:carbonDissolver.name=Fuel Dissolver
 item.floodlights:carbonLantern.name=Non-electric Lantern
 item.floodlights:mantle.name=Mantle
+item.floodlights:lightDebugTool.name=Lightblock Debug Tool
 
 #TileEntities
 tile.floodlights:carbonFloodlight.name=Non-electric Floodlight

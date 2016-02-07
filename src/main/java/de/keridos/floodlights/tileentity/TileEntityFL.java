@@ -1,7 +1,7 @@
 package de.keridos.floodlights.tileentity;
 
-import de.keridos.floodlights.core.network.PacketHandler;
 import de.keridos.floodlights.core.network.message.MessageTileEntityFL;
+import de.keridos.floodlights.handler.PacketHandler;
 import de.keridos.floodlights.reference.Names;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
