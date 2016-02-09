@@ -12,6 +12,7 @@ public class Names {
         public static final String PHANTOM_LIGHT = "tilePhantomLight";
         public static final String UV_LIGHTBLOCK = "tileUVLight";
         public static final String UV_FLOODLIGHT = "uvFloodlight";
+        public static final String GROW_LIGHT = "growLight";
     }
 
     public static final class Items {

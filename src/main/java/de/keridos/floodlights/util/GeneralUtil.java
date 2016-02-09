@@ -6,11 +6,16 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import de.keridos.floodlights.compatability.ModCompatibility;
 import ic2.api.item.IElectricItem;
 import net.minecraft.block.Block;
+import net.minecraft.block.IGrowable;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.*;
 import net.minecraft.util.StatCollector;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
+
+import java.util.logging.Logger;
 
 /**
  * Created by Keridos on 28/11/2014.
@@ -71,4 +76,17 @@ public class GeneralUtil {
         return item instanceof IEnergyContainerItem;
     }
 
+    public static boolean isBlockValidGrowable(Block block, World world, BlockPos blockPos) {
+        boolean result = false;
+        if ((block instanceof IGrowable && ((IGrowable) block).func_149851_a(world, blockPos.posX, blockPos.posY, blockPos.posZ, false))
+                || (ModCompatibility.ACLoaded && ModCompatibility.getInstance().isBlockValidAgriCraftSeed(block, world, blockPos))) {
+            Logger.getGlobal().info("blockcangrow: " + (block instanceof IGrowable && ((IGrowable) block).func_149851_a(world, blockPos.posX, blockPos.posY, blockPos.posZ, false)));
+            result = true;
+        }
+        return result;
+    }
+
+    public static Block getBlockFromDirection(World world, int x, int y, int z, ForgeDirection direction, int distance) {
+        return world.getBlock(x + direction.offsetX * distance, y + direction.offsetY * distance, z + direction.offsetZ * distance);
+    }
 }

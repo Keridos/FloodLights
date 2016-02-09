@@ -19,6 +19,7 @@ import de.keridos.floodlights.handler.RecipeHandler;
 import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.init.ModItems;
 import de.keridos.floodlights.reference.Reference;
+import de.keridos.floodlights.util.RandomUtil;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 
@@ -58,6 +59,7 @@ public class FloodLights {
         ModBlocks.registerBlocks();
         ModBlocks.registerTileEntities();
         ModItems.init();
+        RandomUtil.init();
         PacketHandler.init();
         recipeHandler.initRecipes();
         modCompatibility.performModCompat();

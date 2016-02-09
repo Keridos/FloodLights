@@ -81,7 +81,7 @@ public class TileEntityPhantomLightRenderer extends TileEntitySpecialRenderer {
             GL11.glEnable(GL11.GL_LINE_SMOOTH);
             GL11.glHint(GL11.GL_LINE_SMOOTH_HINT, GL11.GL_NICEST);
             GL11.glTranslatef((float) x, (float) y, (float) z);
-            AxisAlignedBB boundingBox = AxisAlignedBB.getBoundingBox(0.000D, 0.000D, 0.000D, 1D, 1D, 1D);
+            AxisAlignedBB boundingBox = AxisAlignedBB.getBoundingBox(0.002D, 0.002D, 0.002D, 0.998D, 0.998D, 0.998D);
             drawCube(boundingBox);
             GL11.glEnable(GL11.GL_LIGHTING);
             GL11.glEnable(GL11.GL_TEXTURE_2D);

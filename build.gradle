@@ -60,6 +60,10 @@ repositories {
         name "CoFHCore"
         artifactPattern "http://addons-origin.cursecdn.com/files/2277/479/[module]-[revision]-[classifier].[ext]"
     }
+    ivy {
+        name "AgriCraft"
+        artifactPattern "http://addons-origin.cursecdn.com/files/2271/838/[module]-[revision]-[classifier].[ext]"
+    }
 }
 apply plugin: 'forge'
 sourceCompatibility = 1.7
@@ -137,6 +141,7 @@ dependencies {
     compile name: "buildcraft", version: "${config.bc_version}", classifier: "dev"
     compile "com.enderio:EnderIO:${config.minecraft_version}-${config.enderio_version}:dev"
     compile name: "CoFHCore", version: "[${config.minecraft_version}]${config.cofhcore_version}", classifier: "dev", ext: "jar"
+    compile name: "AgriCraft", version: "${config.minecraft_version}-${config.agricraft_version}", classifier: "api", ext: "jar"
 }
 
 // this fixes dev environments for IDEA 14 users.

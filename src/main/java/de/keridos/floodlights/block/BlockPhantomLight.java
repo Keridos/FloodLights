@@ -65,6 +65,11 @@ public class BlockPhantomLight extends BlockFL implements ITileEntityProvider {
     }
 
     @Override
+    public boolean isAir(IBlockAccess world, int x, int y, int z) {
+        return true;
+    }
+
+    @Override
     public boolean canProvidePower() {
         return false;
     }
