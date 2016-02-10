@@ -2,6 +2,7 @@ package de.keridos.floodlights.tileentity;
 
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyHandler;
+import cofh.api.energy.IEnergyReceiver;
 import de.keridos.floodlights.reference.Names;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -15,7 +16,7 @@ import static de.keridos.floodlights.util.GeneralUtil.isItemStackValidElectrical
  */
 
 
-public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IEnergyHandler {
+public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IEnergyHandler, IEnergyReceiver {
     protected boolean wasAddedToEnergyNet = false;
     protected double storageEU;
     protected EnergyStorage storage = new EnergyStorage(50000);
@@ -48,11 +49,6 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
     @Override
     public int receiveEnergy(EnumFacing facing, int maxReceive, boolean simulate) {
         return storage.receiveEnergy(maxReceive, simulate);
-    }
-
-    @Override
-    public int extractEnergy(EnumFacing facing, int maxExtract, boolean simulate) {
-        return storage.extractEnergy(maxExtract, simulate);
     }
 
     @Override

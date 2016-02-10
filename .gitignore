@@ -9,7 +9,7 @@ MinecraftForge-Credits.txt
 MinecraftForge-License.txt
 build/
 .gradle/
-eclipse/
+assets/
 libs/
 out/
 curseKey.properties
