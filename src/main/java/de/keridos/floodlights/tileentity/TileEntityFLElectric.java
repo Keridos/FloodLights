@@ -120,11 +120,11 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
     @Optional.Method(modid = "IC2")
     @Override
     public void invalidate() {
-        super.invalidate();
         if (!worldObj.isRemote) {
             EnergyTileUnloadEvent event = new EnergyTileUnloadEvent(this);
             MinecraftForge.EVENT_BUS.post(event);
         }
+        super.invalidate();
     }
 
     @Override

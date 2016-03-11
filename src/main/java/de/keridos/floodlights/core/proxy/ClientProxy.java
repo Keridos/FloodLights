@@ -33,7 +33,7 @@ public class ClientProxy extends CommonProxy {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPhantomLight.class, new TileEntityPhantomLightRenderer());
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.blockSmallElectricLight),
                 new SmallFloodlightItemRenderer(new TileEntitySmallFoodlightRenderer(), new TileEntitySmallFloodlight()));
-        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.blockGrowLightBlock),
+        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.blockGrowLight),
                 new GrowLightItemRenderer(new TileEntityGrowLightRenderer(), new TileEntityGrowLight()));
         RenderUtil.setupColors();
     }

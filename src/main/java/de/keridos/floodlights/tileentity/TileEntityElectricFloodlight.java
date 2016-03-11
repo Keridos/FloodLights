@@ -8,7 +8,6 @@ import de.keridos.floodlights.util.MathUtil;
 import ic2.api.item.ElectricItem;
 import ic2.api.item.IElectricItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 
@@ -19,7 +18,7 @@ import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
  * This Class is the electric floodlight TileEntity.
  */
 
-public class TileEntityElectricFloodlight extends TileEntityFLElectric implements ISidedInventory {
+public class TileEntityElectricFloodlight extends TileEntityFLElectric {
     @Override
     public void updateEntity() {
         World world = this.getWorldObj();

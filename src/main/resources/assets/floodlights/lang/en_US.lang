@@ -14,6 +14,7 @@ tile.floodlights:smallElectricFloodlight.name=Small Electric Floodlight
 tile.floodlights:uvFloodlight.name=UV Floodlight
 tile.floodlights:smallElectricFloodlightMetaBlock_smallFluorescent.name=Small Flourescent Light
 tile.floodlights:smallElectricFloodlightMetaBlock_squareFluorescent.name=Square Flourescent Light
+tile.floodlights:growLight.name=Grow Light
 
 #GUI
 gui.floodlights:nonElectricFloodlightTimeRemaining=Time remaining
@@ -27,6 +28,8 @@ gui.floodlights:narrowCone=narrow cone
 gui.floodlights:wideCone=wide cone
 gui.floodlights:minutesShort=m
 gui.floodlights:secondsShort=s
+gui.floodlights:growLightLighting=Normal lighting
+gui.floodlights:growLightDarkLight=Black light
 
 # Creative Tabs
 itemGroup.floodlights=Flood Lights

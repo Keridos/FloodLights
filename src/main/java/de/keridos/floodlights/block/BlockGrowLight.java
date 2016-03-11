@@ -99,10 +99,18 @@ public class BlockGrowLight extends BlockFL implements ITileEntityProvider {
                     world.func_147480_a(x, y, z, true);
                     return true;
                 }
+                if (!player.isSneaking() && player.getHeldItem().getItem() instanceof IToolWrench) {
+                    ((TileEntityGrowLight) world.getTileEntity(x, y, z)).changeMode(player);
+                    return true;
+                }
             }
             if (ModCompatibility.EnderIOLoaded) {
                 if (player.isSneaking() && player.getHeldItem().getItem() instanceof ITool) {
                     world.func_147480_a(x, y, z, true);
+                    return true;
+                }
+                if (!player.isSneaking() && player.getHeldItem().getItem() instanceof ITool) {
+                    ((TileEntityGrowLight) world.getTileEntity(x, y, z)).changeMode(player);
                     return true;
                 }
             }
@@ -111,14 +119,20 @@ public class BlockGrowLight extends BlockFL implements ITileEntityProvider {
                     world.func_147480_a(x, y, z, true);
                     return true;
                 }
+                if (!player.isSneaking() && player.getHeldItem().getItem() instanceof IToolHammer) {
+                    ((TileEntityGrowLight) world.getTileEntity(x, y, z)).changeMode(player);
+                    return true;
+                }
             }
             if (ModCompatibility.IC2Loaded) {
-                if (player.isSneaking() && player.getHeldItem().getItem().getUnlocalizedName().equals("ic2.itemToolWrench")) {
+                if (player.isSneaking() && (player.getHeldItem().getItem().getUnlocalizedName().equals("ic2.itemToolWrenchElectric")
+                        || player.getHeldItem().getItem().getUnlocalizedName().equals("ic2.itemToolWrench"))) {
                     world.func_147480_a(x, y, z, true);
                     return true;
                 }
-                if (player.isSneaking() && player.getHeldItem().getItem().getUnlocalizedName().equals("ic2.itemToolWrenchElectric")) {
-                    world.func_147480_a(x, y, z, true);
+                if (!player.isSneaking() && (player.getHeldItem().getItem().getUnlocalizedName().equals("ic2.itemToolWrenchElectric")
+                        || player.getHeldItem().getItem().getUnlocalizedName().equals("ic2.itemToolWrench"))) {
+                    ((TileEntityGrowLight) world.getTileEntity(x, y, z)).changeMode(player);
                     return true;
                 }
             }
@@ -186,7 +200,7 @@ public class BlockGrowLight extends BlockFL implements ITileEntityProvider {
             if (itemStack.hasDisplayName()) {
                 ((TileEntityFL) world.getTileEntity(x, y, z)).setCustomName(itemStack.getDisplayName());
             }
-            ((TileEntityFL) world.getTileEntity(x, y, z)).setOrientation(ForgeDirection.getOrientation(getFacing(entityLiving)));
+            ((TileEntityFL) world.getTileEntity(x, y, z)).setOrientation(ForgeDirection.DOWN);
         }
     }
 }

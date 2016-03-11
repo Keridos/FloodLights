@@ -49,5 +49,8 @@ public class RecipeHandler {
         if (ConfigHandler.uvFloodlight) {
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.blockUVLight, 1), "CIC", "IBG", "CIC", 'C', new ItemStack(getMinecraftItem("cobblestone"), 1), 'I', new ItemStack(getMinecraftItem("iron_ingot"), 1), 'B', new ItemStack(ModItems.lightBulb, 1), 'G', new ItemStack(getMinecraftItem("stained_glass"), 1, 15)));
         }
+        if (ConfigHandler.growLight) {
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.blockGrowLight, 1), "III", "CBC", "GGG", 'C', new ItemStack(getMinecraftItem("cobblestone"), 1), 'I', new ItemStack(getMinecraftItem("iron_ingot"), 1), 'B', new ItemStack(ModItems.lightBulb, 1), 'G', new ItemStack(getMinecraftItem("stained_glass"), 1, 6)));
+        }
     }
 }

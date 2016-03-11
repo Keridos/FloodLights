@@ -19,7 +19,7 @@ public class ModBlocks {
     public static Block blockSmallElectricLight;
     public static Block blockUVLight;
     public static Block blockUVLightBlock;
-    public static Block blockGrowLightBlock;
+    public static Block blockGrowLight;
 
     public static void setupBlocks() {
         blockElectricLight = new BlockElectricFloodlight();
@@ -28,7 +28,7 @@ public class ModBlocks {
         blockSmallElectricLight = new BlockSmallElectricFloodlight();
         blockUVLight = new BlockUVLight();
         blockUVLightBlock = new BlockUVLightBlock();
-        blockGrowLightBlock = new BlockGrowLight();
+        blockGrowLight = new BlockGrowLight();
     }
 
     public static void registerBlocks() {
@@ -38,7 +38,7 @@ public class ModBlocks {
         GameRegistry.registerBlock(blockSmallElectricLight, ItemBlockSmallElectricMetaBlock.class, Names.Blocks.SMALL_ELECTRIC_FLOODLIGHT);
         GameRegistry.registerBlock(blockUVLight, Names.Blocks.UV_FLOODLIGHT);
         GameRegistry.registerBlock(blockUVLightBlock, Names.Blocks.UV_LIGHTBLOCK);
-        GameRegistry.registerBlock(blockGrowLightBlock, Names.Blocks.GROW_LIGHT);
+        GameRegistry.registerBlock(blockGrowLight, Names.Blocks.GROW_LIGHT);
     }
 
     public static void registerTileEntities() {

@@ -4,6 +4,7 @@ import cofh.api.energy.IEnergyContainerItem;
 import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.handler.ConfigHandler;
 import de.keridos.floodlights.init.ModBlocks;
+import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.util.BlockPos;
 import de.keridos.floodlights.util.GeneralUtil;
 import de.keridos.floodlights.util.MathUtil;
@@ -12,9 +13,12 @@ import ic2.api.item.ElectricItem;
 import ic2.api.item.IElectricItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.IGrowable;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
 import static de.keridos.floodlights.util.MathUtil.rotate;
 
 /**
@@ -87,12 +91,16 @@ public class TileEntityGrowLight extends TileEntityFLElectric {
                     nextGrowTick = world.getWorldTime() + RandomUtil.getRandomTickTimeoutFromFloatChance(ConfigHandler.chanceGrowLight);
                 }
                 if (update) {
-                    growSource(true);
-                    growSource(false);
+                    if (mode == 0) {
+                        growSource(true);
+                        growSource(false);
+                    }
                     world.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
                     update = false;
                 } else if (!wasActive) {
-                    growSource(false);
+                    if (mode == 0) {
+                        growSource(false);
+                    }
                     world.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
                 }
                 if (storageEU >= (double) realEnergyUsage / 8.0D) {
@@ -102,12 +110,29 @@ public class TileEntityGrowLight extends TileEntityFLElectric {
                 }
                 wasActive = true;
             } else if ((!active || (storage.getEnergyStored() < realEnergyUsage && storageEU < (double) realEnergyUsage / 8.0D)) && wasActive) {
-                growSource(true);
+                if (mode == 0) {
+                    growSource(true);
+                }
                 world.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
                 wasActive = false;
                 timeout = ConfigHandler.timeoutFloodlights;
                 update = false;
             }
+        }
+    }
+
+    public void changeMode(EntityPlayer player) {
+        World world = this.getWorldObj();
+        if (!world.isRemote) {
+            if (mode == 0) {
+                growSource(true);
+            }
+            mode = (mode == 1 ? 0 : mode + 1);
+            if (active && (storage.getEnergyStored() >= ConfigHandler.energyUsage || storageEU >= ConfigHandler.energyUsage / 8.0D) && mode == 0) {
+                growSource(false);
+            }
+            String modeString = (mode == 0 ? Names.Localizations.LIGHTING : Names.Localizations.DARK_LIGHT);
+            player.addChatMessage(new ChatComponentText(safeLocalize(Names.Localizations.MODE) + ": " + safeLocalize(modeString)));
         }
     }
 }
