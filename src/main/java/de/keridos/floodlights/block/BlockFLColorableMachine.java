@@ -11,8 +11,6 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
 
-import java.util.logging.Logger;
-
 import static de.keridos.floodlights.util.RenderUtil.getColorAsInt;
 
 /**
@@ -28,14 +26,14 @@ public class BlockFLColorableMachine extends BlockFL {
         super(unlocName, material, type, hardness);
         setDefaultState(
                 this.blockState.getBaseState().withProperty(COLOR, 16).withProperty(ACTIVE, false).withProperty(FACING,
-                                                                                                                EnumFacing.DOWN));
+                        EnumFacing.DOWN));
     }
 
     @Override
     public IBlockState getStateFromMeta(int meta) {
         if (meta > 5) {
-            return this.getDefaultState().withProperty(FACING, EnumFacing.getFront(meta - 6)).withProperty(ACTIVE,
-                                                                                                           true);
+            return this.getDefaultState().withProperty(FACING, EnumFacing.getFront(meta - 8)).withProperty(ACTIVE,
+                    true);
         } else {
             return this.getDefaultState().withProperty(FACING, EnumFacing.getFront(meta)).withProperty(ACTIVE, false);
         }
@@ -43,29 +41,27 @@ public class BlockFLColorableMachine extends BlockFL {
 
     @Override
     public int getMetaFromState(IBlockState state) {
-        return 6 * (state.getValue(ACTIVE) ? 1 : 0) + state.getValue(FACING).ordinal();
+        return 8 * (state.getValue(ACTIVE) ? 1 : 0) + state.getValue(FACING).ordinal();
     }
 
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
         if (worldIn.getTileEntity(pos) instanceof TileEntityFL) {
-            return worldIn.getBlockState(pos).withProperty(COLOR, ((TileEntityFL) worldIn.getTileEntity(
+            return state.withProperty(COLOR, ((TileEntityFL) worldIn.getTileEntity(
                     pos)).getColor());
-        } else return worldIn.getBlockState(pos).withProperty(COLOR, 16);
+        } else return state.withProperty(COLOR, 16);
     }
 
     @Override
-    protected BlockState createBlockState()
-    {
-        return new BlockState(this, FACING,ACTIVE,COLOR);
+    protected BlockState createBlockState() {
+        return new BlockState(this, FACING, ACTIVE, COLOR);
     }
 
     @Override
     public int colorMultiplier(IBlockAccess worldIn, BlockPos pos, int renderPass) {
-            if (worldIn.getBlockState(pos).getValue(COLOR) != null) {
-                Logger.getGlobal().info("color: "+ worldIn.getBlockState(pos).getValue(COLOR));
-                return getColorAsInt(worldIn.getBlockState(pos).getValue(COLOR));
-            }
+        if (worldIn.getBlockState(pos).getValue(COLOR) != null) {
+            return getColorAsInt(worldIn.getBlockState(pos).getValue(COLOR));
+        }
         return super.colorMultiplier(worldIn, pos, renderPass);
     }
 }

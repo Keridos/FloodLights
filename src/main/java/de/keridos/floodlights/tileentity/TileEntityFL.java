@@ -82,6 +82,7 @@ public class TileEntityFL extends TileEntity {
 
     public void setColor(int color) {
         this.color = color;
+        this.worldObj.markBlockRangeForRenderUpdate(this.pos,this.pos);
     }
 
     @Override
