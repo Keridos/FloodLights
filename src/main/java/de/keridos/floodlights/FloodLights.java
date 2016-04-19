@@ -1,20 +1,16 @@
 package de.keridos.floodlights;
 
 import de.keridos.floodlights.compatability.ModCompatibility;
-import de.keridos.floodlights.core.EventListener;
-import de.keridos.floodlights.core.FMLEventListener;
-import de.keridos.floodlights.handler.PacketHandler;
 import de.keridos.floodlights.core.proxy.CommonProxy;
 import de.keridos.floodlights.handler.ConfigHandler;
 import de.keridos.floodlights.handler.GuiHandler;
+import de.keridos.floodlights.handler.PacketHandler;
 import de.keridos.floodlights.handler.RecipeHandler;
 import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.init.ModItems;
 import de.keridos.floodlights.reference.Reference;
 import de.keridos.floodlights.util.RenderUtil;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -52,13 +48,14 @@ public class FloodLights {
     public void preInit(FMLPreInitializationEvent event) {
         configHandler.initConfig(new Configuration(event.getSuggestedConfigurationFile()));
         ModBlocks.setupBlocks();
+        ModBlocks.registerBlocks();
+        ModBlocks.registerTileEntities();
+        proxy.initItemModels();
+        ModItems.init();
     }
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
-        ModBlocks.registerBlocks();
-        ModBlocks.registerTileEntities();
-        ModItems.init();
         PacketHandler.init();
         recipeHandler.initRecipes();
         modCompatibility.performModCompat();
@@ -76,8 +73,8 @@ public class FloodLights {
     }
 
     public void registerEventListeners() {
-        MinecraftForge.EVENT_BUS.register(EventListener.getInstance());
+        //MinecraftForge.EVENT_BUS.register(EventListener.getInstance());
         // some events, especially tick, are handled on FML bus
-        FMLCommonHandler.instance().bus().register(FMLEventListener.getInstance());
+        //FMLCommonHandler.instance().bus().register(FMLEventListener.getInstance());
     }
 }

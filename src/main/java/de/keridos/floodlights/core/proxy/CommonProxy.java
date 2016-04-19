@@ -12,6 +12,10 @@ public class CommonProxy {
         RenderUtil.setupColors();
     }
 
+    public void initItemModels(){
+
+    }
+
     public void initSounds() {
 
     }

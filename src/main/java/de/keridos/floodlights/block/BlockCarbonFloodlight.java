@@ -17,7 +17,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumFacing;
@@ -130,10 +129,6 @@ public class BlockCarbonFloodlight extends BlockFLColorableMachine implements IT
                 ((TileEntityFL) world.getTileEntity(pos)).setColor(15 - player.getHeldItem().getMetadata());
                 world.setBlockState(pos, blockState.withProperty(COLOR, 15 - player.getHeldItem().getMetadata()), 2);
                 Logger.getGlobal().info("colorset: " + (15 - player.getHeldItem().getMetadata()) );
-                return true;
-            } else if (player.getHeldItem().getItem() == Item.getItemFromBlock(Blocks.wool) && !player.isSneaking()) {
-                ((TileEntityFL) world.getTileEntity(pos)).setColor(16);
-                world.setBlockState(pos, blockState.withProperty(COLOR, 16), 2);
                 return true;
             }
         }

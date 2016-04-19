@@ -29,7 +29,7 @@ public class TileEntityFL extends TileEntity {
         state = 0;
         customName = "";
         owner = "";
-        color = 16;  //16 is vanilla block color, so no color change in rendering
+        color = 0;
     }
 
     public EnumFacing getOrientation() {

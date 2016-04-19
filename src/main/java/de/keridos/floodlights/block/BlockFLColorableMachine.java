@@ -25,7 +25,7 @@ public class BlockFLColorableMachine extends BlockFL {
     public BlockFLColorableMachine(String unlocName, Material material, SoundType type, float hardness) {
         super(unlocName, material, type, hardness);
         setDefaultState(
-                this.blockState.getBaseState().withProperty(COLOR, 16).withProperty(ACTIVE, false).withProperty(FACING,
+                this.blockState.getBaseState().withProperty(COLOR, 0).withProperty(ACTIVE, false).withProperty(FACING,
                         EnumFacing.DOWN));
     }
 
@@ -49,7 +49,7 @@ public class BlockFLColorableMachine extends BlockFL {
         if (worldIn.getTileEntity(pos) instanceof TileEntityFL) {
             return state.withProperty(COLOR, ((TileEntityFL) worldIn.getTileEntity(
                     pos)).getColor());
-        } else return state.withProperty(COLOR, 16);
+        } else return state.withProperty(COLOR, 0);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class BlockFLColorableMachine extends BlockFL {
     @Override
     public int colorMultiplier(IBlockAccess worldIn, BlockPos pos, int renderPass) {
         if (worldIn.getBlockState(pos).getValue(COLOR) != null) {
-            return getColorAsInt(worldIn.getBlockState(pos).getValue(COLOR));
+            return getColorAsInt(getActualState(worldIn.getBlockState(pos),worldIn,pos).getValue(COLOR));
         }
         return super.colorMultiplier(worldIn, pos, renderPass);
     }

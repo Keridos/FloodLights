@@ -1,0 +1,6 @@
+{
+	"parent": "floodlights:defaultItem",
+	"textures": {
+		"layer0": "floodlights:items/glowingFilament"
+	}
+}

@@ -1,13 +1,13 @@
 package de.keridos.floodlights.core.proxy;
 
 import de.keridos.floodlights.client.render.block.TileEntityPhantomLightRenderer;
-import de.keridos.floodlights.client.render.block.TileEntitySmallFoodlightRenderer;
 import de.keridos.floodlights.compatability.IGWHandler;
 import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.init.ModBlocks;
+import de.keridos.floodlights.init.ModItems;
+import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.reference.Reference;
 import de.keridos.floodlights.tileentity.TileEntityPhantomLight;
-import de.keridos.floodlights.tileentity.TileEntitySmallFloodlight;
 import de.keridos.floodlights.util.RenderUtil;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -38,10 +38,23 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void initRenderers() {
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySmallFloodlight.class, new TileEntitySmallFoodlightRenderer());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPhantomLight.class, new TileEntityPhantomLightRenderer());
-        registerItemModel(Item.getItemFromBlock(ModBlocks.blockSmallElectricLight), 0, "BlockSmallElectricFloodlight");
         RenderUtil.setupColors();
+    }
+
+    @Override
+    public void initItemModels() {
+        registerBlockModelAsItem(ModBlocks.blockElectricLight, 0 , Names.Blocks.ELECTRIC_FLOODLIGHT);
+        registerBlockModelAsItem(ModBlocks.blockCarbonLight, 0 , Names.Blocks.CARBON_FLOODLIGHT);
+        registerBlockModelAsItem(ModBlocks.blockUVLight, 0 , Names.Blocks.UV_FLOODLIGHT);
+        registerBlockModelAsItem(ModBlocks.blockSmallElectricLight, 0 , Names.Blocks.SMALL_ELECTRIC_FLOODLIGHT);
+        registerItemModel(ModItems.carbonDissolver, 0, Names.Items.CARBON_DISSOLVER);
+        registerItemModel(ModItems.carbonLantern, 0, Names.Items.CARBON_LANTERN);
+        registerItemModel(ModItems.glowingFilament, 0, Names.Items.GLOWING_FILAMENT);
+        registerItemModel(ModItems.lightBulb, 0, Names.Items.ELECTRIC_INCANDESCENT_LIGHT_BULB);
+        registerItemModel(ModItems.lightDebugTool, 0, Names.Items.LIGHT_DEBUG_TOOL);
+        registerItemModel(ModItems.mantle, 0, Names.Items.MANTLE);
+        registerItemModel(ModItems.rawFilament, 0, Names.Items.RAW_FILAMENT);
     }
 
     @Override

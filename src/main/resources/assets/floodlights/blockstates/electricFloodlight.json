@@ -11,7 +11,7 @@
 	},
 	"variants": {
 		"normal": [{}],
-		"inventory": [{}],
+		"inventory": [{"x": 90}],
 		"facing": {
 			"down": {
 				"x": 180

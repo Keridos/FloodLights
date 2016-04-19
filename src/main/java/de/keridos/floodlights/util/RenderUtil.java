@@ -102,7 +102,7 @@ public class RenderUtil {
     }
 
     public static int getColorAsInt(int colorvalue) {
-        return Math.round(255 * r[colorvalue]) + Math.round(256 * 255 * g[colorvalue]) + Math.round(256 * 256 * 255 * b[colorvalue]);
+        return Math.round(256 * 256 * 255 * r[colorvalue]) + Math.round(256 * 255 * g[colorvalue]) + Math.round(255 * b[colorvalue]);
 
     }
 }

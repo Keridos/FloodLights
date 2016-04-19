@@ -12,6 +12,9 @@ import de.keridos.floodlights.util.MathUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.PropertyBool;
+import net.minecraft.block.properties.PropertyInteger;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
@@ -40,18 +43,16 @@ import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
  * This Class defines the block properties of the electric floodlight.
  */
 public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implements ITileEntityProvider {
+    public static final PropertyBool ROTATIONSTATE = PropertyBool.create("ROTATIONSTATE");
+    public static final PropertyInteger MODEL = PropertyInteger.create("model", 0, 15);
 
     public BlockSmallElectricFloodlight() {
         super(Names.Blocks.SMALL_ELECTRIC_FLOODLIGHT, Material.rock, soundTypeMetal, 2.5F);
+        setDefaultState(
+                this.blockState.getBaseState().withProperty(COLOR, 0).withProperty(ACTIVE, false).withProperty(FACING,
+                        EnumFacing.DOWN).withProperty(MODEL, 0).withProperty(ROTATIONSTATE, false));
         setHarvestLevel("pickaxe", 1);
     }
-
-    @Override
-    public int getRenderType() {
-        return -1;
-    }
-    
-    
 
     @Override
     public boolean isOpaqueCube() {
@@ -81,6 +82,29 @@ public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implem
                 ((TileEntitySmallFloodlight) world.getTileEntity(pos)).setRedstone(false);
             }
         }
+    }
+
+    @Override
+    public IBlockState getStateFromMeta(int meta) {
+        return this.getDefaultState().withProperty(MODEL, meta);
+    }
+
+    @Override
+    public int getMetaFromState(IBlockState state) {
+        return state.getValue(MODEL);
+    }
+
+    @Override
+    public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
+        if (worldIn.getTileEntity(pos) instanceof TileEntitySmallFloodlight) {
+            TileEntitySmallFloodlight te = ((TileEntitySmallFloodlight) worldIn.getTileEntity(pos));
+            return state.withProperty(COLOR, te.getColor()).withProperty(FACING, te.getOrientation()).withProperty(ROTATIONSTATE, te.getRotationState());
+        } else return state.withProperty(COLOR, 16);
+    }
+
+    @Override
+    protected BlockState createBlockState() {
+        return new BlockState(this, FACING, ACTIVE, COLOR, ROTATIONSTATE, MODEL);
     }
 
     @Override
@@ -140,9 +164,6 @@ public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implem
             if (player.getHeldItem().getItem() == Items.dye) {
                 ((TileEntityFL) world.getTileEntity(pos)).setColor(15 - player.getHeldItem().getItemDamage());
                 return true;
-            } else if (player.getHeldItem().getItem() == Item.getItemFromBlock(Blocks.wool) && !player.isSneaking()) {
-                ((TileEntityFL) world.getTileEntity(pos)).setColor(16);
-                return true;
             }
         }
         if (!world.isRemote) {
@@ -156,13 +177,13 @@ public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implem
     public TileEntitySmallFloodlight createNewTileEntity(World world, int metadata) {
         return new TileEntitySmallFloodlight();
     }
-    
+
 
     @Override
     public AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state) {
         return null;
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getSelectedBoundingBox(World world, BlockPos pos) {
@@ -212,11 +233,11 @@ public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implem
         this.maxZ = newMax[2] + 0.5;
 
         return new AxisAlignedBB((double) pos.getX() + this.minX,
-                                 (double) pos.getY() + this.minY,
-                                 (double) pos.getZ() + this.minZ,
-                                 (double) pos.getX() + this.maxX,
-                                 (double) pos.getY() + this.maxY,
-                                 (double) pos.getZ() + this.maxZ);
+                (double) pos.getY() + this.minY,
+                (double) pos.getZ() + this.minZ,
+                (double) pos.getX() + this.maxX,
+                (double) pos.getY() + this.maxY,
+                (double) pos.getZ() + this.maxZ);
     }
 
     @Override
@@ -226,7 +247,7 @@ public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implem
     }
 
     @Override
-    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack){
+    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
         if (world.getTileEntity(pos) instanceof TileEntityFL) {
             if (stack.hasDisplayName()) {
                 ((TileEntityFL) world.getTileEntity(pos)).setCustomName(stack.getDisplayName());
@@ -235,8 +256,6 @@ public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implem
                     getFacing(placer));
         }
     }
-
-
 
     @Override
     public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
