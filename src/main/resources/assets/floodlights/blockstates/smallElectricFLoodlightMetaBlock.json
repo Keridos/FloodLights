@@ -1,7 +1,7 @@
 {
 	"forge_marker": 1,
 	"defaults": {
-		"model": "floodlights:blockSmallFluorescentFloodlight", // might be top_bottom, I don't remember. You probably need a copy of this model with all the faces specifying tintindex so that colormultiplier will work (see the gist for more info)
+		"model": "floodlights:blockSmallFluorescentFloodlight",
 		"transform": "forge:default-block",
 		"textures": {
 			"bottom": "floodlights:blocks/fluorescentSmallLight_bot",
@@ -13,6 +13,18 @@
 	"variants": {
 		"normal": [{}],
 		"inventory": [{}],
+		"active": {
+			"true": {
+			},
+			"false": {
+			}
+		},
+		"rotationstate": {
+			"true": {
+			},
+			"false": {
+			}
+		},
 		"facing": {
 			"down": { "x": 270 },
 			"up": { "x": 90 }, // 90 and 270 might be flipped, I don't remember :p
@@ -42,10 +54,11 @@
 		},
 		"model": {
 			"0": {
-				"model": "FloodLights:blockSmallFluorescentFloodlight",
+				"model": "floodlights:blockSmallFluorescentFloodlight",
 				"active": {
 					"true": {
 						"textures": {
+							"bottom": "floodlights:blocks/fluorescentSmallLight_bot",
 							"top": "floodlights:blocks/fluorescentSmallLight_top_on", // override default texture
 							"side": "floodlights:blocks/fluorescentSmallLight_side_long_on",
 							"sideshort": "floodlights:blocks/fluorescentSmallLight_side_short_on"
@@ -53,6 +66,7 @@
 					},
 					"false": {
 						"textures": {
+							"bottom": "floodlights:blocks/fluorescentSmallLight_bot",
 							"top": "floodlights:blocks/fluorescentSmallLight_top_off", // override default texture
 							"side": "floodlights:blocks/fluorescentSmallLight_side_long_off",
 							"sideshort": "floodlights:blocks/fluorescentSmallLight_side_short_off"
