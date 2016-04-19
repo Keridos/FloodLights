@@ -26,7 +26,8 @@ public class MessageTileEntityFL implements IMessage {
         }
 
         @Override
-        public IMessage onMessage(MessageTileEntityFL message, MessageContext ctx) {
+        public IMessage onMessage(MessageTileEntityFL messagein, MessageContext ctx) {
+            final MessageTileEntityFL message = messagein;
             Minecraft.getMinecraft().addScheduledTask(new Runnable() {
                 @Override
                 public void run() {
