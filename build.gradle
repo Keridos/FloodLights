@@ -105,7 +105,7 @@ archivesBaseName = "${config.mod_id}-${config.minecraft_version}"
 minecraft {
     version = "${config.forge_version}"
     if (file('../run2').exists()) {
-        runDir = "../run"
+        runDir = "../run2"
     } else {
         runDir = "assets"
     }

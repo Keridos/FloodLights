@@ -179,10 +179,10 @@ public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implem
     }
 
 
-    @Override
+    /*@Override
     public AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state) {
         return null;
-    }
+    }*/
 
     @Override
     @SideOnly(Side.CLIENT)
