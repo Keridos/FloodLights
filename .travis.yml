@@ -11,5 +11,4 @@ jdk:
 before_install:
   - chmod a+x gradlew
   - rm -rf libs/ build/
-script: gradle clean check
-after_script:
+script: gradlew clean check

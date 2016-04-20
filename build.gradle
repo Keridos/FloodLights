@@ -176,8 +176,10 @@ dependencies {
 }
 
 // this fixes dev environments for IDEA 14 users.
+/*
 sourceSets {
     main {
         output.resourcesDir = output.classesDir
     }
 }
+*/
