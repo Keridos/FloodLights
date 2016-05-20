@@ -27,7 +27,7 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric {
             wasAddedToEnergyNet = true;
         }
         if (!world.isRemote) {
-            int realEnergyUsage = ConfigHandler.energyUsage / (mode == 0 ? 1 : 2);
+            int realEnergyUsage = ConfigHandler.energyUsage * (mode == 0 ? 1 : 2);
             if (inventory[0] != null) {
                 if (ModCompatibility.IC2Loaded) {
                     if (inventory[0].getItem() instanceof IElectricItem) {
@@ -100,7 +100,7 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric {
     public void changeMode(EntityPlayer player) {
         World world = this.getWorldObj();
         if (!world.isRemote) {
-            int realEnergyUsage = ConfigHandler.energyUsage / (mode == 0 ? 1 : 4);
+            int realEnergyUsage = ConfigHandler.energyUsage * (mode == 0 ? 1 : 4);
             removeSource(this.mode);
             mode = (mode == 2 ? 0 : mode + 1);
             if (active && (storage.getEnergyStored() >= realEnergyUsage || storageEU >= realEnergyUsage / 8.0D)) {
