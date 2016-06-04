@@ -1,0 +1,418 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "floodlights:smallfluorescentfloodlight",
+		"transform": "forge:default-block",
+		"textures": {
+			"bottom": "floodlights:blocks/fluorescentSmallLight_bot",
+			"topon": "floodlights:blocks/fluorescentSmallLight_top_on",
+			"sideon": "floodlights:blocks/fluorescentSmallLight_side_long_on",
+			"sideshorton": "floodlights:blocks/fluorescentSmallLight_side_short_on",
+			"topoff": "floodlights:blocks/fluorescentSmallLight_top_off",
+			"sideoff": "floodlights:blocks/fluorescentSmallLight_side_long_off",
+			"sideshortoff": "floodlights:blocks/fluorescentSmallLight_side_short_off"
+		}
+	},
+	"variants": {
+		"active=true,facing=down,rotationstate=true": [
+			{
+				"textures": {
+					"top": "#topon",
+					"side": "#sideon",
+					"sideshort": "#sideshorton"
+				},
+				"transform": {
+					"rotation": [
+						{
+							"x": 270
+						}
+					]
+				}
+			}
+		],
+		"active=true,facing=down,rotationstate=false": [
+			{
+				"textures": {
+					"top": "#topon",
+					"side": "#sideon",
+					"sideshort": "#sideshorton"
+				},
+				"transform": {
+					"rotation": [
+						{
+							"x": 270
+						},
+						{
+							"z": 90
+						}
+					]
+				}
+			}
+		],
+		"active=true,facing=up,rotationstate=true": [
+			{
+				"textures": {
+					"top": "#topon",
+					"side": "#sideon",
+					"sideshort": "#sideshorton"
+				},
+				"transform": {
+					"rotation": [
+						{
+							"x": 90
+						}
+					]
+				}
+			}
+		],
+		"active=true,facing=up,rotationstate=false": [
+			{
+				"textures": {
+					"top": "#topon",
+					"side": "#sideon",
+					"sideshort": "#sideshorton"
+				},
+				"transform": {
+					"rotation": [
+						{
+							"x": 90
+						},
+						{
+							"z": 90
+						}
+					]
+				}
+			}
+		],
+		"active=true,facing=north,rotationstate=true": [
+			{
+				"textures": {
+					"top": "#topon",
+					"side": "#sideon",
+					"sideshort": "#sideshorton"
+				},
+				"transform": {
+					"rotation": [
+						{
+							"z": 90
+						}
+					]
+				}
+			}
+		],
+		"active=true,facing=north,rotationstate=false": [
+			{
+				"textures": {
+					"top": "#topon",
+					"side": "#sideon",
+					"sideshort": "#sideshorton"
+				}
+			}
+		],
+		"active=true,facing=south,rotationstate=true": [
+			{
+				"textures": {
+					"top": "#topon",
+					"side": "#sideon",
+					"sideshort": "#sideshorton"
+				},
+				"transform": {
+					"rotation": [
+						{
+							"z": 90
+						},
+						{
+							"y": 180
+						}
+					]
+				}
+			}
+		],
+		"active=true,facing=south,rotationstate=false": [
+			{
+				"textures": {
+					"top": "#topon",
+					"side": "#sideon",
+					"sideshort": "#sideshorton"
+				},
+				"transform": {
+					"rotation": [
+						{
+							"y": 180
+						}
+					]
+				}
+			}
+		],
+		"active=true,facing=west,rotationstate=true": [
+			{
+				"textures": {
+					"top": "#topon",
+					"side": "#sideon",
+					"sideshort": "#sideshorton"
+				},
+				"transform": {
+					"rotation": [
+						{
+							"y": 90
+						},
+						{
+							"z": 90
+						}
+					]
+				}
+			}
+		],
+		"active=true,facing=west,rotationstate=false": [
+			{
+				"textures": {
+					"top": "#topon",
+					"side": "#sideon",
+					"sideshort": "#sideshorton"
+				},
+				"transform": {
+					"rotation": [
+						{
+							"y": 90
+						}
+					]
+				}
+			}
+		],
+		"active=true,facing=east,rotationstate=true": [
+			{
+				"textures": {
+					"top": "#topon",
+					"side": "#sideon",
+					"sideshort": "#sideshorton"
+				},
+				"transform": {
+					"rotation": [
+						{
+							"y": 270
+						},
+						{
+							"z": 90
+						}
+					]
+				}
+			}
+		],
+		"active=true,facing=east,rotationstate=false": [
+			{
+				"textures": {
+					"top": "#topon",
+					"side": "#sideon",
+					"sideshort": "#sideshorton"
+				},
+				"transform": {
+					"rotation": [
+						{
+							"y": 270
+						}
+					]
+				}
+			}
+		],
+		"active=false,facing=down,rotationstate=true": [
+			{
+				"textures": {
+					"top": "#topon",
+					"side": "#sideoff",
+					"sideshort": "#sideshortoff"
+				},
+				"transform": {
+					"rotation": [
+						{
+							"x": 270
+						}
+					]
+				}
+			}
+		],
+		"active=false,facing=down,rotationstate=false": [
+			{
+				"textures": {
+					"top": "#topon",
+					"side": "#sideoff",
+					"sideshort": "#sideshortoff"
+				},
+				"transform": {
+					"rotation": [
+						{
+							"x": 270
+						},
+						{
+							"z": 90
+						}
+					]
+				}
+			}
+		],
+		"active=false,facing=up,rotationstate=true": [
+			{
+				"textures": {
+					"top": "#topon",
+					"side": "#sideoff",
+					"sideshort": "#sideshortoff"
+				},
+				"transform": {
+					"rotation": [
+						{
+							"x": 90
+						}
+					]
+				}
+			}
+		],
+		"active=false,facing=up,rotationstate=false": [
+			{
+				"textures": {
+					"top": "#topon",
+					"side": "#sideoff",
+					"sideshort": "#sideshortoff"
+				},
+				"transform": {
+					"rotation": [
+						{
+							"x": 90
+						},
+						{
+							"z": 90
+						}
+					]
+				}
+			}
+		],
+		"active=false,facing=north,rotationstate=true": [
+			{
+				"textures": {
+					"top": "#topon",
+					"side": "#sideoff",
+					"sideshort": "#sideshortoff"
+				},
+				"transform": {
+					"rotation": [
+						{
+							"z": 90
+						}
+					]
+				}
+			}
+		],
+		"active=false,facing=north,rotationstate=false": [
+			{
+				"textures": {
+					"top": "#topon",
+					"side": "#sideoff",
+					"sideshort": "#sideshortoff"
+				}
+			}
+		],
+		"active=false,facing=south,rotationstate=true": [
+			{
+				"textures": {
+					"top": "#topon",
+					"side": "#sideoff",
+					"sideshort": "#sideshortoff"
+				},
+				"transform": {
+					"rotation": [
+						{
+							"z": 90
+						},
+						{
+							"y": 180
+						}
+					]
+				}
+			}
+		],
+		"active=false,facing=south,rotationstate=false": [
+			{
+				"textures": {
+					"top": "#topon",
+					"side": "#sideoff",
+					"sideshort": "#sideshortoff"
+				},
+				"transform": {
+					"rotation": [
+						{
+							"y": 180
+						}
+					]
+				}
+			}
+		],
+		"active=false,facing=west,rotationstate=true": [
+			{
+				"textures": {
+					"top": "#topon",
+					"side": "#sideoff",
+					"sideshort": "#sideshortoff"
+				},
+				"transform": {
+					"rotation": [
+						{
+							"y": 90
+						},
+						{
+							"z": 90
+						}
+					]
+				}
+			}
+		],
+		"active=false,facing=west,rotationstate=false": [
+			{
+				"textures": {
+					"top": "#topon",
+					"side": "#sideoff",
+					"sideshort": "#sideshortoff"
+				},
+				"transform": {
+					"rotation": [
+						{
+							"y": 90
+						}
+					]
+				}
+			}
+		],
+		"active=false,facing=east,rotationstate=true": [
+			{
+				"textures": {
+					"top": "#topon",
+					"side": "#sideoff",
+					"sideshort": "#sideshortoff"
+				},
+				"transform": {
+					"rotation": [
+						{
+							"y": 270
+						},
+						{
+							"z": 90
+						}
+					]
+				}
+			}
+		],
+		"active=false,facing=east,rotationstate=false": [
+			{
+				"textures": {
+					"top": "#topon",
+					"side": "#sideoff",
+					"sideshort": "#sideshortoff"
+				},
+				"transform": {
+					"rotation": [
+						{
+							"y": 270
+						}
+					]
+				}
+			}
+		]
+	}
+}

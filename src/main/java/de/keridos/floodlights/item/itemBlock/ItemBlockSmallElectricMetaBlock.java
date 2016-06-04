@@ -24,10 +24,17 @@ public class ItemBlockSmallElectricMetaBlock extends ItemBlock {
 
     public ItemBlockSmallElectricMetaBlock(Block block) {
         super(block);
+        setHasSubtypes(true);
     }
 
     @Override
     public String getUnlocalizedName(ItemStack itemStack) {
         return this.getUnlocalizedName() + "_" + subNames[itemStack.getItemDamage()];
     }
+
+    @Override
+    public int getMetadata(int damage) {
+        return damage;
+    }
+
 }

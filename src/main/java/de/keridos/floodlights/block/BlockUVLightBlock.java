@@ -7,8 +7,11 @@ import de.keridos.floodlights.tileentity.TileEntityUVLightBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by Keridos on 15/09/2015.
@@ -21,13 +24,13 @@ public class BlockUVLightBlock extends BlockPhantomLight {
     }
 
     @Override
-    public TileEntityUVLightBlock createNewTileEntity(World world, int metadata) {
-        return new TileEntityUVLightBlock();
+    public int getRenderType() {
+        return 3;
     }
 
     @Override
-    public int getRenderType() {
-        return 0;
+    public TileEntityUVLightBlock createNewTileEntity(World world, int metadata) {
+        return new TileEntityUVLightBlock();
     }
 
     @Override
@@ -38,5 +41,17 @@ public class BlockUVLightBlock extends BlockPhantomLight {
     @Override
     public int getLightValue() {
         return 4;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public EnumWorldBlockLayer getBlockLayer()
+    {
+        return EnumWorldBlockLayer.CUTOUT;
+    }
+
+    @Override
+    public boolean isFullCube()
+    {
+        return false;
     }
 }

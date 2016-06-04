@@ -22,8 +22,6 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
-import java.util.logging.Logger;
-
 import static de.keridos.floodlights.util.GeneralUtil.getMinecraftItem;
 import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
 
@@ -42,7 +40,7 @@ public class BlockCarbonFloodlight extends BlockFLColorableMachine implements IT
     public boolean isOpaqueCube() {
         return true;
     }
-    
+
 
     @Override
     public void onNeighborBlockChange(World world, BlockPos pos, IBlockState blockState, Block neighborBlock) {
@@ -69,7 +67,7 @@ public class BlockCarbonFloodlight extends BlockFLColorableMachine implements IT
             }
         }
     }
-    
+
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState blockState, EntityPlayer player, EnumFacing side, float p_149727_7_, float p_149727_8_, float p_149727_9_) {
         if (!world.isRemote && player.getHeldItem() == null && player.isSneaking()) {
@@ -81,59 +79,20 @@ public class BlockCarbonFloodlight extends BlockFLColorableMachine implements IT
         } else if (!world.isRemote && player.getHeldItem() != null) {
             if (!ModCompatibility.WrenchAvailable && player.getHeldItem().getItem() == getMinecraftItem("stick")) {
                 ((TileEntityCarbonFloodlight) world.getTileEntity(pos)).changeMode(player);
-            }
-            /*if (ModCompatibility.BCLoaded) {
-                if (!player.isSneaking() && player.getHeldItem().getItem() instanceof IToolWrench) {
-                    ((TileEntityCarbonFloodlight) world.getTileEntity(pos)).changeMode(player);
-                    return true;
-                } else if (player.isSneaking() && player.getHeldItem().getItem() instanceof IToolWrench) {
-                    world.func_147480_a(pos, true);
-                    return true;
-                }
-            }
-            if (ModCompatibility.EnderIOLoaded) {
-                if (!player.isSneaking() && player.getHeldItem().getItem() instanceof ITool) {
-                    ((TileEntityCarbonFloodlight) world.getTileEntity(pos)).changeMode(player);
-                    return true;
-                } else if (player.isSneaking() && player.getHeldItem().getItem() instanceof ITool) {
-                    world.func_147480_a(pos, true);
-                    return true;
-                }
-            }
-            if (ModCompatibility.CofhCoreLoaded) {
-                if (!player.isSneaking() && player.getHeldItem().getItem() instanceof IToolHammer) {
-                    ((TileEntityCarbonFloodlight) world.getTileEntity(pos)).changeMode(player);
-                    return true;
-                } else if (player.isSneaking() && player.getHeldItem().getItem() instanceof IToolHammer) {
-                    world.func_147480_a(pos, true);
-                    return true;
-                }
-            }
-            if (ModCompatibility.IC2Loaded) {
-                if (!player.isSneaking() && player.getHeldItem().getItem().getUnlocalizedName().equals("ic2.itemToolWrench")) {
-                    ((TileEntityCarbonFloodlight) world.getTileEntity(pos)).changeMode(player);
-                    return true;
-                } else if (player.isSneaking() && player.getHeldItem().getItem().getUnlocalizedName().equals("ic2.itemToolWrench")) {
-                    world.func_147480_a(pos, true);
-                    return true;
-                }
-                if (!player.isSneaking() && player.getHeldItem().getItem().getUnlocalizedName().equals("ic2.itemToolWrenchElectric")) {
-                    ((TileEntityCarbonFloodlight) world.getTileEntity(pos)).changeMode(player);
-                    return true;
-                } else if (player.isSneaking() && player.getHeldItem().getItem().getUnlocalizedName().equals("ic2.itemToolWrenchElectric")) {
-                    world.func_147480_a(pos, true);
-                    return true;
-                }
-            }*/
-            if (player.getHeldItem().getItem() == Items.dye) {
+                return true;
+            } else if (player.isSneaking() && ModCompatibility.getInstance().isItemValidWrench(player.getHeldItem())) {
+                world.destroyBlock(pos, true);
+                return true;
+            } else if (ModCompatibility.getInstance().isItemValidWrench(player.getHeldItem())) {
+                ((TileEntityCarbonFloodlight) world.getTileEntity(pos)).changeMode(player);
+                return true;
+            } else if (player.getHeldItem().getItem() == Items.dye) {
                 ((TileEntityFL) world.getTileEntity(pos)).setColor(15 - player.getHeldItem().getMetadata());
-                world.setBlockState(pos, blockState.withProperty(COLOR, 15 - player.getHeldItem().getMetadata()), 2);
-                Logger.getGlobal().info("colorset: " + (15 - player.getHeldItem().getMetadata()) );
                 return true;
             }
         }
         if (!world.isRemote) {
-            player.openGui(FloodLights.instance, 0, world,  pos.getX(), pos.getY(), pos.getZ());
+            player.openGui(FloodLights.instance, 0, world, pos.getX(), pos.getY(), pos.getZ());
             return true;
         } else {
             return true;

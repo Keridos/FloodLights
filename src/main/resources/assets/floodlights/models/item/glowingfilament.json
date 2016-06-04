@@ -1,6 +1,6 @@
 {
 	"parent": "floodlights:item/defaultitem",
 	"textures": {
-		"layer0": "floodlights:items/mantle"
+		"layer0": "floodlights:items/glowingFilament"
 	}
 }

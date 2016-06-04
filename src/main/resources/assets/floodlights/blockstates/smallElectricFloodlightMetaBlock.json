@@ -1,95 +1,27 @@
 {
 	"forge_marker": 1,
 	"defaults": {
-		"model": "floodlights:blockSmallFluorescentFloodlight",
+		"model": "floodlights:squarefluorescentfloodlight",
 		"transform": "forge:default-block",
 		"textures": {
-			"bottom": "floodlights:blocks/fluorescentSmallLight_bot",
-			"side": "floodlights:blocks/fluorescentSmallLight_side_long_on",
-			"sideshort": "floodlights:blocks/fluorescentSmallLight_side_short_on",
-			"top": "floodlights:blocks/fluorescentSmallLight_top_on" // set some default textures, that cascade down to all variants below
+			"bottom": "floodlights:blocks/fluorescentSquareLight_bot",
+			"top": "floodlights:blocks/fluorescentSquareLight_top_off",
+			"side": "floodlights:blocks/fluorescentSquareLight_side_off",
+			"sideshort": "floodlights:blocks/fluorescentSquareLight_side_off"
 		}
 	},
 	"variants": {
-		"normal": [{}],
-		"inventory": [{}],
-		"active": {
-			"true": {
-			},
-			"false": {
-			}
-		},
-		"rotationstate": {
-			"true": {
-			},
-			"false": {
-			}
-		},
-		"facing": {
-			"down": { "x": 270 },
-			"up": { "x": 90 }, // 90 and 270 might be flipped, I don't remember :p
-			"north": {},
-			"south": { "y": 180 },
-			"west": { "y": 270 },
-			"east": { "y": 90 }
-		},
-		"color": {
-			"0": {},
-			"1": {},
-			"2": {},
-			"3": {},
-			"4": {},
-			"5": {},
-			"6": {},
-			"7": {},
-			"8": {},
-			"9": {},
-			"10": {},
-			"11": {},
-			"12": {},
-			"13": {},
-			"14": {},
-			"15": {},
-			"16": {}
-		},
-		"model": {
-			"0": {
-				"model": "floodlights:blockSmallFluorescentFloodlight",
-				"active": {
-					"true": {
-						"textures": {
-							"bottom": "floodlights:blocks/fluorescentSmallLight_bot",
-							"top": "floodlights:blocks/fluorescentSmallLight_top_on", // override default texture
-							"side": "floodlights:blocks/fluorescentSmallLight_side_long_on",
-							"sideshort": "floodlights:blocks/fluorescentSmallLight_side_short_on"
-						}
-					},
-					"false": {
-						"textures": {
-							"bottom": "floodlights:blocks/fluorescentSmallLight_bot",
-							"top": "floodlights:blocks/fluorescentSmallLight_top_off", // override default texture
-							"side": "floodlights:blocks/fluorescentSmallLight_side_long_off",
-							"sideshort": "floodlights:blocks/fluorescentSmallLight_side_short_off"
-						}
-					}
-				}
-			},
-			"1": {"model": "FloodLights:blockSquareElectricFloodlight"},
-			"2": {},
-			"3": {},
-			"4": {},
-			"5": {},
-			"6": {},
-			"7": {},
-			"8": {},
-			"9": {},
-			"10": {},
-			"11": {},
-			"12": {},
-			"13": {},
-			"14": {},
-			"15": {},
-			"16": {}
-		}
+		"inventory_square": [
+			{}
+		],
+		"inventory_strip": [
+			{"model": "floodlights:smallfluorescentfloodlight",
+				"textures": {
+					"bottom": "floodlights:blocks/fluorescentSmallLight_bot",
+					"top": "floodlights:blocks/fluorescentSmallLight_top_off",
+					"side": "floodlights:blocks/fluorescentSmallLight_side_long_off",
+					"sideshort": "floodlights:blocks/fluorescentSmallLight_side_short_off"
+				}}
+		]
 	}
 }

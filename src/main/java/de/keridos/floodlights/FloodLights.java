@@ -49,8 +49,8 @@ public class FloodLights {
         ModBlocks.setupBlocks();
         ModBlocks.registerBlocks();
         ModBlocks.registerTileEntities();
-        proxy.initItemModels();
         ModItems.init();
+        proxy.preInit();
     }
 
     @Mod.EventHandler

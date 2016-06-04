@@ -1,10 +1,10 @@
 package de.keridos.floodlights.block;
 
 import de.keridos.floodlights.FloodLights;
+import de.keridos.floodlights.block.properties.BlockProperties;
 import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.reference.Names;
-import de.keridos.floodlights.tileentity.TileEntityElectricFloodlight;
 import de.keridos.floodlights.tileentity.TileEntityFL;
 import de.keridos.floodlights.tileentity.TileEntityMetaFloodlight;
 import de.keridos.floodlights.tileentity.TileEntitySmallFloodlight;
@@ -13,7 +13,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
-import net.minecraft.block.properties.PropertyInteger;
+import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
@@ -43,14 +43,14 @@ import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
  * This Class defines the block properties of the electric floodlight.
  */
 public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implements ITileEntityProvider {
-    public static final PropertyBool ROTATIONSTATE = PropertyBool.create("ROTATIONSTATE");
-    public static final PropertyInteger MODEL = PropertyInteger.create("model", 0, 15);
+    public static final PropertyBool ROTATIONSTATE = PropertyBool.create("rotationstate");
+    public static final PropertyEnum MODEL = PropertyEnum.create("model", BlockProperties.EnumModel.class);
 
     public BlockSmallElectricFloodlight() {
         super(Names.Blocks.SMALL_ELECTRIC_FLOODLIGHT, Material.rock, soundTypeMetal, 2.5F);
         setDefaultState(
                 this.blockState.getBaseState().withProperty(COLOR, 0).withProperty(ACTIVE, false).withProperty(FACING,
-                        EnumFacing.DOWN).withProperty(MODEL, 0).withProperty(ROTATIONSTATE, false));
+                        EnumFacing.DOWN).withProperty(MODEL, BlockProperties.EnumModel.values()[0]).withProperty(ROTATIONSTATE, false));
         setHarvestLevel("pickaxe", 1);
     }
 
@@ -85,13 +85,14 @@ public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implem
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public IBlockState getStateFromMeta(int meta) {
-        return this.getDefaultState().withProperty(MODEL, meta);
+        return this.getDefaultState().withProperty(MODEL, BlockProperties.EnumModel.values()[meta]);
     }
 
     @Override
     public int getMetaFromState(IBlockState state) {
-        return state.getValue(MODEL);
+        return (((BlockProperties.EnumModel) state.getValue(MODEL)).getID());
     }
 
     @Override
@@ -116,52 +117,15 @@ public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implem
             return true;
         } else if (!world.isRemote && player.getHeldItem() != null) {
             if (!ModCompatibility.WrenchAvailable && player.getHeldItem().getItem() == getMinecraftItem("stick")) {
-                ((TileEntityElectricFloodlight) world.getTileEntity(pos)).changeMode(player);
-            }
-            /*if (ModCompatibility.BCLoaded) {
-                if (player.isSneaking() && player.getHeldItem().getItem() instanceof IToolWrench) {
-                    world.func_147480_a(pos, true);
-                    return true;
-                } else if (player.getHeldItem().getItem() instanceof IToolWrench) {
-                    ((TileEntitySmallFloodlight) world.getTileEntity(pos)).toggleRotationState();
-                    return true;
-                }
-            }
-            if (ModCompatibility.EnderIOLoaded) {
-                if (player.isSneaking() && player.getHeldItem().getItem() instanceof ITool) {
-                    world.func_147480_a(pos, true);
-                    return true;
-                } else if (player.getHeldItem().getItem() instanceof ITool) {
-                    ((TileEntitySmallFloodlight) world.getTileEntity(pos)).toggleRotationState();
-                    return true;
-                }
-            }
-            if (ModCompatibility.CofhCoreLoaded) {
-                if (player.isSneaking() && player.getHeldItem().getItem() instanceof IToolHammer) {
-                    world.func_147480_a(pos, true);
-                    return true;
-                } else if (player.getHeldItem().getItem() instanceof IToolHammer) {
-                    ((TileEntitySmallFloodlight) world.getTileEntity(pos)).toggleRotationState();
-                    return true;
-                }
-            }
-            if (ModCompatibility.IC2Loaded) {
-                if (player.isSneaking() && player.getHeldItem().getItem().getUnlocalizedName().equals("ic2.itemToolWrench")) {
-                    world.func_147480_a(pos, true);
-                    return true;
-                } else if (player.getHeldItem().getItem().getUnlocalizedName().equals("ic2.itemToolWrench")) {
-                    ((TileEntitySmallFloodlight) world.getTileEntity(pos)).toggleRotationState();
-                    return true;
-                }
-                if (player.isSneaking() && player.getHeldItem().getItem().getUnlocalizedName().equals("ic2.itemToolWrenchElectric")) {
-                    world.func_147480_a(pos, true);
-                    return true;
-                } else if (player.getHeldItem().getItem().getUnlocalizedName().equals("ic2.itemToolWrenchElectric")) {
-                    ((TileEntitySmallFloodlight) world.getTileEntity(pos)).toggleRotationState();
-                    return true;
-                }
-            }*/
-            if (player.getHeldItem().getItem() == Items.dye) {
+                ((TileEntitySmallFloodlight) world.getTileEntity(pos)).toggleRotationState();
+                return true;
+            } else if (player.isSneaking() && ModCompatibility.getInstance().isItemValidWrench(player.getHeldItem())) {
+                world.destroyBlock(pos, true);
+                return true;
+            } else if (ModCompatibility.getInstance().isItemValidWrench(player.getHeldItem())) {
+                ((TileEntitySmallFloodlight) world.getTileEntity(pos)).toggleRotationState();
+                return true;
+            } else if (player.getHeldItem().getItem() == Items.dye) {
                 ((TileEntityFL) world.getTileEntity(pos)).setColor(15 - player.getHeldItem().getItemDamage());
                 return true;
             }
@@ -178,66 +142,68 @@ public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implem
         return new TileEntitySmallFloodlight();
     }
 
-
-    /*@Override
+    @Override
     public AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state) {
         return null;
-    }*/
+    }
 
     @Override
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getSelectedBoundingBox(World world, BlockPos pos) {
-        TileEntitySmallFloodlight tileEntitySmallFloodlight = (TileEntitySmallFloodlight) world.getTileEntity(pos);
-        switch (this.getMetaFromState(world.getBlockState(pos))) {
-            case 0:
-                if (!tileEntitySmallFloodlight.getRotationState()) {
-                    this.minX = 0;
-                    this.maxX = 0.1875;
-                    this.minY = 0.3125;
-                    this.maxY = 0.6875;
-                    this.minZ = 0;
-                    this.maxZ = 1;
-                } else {
+        if (world.getTileEntity(pos) instanceof TileEntitySmallFloodlight) {
+            TileEntitySmallFloodlight tileEntitySmallFloodlight = (TileEntitySmallFloodlight) world.getTileEntity(pos);
+            switch (this.getMetaFromState(world.getBlockState(pos))) {
+                case 0:
+                    if (!tileEntitySmallFloodlight.getRotationState()) {
+                        this.minX = 0;
+                        this.maxX = 0.1875;
+                        this.minY = 0.3125;
+                        this.maxY = 0.6875;
+                        this.minZ = 0;
+                        this.maxZ = 1;
+                    } else {
+                        this.minX = 0;
+                        this.maxX = 0.1875;
+                        this.minY = 0;
+                        this.maxY = 1;
+                        this.minZ = 0.3125;
+                        this.maxZ = 0.6875;
+                    }
+                    break;
+                case 1:
                     this.minX = 0;
                     this.maxX = 0.1875;
                     this.minY = 0;
                     this.maxY = 1;
-                    this.minZ = 0.3125;
-                    this.maxZ = 0.6875;
-                }
-                break;
-            case 1:
-                this.minX = 0;
-                this.maxX = 0.1875;
-                this.minY = 0;
-                this.maxY = 1;
-                this.minZ = 0;
-                this.maxZ = 1;
-                break;
-        }
-        this.minX = this.minX - 0.5;
-        this.minY = this.minY - 0.5;
-        this.minZ = this.minZ - 0.5;
-        this.maxX = this.maxX - 0.5;
-        this.maxY = this.maxY - 0.5;
-        this.maxZ = this.maxZ - 0.5;
-        double[] newMinTemp = MathUtil.rotateD(minX, minY, minZ, tileEntitySmallFloodlight.getOrientation());
-        double[] newMaxTemp = MathUtil.rotateD(maxX, maxY, maxZ, tileEntitySmallFloodlight.getOrientation());
-        double[] newMax = MathUtil.sortMinMaxToMax(newMinTemp, newMaxTemp);
-        double[] newMin = MathUtil.sortMinMaxToMin(newMinTemp, newMaxTemp);
-        this.minX = newMin[0] + 0.5;
-        this.minY = newMin[1] + 0.5;
-        this.minZ = newMin[2] + 0.5;
-        this.maxX = newMax[0] + 0.5;
-        this.maxY = newMax[1] + 0.5;
-        this.maxZ = newMax[2] + 0.5;
+                    this.minZ = 0;
+                    this.maxZ = 1;
+                    break;
+            }
+            this.minX = this.minX - 0.5;
+            this.minY = this.minY - 0.5;
+            this.minZ = this.minZ - 0.5;
+            this.maxX = this.maxX - 0.5;
+            this.maxY = this.maxY - 0.5;
+            this.maxZ = this.maxZ - 0.5;
+            double[] newMinTemp = MathUtil.rotateD(minX, minY, minZ, tileEntitySmallFloodlight.getOrientation());
+            double[] newMaxTemp = MathUtil.rotateD(maxX, maxY, maxZ, tileEntitySmallFloodlight.getOrientation());
+            double[] newMax = MathUtil.sortMinMaxToMax(newMinTemp, newMaxTemp);
+            double[] newMin = MathUtil.sortMinMaxToMin(newMinTemp, newMaxTemp);
+            this.minX = newMin[0] + 0.5;
+            this.minY = newMin[1] + 0.5;
+            this.minZ = newMin[2] + 0.5;
+            this.maxX = newMax[0] + 0.5;
+            this.maxY = newMax[1] + 0.5;
+            this.maxZ = newMax[2] + 0.5;
 
-        return new AxisAlignedBB((double) pos.getX() + this.minX,
-                (double) pos.getY() + this.minY,
-                (double) pos.getZ() + this.minZ,
-                (double) pos.getX() + this.maxX,
-                (double) pos.getY() + this.maxY,
-                (double) pos.getZ() + this.maxZ);
+            return new AxisAlignedBB((double) pos.getX() + this.minX,
+                    (double) pos.getY() + this.minY,
+                    (double) pos.getZ() + this.minZ,
+                    (double) pos.getX() + this.maxX,
+                    (double) pos.getY() + this.maxY,
+                    (double) pos.getZ() + this.maxZ);
+        }
+        return super.getSelectedBoundingBox(world,pos);
     }
 
     @Override
@@ -278,4 +244,12 @@ public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implem
             subItems.add(new ItemStack(ModBlocks.blockSmallElectricLight, 1, i));
         }
     }
+
+    @Override
+    public boolean isFullCube() {
+        return false;
+    }
+
+
+
 }

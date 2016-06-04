@@ -1,12 +1,12 @@
 {
 	"forge_marker": 1,
 	"defaults": {
-		"model": "floodlights:colorable_cube_bottom_top", // might be top_bottom, I don't remember. You probably need a copy of this model with all the faces specifying tintindex so that colormultiplier will work (see the gist for more info)
+		"model": "floodlights:colorable_cube_bottom_top",
 		"transform": "forge:default-block",
 		"textures": {
 			"top": "floodlights:blocks/electricFloodlight_top",
 			"side":	"floodlights:blocks/electricFloodlight_side",
-			"bottom": "floodlights:blocks/electricFloodlight_bot" // set some default textures, that cascade down to all variants below
+			"bottom": "floodlights:blocks/electricFloodlight_bot"
 		}
 	},
 	"variants": {
@@ -43,25 +43,6 @@
 					"top": "floodlights:blocks/electricFloodlight_top"
 				}
 			}
-		},
-		"color": {
-			"0": {},
-			"1": {},
-			"2": {},
-			"3": {},
-			"4": {},
-			"5": {},
-			"6": {},
-			"7": {},
-			"8": {},
-			"9": {},
-			"10": {},
-			"11": {},
-			"12": {},
-			"13": {},
-			"14": {},
-			"15": {},
-			"16": {}
 		}
 	}
 }

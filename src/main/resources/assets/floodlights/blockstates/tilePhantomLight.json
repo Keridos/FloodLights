@@ -1,7 +1,7 @@
 {
 	"forge_marker": 1,
 	"defaults": {
-		"model": "minecraft:air"
+		"model": "builtin/generated"
 	},
 	"variants": {
 		"normal": [{}],

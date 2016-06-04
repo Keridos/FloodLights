@@ -1,6 +1,7 @@
 package de.keridos.floodlights.tileentity;
 
 import cofh.api.energy.IEnergyContainerItem;
+import de.keridos.floodlights.block.BlockFLColorableMachine;
 import de.keridos.floodlights.handler.ConfigHandler;
 import de.keridos.floodlights.init.ModBlocks;
 import net.minecraft.util.BlockPos;
@@ -72,11 +73,11 @@ public class TileEntityUVLight extends TileEntityFLElectric {
                 if (update) {
                     UVSource(true);
                     UVSource(false);
-                    world.setBlockState(this.pos, world.getBlockState(this.pos).getBlock().getStateFromMeta(this.getOrientation().ordinal() + 6), 2);
+                    world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, true), 2);
                     update = false;
                 } else if (!wasActive) {
                     UVSource(false);
-                    world.setBlockState(this.pos, world.getBlockState(this.pos).getBlock().getStateFromMeta(this.getOrientation().ordinal() + 6), 2);
+                    world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, true), 2);
                 }
                 if (storageEU >= (double) realEnergyUsage / 8.0D) {
                     storageEU -= (double) realEnergyUsage / 8.0D;

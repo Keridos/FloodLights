@@ -73,22 +73,22 @@ public class ModCompatibility implements IItemBlacklist {
     @Optional.Method(modid = "JEI")
     @Override
     public void addItemToBlacklist(@Nonnull ItemStack itemStack) {
-         JEIBlacklist.add(itemStack);
+        JEIBlacklist.add(itemStack);
     }
 
     @Optional.Method(modid = "JEI")
     @Override
     public void removeItemFromBlacklist(@Nonnull ItemStack itemStack) {
-         JEIBlacklist.remove(itemStack);
+        JEIBlacklist.remove(itemStack);
     }
 
     @Optional.Method(modid = "JEI")
     @Override
     public boolean isItemBlacklisted(@Nonnull ItemStack itemStack) {
         if (JEIBlacklist.size() > 0) {
-            for (ItemStack itemStackTemp: JEIBlacklist) {
+            for (ItemStack itemStackTemp : JEIBlacklist) {
                 if (itemStack.getItem().equals(itemStackTemp.getItem())) {
-                   return true;
+                    return true;
                 }
             }
         }
@@ -119,5 +119,32 @@ public class ModCompatibility implements IItemBlacklist {
         addVersionCheckerInfo();
         FMLInterModComms.sendMessage("Waila", "register", "de.keridos.floodlights.compatability.WailaTileHandler.callbackRegister");
         WrenchAvailable = (BCLoaded || EnderIOLoaded || IC2Loaded || CofhCoreLoaded);
+    }
+
+    public boolean isItemValidWrench(ItemStack stack) {
+        /*if (ModCompatibility.BCLoaded) {
+            if (stack.getItem() instanceof IToolWrench) {
+                return true;
+            }
+        }
+        if (ModCompatibility.EnderIOLoaded) {
+            if (stack.getItem() instanceof ITool) {
+                return true;
+            }
+        }
+        if (ModCompatibility.CofhCoreLoaded) {
+            if (stack.getItem() instanceof IToolHammer) {
+                return true;
+            }
+        } */
+        if (ModCompatibility.IC2Loaded) {
+            if (stack.getItem().getUnlocalizedName().equals("ic2.itemToolWrench")) {
+                return true;
+            }
+            if (stack.getItem().getUnlocalizedName().equals("ic2.itemToolWrenchElectric")) {
+                return true;
+            }
+        }
+        return false;
     }
 }
