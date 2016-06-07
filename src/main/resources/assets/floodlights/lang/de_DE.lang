@@ -5,6 +5,7 @@ item.floodlights:electricIncandescentLightBulb.name=Elektrische Glühbirne
 item.floodlights:carbonDissolver.name=Treibstoffzersetzer
 item.floodlights:carbonLantern.name=Nicht-elektrische Laterne
 item.floodlights:mantle.name=Docht
+item.floodlights:lightDebugTool.name=Lichtblock Debug Werkzeug
 
 #TileEntities
 tile.floodlights:carbonFloodlight.name=Nicht-elektrisches Flutlicht
@@ -13,6 +14,7 @@ tile.floodlights:smallElectricFloodlight.name=Kleines Elektrisches Flutlicht
 tile.floodlights:uvFloodlight.name=UV Flutlicht
 tile.floodlights:smallElectricFloodlightMetaBlock_smallFluorescent.name=Kleine Leuchtstofflampe
 tile.floodlights:smallElectricFloodlightMetaBlock_squareFluorescent.name=Quadratische kleine Leuchtstofflampe
+tile.floodlights:growLight.name=Wachstumslampe
 
 #GUI
 gui.floodlights:nonElectricFloodlightTimeRemaining=Verbleibend
@@ -26,6 +28,8 @@ gui.floodlights:narrowCone=enger Kegel
 gui.floodlights:wideCone=weiter Kegel
 gui.floodlights:minutesShort=m
 gui.floodlights:secondsShort=s
+gui.floodlights:growLightLighting=Normales Licht
+gui.floodlights:growLightDarkLight=Schwarzlicht
 
 # Creative Tabs
 itemGroup.floodlights=Flood Lights

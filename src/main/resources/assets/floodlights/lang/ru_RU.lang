@@ -5,6 +5,7 @@ item.floodlights:electricIncandescentLightBulb.name=Электрическая �
 item.floodlights:carbonDissolver.name=Поглотитель топлива
 item.floodlights:carbonLantern.name=Лампа
 item.floodlights:mantle.name=Фитиль
+item.floodlights:lightDebugTool.name=Инструмент отладки освещения
 
 #TileEntities
 tile.floodlights:carbonFloodlight.name=Прожектор
@@ -13,10 +14,11 @@ tile.floodlights:smallElectricFloodlight.name=Маленький электри�
 tile.floodlights:uvFloodlight.name=Ультрафиолетовый прожектор
 tile.floodlights:smallElectricFloodlightMetaBlock_smallFluorescent.name=Маленькая флуоресцентная лампа
 tile.floodlights:smallElectricFloodlightMetaBlock_squareFluorescent.name=Квадратная флуоресцентная лампа
+tile.floodlights:growLight.name=Лампа роста
 
 #GUI – ГИП
 gui.floodlights:nonElectricFloodlightTimeRemaining=Осталось времени:
-gui.floodlights:RFStorage=Хранилище RF #Если кто-то может перевести лучше – переведите. If someone can translate this line better – translate it.
+gui.floodlights:RFStorage=Хранилище RF
 gui.floodlights:invert=Инвертирован
 gui.floodlights:mode=Режим
 gui.floodlights:true=да
@@ -26,6 +28,8 @@ gui.floodlights:narrowCone=узкий конус
 gui.floodlights:wideCone=широкий конус
 gui.floodlights:minutesShort=м
 gui.floodlights:secondsShort=с
+gui.floodlights:growLightLighting=Обычное освещение
+gui.floodlights:growLightDarkLight=Чёрный свет
 
 # Creative Tabs – Вкладки в режиме творчества
 itemGroup.floodlights=Flood Lights
