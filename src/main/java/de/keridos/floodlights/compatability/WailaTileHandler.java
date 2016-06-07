@@ -38,7 +38,6 @@ public class WailaTileHandler implements IWailaDataProvider {
      */
     @Optional.Method(modid = "Waila")
     public static void callbackRegister(IWailaRegistrar register) {
-
         WailaTileHandler instance = new WailaTileHandler();
 
         register.registerNBTProvider(instance, TileEntityFL.class);
@@ -55,7 +54,6 @@ public class WailaTileHandler implements IWailaDataProvider {
     @Override
     @Optional.Method(modid = "Waila")
     public ItemStack getWailaStack(IWailaDataAccessor accessor, IWailaConfigHandler config) {
-
         return accessor.getStack();
     }
 
@@ -70,7 +68,6 @@ public class WailaTileHandler implements IWailaDataProvider {
     public List<String> getWailaHead(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
         return currenttip;
     }
-
 
     /**
      * This method adds data to the body of the waila tool tip. This is where you should place the
@@ -103,7 +100,6 @@ public class WailaTileHandler implements IWailaDataProvider {
     @Override
     @Optional.Method(modid = "Waila")
     public List<String> getWailaTail(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
-
         return currenttip;
     }
 
@@ -116,7 +112,6 @@ public class WailaTileHandler implements IWailaDataProvider {
 
     @Override
     public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, BlockPos pos) {
-
         if (te != null)
             te.writeToNBT(tag);
 
