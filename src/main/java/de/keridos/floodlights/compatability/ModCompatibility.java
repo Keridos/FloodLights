@@ -34,6 +34,7 @@ public class ModCompatibility implements IItemBlacklist {
     public static boolean EnderIOLoaded = false;
     public static boolean WrenchAvailable = false;
     public static boolean ColoredLightCoreLoaded = false;
+    public static boolean ACLoaded = false;
 
     private static ArrayList<ItemStack> JEIBlacklist = new ArrayList<>();
 
@@ -56,6 +57,7 @@ public class ModCompatibility implements IItemBlacklist {
         JEILoaded = Loader.isModLoaded("JEI");
         EnderIOLoaded = Loader.isModLoaded("EnderIO");
         ColoredLightCoreLoaded = Loader.isModLoaded("coloredlightcore");
+        ACLoaded = Loader.isModLoaded("AgriCraft");
     }
 
     @Optional.Method(modid = "NotEnoughItems")
@@ -147,4 +149,12 @@ public class ModCompatibility implements IItemBlacklist {
         }
         return false;
     }
+
+    /*@Optional.Method(modid = "AgriCraft")
+    public boolean isBlockValidAgriCraftSeed(Block block, World world, BlockPos blockPos) {
+        if (block instanceof ICrop && ((APIv2) API.getAPI(2)).getCrop(world, blockPos.posX, blockPos.posY, blockPos.posZ).hasPlant() && ((APIv2) API.getAPI(2)).getCrop(world, blockPos.posX, blockPos.posY, blockPos.posZ).getPlant().getGrowthRequirement().canGrow(world, blockPos.posX, blockPos.posY, blockPos.posZ)) {
+            return true;
+        }
+        return false;
+    }        */
 }

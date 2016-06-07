@@ -16,12 +16,10 @@ import net.minecraft.init.Items;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import static de.keridos.floodlights.util.GeneralUtil.getMinecraftItem;
 import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
-import static de.keridos.floodlights.util.RenderUtil.getColorAsInt;
 
 /**
  * Created by Keridos on 01.10.14.
@@ -57,9 +55,9 @@ public class BlockElectricFloodlight extends BlockFLColorableMachine implements 
     public void onBlockAdded(World world, BlockPos pos, IBlockState block) {
         if (!world.isRemote) {
             if (world.isBlockIndirectlyGettingPowered(pos) != 0) {
-                ((TileEntityElectricFloodlight) world.getTileEntity(pos)).setRedstone(true);
+                ((TileEntityMetaFloodlight) world.getTileEntity(pos)).setRedstone(true);
             } else if (world.isBlockIndirectlyGettingPowered(pos) == 0) {
-                ((TileEntityElectricFloodlight) world.getTileEntity(pos)).setRedstone(false);
+                ((TileEntityMetaFloodlight) world.getTileEntity(pos)).setRedstone(false);
             }
         }
     }
@@ -103,12 +101,5 @@ public class BlockElectricFloodlight extends BlockFLColorableMachine implements 
     public void breakBlock(World world, BlockPos pos, IBlockState blockState) {
         ((TileEntityElectricFloodlight) world.getTileEntity(pos)).removeSource(-1);
         super.breakBlock(world, pos, blockState);
-    }
-    @Override
-    public int colorMultiplier(IBlockAccess worldIn, BlockPos pos, int renderPass) {
-        if (worldIn.getBlockState(pos).getValue(COLOR) != null) {
-            return getColorAsInt(getActualState(worldIn.getBlockState(pos),worldIn,pos).getValue(COLOR));
-        }
-        return super.colorMultiplier(worldIn, pos, renderPass);
     }
 }

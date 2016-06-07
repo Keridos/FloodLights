@@ -2,6 +2,7 @@ package de.keridos.floodlights.util;
 
 import cofh.api.energy.IEnergyContainerItem;
 import net.minecraft.block.Block;
+import net.minecraft.block.IGrowable;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
@@ -11,8 +12,11 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameData;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+
+import java.util.logging.Logger;
 
 //import ic2.api.item.IElectricItem;
 
@@ -91,5 +95,15 @@ public class GeneralUtil {
 
     public static int[] getIntArrayFromPos(BlockPos pos) {
         return new int[]{pos.getX(), pos.getY(), pos.getZ()};
+    }
+
+    public static boolean isBlockValidGrowable(Block block, World world, BlockPos blockPos) {
+        boolean result = false;
+        if ((block instanceof IGrowable && ((IGrowable) block).canGrow(world, blockPos,world.getBlockState(blockPos), false))
+                /*|| (ModCompatibility.ACLoaded  && ModCompatibility.getInstance().isBlockValidAgriCraftSeed(block, world, blockPos)*/) {
+            Logger.getGlobal().info("blockcangrow: " + (((IGrowable) block).canGrow(world, blockPos,world.getBlockState(blockPos), false)));
+            result = true;
+        }
+        return result;
     }
 }

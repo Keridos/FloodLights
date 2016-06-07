@@ -55,6 +55,7 @@ public class ClientProxy extends CommonProxy {
         registerBlockModelAsItem(ModBlocks.blockElectricLight, 0 , Names.Blocks.ELECTRIC_FLOODLIGHT);
         registerBlockModelAsItem(ModBlocks.blockCarbonLight, 0 , Names.Blocks.CARBON_FLOODLIGHT);
         registerBlockModelAsItem(ModBlocks.blockUVLight, 0 , Names.Blocks.UV_FLOODLIGHT);
+        registerBlockModelAsItem(ModBlocks.blockGrowLight, 0 , Names.Blocks.GROW_LIGHT);
         registerBlockModelAsItem(ModBlocks.blockSmallElectricLight, 0 , Names.Blocks.SMALL_ELECTRIC_FLOODLIGHT,"inventory_strip");
         registerBlockModelAsItem(ModBlocks.blockSmallElectricLight, 1 , Names.Blocks.SMALL_ELECTRIC_FLOODLIGHT,"inventory_square");
         registerItemModel(ModItems.carbonDissolver, 0);
@@ -69,6 +70,7 @@ public class ClientProxy extends CommonProxy {
         ModelLoader.setCustomStateMapper(ModBlocks.blockElectricLight,ignoreColor);
         ModelLoader.setCustomStateMapper(ModBlocks.blockUVLight,ignoreColor);
         ModelLoader.setCustomStateMapper(ModBlocks.blockSmallElectricLight, new StateMap.Builder().withName(BlockSmallElectricFloodlight.MODEL).ignore(BlockFLColorableMachine.COLOR).build());
+        ModelLoader.setCustomStateMapper(ModBlocks.blockGrowLight, new StateMap.Builder().ignore(BlockFLColorableMachine.COLOR).ignore(BlockFLColorableMachine.FACING).build());
     }
 
     @Override

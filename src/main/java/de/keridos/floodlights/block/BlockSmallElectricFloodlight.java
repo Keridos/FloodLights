@@ -99,7 +99,7 @@ public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implem
     public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
         if (worldIn.getTileEntity(pos) instanceof TileEntitySmallFloodlight) {
             TileEntitySmallFloodlight te = ((TileEntitySmallFloodlight) worldIn.getTileEntity(pos));
-            return state.withProperty(COLOR, te.getColor()).withProperty(FACING, te.getOrientation()).withProperty(ROTATIONSTATE, te.getRotationState());
+            return state.withProperty(COLOR, te.getColor()).withProperty(FACING, te.getOrientation()).withProperty(ROTATIONSTATE, te.getRotationState()).withProperty(ACTIVE, te.getWasActive());
         } else return state.withProperty(COLOR, 16);
     }
 

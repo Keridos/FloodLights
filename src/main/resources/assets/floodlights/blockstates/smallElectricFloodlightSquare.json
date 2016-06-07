@@ -217,7 +217,7 @@
 		"active=false,facing=down,rotationstate=true": [
 			{
 				"textures": {
-					"top": "#topon",
+					"top": "#topoff",
 					"side": "#sideoff",
 					"sideshort": "#sideshortoff"
 				},
@@ -233,7 +233,7 @@
 		"active=false,facing=down,rotationstate=false": [
 			{
 				"textures": {
-					"top": "#topon",
+					"top": "#topoff",
 					"side": "#sideoff",
 					"sideshort": "#sideshortoff"
 				},
@@ -252,7 +252,7 @@
 		"active=false,facing=up,rotationstate=true": [
 			{
 				"textures": {
-					"top": "#topon",
+					"top": "#topoff",
 					"side": "#sideoff",
 					"sideshort": "#sideshortoff"
 				},
@@ -268,7 +268,7 @@
 		"active=false,facing=up,rotationstate=false": [
 			{
 				"textures": {
-					"top": "#topon",
+					"top": "#topoff",
 					"side": "#sideoff",
 					"sideshort": "#sideshortoff"
 				},
@@ -287,7 +287,7 @@
 		"active=false,facing=north,rotationstate=true": [
 			{
 				"textures": {
-					"top": "#topon",
+					"top": "#topoff",
 					"side": "#sideoff",
 					"sideshort": "#sideshortoff"
 				},
@@ -303,7 +303,7 @@
 		"active=false,facing=north,rotationstate=false": [
 			{
 				"textures": {
-					"top": "#topon",
+					"top": "#topoff",
 					"side": "#sideoff",
 					"sideshort": "#sideshortoff"
 				}
@@ -312,7 +312,7 @@
 		"active=false,facing=south,rotationstate=true": [
 			{
 				"textures": {
-					"top": "#topon",
+					"top": "#topoff",
 					"side": "#sideoff",
 					"sideshort": "#sideshortoff"
 				},
@@ -331,7 +331,7 @@
 		"active=false,facing=south,rotationstate=false": [
 			{
 				"textures": {
-					"top": "#topon",
+					"top": "#topoff",
 					"side": "#sideoff",
 					"sideshort": "#sideshortoff"
 				},
@@ -347,7 +347,7 @@
 		"active=false,facing=west,rotationstate=true": [
 			{
 				"textures": {
-					"top": "#topon",
+					"top": "#topoff",
 					"side": "#sideoff",
 					"sideshort": "#sideshortoff"
 				},
@@ -366,7 +366,7 @@
 		"active=false,facing=west,rotationstate=false": [
 			{
 				"textures": {
-					"top": "#topon",
+					"top": "#topoff",
 					"side": "#sideoff",
 					"sideshort": "#sideshortoff"
 				},
@@ -382,7 +382,7 @@
 		"active=false,facing=east,rotationstate=true": [
 			{
 				"textures": {
-					"top": "#topon",
+					"top": "#topoff",
 					"side": "#sideoff",
 					"sideshort": "#sideshortoff"
 				},
@@ -401,7 +401,7 @@
 		"active=false,facing=east,rotationstate=false": [
 			{
 				"textures": {
-					"top": "#topon",
+					"top": "#topoff",
 					"side": "#sideoff",
 					"sideshort": "#sideshortoff"
 				},

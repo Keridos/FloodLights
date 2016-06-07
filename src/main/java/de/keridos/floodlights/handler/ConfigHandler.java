@@ -61,7 +61,7 @@ public class ConfigHandler {
         timeoutFloodlights = config.getInt("timeoutFloodlights", "general", 40, 1, 240, "How long should the timeout for turning on floodlights again be in ticks?");
         damageUVFloodlight = config.getFloat("damageUVFloodlight", "general", 4.0F, 1.0F, 16.0F, "How much damage should the UV Floodlights do per second?");
         uvLightRendered = config.getBoolean("uvLightRendered", "general", true, "Should the UV Light Block be visible?");
-        IGWNotifierEnabled = config.getBoolean("uvLightRendered", "general", true, "Should the IGW Notifier be shown?");
+        IGWNotifierEnabled = config.getBoolean("IGWNotifierEnabled", "general", true, "Should the IGW Notifier be shown?");
         config.save();
     }
 }

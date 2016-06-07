@@ -9,6 +9,7 @@ import de.keridos.floodlights.handler.RecipeHandler;
 import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.init.ModItems;
 import de.keridos.floodlights.reference.Reference;
+import de.keridos.floodlights.util.RandomUtil;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -59,6 +60,7 @@ public class FloodLights {
         recipeHandler.initRecipes();
         modCompatibility.performModCompat();
         registerEventListeners();
+        RandomUtil.init();
         proxy.initRenderers();
         proxy.initSounds();
         proxy.initHandlers();

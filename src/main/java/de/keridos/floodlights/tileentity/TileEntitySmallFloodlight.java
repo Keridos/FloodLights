@@ -1,6 +1,7 @@
 package de.keridos.floodlights.tileentity;
 
 import cofh.api.energy.IEnergyContainerItem;
+import de.keridos.floodlights.block.BlockFLColorableMachine;
 import de.keridos.floodlights.handler.ConfigHandler;
 import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.reference.Names;
@@ -95,7 +96,7 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
         }
     }
 
-    public void updateEntity() {
+    public void update() {
         World world = this.getWorld();
         /*if (ModCompatibility.IC2Loaded && !wasAddedToEnergyNet && !world.isRemote) {
             addToIc2EnergyNetwork();
@@ -124,10 +125,12 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
                 if (update) {
                     smallSource(true);
                     smallSource(false);
+                    world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, true), 2);
                     world.markBlockForUpdate(this.pos);
                     update = false;
                 } else if (!wasActive) {
                     smallSource(false);
+                    world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, true), 2);
                     world.markBlockForUpdate(this.pos);
                 }
                 if (storageEU >= (double) realEnergyUsage / 8.0D) {
@@ -138,6 +141,7 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
                 wasActive = true;
             } else if ((!active || (storage.getEnergyStored() < realEnergyUsage && storageEU < (double) realEnergyUsage / 8.0D)) && wasActive) {
                 smallSource(true);
+                world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, false), 2);
                 world.markBlockForUpdate(this.pos);
                 wasActive = false;
                 timeout = ConfigHandler.timeoutFloodlights;

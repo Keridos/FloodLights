@@ -1,22 +1,20 @@
 package de.keridos.floodlights.tileentity;
 
 import cofh.api.energy.IEnergyContainerItem;
+import de.keridos.floodlights.block.BlockFLColorableMachine;
 import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.handler.ConfigHandler;
 import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.reference.Names;
-import de.keridos.floodlights.util.BlockPos;
 import de.keridos.floodlights.util.GeneralUtil;
-import de.keridos.floodlights.util.MathUtil;
 import de.keridos.floodlights.util.RandomUtil;
-import ic2.api.item.ElectricItem;
-import ic2.api.item.IElectricItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.IGrowable;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
 import static de.keridos.floodlights.util.MathUtil.rotate;
@@ -30,44 +28,44 @@ public class TileEntityGrowLight extends TileEntityFLElectric {
     private long nextGrowTick = 0;
 
     @Override
-    public boolean canConnectEnergy(ForgeDirection from) {
+    public boolean canConnectEnergy(EnumFacing from) {
         return (from.getOpposite().ordinal() == orientation.ordinal());
     }
 
 
     public void growSource(boolean remove) {
         int[] rotatedCoords = rotate(1, 0, 0, this.orientation);
-        int x = this.xCoord + rotatedCoords[0];
-        int y = this.yCoord + rotatedCoords[1];
-        int z = this.zCoord + rotatedCoords[2];
+        int x = this.pos.getX() + rotatedCoords[0];
+        int y = this.pos.getY()+ rotatedCoords[1];
+        int z = this.pos.getZ() + rotatedCoords[2];
         if (remove) {
-            if (worldObj.getBlock(x, y, z) == ModBlocks.blockPhantomLight) {
-                TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
-                light.removeSource(this.xCoord, this.yCoord, this.zCoord);
+            if (worldObj.getBlockState(new BlockPos(x, y, z)).getBlock() == ModBlocks.blockPhantomLight) {
+                TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(new BlockPos(x, y, z));
+                light.removeSource(this.pos);
             }
-        } else if (worldObj.getBlock(x, y, z).isAir(worldObj, x, y, z)) {
-            setLight(x, y, z);
-        } else if (worldObj.getBlock(x, y, z) == ModBlocks.blockPhantomLight) {
-            TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(x, y, z);
-            light.addSource(this.xCoord, this.yCoord, this.zCoord);
+        } else if (worldObj.getBlockState(new BlockPos(x, y, z)).getBlock().isAir(worldObj,new BlockPos(x, y, z))) {
+            setLight(new BlockPos(x, y, z));
+        } else if (worldObj.getBlockState(new BlockPos(x, y, z)).getBlock() == ModBlocks.blockPhantomLight) {
+            TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(new BlockPos(x, y, z));
+            light.addSource(this.pos);
         }
 
     }
 
-    public void updateEntity() {
-        World world = this.getWorldObj();
+    public void update() {
+        World world = this.getWorld();
         if (ModCompatibility.IC2Loaded && !wasAddedToEnergyNet && !world.isRemote) {
-            addToIc2EnergyNetwork();
+            //addToIc2EnergyNetwork();
             wasAddedToEnergyNet = true;
         }
         if (!world.isRemote) {
             int realEnergyUsage = ConfigHandler.energyUsageGrowLight;
             if (inventory[0] != null) {
                 if (ModCompatibility.IC2Loaded) {
-                    if (inventory[0].getItem() instanceof IElectricItem) {
+                    /*if (inventory[0].getItem() instanceof IElectricItem) {
                         double dischargeValue = (storage.getMaxEnergyStored() - (double) storage.getEnergyStored()) / 8.0D;
                         storage.modifyEnergyStored(MathUtil.truncateDoubleToInt(8 * ElectricItem.manager.discharge(inventory[0], dischargeValue, 4, false, true, false)));
-                    }
+                    }*/
                 }
                 if (inventory[0].getItem() instanceof IEnergyContainerItem) {
                     IEnergyContainerItem item = (IEnergyContainerItem) inventory[0].getItem();
@@ -81,12 +79,12 @@ public class TileEntityGrowLight extends TileEntityFLElectric {
             }
             if (active && (storage.getEnergyStored() >= realEnergyUsage || storageEU >= (double) realEnergyUsage / 8.0D)) {
                 if (world.getWorldTime() > nextGrowTick) {
-                    BlockPos blockPosTarget = new BlockPos(this.xCoord + this.orientation.offsetX * 2, this.yCoord + this.orientation.offsetY * 2, this.zCoord + this.orientation.offsetZ * 2);
-                    BlockPos blockPosFront = new BlockPos(this.xCoord + this.orientation.offsetX, this.yCoord + this.orientation.offsetY, this.zCoord + this.orientation.offsetZ);
-                    Block block = worldObj.getBlock(blockPosTarget.posX, blockPosTarget.posY, blockPosTarget.posZ);
-                    Block blockFront = worldObj.getBlock(blockPosFront.posX, blockPosFront.posY, blockPosFront.posZ);
-                    if (GeneralUtil.isBlockValidGrowable(block, world, blockPosTarget) && blockFront.isAir(world, blockPosFront.posX, blockPosFront.posY, blockPosFront.posZ)) {
-                        ((IGrowable) block).func_149853_b(world, RandomUtil.random, blockPosTarget.posX, blockPosTarget.posY, blockPosTarget.posZ);
+                    BlockPos blockPosTarget = new BlockPos(this.pos.getX() + this.orientation.getFrontOffsetX() * 2, this.pos.getY() + this.orientation.getFrontOffsetY() * 2, this.pos.getZ() + this.orientation.getFrontOffsetZ() * 2);
+                    BlockPos blockPosFront = new BlockPos(this.pos.getX() + this.orientation.getFrontOffsetX(), this.pos.getY() + this.orientation.getFrontOffsetY(), this.pos.getZ() + this.orientation.getFrontOffsetZ());
+                    Block block = worldObj.getBlockState(blockPosTarget).getBlock();
+                    Block blockFront = worldObj.getBlockState(blockPosFront).getBlock();
+                    if (GeneralUtil.isBlockValidGrowable(block, world, blockPosTarget) && blockFront.isAir(world, blockPosFront)) {
+                        ((IGrowable) block).grow(world, RandomUtil.random, blockPosTarget,world.getBlockState(blockPosTarget));
                     }
                     nextGrowTick = world.getWorldTime() + RandomUtil.getRandomTickTimeoutFromFloatChance(ConfigHandler.chanceGrowLight);
                 }
@@ -95,13 +93,15 @@ public class TileEntityGrowLight extends TileEntityFLElectric {
                         growSource(true);
                         growSource(false);
                     }
-                    world.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+                    world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, true), 2);
+                    world.markBlockForUpdate(this.pos);
                     update = false;
                 } else if (!wasActive) {
                     if (mode == 0) {
                         growSource(false);
                     }
-                    world.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+                    world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, true), 2);
+                    world.markBlockForUpdate(this.pos);
                 }
                 if (storageEU >= (double) realEnergyUsage / 8.0D) {
                     storageEU -= (double) realEnergyUsage / 8.0D;
@@ -113,7 +113,8 @@ public class TileEntityGrowLight extends TileEntityFLElectric {
                 if (mode == 0) {
                     growSource(true);
                 }
-                world.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+                world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, false), 2);
+                world.markBlockForUpdate(this.pos);
                 wasActive = false;
                 timeout = ConfigHandler.timeoutFloodlights;
                 update = false;
@@ -122,7 +123,7 @@ public class TileEntityGrowLight extends TileEntityFLElectric {
     }
 
     public void changeMode(EntityPlayer player) {
-        World world = this.getWorldObj();
+        World world = this.getWorld();
         if (!world.isRemote) {
             if (mode == 0) {
                 growSource(true);

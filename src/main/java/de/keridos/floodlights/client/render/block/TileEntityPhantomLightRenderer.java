@@ -33,31 +33,31 @@ public class TileEntityPhantomLightRenderer extends TileEntitySpecialRenderer {
         Tessellator tessellator = Tessellator.getInstance();
         WorldRenderer worldRenderer = Tessellator.getInstance().getWorldRenderer();
         worldRenderer.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION_COLOR);
-        worldRenderer.pos(xa, ya, za).endVertex();
-        worldRenderer.pos(xa, yb, za).endVertex();
-        worldRenderer.pos(xb, yb, za).endVertex();
-        worldRenderer.pos(xb, ya, za).endVertex();
-        worldRenderer.pos(xa, ya, za).endVertex();
+        worldRenderer.pos(xa, ya, za).color(1F, 1F, 0.0F,1.0F).endVertex();
+        worldRenderer.pos(xa, yb, za).color(1F, 1F, 0.0F,1.0F).endVertex();
+        worldRenderer.pos(xb, yb, za).color(1F, 1F, 0.0F,1.0F).endVertex();
+        worldRenderer.pos(xb, ya, za).color(1F, 1F, 0.0F,1.0F).endVertex();
+        worldRenderer.pos(xa, ya, za).color(1F, 1F, 0.0F,1.0F).endVertex();
 
-        worldRenderer.pos(xa, ya, zb).endVertex();
-        worldRenderer.pos(xa, yb, zb).endVertex();
-        worldRenderer.pos(xb, yb, zb).endVertex();
-        worldRenderer.pos(xb, ya, zb).endVertex();
-        worldRenderer.pos(xa, ya, zb).endVertex();
+        worldRenderer.pos(xa, ya, zb).color(1F, 1F, 0.0F,1.0F).endVertex();
+        worldRenderer.pos(xa, yb, zb).color(1F, 1F, 0.0F,1.0F).endVertex();
+        worldRenderer.pos(xb, yb, zb).color(1F, 1F, 0.0F,1.0F).endVertex();
+        worldRenderer.pos(xb, ya, zb).color(1F, 1F, 0.0F,1.0F).endVertex();
+        worldRenderer.pos(xa, ya, zb).color(1F, 1F, 0.0F,1.0F).endVertex();
         tessellator.draw();
 
         worldRenderer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
-        worldRenderer.pos(xa, ya, za).endVertex();
-        worldRenderer.pos(xa, ya, zb).endVertex();
+        worldRenderer.pos(xa, ya, za).color(1F, 1F, 0.0F,1.0F).endVertex();
+        worldRenderer.pos(xa, ya, zb).color(1F, 1F, 0.0F,1.0F).endVertex();
 
-        worldRenderer.pos(xa, yb, za).endVertex();
-        worldRenderer.pos(xa, yb, zb).endVertex();
+        worldRenderer.pos(xa, yb, za).color(1F, 1F, 0.0F,1.0F).endVertex();
+        worldRenderer.pos(xa, yb, zb).color(1F, 1F, 0.0F,1.0F).endVertex();
 
-        worldRenderer.pos(xb, ya, za).endVertex();
-        worldRenderer.pos(xb, ya, zb).endVertex();
+        worldRenderer.pos(xb, ya, za).color(1F, 1F, 0.0F,1.0F).endVertex();
+        worldRenderer.pos(xb, ya, zb).color(1F, 1F, 0.0F,1.0F).endVertex();
 
-        worldRenderer.pos(xb, yb, za).endVertex();
-        worldRenderer.pos(xb, yb, zb).endVertex();
+        worldRenderer.pos(xb, yb, za).color(1F, 1F, 0.0F,1.0F).endVertex();
+        worldRenderer.pos(xb, yb, zb).color(1F, 1F, 0.0F,1.0F).endVertex();
         tessellator.draw();
     }
 
