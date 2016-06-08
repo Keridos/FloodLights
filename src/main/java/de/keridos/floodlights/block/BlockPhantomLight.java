@@ -18,7 +18,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import java.util.Random;
-import java.util.logging.Logger;
 
 /**
  * Created by Keridos on 01.10.14.
@@ -108,8 +107,7 @@ public class BlockPhantomLight extends BlockFL implements ITileEntityProvider {
 
     @Override
     public void neighborChanged(IBlockState state,World worldIn, BlockPos pos, Block neighborBlock) {
-        if (!worldIn.isRemote && state.getValue(UPDATE) && (neighborBlock != Blocks.AIR)) { //TODO: rework this to be less laggy
-            Logger.getGlobal().info("detected change in neighbour to phantomlight");
+        if (!worldIn.isRemote && state.getValue(UPDATE) && (neighborBlock != Blocks.AIR)) {
             ((TileEntityPhantomLight) worldIn.getTileEntity(pos)).updateAllSources(true);
         }
     }

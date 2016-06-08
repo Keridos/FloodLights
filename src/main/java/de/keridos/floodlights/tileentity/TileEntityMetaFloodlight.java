@@ -140,7 +140,6 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
     @Override
     public ItemStack getStackInSlot(int i) {
         worldObj.markBlocksDirtyVertical(this.pos.getX(), this.pos.getZ(), this.pos.getX(), this.pos.getZ());
-        ;
         return inventory[i];
     }
 
