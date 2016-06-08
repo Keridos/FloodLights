@@ -35,10 +35,11 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound nbtTagCompound) {
-        super.writeToNBT(nbtTagCompound);
+    public NBTTagCompound writeToNBT(NBTTagCompound nbtTagCompound) {
+        nbtTagCompound = super.writeToNBT(nbtTagCompound);
         storage.writeToNBT(nbtTagCompound);
         nbtTagCompound.setDouble(Names.NBT.STORAGE_EU, storageEU);
+        return nbtTagCompound;
     }
 
     @Override

@@ -1,6 +1,6 @@
 package de.keridos.floodlights.handler;
 
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import de.keridos.floodlights.FloodLights;

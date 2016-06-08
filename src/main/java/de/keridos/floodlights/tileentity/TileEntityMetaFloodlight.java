@@ -8,11 +8,12 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 
+import static de.keridos.floodlights.block.BlockPhantomLight.UPDATE;
 import static de.keridos.floodlights.util.GeneralUtil.getPosFromPosFacing;
 import static de.keridos.floodlights.util.MathUtil.rotate;
 
@@ -36,14 +37,16 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
     public void setRedstone(boolean b) {
         active = b ^ inverted;
         this.setState((byte) (this.active ? 1 : 0));
-        this.worldObj.markBlockForUpdate(this.pos);
+        this.worldObj.markBlocksDirtyVertical(this.pos.getX(), this.pos.getZ(), this.pos.getX(), this.pos.getZ());
+        ;
     }
 
     public void toggleInverted() {
         inverted = !inverted;
         active = !active;
         this.setState((byte) (this.active ? 1 : 0));
-        this.worldObj.markBlockForUpdate(this.pos);
+        this.worldObj.markBlocksDirtyVertical(this.pos.getX(), this.pos.getZ(), this.pos.getX(), this.pos.getZ());
+        ;
     }
 
     public boolean getWasActive() {
@@ -62,10 +65,9 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
         if (worldObj.getBlockState(pos).getBlock() == ModBlocks.blockUVLightBlock) {
             return;
         }
-        if (worldObj.setBlockState(pos, ModBlocks.blockPhantomLight.getDefaultState())) {
+        if (worldObj.setBlockState(pos, ModBlocks.blockPhantomLight.getDefaultState(), 3)) {
             TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(pos);
             light.addSource(this.pos);
-            worldObj.markBlockRangeForRenderUpdate(pos, pos);
         } else {
             this.toggleUpdateRun();
         }
@@ -74,9 +76,11 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
 
     @Override
     public void update() {
-        
+        if (!worldObj.isRemote && update && !active) {
+            update = false;
+        }
     }
-    
+
     @Override
     public void readFromNBT(NBTTagCompound nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
@@ -97,8 +101,8 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound nbtTagCompound) {
-        super.writeToNBT(nbtTagCompound);
+    public NBTTagCompound writeToNBT(NBTTagCompound nbtTagCompound) {
+        nbtTagCompound = super.writeToNBT(nbtTagCompound);
         nbtTagCompound.setBoolean(Names.NBT.WAS_ACTIVE, wasActive);
         nbtTagCompound.setByte(Names.NBT.STATE, state);
         NBTTagList list = new NBTTagList();
@@ -110,6 +114,7 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
             list.appendTag(item);
         }
         nbtTagCompound.setTag(Names.NBT.ITEMS, list);
+        return nbtTagCompound;
     }
 
     @Override
@@ -134,7 +139,8 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
 
     @Override
     public ItemStack getStackInSlot(int i) {
-        worldObj.markBlockForUpdate(this.pos);
+        worldObj.markBlocksDirtyVertical(this.pos.getX(), this.pos.getZ(), this.pos.getX(), this.pos.getZ());
+        ;
         return inventory[i];
     }
 
@@ -178,11 +184,11 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
     public boolean isUseableByPlayer(EntityPlayer player) {
         return player.getDistanceSq(this.pos.getX() + 0.5D, this.pos.getY() + 0.5D, this.pos.getZ() + 0.5D) <= 64;
     }
-    
+
 
     @Override
     public void openInventory(EntityPlayer player) {
-        
+
     }
 
     @Override
@@ -216,7 +222,7 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
     }
 
     @Override
-    public IChatComponent getDisplayName() {
+    public ITextComponent getDisplayName() {
         return null;
     }
 
@@ -225,139 +231,139 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
         return true;
     }
 
+    public void setSource(BlockPos blockPos, boolean remove, Integer setSourceUpdate) {
+        if (remove) {
+            if (worldObj.getBlockState(blockPos).getBlock() == ModBlocks.blockPhantomLight && setSourceUpdate == 0) {
+                TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(blockPos);
+                light.removeSource(this.pos);
+            } else if (worldObj.getBlockState(blockPos).getBlock() == ModBlocks.blockPhantomLight) {
+                worldObj.setBlockState(blockPos, worldObj.getBlockState(blockPos).withProperty(UPDATE, false), 4);
+            }
+        } else if (worldObj.getBlockState(blockPos).getBlock() == ModBlocks.blockPhantomLight && setSourceUpdate == 2) {
+            worldObj.setBlockState(blockPos, worldObj.getBlockState(blockPos).withProperty(UPDATE, false), 4);
+
+        } else if (worldObj.getBlockState(blockPos).getBlock() == ModBlocks.blockPhantomLight && setSourceUpdate == 0) {
+            worldObj.setBlockState(blockPos, worldObj.getBlockState(blockPos).withProperty(UPDATE, true), 4);
+
+        } else if (worldObj.getBlockState(blockPos).getBlock().isAir(worldObj.getBlockState(blockPos), worldObj, blockPos)) {
+            setLight(blockPos);
+        } else if (worldObj.getBlockState(blockPos).getBlock() == ModBlocks.blockPhantomLight) {
+            TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(blockPos);
+            light.addSource(this.pos);
+        }
+    }
+
     public void straightSource(boolean remove) {
-        for (int i = 1; i <= ConfigHandler.rangeStraightFloodlight; i++) {
-            int x = this.pos.getX() + this.orientation.getFrontOffsetX() * i;
-            int y = this.pos.getY() + this.orientation.getFrontOffsetY() * i;
-            int z = this.pos.getZ() + this.orientation.getFrontOffsetZ() * i;
-            if (remove) {
-                if (worldObj.getBlockState(new BlockPos(x,y,z)).getBlock() == ModBlocks.blockPhantomLight) {
-                    TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(new BlockPos(x,y,z));
-                    light.removeSource(this.pos);
+        for (int k = (remove ? 1 : 2); k >= 0; k--) {
+            for (int i = 1; i <= ConfigHandler.rangeStraightFloodlight; i++) {
+
+                int x = this.pos.getX() + this.orientation.getFrontOffsetX() * i;
+                int y = this.pos.getY() + this.orientation.getFrontOffsetY() * i;
+                int z = this.pos.getZ() + this.orientation.getFrontOffsetZ() * i;
+                setSource(new BlockPos(x, y, z), remove, k);
+                if (worldObj.getBlockState(new BlockPos(x, y, z)).getBlock().isOpaqueCube(worldObj.getBlockState(new BlockPos(x, y, z))) && !remove) {
+                    break;
                 }
-            } else if (worldObj.getBlockState(new BlockPos(x,y,z)).getBlock().isAir(worldObj, new BlockPos(x,y,z))) {
-                setLight(new BlockPos(x,y,z));
-            } else if (worldObj.getBlockState(new BlockPos(x,y,z)).getBlock() == ModBlocks.blockPhantomLight) {
-                TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(new BlockPos(x,y,z));
-                light.addSource(this.pos);
-            } else if (worldObj.getBlockState(new BlockPos(x,y,z)).getBlock().isOpaqueCube()) {
-                break;
             }
         }
     }
 
     public void wideConeSource(boolean remove) {
-        boolean[] failedBeams = new boolean[9];
+        for (int k = (remove ? 1 : 2); k >= 0; k--) {
+            boolean[] failedBeams = new boolean[9];
 
-        if (!remove && worldObj.getBlockState(getPosFromPosFacing(this.pos, this.orientation)).getBlock().isOpaqueCube()) {
-            return;
-        }
-        for (int j = 0; j <= 16; j++) {
-            if (j <= 8) {
-                for (int i = 1; i <= ConfigHandler.rangeConeFloodlight / 4; i++) {
-                    int b = 0;
-                    int c = 0;
-                    switch (j) {
-                        case 0:
-                            b += i;
-                            break;
-                        case 1:
-                            b -= i;
-                            break;
-                        case 2:
-                            c += i;
-                            break;
-                        case 3:
-                            c -= i;
-                            break;
-                        case 4:
-                            b += i;
-                            c += i;
-                            break;
-                        case 5:
-                            b += i;
-                            c -= i;
-                            break;
-                        case 6:
-                            b -= i;
-                            c += i;
-                            break;
-                        case 7:
-                            b -= i;
-                            c -= i;
-                            break;
-                    }
-                    int[] rotatedCoords = rotate(i, b, c, this.orientation);
-                    int x = this.pos.getX() + rotatedCoords[0];
-                    int y = this.pos.getY() + rotatedCoords[1];
-                    int z = this.pos.getZ() + rotatedCoords[2];
-                    if (remove) {
-                        if (worldObj.getBlockState(pos).getBlock() == ModBlocks.blockPhantomLight) {
-                            TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(new BlockPos(x,y,z));
-                            light.removeSource(this.pos);
+            if (!remove && worldObj.getBlockState(getPosFromPosFacing(this.pos, this.orientation)).getBlock().isOpaqueCube(worldObj.getBlockState(getPosFromPosFacing(this.pos, this.orientation)))) {
+                return;
+            }
+            for (int j = 0; j <= 16; j++) {
+                if (j <= 8) {
+                    for (int i = 1; i <= ConfigHandler.rangeConeFloodlight / 4; i++) {
+                        int b = 0;
+                        int c = 0;
+                        switch (j) {
+                            case 0:
+                                b += i;
+                                break;
+                            case 1:
+                                b -= i;
+                                break;
+                            case 2:
+                                c += i;
+                                break;
+                            case 3:
+                                c -= i;
+                                break;
+                            case 4:
+                                b += i;
+                                c += i;
+                                break;
+                            case 5:
+                                b += i;
+                                c -= i;
+                                break;
+                            case 6:
+                                b -= i;
+                                c += i;
+                                break;
+                            case 7:
+                                b -= i;
+                                c -= i;
+                                break;
                         }
-                    } else if (worldObj.getBlockState(new BlockPos(x,y,z)).getBlock().isAir(worldObj, new BlockPos(x,y,z))) {
-                        setLight(new BlockPos(x,y,z));
-                    } else if (worldObj.getBlockState(new BlockPos(x,y,z)).getBlock() == ModBlocks.blockPhantomLight) {
-                        TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(new BlockPos(x,y,z));
-                        light.addSource(this.pos);
-                    } else if (worldObj.getBlockState(new BlockPos(x,y,z)).getBlock().isOpaqueCube()) {
-                        if (i < 4) {   //This is for canceling the long rangs beams
-                            failedBeams[j] = true;
+                        int[] rotatedCoords = rotate(i, b, c, this.orientation);
+                        int x = this.pos.getX() + rotatedCoords[0];
+                        int y = this.pos.getY() + rotatedCoords[1];
+                        int z = this.pos.getZ() + rotatedCoords[2];
+                        setSource(new BlockPos(x, y, z), remove, k);
+                        if (worldObj.getBlockState(new BlockPos(x, y, z)).getBlock().isOpaqueCube(worldObj.getBlockState(new BlockPos(x, y, z))) && !remove) {
+                            if (i < 4) {   //This is for canceling the long rangs beams
+                                failedBeams[j] = true;
+                            }
+                            break;
                         }
-                        break;
                     }
-                }
-            } else if (!failedBeams[j - 9] || remove) { // This is for the inner beams at longer range
-                for (int i = 4; i <= ConfigHandler.rangeConeFloodlight / 4; i++) {
-                    int b = 0;
-                    int c = 0;
-                    switch (j) {
-                        case 9:
-                            b += i / 2;
-                            break;
-                        case 10:
-                            b -= i / 2;
-                            break;
-                        case 11:
-                            c += i / 2;
-                            break;
-                        case 12:
-                            c -= i / 2;
-                            break;
-                        case 13:
-                            b += i / 2;
-                            c += i / 2;
-                            break;
-                        case 14:
-                            b += i / 2;
-                            c -= i / 2;
-                            break;
-                        case 15:
-                            b -= i / 2;
-                            c += i / 2;
-                            break;
-                        case 16:
-                            b -= i / 2;
-                            c -= i / 2;
-                            break;
-                    }
-                    int[] rotatedCoords = rotate(i, b, c, this.orientation);
-                    int x = this.pos.getX() + rotatedCoords[0];
-                    int y = this.pos.getY() + rotatedCoords[1];
-                    int z = this.pos.getZ() + rotatedCoords[2];
-                    if (remove) {
-                        if (worldObj.getBlockState(new BlockPos(x,y,z)).getBlock() == ModBlocks.blockPhantomLight) {
-                            TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(new BlockPos(x,y,z));
-                            light.removeSource(this.pos);
+                } else if (!failedBeams[j - 9] || remove) { // This is for the inner beams at longer range
+                    for (int i = 4; i <= ConfigHandler.rangeConeFloodlight / 4; i++) {
+                        int b = 0;
+                        int c = 0;
+                        switch (j) {
+                            case 9:
+                                b += i / 2;
+                                break;
+                            case 10:
+                                b -= i / 2;
+                                break;
+                            case 11:
+                                c += i / 2;
+                                break;
+                            case 12:
+                                c -= i / 2;
+                                break;
+                            case 13:
+                                b += i / 2;
+                                c += i / 2;
+                                break;
+                            case 14:
+                                b += i / 2;
+                                c -= i / 2;
+                                break;
+                            case 15:
+                                b -= i / 2;
+                                c += i / 2;
+                                break;
+                            case 16:
+                                b -= i / 2;
+                                c -= i / 2;
+                                break;
                         }
-                    } else if (worldObj.getBlockState(new BlockPos(x,y,z)).getBlock().isAir(worldObj, new BlockPos(x,y,z))) {
-                        setLight(new BlockPos(x,y,z));
-                    } else if (worldObj.getBlockState(new BlockPos(x,y,z)).getBlock() == ModBlocks.blockPhantomLight) {
-                        TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(new BlockPos(x,y,z));
-                        light.addSource(this.pos);
-                    } else if (worldObj.getBlockState(new BlockPos(x,y,z)).getBlock().isOpaqueCube()) {
-                        break;
+                        int[] rotatedCoords = rotate(i, b, c, this.orientation);
+                        int x = this.pos.getX() + rotatedCoords[0];
+                        int y = this.pos.getY() + rotatedCoords[1];
+                        int z = this.pos.getZ() + rotatedCoords[2];
+                        setSource(new BlockPos(x, y, z), remove, k);
+                        if (worldObj.getBlockState(new BlockPos(x, y, z)).getBlock().isOpaqueCube(worldObj.getBlockState(new BlockPos(x, y, z))) && !remove) {
+                            break;
+                        }
                     }
                 }
             }
@@ -365,134 +371,109 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
     }
 
     public void narrowConeSource(boolean remove) {
-        boolean[] failedBeams = new boolean[9];    // for the additional beam to cancel when the main beams fail.
-        for (int j = 0; j <= 16; j++) {
-            if (j <= 8) {     // This is the main beams
-                for (int i = 1; i <= ConfigHandler.rangeConeFloodlight; i++) {
-                    // for 1st light:
-                    if (i == 1) {
-                        int x = this.pos.getX() + this.orientation.getFrontOffsetX();
-                        int y = this.pos.getY() + this.orientation.getFrontOffsetY();
-                        int z = this.pos.getZ() + this.orientation.getFrontOffsetZ();
-                        if (remove) {
-                            if (worldObj.getBlockState(new BlockPos(x,y,z)).getBlock() == ModBlocks.blockPhantomLight) {
-                                TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(new BlockPos(x,y,z));
-                                light.removeSource(this.pos);
+        for (int k = (remove ? 1 : 2); k >= 0; k--) {
+            boolean[] failedBeams = new boolean[9];    // for the additional beam to cancel when the main beams fail.
+            for (int j = 0; j <= 16; j++) {
+                if (j <= 8) {     // This is the main beams
+                    for (int i = 1; i <= ConfigHandler.rangeConeFloodlight; i++) {
+                        // for 1st light:
+                        if (i == 1) {
+                            int x = this.pos.getX() + this.orientation.getFrontOffsetX();
+                            int y = this.pos.getY() + this.orientation.getFrontOffsetY();
+                            int z = this.pos.getZ() + this.orientation.getFrontOffsetZ();
+                            setSource(new BlockPos(x, y, z), remove, k);
+                            if (worldObj.getBlockState(new BlockPos(x, y, z)).getBlock().isOpaqueCube(worldObj.getBlockState(new BlockPos(x, y, z))) && !remove) {
+                                return;
                             }
-                        } else if (worldObj.getBlockState(new BlockPos(x,y,z)).getBlock().isAir(worldObj, new BlockPos(x,y,z))) {
-                            setLight(new BlockPos(x,y,z));
-                        } else if (worldObj.getBlockState(new BlockPos(x,y,z)).getBlock() == ModBlocks.blockPhantomLight) {
-                            TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(new BlockPos(x,y,z));
-                            light.addSource(this.pos);
-                        } else if (worldObj.getBlockState(new BlockPos(x,y,z)).getBlock().isOpaqueCube()) {
-                            return;
+                        }
+                        int a = i;
+                        int b = 0;
+                        int c = 0;
+                        switch (j) {
+                            case 0:
+                                b += i / 2;
+                                break;
+                            case 1:
+                                b -= i / 2;
+                                break;
+                            case 2:
+                                c += i / 2;
+                                break;
+                            case 3:
+                                c -= i / 2;
+                                break;
+                            case 4:
+                                b += i / 2;
+                                c += i / 2;
+                                break;
+                            case 5:
+                                b += i / 2;
+                                c -= i / 2;
+                                break;
+                            case 6:
+                                b -= i / 2;
+                                c += i / 2;
+                                break;
+                            case 7:
+                                b -= i / 2;
+                                c -= i / 2;
+                                break;
+                        }
+                        int[] rotatedCoords = rotate(a, b, c, this.orientation); // rotate the coordinate to the correct spot in the real world :)
+                        int x = this.pos.getX() + rotatedCoords[0];
+                        int y = this.pos.getY() + rotatedCoords[1];
+                        int z = this.pos.getZ() + rotatedCoords[2];
+                        setSource(new BlockPos(x, y, z), remove, k);
+                        if (worldObj.getBlockState(new BlockPos(x, y, z)).getBlock().isOpaqueCube(worldObj.getBlockState(new BlockPos(x, y, z))) && !remove) {
+                            if (i < 8) {   //This is for canceling the long rangs beams
+                                failedBeams[j] = true;
+                            }
+                            break;
                         }
                     }
-                    int a = i;
-                    int b = 0;
-                    int c = 0;
-                    switch (j) {
-                        case 0:
-                            b += i / 2;
-                            break;
-                        case 1:
-                            b -= i / 2;
-                            break;
-                        case 2:
-                            c += i / 2;
-                            break;
-                        case 3:
-                            c -= i / 2;
-                            break;
-                        case 4:
-                            b += i / 2;
-                            c += i / 2;
-                            break;
-                        case 5:
-                            b += i / 2;
-                            c -= i / 2;
-                            break;
-                        case 6:
-                            b -= i / 2;
-                            c += i / 2;
-                            break;
-                        case 7:
-                            b -= i / 2;
-                            c -= i / 2;
-                            break;
-                    }
-                    int[] rotatedCoords = rotate(a, b, c, this.orientation); // rotate the coordinate to the correct spot in the real world :)
-                    int x = this.pos.getX() + rotatedCoords[0];
-                    int y = this.pos.getY() + rotatedCoords[1];
-                    int z = this.pos.getZ() + rotatedCoords[2];
-                    if (remove) {
-                        if (worldObj.getBlockState(new BlockPos(x,y,z)).getBlock() == ModBlocks.blockPhantomLight) {
-                            TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(new BlockPos(x,y,z));
-                            light.removeSource(this.pos);
+                } else if (!failedBeams[j - 9] || remove) { // This is for the inner beams at longer range
+                    for (int i = 8; i <= ConfigHandler.rangeConeFloodlight; i++) {
+                        int a = i;
+                        int b = 0;
+                        int c = 0;
+                        switch (j) {
+                            case 9:
+                                b += i / 4;
+                                break;
+                            case 10:
+                                b -= i / 4;
+                                break;
+                            case 11:
+                                c += i / 4;
+                                break;
+                            case 12:
+                                c -= i / 4;
+                                break;
+                            case 13:
+                                b += i / 4;
+                                c += i / 4;
+                                break;
+                            case 14:
+                                b += i / 4;
+                                c -= i / 4;
+                                break;
+                            case 15:
+                                b -= i / 4;
+                                c += i / 4;
+                                break;
+                            case 16:
+                                b -= i / 4;
+                                c -= i / 4;
+                                break;
                         }
-                    } else if (worldObj.getBlockState(new BlockPos(x,y,z)).getBlock().isAir(worldObj, new BlockPos(x,y,z))) {
-                        setLight(new BlockPos(x,y,z));
-                    } else if (worldObj.getBlockState(new BlockPos(x,y,z)).getBlock() == ModBlocks.blockPhantomLight) {
-                        TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(new BlockPos(x,y,z));
-                        light.addSource(this.pos);
-                    } else if (worldObj.getBlockState(new BlockPos(x,y,z)).getBlock().isOpaqueCube()) {
-                        if (i < 8) {   //This is for canceling the long rangs beams
-                            failedBeams[j] = true;
+                        int[] rotatedCoords = rotate(a, b, c, this.orientation);
+                        int x = this.pos.getX() + rotatedCoords[0];
+                        int y = this.pos.getY() + rotatedCoords[1];
+                        int z = this.pos.getZ() + rotatedCoords[2];
+                        setSource(new BlockPos(x, y, z), remove, k);
+                        if (worldObj.getBlockState(new BlockPos(x, y, z)).getBlock().isOpaqueCube(worldObj.getBlockState(new BlockPos(x, y, z))) && !remove) {
+                            break;
                         }
-                        break;
-                    }
-                }
-            } else if (!failedBeams[j - 9] || remove) { // This is for the inner beams at longer range
-                for (int i = 8; i <= ConfigHandler.rangeConeFloodlight; i++) {
-                    int a = i;
-                    int b = 0;
-                    int c = 0;
-                    switch (j) {
-                        case 9:
-                            b += i / 4;
-                            break;
-                        case 10:
-                            b -= i / 4;
-                            break;
-                        case 11:
-                            c += i / 4;
-                            break;
-                        case 12:
-                            c -= i / 4;
-                            break;
-                        case 13:
-                            b += i / 4;
-                            c += i / 4;
-                            break;
-                        case 14:
-                            b += i / 4;
-                            c -= i / 4;
-                            break;
-                        case 15:
-                            b -= i / 4;
-                            c += i / 4;
-                            break;
-                        case 16:
-                            b -= i / 4;
-                            c -= i / 4;
-                            break;
-                    }
-                    int[] rotatedCoords = rotate(a, b, c, this.orientation);
-                    int x = this.pos.getX() + rotatedCoords[0];
-                    int y = this.pos.getY() + rotatedCoords[1];
-                    int z = this.pos.getZ() + rotatedCoords[2];
-                    if (remove) {
-                        if (worldObj.getBlockState(new BlockPos(x,y,z)).getBlock() == ModBlocks.blockPhantomLight) {
-                            TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(new BlockPos(x,y,z));
-                            light.removeSource(this.pos);
-                        }
-                    } else if (worldObj.getBlockState(new BlockPos(x,y,z)).getBlock().isAir(worldObj, new BlockPos(x,y,z))) {
-                        setLight(new BlockPos(x,y,z));
-                    } else if (worldObj.getBlockState(new BlockPos(x,y,z)).getBlock() == ModBlocks.blockPhantomLight) {
-                        TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(new BlockPos(x,y,z));
-                        light.addSource(this.pos);
-                    } else if (worldObj.getBlockState(new BlockPos(x,y,z)).getBlock().isOpaqueCube()) {
-                        break;
                     }
                 }
             }

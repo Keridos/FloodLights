@@ -6,7 +6,7 @@ import de.keridos.floodlights.handler.ConfigHandler;
 import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.reference.Names;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
@@ -34,9 +34,10 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound nbtTagCompound) {
-        super.writeToNBT(nbtTagCompound);
+    public NBTTagCompound writeToNBT(NBTTagCompound nbtTagCompound) {
+        nbtTagCompound = super.writeToNBT(nbtTagCompound);
         nbtTagCompound.setBoolean(Names.NBT.ROTATION_STATE, rotationState);
+        return nbtTagCompound;
     }
 
     @Override
@@ -46,7 +47,7 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
 
     public void toggleRotationState() {
         rotationState = !rotationState;
-        this.worldObj.markBlockForUpdate(this.pos);
+        this.worldObj.markBlocksDirtyVertical(this.pos.getX(),this.pos.getZ(),this.pos.getX(),this.pos.getZ());;
     }
 
     public boolean getRotationState() {
@@ -87,7 +88,7 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
                     TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(new BlockPos(x, y, z));
                     light.removeSource(this.pos);
                 }
-            } else if (worldObj.getBlockState(new BlockPos(x,y,z)).getBlock().isAir(worldObj, new BlockPos(x,y,z))) {
+            } else if (worldObj.getBlockState(new BlockPos(x,y,z)).getBlock().isAir(worldObj.getBlockState(new BlockPos(x,y,z)),worldObj, new BlockPos(x,y,z))) {
                 setLight(new BlockPos(x,y,z));
             } else if (worldObj.getBlockState(new BlockPos(x,y,z)).getBlock() == ModBlocks.blockPhantomLight) {
                 TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(new BlockPos(x,y,z));
@@ -97,6 +98,7 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
     }
 
     public void update() {
+        super.update();
         World world = this.getWorld();
         /*if (ModCompatibility.IC2Loaded && !wasAddedToEnergyNet && !world.isRemote) {
             addToIc2EnergyNetwork();
@@ -126,12 +128,12 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
                     smallSource(true);
                     smallSource(false);
                     world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, true), 2);
-                    world.markBlockForUpdate(this.pos);
+                    world.markBlocksDirtyVertical(this.pos.getX(),this.pos.getZ(),this.pos.getX(),this.pos.getZ());;
                     update = false;
                 } else if (!wasActive) {
                     smallSource(false);
                     world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, true), 2);
-                    world.markBlockForUpdate(this.pos);
+                    world.markBlocksDirtyVertical(this.pos.getX(),this.pos.getZ(),this.pos.getX(),this.pos.getZ());;
                 }
                 if (storageEU >= (double) realEnergyUsage / 8.0D) {
                     storageEU -= (double) realEnergyUsage / 8.0D;
@@ -142,7 +144,7 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
             } else if ((!active || (storage.getEnergyStored() < realEnergyUsage && storageEU < (double) realEnergyUsage / 8.0D)) && wasActive) {
                 smallSource(true);
                 world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, false), 2);
-                world.markBlockForUpdate(this.pos);
+                world.markBlocksDirtyVertical(this.pos.getX(),this.pos.getZ(),this.pos.getX(),this.pos.getZ());;
                 wasActive = false;
                 timeout = ConfigHandler.timeoutFloodlights;
                 update = false;

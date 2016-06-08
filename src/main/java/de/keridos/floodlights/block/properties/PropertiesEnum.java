@@ -6,10 +6,10 @@ import net.minecraft.util.IStringSerializable;
  * Created by Keridos on 04/06/2016.
  * This Class
  */
-public class BlockProperties {
+public class PropertiesEnum {
     public enum EnumModel implements IStringSerializable {
-        SMALLELECTRICFLOODLIGHTSTRIP(0, "smallElectricFloodlightStrip"),
-        SMALLELECTRICFLOODLIGHTSQUARE(1, "smallElectricFloodlightSquare");
+        SMALLELECTRICFLOODLIGHTSTRIP(0, "smallelectricfloodlightstrip"),
+        SMALLELECTRICFLOODLIGHTSQUARE(1, "smallelectricfloodlightsquare");
 
         private int ID;
         private String name;

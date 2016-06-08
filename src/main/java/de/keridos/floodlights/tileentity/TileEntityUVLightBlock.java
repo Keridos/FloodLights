@@ -2,7 +2,7 @@ package de.keridos.floodlights.tileentity;
 
 import de.keridos.floodlights.handler.ConfigHandler;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
 
 import java.util.List;

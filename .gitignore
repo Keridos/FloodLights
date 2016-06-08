@@ -11,5 +11,7 @@ MinecraftForge-License.txt
 /.gradle/
 /assets/
 /libs/
+/run/
+/classes/
 out/
 curseKey.properties

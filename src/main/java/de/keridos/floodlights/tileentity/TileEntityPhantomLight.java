@@ -6,7 +6,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.ITickable;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
@@ -51,9 +51,7 @@ public class TileEntityPhantomLight extends TileEntity implements ITickable {
         if (sources.isEmpty() && this.hasWorldObj() && remove) {
             if (!worldObj.setBlockToAir(this.pos)) {
                 update = true;
-            } else {
                 removeLightOnUpdate = true;
-                worldObj.markBlockForUpdate(this.pos);
             }
         }
     }
@@ -68,9 +66,7 @@ public class TileEntityPhantomLight extends TileEntity implements ITickable {
         if (sources.isEmpty() && this.hasWorldObj()) {
             if (!worldObj.setBlockToAir(this.pos)) {
                 update = true;
-            } else {
                 removeLightOnUpdate = true;
-                worldObj.markBlockForUpdate(this.pos);
             }
         }
     }
@@ -102,8 +98,8 @@ public class TileEntityPhantomLight extends TileEntity implements ITickable {
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound nbtTagCompound) {
-        super.writeToNBT(nbtTagCompound);
+    public NBTTagCompound writeToNBT(NBTTagCompound nbtTagCompound) {
+        nbtTagCompound = super.writeToNBT(nbtTagCompound);
         if (!this.sources.isEmpty()) {
             NBTTagList SourceList = new NBTTagList();
             for (BlockPos source : sources) {
@@ -111,6 +107,7 @@ public class TileEntityPhantomLight extends TileEntity implements ITickable {
             }
             nbtTagCompound.setTag(Names.NBT.SOURCES, SourceList);
         }
+        return nbtTagCompound;
     }
 
     @Override
@@ -118,13 +115,11 @@ public class TileEntityPhantomLight extends TileEntity implements ITickable {
         if (!worldObj.isRemote && update && worldObj.getWorldTime() % 20 == 11) {
             if (removeLightOnUpdate) {
                 if (worldObj.setBlockToAir(this.pos)) {
-                    worldObj.markBlockForUpdate(this.pos);
                     return;
                 }
             }
             if (sources.isEmpty()) {
                 if (worldObj.setBlockToAir(this.pos)) {
-                    worldObj.markBlockForUpdate(this.pos);
                     update = false;
                 }
             } else {

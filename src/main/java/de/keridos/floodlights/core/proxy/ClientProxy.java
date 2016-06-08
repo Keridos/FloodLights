@@ -1,6 +1,7 @@
 package de.keridos.floodlights.core.proxy;
 
 import de.keridos.floodlights.block.BlockFLColorableMachine;
+import de.keridos.floodlights.block.BlockPhantomLight;
 import de.keridos.floodlights.block.BlockSmallElectricFloodlight;
 import de.keridos.floodlights.client.render.block.TileEntityPhantomLightRenderer;
 import de.keridos.floodlights.compatability.IGWHandler;
@@ -13,7 +14,7 @@ import de.keridos.floodlights.tileentity.TileEntityPhantomLight;
 import de.keridos.floodlights.util.RenderUtil;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.statemap.StateMap;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -71,6 +72,8 @@ public class ClientProxy extends CommonProxy {
         ModelLoader.setCustomStateMapper(ModBlocks.blockUVLight,ignoreColor);
         ModelLoader.setCustomStateMapper(ModBlocks.blockSmallElectricLight, new StateMap.Builder().withName(BlockSmallElectricFloodlight.MODEL).ignore(BlockFLColorableMachine.COLOR).build());
         ModelLoader.setCustomStateMapper(ModBlocks.blockGrowLight, new StateMap.Builder().ignore(BlockFLColorableMachine.COLOR).ignore(BlockFLColorableMachine.FACING).build());
+        ModelLoader.setCustomStateMapper(ModBlocks.blockPhantomLight, new StateMap.Builder().ignore(BlockPhantomLight.UPDATE).build());
+        ModelLoader.setCustomStateMapper(ModBlocks.blockUVLightBlock, new StateMap.Builder().ignore(BlockPhantomLight.UPDATE).build());
     }
 
     @Override

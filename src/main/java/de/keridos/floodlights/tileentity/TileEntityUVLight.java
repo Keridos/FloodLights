@@ -4,7 +4,7 @@ import cofh.api.energy.IEnergyContainerItem;
 import de.keridos.floodlights.block.BlockFLColorableMachine;
 import de.keridos.floodlights.handler.ConfigHandler;
 import de.keridos.floodlights.init.ModBlocks;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
@@ -34,14 +34,14 @@ public class TileEntityUVLight extends TileEntityFLElectric {
                     TileEntityUVLightBlock light = (TileEntityUVLightBlock) worldObj.getTileEntity(tempPos);
                     light.removeSource(this.pos);
                 }
-            } else if (worldObj.getBlockState(tempPos).getBlock().isAir(worldObj, tempPos) || worldObj.getBlockState(tempPos).getBlock() == ModBlocks.blockPhantomLight) {
+            } else if (worldObj.getBlockState(tempPos).getBlock().isAir(worldObj.getBlockState(tempPos),worldObj, tempPos) || worldObj.getBlockState(tempPos).getBlock() == ModBlocks.blockPhantomLight) {
                 worldObj.setBlockToAir(tempPos);
                 worldObj.removeTileEntity(tempPos);
                 setLightUV(tempPos);
             } else if (worldObj.getBlockState(tempPos).getBlock() == ModBlocks.blockUVLightBlock) {
                 TileEntityUVLightBlock light = (TileEntityUVLightBlock) worldObj.getTileEntity(tempPos);
                 light.addSource(this.pos);
-            } else if (worldObj.getBlockState(tempPos).getBlock().isOpaqueCube()) {
+            } else if (worldObj.getBlockState(tempPos).getBlock().isOpaqueCube(worldObj.getBlockState(tempPos))) {
                 break;
             }
         }
@@ -49,6 +49,7 @@ public class TileEntityUVLight extends TileEntityFLElectric {
 
     @Override
     public void update() {
+        super.update();
         World world = this.getWorld();
         /*if (ModCompatibility.IC2Loaded && !wasAddedToEnergyNet && !world.isRemote) {
             addToIc2EnergyNetwork();
@@ -74,10 +75,12 @@ public class TileEntityUVLight extends TileEntityFLElectric {
                     UVSource(true);
                     UVSource(false);
                     world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, true), 2);
+                    world.markBlocksDirtyVertical(this.pos.getX(),this.pos.getZ(),this.pos.getX(),this.pos.getZ());
                     update = false;
                 } else if (!wasActive) {
                     UVSource(false);
                     world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, true), 2);
+                    world.markBlocksDirtyVertical(this.pos.getX(),this.pos.getZ(),this.pos.getX(),this.pos.getZ());
                 }
                 if (storageEU >= (double) realEnergyUsage / 8.0D) {
                     storageEU -= (double) realEnergyUsage / 8.0D;
@@ -88,6 +91,7 @@ public class TileEntityUVLight extends TileEntityFLElectric {
             } else if ((!active || (storage.getEnergyStored() < realEnergyUsage && storageEU < (double) realEnergyUsage / 8.0D)) && wasActive) {
                 UVSource(true);
                 world.setBlockState(this.pos, world.getBlockState(this.pos).getBlock().getStateFromMeta(this.getOrientation().ordinal()), 2);
+                world.markBlocksDirtyVertical(this.pos.getX(),this.pos.getZ(),this.pos.getX(),this.pos.getZ());
                 wasActive = false;
             }
         }

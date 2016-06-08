@@ -4,11 +4,16 @@ import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.tileentity.TileEntityPhantomLight;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.PropertyBool;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
+import net.minecraft.init.Blocks;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -20,22 +25,39 @@ import java.util.logging.Logger;
  * This Class implements the invisible light block the mod uses to light up areas.
  */
 public class BlockPhantomLight extends BlockFL implements ITileEntityProvider {
+    public static final PropertyBool UPDATE = PropertyBool.create("update");
     public BlockPhantomLight() {
-        super(Names.Blocks.PHANTOM_LIGHT, Material.air, soundTypeCloth, 0.0F);
+        super(Names.Blocks.PHANTOM_LIGHT, Material.AIR, SoundType.CLOTH, 0.0F);
     }
 
     public BlockPhantomLight(String name, Material material, SoundType soundType, float hardness) {
         super(name, material, soundType, hardness);
         setHarvestLevel("pickaxe", 1);
+        setDefaultState(this.blockState.getBaseState().withProperty(UPDATE, false));
     }
 
     @Override
-    public int getRenderType() {
-        return -1;
+    public IBlockState getStateFromMeta(int meta) {
+          return this.getDefaultState().withProperty(UPDATE, (meta == 1));
     }
 
     @Override
-    public AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state) {
+    public int getMetaFromState(IBlockState state) {
+        return (state.getValue(UPDATE)? 1 : 0);
+    }
+
+    @Override
+    protected BlockStateContainer createBlockState() {
+        return new BlockStateContainer(this, UPDATE);
+    }
+
+    @Override
+    public EnumBlockRenderType getRenderType(IBlockState state) {
+        return EnumBlockRenderType.INVISIBLE;
+    }
+
+    @Override
+    public AxisAlignedBB getCollisionBoundingBox(IBlockState state, World worldIn, BlockPos pos) {
         return null;
     }
 
@@ -45,7 +67,7 @@ public class BlockPhantomLight extends BlockFL implements ITileEntityProvider {
     }
 
     @Override
-    public boolean isOpaqueCube() {
+    public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
 
@@ -65,17 +87,17 @@ public class BlockPhantomLight extends BlockFL implements ITileEntityProvider {
     }
 
     @Override
-    public boolean canProvidePower() {
+    public boolean canProvidePower(IBlockState state) {
         return false;
     }
 
     @Override
-    public boolean canBeReplacedByLeaves(IBlockAccess world, BlockPos pos) {
+    public boolean canBeReplacedByLeaves(IBlockState state,IBlockAccess world, BlockPos pos) {
         return true;
     }
 
     @Override
-    public int getLightValue() {
+    public int getLightValue(IBlockState state) {
         return 15;
     }
 
@@ -85,8 +107,8 @@ public class BlockPhantomLight extends BlockFL implements ITileEntityProvider {
     }
 
     @Override
-    public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock) {
-        if (!(neighborBlock instanceof BlockFL)) { //TODO: rework this to be less laggy
+    public void neighborChanged(IBlockState state,World worldIn, BlockPos pos, Block neighborBlock) {
+        if (!worldIn.isRemote && state.getValue(UPDATE) && (neighborBlock != Blocks.AIR)) { //TODO: rework this to be less laggy
             Logger.getGlobal().info("detected change in neighbour to phantomlight");
             ((TileEntityPhantomLight) worldIn.getTileEntity(pos)).updateAllSources(true);
         }

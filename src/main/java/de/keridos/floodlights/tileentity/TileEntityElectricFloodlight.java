@@ -6,7 +6,7 @@ import de.keridos.floodlights.handler.ConfigHandler;
 import de.keridos.floodlights.reference.Names;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 
 import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
@@ -19,6 +19,7 @@ import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
 public class TileEntityElectricFloodlight extends TileEntityFLElectric implements ISidedInventory {
     @Override
     public void update() {
+        super.update();
         World world = this.getWorld();
         /*if (ModCompatibility.IC2Loaded && !wasAddedToEnergyNet && !world.isRemote) {
             addToIc2EnergyNetwork();
@@ -105,7 +106,7 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric implement
                 addSource(this.mode);
             }
             String modeString = (mode == 0 ? Names.Localizations.STRAIGHT : mode == 1 ? Names.Localizations.NARROW_CONE : Names.Localizations.WIDE_CONE);
-            player.addChatMessage(new ChatComponentText(safeLocalize(Names.Localizations.MODE) + ": " + safeLocalize(modeString)));
+            player.addChatMessage(new TextComponentString(safeLocalize(Names.Localizations.MODE) + ": " + safeLocalize(modeString)));
         }
     }
 }

@@ -6,7 +6,7 @@ import de.keridos.floodlights.reference.Names;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
@@ -36,9 +36,10 @@ public class TileEntityCarbonFloodlight extends TileEntityMetaFloodlight {
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound nbtTagCompound) {
-        super.writeToNBT(nbtTagCompound);
+    public NBTTagCompound writeToNBT(NBTTagCompound nbtTagCompound) {
+        nbtTagCompound = super.writeToNBT(nbtTagCompound);
         nbtTagCompound.setInteger(Names.NBT.TIME_REMAINING, timeRemaining);
+        return nbtTagCompound;
     }
 
     @Override
@@ -53,6 +54,7 @@ public class TileEntityCarbonFloodlight extends TileEntityMetaFloodlight {
 
     @Override
     public void update() {
+        super.update();
         World world = this.getWorld();
         if (!world.isRemote) {
             if (timeRemaining == 0 && inventory[0] != null) {
@@ -128,7 +130,7 @@ public class TileEntityCarbonFloodlight extends TileEntityMetaFloodlight {
                 addSource(this.mode);
             }
             String modeString = (mode == 0 ? Names.Localizations.STRAIGHT : mode == 1 ? Names.Localizations.NARROW_CONE : Names.Localizations.WIDE_CONE);
-            player.addChatMessage(new ChatComponentText(safeLocalize(Names.Localizations.MODE) + ": " + safeLocalize(modeString)));
+            player.addChatMessage(new TextComponentString(safeLocalize(Names.Localizations.MODE) + ": " + safeLocalize(modeString)));
         }
     }
 }

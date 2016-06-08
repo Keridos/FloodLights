@@ -1,14 +1,11 @@
 package de.keridos.floodlights.tileentity;
 
-import de.keridos.floodlights.core.network.message.MessageTileEntityFL;
-import de.keridos.floodlights.handler.PacketHandler;
 import de.keridos.floodlights.reference.Names;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
@@ -112,8 +109,8 @@ public class TileEntityFL extends TileEntity {
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound nbtTagCompound) {
-        super.writeToNBT(nbtTagCompound);
+    public NBTTagCompound writeToNBT(NBTTagCompound nbtTagCompound) {
+        nbtTagCompound = super.writeToNBT(nbtTagCompound);
         nbtTagCompound.setByte(Names.NBT.DIRECTION, (byte) orientation.ordinal());
         nbtTagCompound.setBoolean(Names.NBT.INVERT, inverted);
         nbtTagCompound.setByte(Names.NBT.STATE, state);
@@ -125,6 +122,7 @@ public class TileEntityFL extends TileEntity {
         if (this.hasOwner()) {
             nbtTagCompound.setString(Names.NBT.OWNER, owner);
         }
+        return nbtTagCompound;
     }
 
     public boolean hasCustomName() {
@@ -145,7 +143,7 @@ public class TileEntityFL extends TileEntity {
     }
 
     @Override
-    public Packet getDescriptionPacket() {
-        return PacketHandler.INSTANCE.getPacketFrom(new MessageTileEntityFL(this));
+    public NBTTagCompound getUpdateTag() {
+        return this.writeToNBT(super.getUpdateTag());
     }
 }
