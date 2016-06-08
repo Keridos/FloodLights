@@ -5,7 +5,10 @@ import de.keridos.floodlights.tileentity.TileEntityPhantomLight;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.PropertyBool;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
@@ -20,6 +23,7 @@ import java.util.logging.Logger;
  * This Class implements the invisible light block the mod uses to light up areas.
  */
 public class BlockPhantomLight extends BlockFL implements ITileEntityProvider {
+    public static final PropertyBool UPDATE = PropertyBool.create("update");
     public BlockPhantomLight() {
         super(Names.Blocks.PHANTOM_LIGHT, Material.air, soundTypeCloth, 0.0F);
     }
@@ -27,11 +31,27 @@ public class BlockPhantomLight extends BlockFL implements ITileEntityProvider {
     public BlockPhantomLight(String name, Material material, SoundType soundType, float hardness) {
         super(name, material, soundType, hardness);
         setHarvestLevel("pickaxe", 1);
+        setDefaultState(this.blockState.getBaseState().withProperty(UPDATE, false));
     }
 
     @Override
     public int getRenderType() {
         return -1;
+    }
+
+    @Override
+    public IBlockState getStateFromMeta(int meta) {
+        return this.getDefaultState().withProperty(UPDATE, (meta == 1));
+    }
+
+    @Override
+    public int getMetaFromState(IBlockState state) {
+        return (state.getValue(UPDATE) ? 1 : 0);
+    }
+
+    @Override
+    protected BlockState createBlockState() {
+        return new BlockState(this, UPDATE);
     }
 
     @Override
@@ -86,7 +106,7 @@ public class BlockPhantomLight extends BlockFL implements ITileEntityProvider {
 
     @Override
     public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock) {
-        if (!(neighborBlock instanceof BlockFL)) { //TODO: rework this to be less laggy
+        if (!worldIn.isRemote && state.getValue(UPDATE) && (neighborBlock != Blocks.air)) {
             Logger.getGlobal().info("detected change in neighbour to phantomlight");
             ((TileEntityPhantomLight) worldIn.getTileEntity(pos)).updateAllSources(true);
         }
@@ -94,7 +114,7 @@ public class BlockPhantomLight extends BlockFL implements ITileEntityProvider {
 
     @Override
     public void breakBlock(World world, BlockPos pos, IBlockState blockState) {
-        ((TileEntityPhantomLight) world.getTileEntity(pos)).updateAllSources(true);
+        w((TileEntityPhantomLight) world.getTileEntity(pos)).updateAllSources(true);
         super.breakBlock(world,pos,blockState);
     }
 }

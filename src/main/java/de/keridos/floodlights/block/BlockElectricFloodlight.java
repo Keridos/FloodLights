@@ -45,7 +45,7 @@ public class BlockElectricFloodlight extends BlockFLColorableMachine implements 
             } else if (world.isBlockIndirectlyGettingPowered(pos) == 0) {
                 ((TileEntityElectricFloodlight) world.getTileEntity(pos)).setRedstone(false);
             }
-            if (!(block instanceof BlockFL) && block == Blocks.air) {
+            if (!(block instanceof BlockFL) && block != Blocks.air) {
                 ((TileEntityMetaFloodlight) world.getTileEntity(pos)).toggleUpdateRun();
             }
         }

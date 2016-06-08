@@ -2,14 +2,11 @@
 *.ipr
 *.iws
 /.idea/
-CREDITS-fml*
-forge-*-changelog.txt
-LICENSE*
-MinecraftForge-Credits.txt
-MinecraftForge-License.txt
 /build/
 /.gradle/
 /assets/
 /libs/
+/run/
+/classes/
 out/
 curseKey.properties

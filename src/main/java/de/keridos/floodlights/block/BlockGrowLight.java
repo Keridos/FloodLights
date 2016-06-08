@@ -52,7 +52,7 @@ public class BlockGrowLight extends BlockFLColorableMachine implements ITileEnti
             } else if (world.isBlockIndirectlyGettingPowered(pos) == 0) {
                 ((TileEntityMetaFloodlight) world.getTileEntity(pos)).setRedstone(false);
             }
-            if (!(block instanceof BlockFL) && block == Blocks.air) {
+            if (!(block instanceof BlockFL) && block != Blocks.air) {
                 ((TileEntityMetaFloodlight) world.getTileEntity(pos)).toggleUpdateRun();
             }
         }

@@ -53,6 +53,7 @@ public class TileEntityCarbonFloodlight extends TileEntityMetaFloodlight {
 
     @Override
     public void update() {
+        super.update();
         World world = this.getWorld();
         if (!world.isRemote) {
             if (timeRemaining == 0 && inventory[0] != null) {

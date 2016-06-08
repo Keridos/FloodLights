@@ -51,9 +51,9 @@ public class TileEntityPhantomLight extends TileEntity implements ITickable {
         if (sources.isEmpty() && this.hasWorldObj() && remove) {
             if (!worldObj.setBlockToAir(this.pos)) {
                 update = true;
-            } else {
                 removeLightOnUpdate = true;
-                worldObj.markBlockForUpdate(this.pos);
+            } else {
+                worldObj.notifyLightSet(pos);
             }
         }
     }
@@ -68,9 +68,9 @@ public class TileEntityPhantomLight extends TileEntity implements ITickable {
         if (sources.isEmpty() && this.hasWorldObj()) {
             if (!worldObj.setBlockToAir(this.pos)) {
                 update = true;
-            } else {
                 removeLightOnUpdate = true;
-                worldObj.markBlockForUpdate(this.pos);
+            } else {
+                worldObj.notifyLightSet(pos);
             }
         }
     }
@@ -118,13 +118,13 @@ public class TileEntityPhantomLight extends TileEntity implements ITickable {
         if (!worldObj.isRemote && update && worldObj.getWorldTime() % 20 == 11) {
             if (removeLightOnUpdate) {
                 if (worldObj.setBlockToAir(this.pos)) {
-                    worldObj.markBlockForUpdate(this.pos);
+                    worldObj.notifyLightSet(this.pos);
                     return;
                 }
             }
             if (sources.isEmpty()) {
                 if (worldObj.setBlockToAir(this.pos)) {
-                    worldObj.markBlockForUpdate(this.pos);
+                    worldObj.notifyLightSet(this.pos);
                     update = false;
                 }
             } else {

@@ -107,7 +107,7 @@ minecraft {
     if (file('../run2').exists()) {
         runDir = "../run2"
     } else {
-        runDir = "assets"
+        runDir = "run"
     }
     mappings = "stable_20"
     replace '@VERSION@', project.version

@@ -50,7 +50,7 @@ public class BlockCarbonFloodlight extends BlockFLColorableMachine implements IT
             } else if (world.isBlockIndirectlyGettingPowered(pos) == 0) {
                 ((TileEntityCarbonFloodlight) world.getTileEntity(pos)).setRedstone(false);
             }
-            if (!(neighborBlock instanceof BlockFL) && neighborBlock == Blocks.air) {
+            if (!(neighborBlock instanceof BlockFL) && neighborBlock != Blocks.air) {
                 ((TileEntityMetaFloodlight) world.getTileEntity(pos)).toggleUpdateRun();
             }
         }

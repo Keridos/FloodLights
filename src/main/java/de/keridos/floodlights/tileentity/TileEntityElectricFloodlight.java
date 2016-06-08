@@ -19,6 +19,7 @@ import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
 public class TileEntityElectricFloodlight extends TileEntityFLElectric implements ISidedInventory {
     @Override
     public void update() {
+        super.update();
         World world = this.getWorld();
         /*if (ModCompatibility.IC2Loaded && !wasAddedToEnergyNet && !world.isRemote) {
             addToIc2EnergyNetwork();
