@@ -8,8 +8,8 @@ import net.minecraft.util.IStringSerializable;
  */
 public class BlockProperties {
     public enum EnumModel implements IStringSerializable {
-        SMALLELECTRICFLOODLIGHTSTRIP(0, "smallElectricFloodlightStrip"),
-        SMALLELECTRICFLOODLIGHTSQUARE(1, "smallElectricFloodlightSquare");
+        SMALLELECTRICFLOODLIGHTSTRIP(0, "smallelectricfloodlightstrip"),
+        SMALLELECTRICFLOODLIGHTSQUARE(1, "smallelectricfloodlightsquare");
 
         private int ID;
         private String name;
