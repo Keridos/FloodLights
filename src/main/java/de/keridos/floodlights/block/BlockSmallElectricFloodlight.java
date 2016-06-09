@@ -1,15 +1,13 @@
 package de.keridos.floodlights.block;
 
 import de.keridos.floodlights.FloodLights;
-import de.keridos.floodlights.block.properties.PropertiesEnum;
 import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.tileentity.TileEntityFL;
-import de.keridos.floodlights.tileentity.TileEntityMetaFloodlight;
 import de.keridos.floodlights.tileentity.TileEntitySmallFloodlight;
 import de.keridos.floodlights.util.MathUtil;
-import net.minecraft.block.Block;
+import de.keridos.floodlights.util.PropertiesEnum;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -20,7 +18,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -47,13 +44,13 @@ import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
  */
 public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implements ITileEntityProvider {
     public static final PropertyBool ROTATIONSTATE = PropertyBool.create("rotationstate");
-    public static final PropertyEnum MODEL = PropertyEnum.create("model", PropertiesEnum.EnumModel.class);
+    public static final PropertyEnum MODEL = PropertyEnum.create("model", PropertiesEnum.EnumModelSmallLight.class);
 
     public BlockSmallElectricFloodlight() {
         super(Names.Blocks.SMALL_ELECTRIC_FLOODLIGHT, Material.ROCK, SoundType.METAL, 2.5F);
         setDefaultState(
                 this.blockState.getBaseState().withProperty(COLOR, 0).withProperty(ACTIVE, false).withProperty(FACING,
-                        EnumFacing.DOWN).withProperty(MODEL, PropertiesEnum.EnumModel.values()[0]).withProperty(ROTATIONSTATE, false));
+                        EnumFacing.DOWN).withProperty(MODEL, PropertiesEnum.EnumModelSmallLight.values()[0]).withProperty(ROTATIONSTATE, false));
         setHarvestLevel("pickaxe", 1);
     }
 
@@ -62,41 +59,15 @@ public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implem
         return false;
     }
 
-
-    @Override
-    public void neighborChanged(IBlockState blockState, World world, BlockPos pos, Block neighborBlock) {
-        if (!world.isRemote) {
-            if (world.isBlockIndirectlyGettingPowered(pos) != 0) {
-                ((TileEntityMetaFloodlight) world.getTileEntity(pos)).setRedstone(true);
-            } else if (world.isBlockIndirectlyGettingPowered(pos) == 0) {
-                ((TileEntityMetaFloodlight) world.getTileEntity(pos)).setRedstone(false);
-            }
-            if (!(neighborBlock instanceof BlockFL) && neighborBlock != Blocks.AIR) {
-                ((TileEntityMetaFloodlight) world.getTileEntity(pos)).toggleUpdateRun();
-            }
-        }
-    }
-
-    @Override
-    public void onBlockAdded(World world, BlockPos pos, IBlockState block) {
-        if (!world.isRemote) {
-            if (world.isBlockIndirectlyGettingPowered(pos) != 0) {
-                ((TileEntitySmallFloodlight) world.getTileEntity(pos)).setRedstone(true);
-            } else if (world.isBlockIndirectlyGettingPowered(pos) == 0) {
-                ((TileEntitySmallFloodlight) world.getTileEntity(pos)).setRedstone(false);
-            }
-        }
-    }
-
     @Override
     @SuppressWarnings("unchecked")
     public IBlockState getStateFromMeta(int meta) {
-        return this.getDefaultState().withProperty(MODEL, PropertiesEnum.EnumModel.values()[meta]);
+        return this.getDefaultState().withProperty(MODEL, PropertiesEnum.EnumModelSmallLight.values()[meta]);
     }
 
     @Override
     public int getMetaFromState(IBlockState state) {
-        return (((PropertiesEnum.EnumModel) state.getValue(MODEL)).getID());
+        return (((PropertiesEnum.EnumModelSmallLight) state.getValue(MODEL)).getID());
     }
 
     @Override
@@ -245,7 +216,6 @@ public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implem
         return super.damageDropped(state);
     }
 
-
     @Override
     @SideOnly(Side.CLIENT)
     @SuppressWarnings("unchecked")
@@ -259,6 +229,4 @@ public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implem
     public boolean isFullCube(IBlockState state) {
         return false;
     }
-
-
 }

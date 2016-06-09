@@ -1,4 +1,4 @@
-package de.keridos.floodlights.block.properties;
+package de.keridos.floodlights.util;
 
 import net.minecraft.util.IStringSerializable;
 
@@ -7,14 +7,14 @@ import net.minecraft.util.IStringSerializable;
  * This Class
  */
 public class PropertiesEnum {
-    public enum EnumModel implements IStringSerializable {
+    public enum EnumModelSmallLight implements IStringSerializable {
         SMALLELECTRICFLOODLIGHTSTRIP(0, "smallelectricfloodlightstrip"),
         SMALLELECTRICFLOODLIGHTSQUARE(1, "smallelectricfloodlightsquare");
 
         private int ID;
         private String name;
 
-        private EnumModel(int ID, String name) {
+        EnumModelSmallLight(int ID, String name) {
             this.ID = ID;
             this.name = name;
         }

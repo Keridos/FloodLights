@@ -9,14 +9,11 @@ import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.tileentity.TileEntityCarbonFloodlight;
 import de.keridos.floodlights.tileentity.TileEntityFL;
-import de.keridos.floodlights.tileentity.TileEntityMetaFloodlight;
-import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -44,32 +41,6 @@ public class BlockCarbonFloodlight extends BlockFLColorableMachine implements IT
     @Override
     public boolean isOpaqueCube(IBlockState blockState) {
         return true;
-    }
-
-
-    @Override
-    public void neighborChanged(IBlockState blockState,World world, BlockPos pos , Block neighborBlock) {
-        if (!world.isRemote) {
-            if (world.isBlockIndirectlyGettingPowered(pos) != 0) {
-                ((TileEntityMetaFloodlight) world.getTileEntity(pos)).setRedstone(true);
-            } else if (world.isBlockIndirectlyGettingPowered(pos) == 0) {
-                ((TileEntityMetaFloodlight) world.getTileEntity(pos)).setRedstone(false);
-            }
-            if (!(neighborBlock instanceof BlockFL) && neighborBlock != Blocks.AIR) {
-                ((TileEntityMetaFloodlight) world.getTileEntity(pos)).toggleUpdateRun();
-            }
-        }
-    }
-
-    @Override
-    public void onBlockAdded(World world, BlockPos pos, IBlockState blockState) {
-        if (!world.isRemote) {
-            if (world.isBlockIndirectlyGettingPowered(pos) != 0) {
-                ((TileEntityCarbonFloodlight) world.getTileEntity(pos)).setRedstone(true);
-            } else if (world.isBlockIndirectlyGettingPowered(pos) == 0) {
-                ((TileEntityCarbonFloodlight) world.getTileEntity(pos)).setRedstone(false);
-            }
-        }
     }
 
     @Override

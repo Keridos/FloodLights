@@ -4,13 +4,12 @@ import cofh.api.energy.IEnergyContainerItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.*;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameData;
@@ -77,10 +76,6 @@ public class GeneralUtil {
             }
         } */
         return item instanceof IEnergyContainerItem;
-    }
-
-    public static EnumFacing getFacingFromEntity(Entity entity) {
-        return null; //TODO: implement!
     }
 
     public static BlockPos getPosFromPosFacing(BlockPos pos, EnumFacing facing) {

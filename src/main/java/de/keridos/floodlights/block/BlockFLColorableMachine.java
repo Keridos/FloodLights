@@ -1,6 +1,8 @@
 package de.keridos.floodlights.block;
 
 import de.keridos.floodlights.tileentity.TileEntityFL;
+import de.keridos.floodlights.tileentity.TileEntityMetaFloodlight;
+import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
@@ -8,9 +10,11 @@ import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 
 /**
  * Created by Keridos on 02/02/2016.
@@ -54,6 +58,31 @@ public class BlockFLColorableMachine extends BlockFL {
     @Override
     protected BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, FACING, ACTIVE, COLOR);
+    }
+
+    @Override
+    public void neighborChanged(IBlockState blockState, World world, BlockPos pos, Block neighborBlock) {
+        if (!world.isRemote && world.getTileEntity(pos) instanceof TileEntityMetaFloodlight) {
+            if (world.isBlockIndirectlyGettingPowered(pos) != 0) {
+                ((TileEntityMetaFloodlight) world.getTileEntity(pos)).setRedstone(true);
+            } else if (world.isBlockIndirectlyGettingPowered(pos) == 0) {
+                ((TileEntityMetaFloodlight) world.getTileEntity(pos)).setRedstone(false);
+            }
+            if (!(neighborBlock instanceof BlockFL) && neighborBlock != Blocks.AIR) {
+                ((TileEntityMetaFloodlight) world.getTileEntity(pos)).toggleUpdateRun();
+            }
+        }
+    }
+
+    @Override
+    public void onBlockAdded(World world, BlockPos pos, IBlockState block) {
+        if (!world.isRemote && world.getTileEntity(pos) instanceof TileEntityMetaFloodlight) {
+            if (world.isBlockIndirectlyGettingPowered(pos) != 0) {
+                ((TileEntityMetaFloodlight) world.getTileEntity(pos)).setRedstone(true);
+            } else if (world.isBlockIndirectlyGettingPowered(pos) == 0) {
+                ((TileEntityMetaFloodlight) world.getTileEntity(pos)).setRedstone(false);
+            }
+        }
     }
 
     /*@Override
