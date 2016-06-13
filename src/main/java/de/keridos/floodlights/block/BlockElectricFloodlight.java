@@ -40,8 +40,6 @@ public class BlockElectricFloodlight extends BlockFLColorableMachine implements 
         return true;
     }
 
-
-
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!world.isRemote && heldItem == null && player.isSneaking()) {

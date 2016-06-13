@@ -28,6 +28,8 @@ public class TileEntityPhantomLight extends TileEntity implements ITickable {
 
     public TileEntityPhantomLight() {
         super();
+        removeLightOnUpdate = false;
+        update = false;
     }
 
     @Override

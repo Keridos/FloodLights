@@ -21,7 +21,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 import java.util.Random;
-import java.util.logging.Logger;
 
 /**
  * Created by Keridos on 28.02.14.
@@ -64,7 +63,6 @@ public class BlockFL extends Block {
             }
             ((TileEntityFL) world.getTileEntity(pos)).setOrientation(getFacing(placer));
             world.setBlockState(pos, this.getStateFromMeta(getFacing(placer).ordinal()), 2);
-            Logger.getGlobal().info("rotation: " + getFacing(placer).toString() );
         }
     }
 

@@ -1,5 +1,6 @@
 package de.keridos.floodlights.tileentity;
 
+import de.keridos.floodlights.block.BlockFLColorableMachine;
 import de.keridos.floodlights.reference.Names;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
@@ -79,7 +80,7 @@ public class TileEntityFL extends TileEntity {
 
     public void setColor(int color) {
         this.color = color;
-        this.worldObj.markBlockRangeForRenderUpdate(this.pos,this.pos);
+        this.worldObj.setBlockState(this.pos,this.worldObj.getBlockState(this.pos).withProperty(BlockFLColorableMachine.COLOR,color),2);
     }
 
     @Override

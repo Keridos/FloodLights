@@ -3,9 +3,11 @@ package de.keridos.floodlights.tileentity;
 import cofh.api.energy.IEnergyContainerItem;
 import de.keridos.floodlights.block.BlockFLColorableMachine;
 import de.keridos.floodlights.handler.ConfigHandler;
-import de.keridos.floodlights.init.ModBlocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import static de.keridos.floodlights.block.BlockPhantomLight.UPDATE;
+import static de.keridos.floodlights.init.ModBlocks.blockUVLightBlock;
 
 /**
  * Created by Keridos on 15/09/2015.
@@ -18,31 +20,42 @@ public class TileEntityUVLight extends TileEntityFLElectric {
     }
 
     public void setLightUV(BlockPos pos) {
-        if (worldObj.setBlockState(pos, ModBlocks.blockUVLightBlock.getDefaultState())) {
+        if (worldObj.setBlockState(pos, blockUVLightBlock.getDefaultState())) {
             TileEntityUVLightBlock light = (TileEntityUVLightBlock) worldObj.getTileEntity(pos);
             light.addSource(this.pos);
         }
     }
 
+    public void setSource(BlockPos blockPos, boolean remove, Integer setSourceUpdate) {
+        if (remove) {
+            if (worldObj.getBlockState(blockPos).getBlock() == blockUVLightBlock && setSourceUpdate == 0) {
+                TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(blockPos);
+                light.removeSource(this.pos);
+            } else if (worldObj.getBlockState(blockPos).getBlock() == blockUVLightBlock) {
+                worldObj.setBlockState(blockPos, worldObj.getBlockState(blockPos).withProperty(UPDATE, false), 4);
+            }
+        } else if (worldObj.getBlockState(blockPos).getBlock() == blockUVLightBlock && setSourceUpdate == 2) {
+            worldObj.setBlockState(blockPos, worldObj.getBlockState(blockPos).withProperty(UPDATE, false), 4);
+        } else if (worldObj.getBlockState(blockPos).getBlock() == blockUVLightBlock && setSourceUpdate == 0) {
+            worldObj.setBlockState(blockPos, worldObj.getBlockState(blockPos).withProperty(UPDATE, true), 4);
+        } else if (worldObj.getBlockState(blockPos).getBlock() == blockUVLightBlock) {
+            TileEntityUVLightBlock light = (TileEntityUVLightBlock) worldObj.getTileEntity(blockPos);
+            light.addSource(this.pos);
+        } else if (worldObj.getBlockState(blockPos).getBlock().isAir(worldObj.getBlockState(blockPos), worldObj, blockPos) && setSourceUpdate == 1) {
+            setLightUV(blockPos);
+        }
+    }
+
     public void UVSource(boolean remove) {
-        for (int i = 1; i <= ConfigHandler.rangeUVFloodlight; i++) {
-            BlockPos tempPos = new BlockPos(this.pos.getX() + this.orientation.getFrontOffsetX() * i,
-                    this.pos.getY() + this.orientation.getFrontOffsetY() * i,
-                    this.pos.getZ() + this.orientation.getFrontOffsetZ() * i);
-            if (remove) {
-                if (worldObj.getBlockState(tempPos).getBlock() == ModBlocks.blockUVLightBlock) {
-                    TileEntityUVLightBlock light = (TileEntityUVLightBlock) worldObj.getTileEntity(tempPos);
-                    light.removeSource(this.pos);
+        for (int k = (remove ? 1 : 2); k >= 0; k--) {
+            for (int i = 1; i <= ConfigHandler.rangeUVFloodlight; i++) {
+                BlockPos tempPos = new BlockPos(this.pos.getX() + this.orientation.getFrontOffsetX() * i,
+                        this.pos.getY() + this.orientation.getFrontOffsetY() * i,
+                        this.pos.getZ() + this.orientation.getFrontOffsetZ() * i);
+                setSource(tempPos, remove, k);
+                if (worldObj.getBlockState(tempPos).getBlock().isOpaqueCube(worldObj.getBlockState(tempPos))) {
+                    break;
                 }
-            } else if (worldObj.getBlockState(tempPos).getBlock().isAir(worldObj.getBlockState(tempPos),worldObj, tempPos) || worldObj.getBlockState(tempPos).getBlock() == ModBlocks.blockPhantomLight) {
-                worldObj.setBlockToAir(tempPos);
-                worldObj.removeTileEntity(tempPos);
-                setLightUV(tempPos);
-            } else if (worldObj.getBlockState(tempPos).getBlock() == ModBlocks.blockUVLightBlock) {
-                TileEntityUVLightBlock light = (TileEntityUVLightBlock) worldObj.getTileEntity(tempPos);
-                light.addSource(this.pos);
-            } else if (worldObj.getBlockState(tempPos).getBlock().isOpaqueCube(worldObj.getBlockState(tempPos))) {
-                break;
             }
         }
     }
@@ -75,12 +88,10 @@ public class TileEntityUVLight extends TileEntityFLElectric {
                     UVSource(true);
                     UVSource(false);
                     world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, true), 2);
-                    world.markBlocksDirtyVertical(this.pos.getX(),this.pos.getZ(),this.pos.getX(),this.pos.getZ());
                     update = false;
                 } else if (!wasActive) {
                     UVSource(false);
                     world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, true), 2);
-                    world.markBlocksDirtyVertical(this.pos.getX(),this.pos.getZ(),this.pos.getX(),this.pos.getZ());
                 }
                 if (storageEU >= (double) realEnergyUsage / 8.0D) {
                     storageEU -= (double) realEnergyUsage / 8.0D;
@@ -91,7 +102,6 @@ public class TileEntityUVLight extends TileEntityFLElectric {
             } else if ((!active || (storage.getEnergyStored() < realEnergyUsage && storageEU < (double) realEnergyUsage / 8.0D)) && wasActive) {
                 UVSource(true);
                 world.setBlockState(this.pos, world.getBlockState(this.pos).getBlock().getStateFromMeta(this.getOrientation().ordinal()), 2);
-                world.markBlocksDirtyVertical(this.pos.getX(),this.pos.getZ(),this.pos.getX(),this.pos.getZ());
                 wasActive = false;
             }
         }

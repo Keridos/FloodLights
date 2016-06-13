@@ -23,12 +23,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class BlockUVLightBlock extends BlockPhantomLight {
 
     public BlockUVLightBlock() {
-        super(Names.Blocks.UV_LIGHTBLOCK, Material.GLASS, SoundType.CLOTH, 0.0F);
-    }
-
-    @Override
-    public EnumBlockRenderType getRenderType(IBlockState state) {
-        return EnumBlockRenderType.INVISIBLE;
+        super(Names.Blocks.UV_LIGHTBLOCK, Material.AIR, SoundType.CLOTH, 0.0F);
     }
 
     @Override
@@ -37,8 +32,13 @@ public class BlockUVLightBlock extends BlockPhantomLight {
     }
 
     @Override
+    public EnumBlockRenderType getRenderType(IBlockState state) {
+        return EnumBlockRenderType.MODEL;
+    }
+
+    @Override
     public boolean shouldSideBeRendered(IBlockState state,IBlockAccess world, BlockPos pos, EnumFacing side) {
-        return ConfigHandler.uvLightRendered && (side.getIndex() == 0 || (!world.getBlockState(pos.offset(side)).getBlock().isOpaqueCube(state) && world.getBlockState(pos.offset(side)).getBlock() != ModBlocks.blockUVLightBlock));
+        return ConfigHandler.uvLightRendered && (!world.getBlockState(pos.offset(side)).getBlock().isOpaqueCube(world.getBlockState(pos.offset(side))) && world.getBlockState(pos.offset(side)).getBlock() != ModBlocks.blockUVLightBlock);
     }
 
     @Override
@@ -56,5 +56,10 @@ public class BlockUVLightBlock extends BlockPhantomLight {
     public boolean isFullCube(IBlockState state)
     {
         return false;
+    }
+
+    @Override
+    public boolean isReplaceable(IBlockAccess worldIn, BlockPos pos) {
+        return true;
     }
 }

@@ -1,6 +1,5 @@
 package de.keridos.floodlights.block;
 
-import de.keridos.floodlights.tileentity.TileEntityFL;
 import de.keridos.floodlights.tileentity.TileEntityMetaFloodlight;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -13,7 +12,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 /**
@@ -48,14 +46,6 @@ public class BlockFLColorableMachine extends BlockFL {
     }
 
     @Override
-    public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
-        if (worldIn.getTileEntity(pos) instanceof TileEntityFL) {
-            return state.withProperty(COLOR, ((TileEntityFL) worldIn.getTileEntity(
-                    pos)).getColor());
-        } else return state.withProperty(COLOR, 0);
-    }
-
-    @Override
     protected BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, FACING, ACTIVE, COLOR);
     }
@@ -84,14 +74,5 @@ public class BlockFLColorableMachine extends BlockFL {
             }
         }
     }
-
-    /*@Override
-    public int colorMultiplier(IBlockAccess worldIn, BlockPos pos, int renderPass) {
-        if (worldIn.getBlockState(pos).getValue(COLOR) != null) {
-            return getColorAsInt(getActualState(worldIn.getBlockState(pos),worldIn,pos).getValue(COLOR));
-        }
-        return super.colorMultiplier(worldIn, pos, renderPass);
-    }    */
-
 
 }

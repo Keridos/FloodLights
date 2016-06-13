@@ -13,17 +13,25 @@ import de.keridos.floodlights.reference.Reference;
 import de.keridos.floodlights.tileentity.TileEntityPhantomLight;
 import de.keridos.floodlights.util.RenderUtil;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.block.statemap.StateMap;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.statemap.StateMap;
+import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.item.Item;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+
+import static de.keridos.floodlights.util.RenderUtil.getColorAsInt;
 
 /**
  * Created by Keridos on 28.02.14.
  * This Class is the proxy for the client.
  */
 public class ClientProxy extends CommonProxy {
+    private static final Minecraft minecraft = Minecraft.getMinecraft();
 
     public void registerItemModel(final Item item, int meta)
     {
@@ -49,6 +57,12 @@ public class ClientProxy extends CommonProxy {
     public void initRenderers() {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPhantomLight.class, new TileEntityPhantomLightRenderer());
         RenderUtil.setupColors();
+        minecraft.getBlockColors().registerBlockColorHandler(new IBlockColor() {
+            @Override
+            public int colorMultiplier(IBlockState state, IBlockAccess worldIn, BlockPos pos, int renderPass) {
+                return getColorAsInt(state.getValue(BlockFLColorableMachine.COLOR));
+            }
+        },ModBlocks.blockCarbonLight,ModBlocks.blockElectricLight,ModBlocks.blockSmallElectricLight);
     }
 
     @Override
