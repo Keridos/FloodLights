@@ -53,7 +53,7 @@ public class TileEntityUVLight extends TileEntityFLElectric {
                         this.pos.getY() + this.orientation.getFrontOffsetY() * i,
                         this.pos.getZ() + this.orientation.getFrontOffsetZ() * i);
                 setSource(tempPos, remove, k);
-                if (worldObj.getBlockState(tempPos).getBlock().isOpaqueCube()) {
+                if (!remove && worldObj.getBlockState(tempPos).getBlock().isOpaqueCube()) {
                     break;
                 }
             }

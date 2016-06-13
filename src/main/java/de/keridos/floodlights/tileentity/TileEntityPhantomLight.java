@@ -90,7 +90,6 @@ public class TileEntityPhantomLight extends TileEntity implements ITickable {
 
     @Override
     public void readFromNBT(NBTTagCompound nbtTagCompound) {
-        super.readFromNBT(nbtTagCompound);
         if (nbtTagCompound.hasKey(Names.NBT.SOURCES)) {
             NBTTagList list = nbtTagCompound.getTagList(Names.NBT.SOURCES, Constants.NBT.TAG_INT_ARRAY);
             for (int i = 0; i < list.tagCount(); i++) {
@@ -101,7 +100,6 @@ public class TileEntityPhantomLight extends TileEntity implements ITickable {
 
     @Override
     public void writeToNBT(NBTTagCompound nbtTagCompound) {
-        super.writeToNBT(nbtTagCompound);
         if (!this.sources.isEmpty()) {
             NBTTagList SourceList = new NBTTagList();
             for (BlockPos source : sources) {
@@ -117,6 +115,17 @@ public class TileEntityPhantomLight extends TileEntity implements ITickable {
             if (removeLightOnUpdate) {
                 if (worldObj.setBlockToAir(this.pos)) {
                     return;
+                }
+            } else {
+                Iterator<BlockPos> iter = sources.iterator();
+                while (iter.hasNext()) {
+                    BlockPos pos = iter.next();
+                    if (worldObj != null) {
+                        TileEntity te = worldObj.getTileEntity(pos);
+                        if (te != null && te instanceof TileEntityMetaFloodlight && ((TileEntityMetaFloodlight) te).getWasActive()) {
+                            this.removeSource(iter, true);
+                        }
+                    }
                 }
             }
             if (sources.isEmpty()) {

@@ -54,4 +54,9 @@ public class BlockUVLightBlock extends BlockPhantomLight {
     {
         return false;
     }
+
+    @Override
+    public boolean isReplaceable(World worldIn, BlockPos pos) {
+        return true;
+    }
 }
