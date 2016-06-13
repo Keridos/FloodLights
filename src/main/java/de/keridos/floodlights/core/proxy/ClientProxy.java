@@ -1,6 +1,7 @@
 package de.keridos.floodlights.core.proxy;
 
 import de.keridos.floodlights.block.BlockFLColorableMachine;
+import de.keridos.floodlights.block.BlockPhantomLight;
 import de.keridos.floodlights.block.BlockSmallElectricFloodlight;
 import de.keridos.floodlights.client.render.block.TileEntityPhantomLightRenderer;
 import de.keridos.floodlights.compatability.IGWHandler;
@@ -71,6 +72,8 @@ public class ClientProxy extends CommonProxy {
         ModelLoader.setCustomStateMapper(ModBlocks.blockUVLight,ignoreColor);
         ModelLoader.setCustomStateMapper(ModBlocks.blockSmallElectricLight, new StateMap.Builder().withName(BlockSmallElectricFloodlight.MODEL).ignore(BlockFLColorableMachine.COLOR).build());
         ModelLoader.setCustomStateMapper(ModBlocks.blockGrowLight, new StateMap.Builder().ignore(BlockFLColorableMachine.COLOR).ignore(BlockFLColorableMachine.FACING).build());
+        ModelLoader.setCustomStateMapper(ModBlocks.blockPhantomLight, new StateMap.Builder().ignore(BlockPhantomLight.UPDATE).build());
+        ModelLoader.setCustomStateMapper(ModBlocks.blockUVLightBlock, new StateMap.Builder().ignore(BlockPhantomLight.UPDATE).build());
     }
 
     @Override

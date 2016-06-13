@@ -20,7 +20,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class BlockUVLightBlock extends BlockPhantomLight {
 
     public BlockUVLightBlock() {
-        super(Names.Blocks.UV_LIGHTBLOCK, Material.glass, soundTypeCloth, 0.0F);
+        super(Names.Blocks.UV_LIGHTBLOCK, Material.air, soundTypeCloth, 0.0F);
     }
 
     @Override
@@ -35,7 +35,7 @@ public class BlockUVLightBlock extends BlockPhantomLight {
 
     @Override
     public boolean shouldSideBeRendered(IBlockAccess world, BlockPos pos, EnumFacing side) {
-        return ConfigHandler.uvLightRendered && (side.getIndex() == 0 || (!world.getBlockState(pos).getBlock().isOpaqueCube() && world.getBlockState(pos).getBlock() != ModBlocks.blockUVLightBlock));
+        return ConfigHandler.uvLightRendered && (!world.getBlockState(pos).getBlock().isOpaqueCube() && world.getBlockState(pos).getBlock() != ModBlocks.blockUVLightBlock);
     }
 
     @Override

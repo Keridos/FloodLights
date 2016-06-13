@@ -241,11 +241,11 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
         } else if (worldObj.getBlockState(blockPos).getBlock() == ModBlocks.blockPhantomLight && setSourceUpdate == 0) {
             worldObj.setBlockState(blockPos, worldObj.getBlockState(blockPos).withProperty(UPDATE, true), 4);
 
-        } else if (worldObj.getBlockState(blockPos).getBlock().isAir(worldObj, blockPos)) {
-            setLight(blockPos);
         } else if (worldObj.getBlockState(blockPos).getBlock() == ModBlocks.blockPhantomLight) {
             TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(blockPos);
             light.addSource(this.pos);
+        } else if (worldObj.getBlockState(blockPos).getBlock().isAir(worldObj, blockPos) && setSourceUpdate == 1) {
+            setLight(blockPos);
         }
     }
 
