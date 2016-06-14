@@ -111,6 +111,8 @@ minecraft {
     }
     mappings = "stable_20"
     replace '@VERSION@', project.version
+
+    useDepAts = true
 }
 
 processResources {

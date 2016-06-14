@@ -1,0 +1,4 @@
+This light uses energy to accelerate the grwoth of plants below it (2 blocks). It uses a decent amount of energy and can be set to either normal mode,
+which places a light block below it or dark mode, which prevents that. With the dark mode you can actually accelerate the
+growth of plants that require darkness, too.
+Shift-clicking with an empty hand will make it change its inversion state, just like the other lights.

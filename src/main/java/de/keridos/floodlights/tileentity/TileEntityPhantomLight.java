@@ -34,7 +34,6 @@ public class TileEntityPhantomLight extends TileEntity {
     }
 
     void addSource(BlockPos pos) {
-
         if (sources.contains(pos)) {
             return;
         }

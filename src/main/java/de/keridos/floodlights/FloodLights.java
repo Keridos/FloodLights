@@ -34,9 +34,9 @@ public class FloodLights {
     @SidedProxy(clientSide = Reference.PROXY_LOCATION + ".ClientProxy", serverSide = Reference.PROXY_LOCATION + ".CommonProxy")
     public static CommonProxy proxy;
 
-    private ConfigHandler configHandler = ConfigHandler.getInstance();
-    private static RecipeHandler recipeHandler = RecipeHandler.getInstance();
-    private static ModCompatibility modCompatibility = ModCompatibility.getInstance();
+    private static ConfigHandler configHandler;
+    private static RecipeHandler recipeHandler;
+    private static ModCompatibility modCompatibility;
     private static GuiHandler Gui;
 
     @NetworkCheckHandler()
@@ -46,6 +46,7 @@ public class FloodLights {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+        configHandler = ConfigHandler.getInstance();
         configHandler.initConfig(new Configuration(event.getSuggestedConfigurationFile()));
         ModBlocks.setupBlocks();
         ModBlocks.registerBlocks();
@@ -56,6 +57,8 @@ public class FloodLights {
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
+        recipeHandler = RecipeHandler.getInstance();
+        modCompatibility = ModCompatibility.getInstance();
         PacketHandler.init();
         recipeHandler.initRecipes();
         modCompatibility.performModCompat();

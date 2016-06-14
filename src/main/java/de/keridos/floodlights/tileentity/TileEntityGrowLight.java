@@ -1,6 +1,5 @@
 package de.keridos.floodlights.tileentity;
 
-import cofh.api.energy.IEnergyContainerItem;
 import de.keridos.floodlights.block.BlockFLColorableMachine;
 import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.handler.ConfigHandler;
@@ -49,7 +48,6 @@ public class TileEntityGrowLight extends TileEntityFLElectric {
             TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(new BlockPos(x, y, z));
             light.addSource(this.pos);
         }
-
     }
 
     public void update() {
@@ -61,19 +59,7 @@ public class TileEntityGrowLight extends TileEntityFLElectric {
         }
         if (!world.isRemote) {
             int realEnergyUsage = ConfigHandler.energyUsageGrowLight;
-            if (inventory[0] != null) {
-                if (ModCompatibility.IC2Loaded) {
-                    /*if (inventory[0].getItem() instanceof IElectricItem) {
-                        double dischargeValue = (storage.getMaxEnergyStored() - (double) storage.getEnergyStored()) / 8.0D;
-                        storage.modifyEnergyStored(MathUtil.truncateDoubleToInt(8 * ElectricItem.manager.discharge(inventory[0], dischargeValue, 4, false, true, false)));
-                    }*/
-                }
-                if (inventory[0].getItem() instanceof IEnergyContainerItem) {
-                    IEnergyContainerItem item = (IEnergyContainerItem) inventory[0].getItem();
-                    int dischargeValue = Math.min(item.getEnergyStored(inventory[0]), (storage.getMaxEnergyStored() - storage.getEnergyStored()));
-                    storage.modifyEnergyStored(item.extractEnergy(inventory[0], dischargeValue, false));
-                }
-            }
+            tryDischargeItem(inventory[0]);
             if (timeout > 0) {
                 timeout--;
                 return;
