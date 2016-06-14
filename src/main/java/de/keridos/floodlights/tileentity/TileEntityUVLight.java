@@ -19,9 +19,9 @@ public class TileEntityUVLight extends TileEntityFLElectric {
         super();
     }
 
-    public void setLightUV(BlockPos pos) {
-        if (worldObj.setBlockState(pos, blockUVLightBlock.getDefaultState())) {
-            TileEntityUVLightBlock light = (TileEntityUVLightBlock) worldObj.getTileEntity(pos);
+    private void setLightUV(BlockPos blockPos) {
+        if (worldObj.setBlockState(blockPos, blockUVLightBlock.getDefaultState())) {
+            TileEntityUVLightBlock light = (TileEntityUVLightBlock) worldObj.getTileEntity(blockPos);
             light.addSource(this.pos);
         }
     }
