@@ -85,7 +85,7 @@ public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implem
 
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
-        if (!world.isRemote && heldItem == null && player.isSneaking()) {
+        if (!world.isRemote && heldItem == null && player.isSneaking() && player.getHeldItemMainhand() == null) {
             ((TileEntitySmallFloodlight) world.getTileEntity(pos)).toggleInverted();
             String invert = (((TileEntitySmallFloodlight) world.getTileEntity(pos)).getInverted() ? Names.Localizations.TRUE : Names.Localizations.FALSE);
             player.addChatMessage(new TextComponentString(safeLocalize(Names.Localizations.INVERT) + ": " + safeLocalize(invert)));
@@ -109,7 +109,7 @@ public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implem
             player.openGui(FloodLights.instance, 1, world, pos.getX(), pos.getY(), pos.getZ());
             return true;
         }
-        return false;
+        return true;
     }
 
     @Override

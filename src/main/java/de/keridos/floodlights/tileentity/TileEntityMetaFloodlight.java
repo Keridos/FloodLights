@@ -46,7 +46,6 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
         active = !active;
         this.setState((byte) (this.active ? 1 : 0));
         this.worldObj.markBlocksDirtyVertical(this.pos.getX(), this.pos.getZ(), this.pos.getX(), this.pos.getZ());
-        ;
     }
 
     public boolean getWasActive() {
