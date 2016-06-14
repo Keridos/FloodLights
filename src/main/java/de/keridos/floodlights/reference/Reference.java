@@ -10,5 +10,5 @@ public class Reference {
     public static final String VERSION = "@VERSION@";
     public static final String CHANNEL = "FloodLights";
     public static final String PROXY_LOCATION = "de.keridos.floodlights.core.proxy";
-    public static final String DEPENDENCIES = "after:IC2";
+    public static final String DEPENDENCIES = "after:IC2;after:JEI";
 }

@@ -168,7 +168,7 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
     // I dont have to specify NEI.. because gradle magic. aka: transitive dependency resolution
-    compile "mezz.jei:jei_${config.minecraft_version}:${config.jei_version}"
+    deobfCompile "mezz.jei:jei_${config.minecraft_version}:${config.jei_version}"
     compile "igwmod:IGW-Mod-${config.minecraft_version}:${config.igwmod_version}:userdev"
     compile "mcp.mobius.waila:Waila:${config.waila_version}"
     //compile "codechicken:CodeChickenCore:${config.minecraft_version}-${config.ccc_version}:dev"
@@ -177,6 +177,10 @@ dependencies {
     //compile "com.enderio:EnderIO:${config.minecraft_version}-${config.enderio_version}:dev"
     if (new File("curseKey.properties").exists()) {
         //compile "cofhcore:CoFHCore-[${config.minecraft_version}]${config.cofhcore_version}:latest:dev"
+    }
+
+    minecraft {
+        useDepAts = true
     }
 }
 

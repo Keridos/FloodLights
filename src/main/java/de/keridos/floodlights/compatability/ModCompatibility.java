@@ -1,9 +1,7 @@
 package de.keridos.floodlights.compatability;
 
 import de.keridos.floodlights.handler.ConfigHandler;
-import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.reference.Reference;
-import mezz.jei.api.IItemBlacklist;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.Loader;
@@ -11,16 +9,12 @@ import net.minecraftforge.fml.common.ModAPIManager;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
 
-import javax.annotation.Nonnull;
-import java.util.ArrayList;
-
 /**
  * Created by Keridos on 28.02.14.
  * This Class will be used for Mod Compatibility functions.
  */
 
-@Optional.Interface(iface = "mezz.jei.api.IItemBlacklist", modid = "JEI")
-public class ModCompatibility implements IItemBlacklist {
+public class ModCompatibility {
     private static ModCompatibility instance = null;
 
     public IGWHandler igwHandler = null;
@@ -36,7 +30,6 @@ public class ModCompatibility implements IItemBlacklist {
     public static boolean ColoredLightCoreLoaded = false;
     public static boolean ACLoaded = false;
 
-    private static ArrayList<ItemStack> JEIBlacklist = new ArrayList<>();
 
     private ModCompatibility() {
     }
@@ -66,36 +59,6 @@ public class ModCompatibility implements IItemBlacklist {
         //hideItem(new ItemStack(ModBlocks.blockUVLightBlock));
     }
 
-    @Optional.Method(modid = "JEI")
-    private void hideJEIItems() {
-        addItemToBlacklist(new ItemStack(ModBlocks.blockPhantomLight));
-        addItemToBlacklist(new ItemStack(ModBlocks.blockUVLightBlock));
-    }
-
-    @Optional.Method(modid = "JEI")
-    @Override
-    public void addItemToBlacklist(@Nonnull ItemStack itemStack) {
-        JEIBlacklist.add(itemStack);
-    }
-
-    @Optional.Method(modid = "JEI")
-    @Override
-    public void removeItemFromBlacklist(@Nonnull ItemStack itemStack) {
-        JEIBlacklist.remove(itemStack);
-    }
-
-    @Optional.Method(modid = "JEI")
-    @Override
-    public boolean isItemBlacklisted(@Nonnull ItemStack itemStack) {
-        if (JEIBlacklist.size() > 0) {
-            for (ItemStack itemStackTemp : JEIBlacklist) {
-                if (itemStack.getItem().equals(itemStackTemp.getItem())) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
 
     private void addVersionCheckerInfo() {
         NBTTagCompound versionchecker = new NBTTagCompound();
@@ -114,10 +77,6 @@ public class ModCompatibility implements IItemBlacklist {
         if (NEILoaded) {
             hideNEIItems();
         }
-        if (JEILoaded) {
-            hideJEIItems();
-        }
-
         addVersionCheckerInfo();
         FMLInterModComms.sendMessage("Waila", "register", "de.keridos.floodlights.compatability.WailaTileHandler.callbackRegister");
         WrenchAvailable = (BCLoaded || EnderIOLoaded || IC2Loaded || CofhCoreLoaded);
