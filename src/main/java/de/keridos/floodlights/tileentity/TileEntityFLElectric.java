@@ -20,7 +20,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Optional;
 
 import static de.keridos.floodlights.util.GeneralUtil.isItemStackValidElectrical;
-import static de.keridos.floodlights.util.MathUtil.roundDoubleToInt;
 
 /**
  * Created by Keridos on 04.05.2015.
@@ -160,15 +159,6 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
         if (ModCompatibility.IC2Loaded && !wasAddedToEnergyNet && !worldObj.isRemote) {
             addToIc2EnergyNetwork();
             wasAddedToEnergyNet = true;
-        }
-        if (!worldObj.isRemote && storageEU > 0 && storage.getEnergyStored() < 50000) {
-            if (storageEU > (storage.getEnergyStored() - 50000) / 8.0D) {
-                storageEU = storageEU - ((storage.getEnergyStored() - 50000) / 8.0D);
-                storage.setEnergyStored(50000);
-            } else {
-                storageEU = 0;
-                storage.modifyEnergyStored(roundDoubleToInt(storageEU *8));
-            }
         }
     }
 }
