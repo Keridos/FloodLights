@@ -9,6 +9,7 @@ MinecraftForge-License.txt
 build/
 .gradle/
 eclipse/
+/.idea/
 libs/
 out/
 curseKey.properties
