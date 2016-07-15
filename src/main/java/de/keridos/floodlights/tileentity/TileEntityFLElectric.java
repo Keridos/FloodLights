@@ -4,10 +4,20 @@ import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyContainerItem;
 import cofh.api.energy.IEnergyHandler;
 import cofh.api.energy.IEnergyReceiver;
+import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.reference.Names;
+import de.keridos.floodlights.util.MathUtil;
+import ic2.api.energy.event.EnergyTileLoadEvent;
+import ic2.api.energy.event.EnergyTileUnloadEvent;
+import ic2.api.energy.tile.IEnergyEmitter;
+import ic2.api.energy.tile.IEnergySink;
+import ic2.api.item.ElectricItem;
+import ic2.api.item.IElectricItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.Optional;
 
 import static de.keridos.floodlights.util.GeneralUtil.isItemStackValidElectrical;
 
@@ -16,8 +26,11 @@ import static de.keridos.floodlights.util.GeneralUtil.isItemStackValidElectrical
  * This Class
  */
 
+@Optional.InterfaceList({
+        @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink", modid = "IC2"),
+        @Optional.Interface(iface = "gregtech.api.interfaces.tileentity.IEnergyConnected", modid = "GregTech")})
 
-public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IEnergyHandler, IEnergyReceiver {
+public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IEnergyHandler, IEnergyReceiver, IEnergySink {
     protected boolean wasAddedToEnergyNet = false;
     protected double storageEU;
     protected EnergyStorage storage = new EnergyStorage(50000);
@@ -66,7 +79,7 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
         storage.setEnergyStored(energyStored);
     }
 
-    /*@Optional.Method(modid = "IC2")
+    @Optional.Method(modid = "IC2")
     @Override
     public double injectEnergy(EnumFacing forgeDirection, double v, double v1) {
         if ((double) (storage.getMaxEnergyStored() - storage.getEnergyStored()) >= (v * 8.0D)) {
@@ -92,7 +105,7 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
 
     @Optional.Method(modid = "IC2")
     @Override
-    public boolean acceptsEnergyFrom(TileEntity tileEntity, EnumFacing forgeDirection) {
+    public boolean acceptsEnergyFrom(IEnergyEmitter iEnergyEmitter, EnumFacing forgeDirection) {
         return true;
     }
 
@@ -112,7 +125,7 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
             EnergyTileUnloadEvent event = new EnergyTileUnloadEvent(this);
             MinecraftForge.EVENT_BUS.post(event);
         }
-    }*/
+    }
 
     @Override
     public boolean isItemValidForSlot(int i, ItemStack itemstack) {
@@ -126,17 +139,26 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
 
     protected void tryDischargeItem(ItemStack itemStack) {
         if (itemStack != null) {
-                /*if (ModCompatibility.IC2Loaded) {
+            if (ModCompatibility.IC2Loaded) {
                     if (inventory[0].getItem() instanceof IElectricItem) {
                         double dischargeValue = (storage.getMaxEnergyStored() - (double) storage.getEnergyStored()) / 8.0D;
                         storage.modifyEnergyStored(MathUtil.truncateDoubleToInt(8 * ElectricItem.manager.discharge(inventory[0], dischargeValue, 4, false, true, false)));
                     }
-                }*/
+            }
             if (itemStack.getItem() instanceof IEnergyContainerItem) {
                 IEnergyContainerItem item = (IEnergyContainerItem) itemStack.getItem();
                 int dischargeValue = Math.min(item.getEnergyStored(itemStack), (storage.getMaxEnergyStored() - storage.getEnergyStored()));
                 storage.modifyEnergyStored(item.extractEnergy(itemStack, dischargeValue, false));
             }
+        }
+    }
+
+    @Override
+    public void update() {
+        super.update();
+        if (ModCompatibility.IC2Loaded && !wasAddedToEnergyNet && !worldObj.isRemote) {
+            addToIc2EnergyNetwork();
+            wasAddedToEnergyNet = true;
         }
     }
 }

@@ -9,13 +9,10 @@ import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.tileentity.TileEntityCarbonFloodlight;
 import de.keridos.floodlights.tileentity.TileEntityFL;
-import de.keridos.floodlights.tileentity.TileEntityMetaFloodlight;
-import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
@@ -39,33 +36,6 @@ public class BlockCarbonFloodlight extends BlockFLColorableMachine implements IT
     @Override
     public boolean isOpaqueCube() {
         return true;
-    }
-
-
-    @Override
-    public void onNeighborBlockChange(World world, BlockPos pos, IBlockState blockState, Block neighborBlock) {
-        if (!world.isRemote) {
-            if (world.isBlockIndirectlyGettingPowered(pos) != 0) {
-                ((TileEntityCarbonFloodlight) world.getTileEntity(pos)).setRedstone(true);
-            } else if (world.isBlockIndirectlyGettingPowered(pos) == 0) {
-                ((TileEntityCarbonFloodlight) world.getTileEntity(pos)).setRedstone(false);
-            }
-            if (!(neighborBlock instanceof BlockFL) && neighborBlock != Blocks.air) {
-                ((TileEntityMetaFloodlight) world.getTileEntity(pos)).toggleUpdateRun();
-            }
-        }
-
-    }
-
-    @Override
-    public void onBlockAdded(World world, BlockPos pos, IBlockState blockState) {
-        if (!world.isRemote) {
-            if (world.isBlockIndirectlyGettingPowered(pos) != 0) {
-                ((TileEntityCarbonFloodlight) world.getTileEntity(pos)).setRedstone(true);
-            } else if (world.isBlockIndirectlyGettingPowered(pos) == 0) {
-                ((TileEntityCarbonFloodlight) world.getTileEntity(pos)).setRedstone(false);
-            }
-        }
     }
 
     @Override

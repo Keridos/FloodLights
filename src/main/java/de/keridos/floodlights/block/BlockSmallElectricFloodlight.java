@@ -6,10 +6,8 @@ import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.tileentity.TileEntityFL;
-import de.keridos.floodlights.tileentity.TileEntityMetaFloodlight;
 import de.keridos.floodlights.tileentity.TileEntitySmallFloodlight;
 import de.keridos.floodlights.util.MathUtil;
-import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
@@ -19,7 +17,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -59,30 +56,7 @@ public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implem
         return false;
     }
 
-    @Override
-    public void onNeighborBlockChange(World world, BlockPos pos, IBlockState blockState, Block block) {
-        if (!world.isRemote) {
-            if (world.isBlockIndirectlyGettingPowered(pos) != 0) {
-                ((TileEntitySmallFloodlight) world.getTileEntity(pos)).setRedstone(true);
-            } else if (world.isBlockIndirectlyGettingPowered(pos) == 0) {
-                ((TileEntitySmallFloodlight) world.getTileEntity(pos)).setRedstone(false);
-            }
-            if (!(block instanceof BlockFL) && block != Blocks.air) {
-                ((TileEntityMetaFloodlight) world.getTileEntity(pos)).toggleUpdateRun();
-            }
-        }
-    }
 
-    @Override
-    public void onBlockAdded(World world, BlockPos pos, IBlockState block) {
-        if (!world.isRemote) {
-            if (world.isBlockIndirectlyGettingPowered(pos) != 0) {
-                ((TileEntitySmallFloodlight) world.getTileEntity(pos)).setRedstone(true);
-            } else if (world.isBlockIndirectlyGettingPowered(pos) == 0) {
-                ((TileEntitySmallFloodlight) world.getTileEntity(pos)).setRedstone(false);
-            }
-        }
-    }
 
     @Override
     @SuppressWarnings("unchecked")
@@ -134,7 +108,7 @@ public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implem
             player.openGui(FloodLights.instance, 1, world, pos.getX(), pos.getY(), pos.getZ());
             return true;
         }
-        return false;
+        return true;
     }
 
     @Override

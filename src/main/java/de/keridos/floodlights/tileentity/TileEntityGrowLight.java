@@ -1,7 +1,6 @@
 package de.keridos.floodlights.tileentity;
 
 import de.keridos.floodlights.block.BlockFLColorableMachine;
-import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.handler.ConfigHandler;
 import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.reference.Names;
@@ -53,10 +52,6 @@ public class TileEntityGrowLight extends TileEntityFLElectric {
     public void update() {
         super.update();
         World world = this.getWorld();
-        if (ModCompatibility.IC2Loaded && !wasAddedToEnergyNet && !world.isRemote) {
-            //addToIc2EnergyNetwork();
-            wasAddedToEnergyNet = true;
-        }
         if (!world.isRemote) {
             int realEnergyUsage = ConfigHandler.energyUsageGrowLight;
             tryDischargeItem(inventory[0]);

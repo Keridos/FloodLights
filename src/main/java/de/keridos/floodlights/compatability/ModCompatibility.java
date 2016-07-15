@@ -1,5 +1,6 @@
 package de.keridos.floodlights.compatability;
 
+import crazypants.enderio.api.tool.ITool;
 import de.keridos.floodlights.handler.ConfigHandler;
 import de.keridos.floodlights.reference.Reference;
 import net.minecraft.item.ItemStack;
@@ -89,13 +90,13 @@ public class ModCompatibility {
             if (stack.getItem() instanceof IToolWrench) {
                 return true;
             }
-        }
+        }*/
         if (ModCompatibility.EnderIOLoaded) {
             if (stack.getItem() instanceof ITool) {
                 return true;
             }
         }
-        if (ModCompatibility.CofhCoreLoaded) {
+        /*if (ModCompatibility.CofhCoreLoaded) {
             if (stack.getItem() instanceof IToolHammer) {
                 return true;
             }

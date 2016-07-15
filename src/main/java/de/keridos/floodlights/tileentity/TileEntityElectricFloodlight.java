@@ -20,10 +20,6 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric implement
     public void update() {
         super.update();
         World world = this.getWorld();
-        /*if (ModCompatibility.IC2Loaded && !wasAddedToEnergyNet && !world.isRemote) {
-            addToIc2EnergyNetwork();
-            wasAddedToEnergyNet = true;
-        }*/
         if (!world.isRemote) {
             int realEnergyUsage = ConfigHandler.energyUsage * (mode == 0 ? 1 : 4);;
             tryDischargeItem(inventory[0]);

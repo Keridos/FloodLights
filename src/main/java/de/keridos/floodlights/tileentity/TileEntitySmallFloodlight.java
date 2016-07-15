@@ -98,10 +98,6 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
     public void update() {
         super.update();
         World world = this.getWorld();
-        /*if (ModCompatibility.IC2Loaded && !wasAddedToEnergyNet && !world.isRemote) {
-            addToIc2EnergyNetwork();
-            wasAddedToEnergyNet = true;
-        }*/
         if (!world.isRemote) {
             int realEnergyUsage = ConfigHandler.energyUsageSmallFloodlight;
             tryDischargeItem(inventory[0]);

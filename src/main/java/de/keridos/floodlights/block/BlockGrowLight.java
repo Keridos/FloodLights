@@ -7,13 +7,11 @@ import de.keridos.floodlights.tileentity.TileEntityFL;
 import de.keridos.floodlights.tileentity.TileEntityGrowLight;
 import de.keridos.floodlights.tileentity.TileEntityMetaFloodlight;
 import de.keridos.floodlights.tileentity.TileEntitySmallFloodlight;
-import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
@@ -43,32 +41,6 @@ public class BlockGrowLight extends BlockFLColorableMachine implements ITileEnti
     public boolean isOpaqueCube() {
         return false;
     }
-
-    @Override
-    public void onNeighborBlockChange(World world, BlockPos pos, IBlockState blockState, Block block) {
-        if (!world.isRemote) {
-            if (world.isBlockIndirectlyGettingPowered(pos) != 0) {
-                ((TileEntityMetaFloodlight) world.getTileEntity(pos)).setRedstone(true);
-            } else if (world.isBlockIndirectlyGettingPowered(pos) == 0) {
-                ((TileEntityMetaFloodlight) world.getTileEntity(pos)).setRedstone(false);
-            }
-            if (!(block instanceof BlockFL) && block != Blocks.air) {
-                ((TileEntityMetaFloodlight) world.getTileEntity(pos)).toggleUpdateRun();
-            }
-        }
-    }
-
-    @Override
-    public void onBlockAdded(World world, BlockPos pos, IBlockState block) {
-        if (!world.isRemote) {
-            if (world.isBlockIndirectlyGettingPowered(pos) != 0) {
-                ((TileEntityMetaFloodlight) world.getTileEntity(pos)).setRedstone(true);
-            } else if (world.isBlockIndirectlyGettingPowered(pos) == 0) {
-                ((TileEntityMetaFloodlight) world.getTileEntity(pos)).setRedstone(false);
-            }
-        }
-    }
-
 
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
