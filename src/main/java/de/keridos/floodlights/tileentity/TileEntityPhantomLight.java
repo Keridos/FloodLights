@@ -28,10 +28,7 @@ public class TileEntityPhantomLight extends TileEntity {
         sources = new ArrayList<>();
     }
 
-    @Override
-    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate) {
-        return false;
-    }
+
 
     void addSource(BlockPos pos) {
 

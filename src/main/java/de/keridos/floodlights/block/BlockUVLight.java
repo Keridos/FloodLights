@@ -46,27 +46,32 @@ public class BlockUVLight extends BlockFLColorableMachine implements ITileEntity
 
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
-        if (!world.isRemote && heldItem == null && player.isSneaking()) {
-            ((TileEntityMetaFloodlight) world.getTileEntity(pos)).toggleInverted();
-            String invert = (((TileEntityMetaFloodlight) world.getTileEntity(pos)).getInverted() ? Names.Localizations.TRUE : Names.Localizations.FALSE);
-            player.addChatMessage(new TextComponentString(safeLocalize(Names.Localizations.INVERT) + ": " + safeLocalize(invert)));
-            return true;
-        } else if (!world.isRemote && heldItem != null) {
-            if (player.isSneaking() && ModCompatibility.getInstance().isItemValidWrench(heldItem)) {
-                world.destroyBlock(pos, true);
+        if (hand == EnumHand.MAIN_HAND) {
+            if (!world.isRemote && heldItem == null && player.isSneaking()) {
+                ((TileEntityMetaFloodlight) world.getTileEntity(pos)).toggleInverted();
+                String invert = (((TileEntityMetaFloodlight) world.getTileEntity(pos)).getInverted() ? Names.Localizations.TRUE : Names.Localizations.FALSE);
+                player.addChatMessage(new TextComponentString(safeLocalize(Names.Localizations.INVERT) + ": " + safeLocalize(invert)));
                 return true;
-            } else if (heldItem.getItem() == Items.DYE) {
-                ((TileEntityFL) world.getTileEntity(pos)).setColor(15 - heldItem.getItemDamage());
+            } else if (!world.isRemote && heldItem != null) {
+                if (player.isSneaking() && ModCompatibility.getInstance().isItemValidWrench(heldItem)) {
+                    world.destroyBlock(pos, true);
+                    return true;
+                } else if (heldItem.getItem() == Items.DYE) {
+                    ((TileEntityFL) world.getTileEntity(pos)).setColor(15 - heldItem.getItemDamage());
+                    return true;
+                }
+            }
+            if (!world.isRemote) {
+                player.openGui(FloodLights.instance, 1, world, pos.getX(), pos.getY(), pos.getZ());
+                return true;
+            } else {
                 return true;
             }
         }
-        if (!world.isRemote) {
-            player.openGui(FloodLights.instance, 1, world, pos.getX(), pos.getY(), pos.getZ());
-            return true;
-        } else {
-            return true;
-        }
+        return true;
     }
+
+
 
     @Override
     public void breakBlock(World world, BlockPos pos, IBlockState blockState) {

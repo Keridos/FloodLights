@@ -7,7 +7,6 @@ import de.keridos.floodlights.tileentity.TileEntityFL;
 import de.keridos.floodlights.tileentity.TileEntityGrowLight;
 import de.keridos.floodlights.tileentity.TileEntityMetaFloodlight;
 import de.keridos.floodlights.tileentity.TileEntitySmallFloodlight;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -15,6 +14,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -25,6 +25,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import static de.keridos.floodlights.util.GeneralUtil.getMinecraftItem;
@@ -34,7 +35,7 @@ import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
  * Created by Keridos on 01.10.14.
  * This Class defines the block properties of the electric floodlight.
  */
-public class BlockGrowLight extends BlockFLColorableMachine implements ITileEntityProvider {
+public class BlockGrowLight extends BlockFLColorableMachine {
 
     public BlockGrowLight() {
         super(Names.Blocks.GROW_LIGHT, Material.ROCK, SoundType.METAL, 2.5F);
@@ -56,39 +57,48 @@ public class BlockGrowLight extends BlockFLColorableMachine implements ITileEnti
 
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
-        if (!world.isRemote && heldItem == null && player.isSneaking()) {
-            ((TileEntityMetaFloodlight) world.getTileEntity(pos)).toggleInverted();
-            String invert = (((TileEntityMetaFloodlight) world.getTileEntity(pos)).getInverted() ? Names.Localizations.TRUE : Names.Localizations.FALSE);
-            player.addChatMessage(new TextComponentString(safeLocalize(Names.Localizations.INVERT) + ": " + safeLocalize(invert)));
-            return true;
-        } else if (!world.isRemote && heldItem != null) {
-            if (!ModCompatibility.WrenchAvailable && heldItem.getItem() == getMinecraftItem("stick")) {
-                ((TileEntityGrowLight) world.getTileEntity(pos)).changeMode(player);
+        if (hand == EnumHand.MAIN_HAND) {
+            if (!world.isRemote && heldItem == null && player.isSneaking()) {
+                ((TileEntityMetaFloodlight) world.getTileEntity(pos)).toggleInverted();
+                String invert = (((TileEntityMetaFloodlight) world.getTileEntity(pos)).getInverted() ? Names.Localizations.TRUE : Names.Localizations.FALSE);
+                player.addChatMessage(new TextComponentString(safeLocalize(Names.Localizations.INVERT) + ": " + safeLocalize(invert)));
                 return true;
-            } else if (player.isSneaking() && ModCompatibility.getInstance().isItemValidWrench(heldItem)) {
-                world.destroyBlock(pos, true);
+            } else if (!world.isRemote && heldItem != null) {
+                if (!ModCompatibility.WrenchAvailable && heldItem.getItem() == getMinecraftItem("stick")) {
+                    ((TileEntityGrowLight) world.getTileEntity(pos)).changeMode(player);
+                    return true;
+                } else if (player.isSneaking() && ModCompatibility.getInstance().isItemValidWrench(heldItem)) {
+                    world.destroyBlock(pos, true);
+                    return true;
+                } else if (ModCompatibility.getInstance().isItemValidWrench(heldItem)) {
+                    ((TileEntityGrowLight) world.getTileEntity(pos)).changeMode(player);
+                    return true;
+                } else if (heldItem.getItem() == Items.DYE) {
+                    ((TileEntityFL) world.getTileEntity(pos)).setColor(15 - heldItem.getItemDamage());
+                    return true;
+                }
+            }
+            if (!world.isRemote) {
+                player.openGui(FloodLights.instance, 1, world, pos.getX(), pos.getY(), pos.getZ());
                 return true;
-            } else if (ModCompatibility.getInstance().isItemValidWrench(heldItem)) {
-                ((TileEntityGrowLight) world.getTileEntity(pos)).changeMode(player);
-                return true;
-            } else if (heldItem.getItem() == Items.DYE) {
-                ((TileEntityFL) world.getTileEntity(pos)).setColor(15 - heldItem.getItemDamage());
+            } else {
                 return true;
             }
         }
-        if (!world.isRemote) {
-            player.openGui(FloodLights.instance, 1, world, pos.getX(), pos.getY(), pos.getZ());
-            return true;
-        } else {
-            return true;
-        }
+        return true;
     }
 
     @Override
-    public TileEntityGrowLight createNewTileEntity(World world, int metadata) {
-        return new TileEntityGrowLight();
+    public boolean hasTileEntity(IBlockState state)
+    {
+        return true;
     }
 
+    @Nonnull
+    @Override
+    public TileEntity createTileEntity(@Nonnull World w, @Nonnull IBlockState state) {
+        return new TileEntityGrowLight();
+    }
     @Override
     public AxisAlignedBB getCollisionBoundingBox(IBlockState state, World world, BlockPos pos) {
         //getSelectedBoundingBox(World world, BlockPos pos);

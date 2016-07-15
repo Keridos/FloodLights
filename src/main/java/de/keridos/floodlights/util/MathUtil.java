@@ -103,4 +103,7 @@ public class MathUtil {
     public static int truncateDoubleToInt(double number) {
         return (int) Math.floor(number);
     }
+    public static int roundDoubleToInt(double number) {
+        return (int) Math.floor(number+0.5D);
+    }
 }

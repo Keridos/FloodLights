@@ -117,4 +117,9 @@ public class BlockPhantomLight extends BlockFL implements ITileEntityProvider {
         ((TileEntityPhantomLight) world.getTileEntity(pos)).updateAllSources(true);
         super.breakBlock(world,pos,blockState);
     }
+
+    @Override
+    public boolean isReplaceable(IBlockAccess worldIn, BlockPos pos) {
+        return true;
+    }
 }

@@ -74,5 +74,4 @@ public class BlockFLColorableMachine extends BlockFL {
             }
         }
     }
-
 }

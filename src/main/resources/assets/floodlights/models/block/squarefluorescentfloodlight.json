@@ -30,7 +30,8 @@
 			},
 			"east": {
 				"texture": "#side",
-				"tintindex": 255
+				"tintindex": 255,
+			    "uv": [13,0,16,16]
 			}
 		}
 	}]

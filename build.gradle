@@ -36,21 +36,18 @@ if (new File("curseKey.properties").exists()) {
 }
 
 repositories {
+    maven { url "http://dvs1.progwml6.com/files/maven" }
     maven {
         name = "IGW"
         url = "http://maven.k-4u.nl/"
     }
     maven { // The repo from which to get waila
-        name "Mobius Repo"
-        url "http://mobiusstrip.eu/maven"
-    }
-    maven { // the repo from which to get NEI and stuff
-        name 'CB Repo'
-        url "http://chickenbones.net/maven/"
+        name = "Mobius Repo"
+        url = "http://mobiusstrip.eu/maven"
     }
     maven { // the repo from which to get EnderIO and tterags mods
-        name 'tterrag'
-        url "http://maven.tterrag.com/"
+        name = 'tterrag'
+        url = "http://maven.tterrag.com/"
     }
     maven {
         name = "OC repo"
@@ -60,22 +57,11 @@ repositories {
         name = "ic2"
         url = "http://maven.ic2.player.to/"
     }
-    maven {
-        name 'ColoredLightCore'
-        url "http://coloredlightscore.us.to/maven/clc/"
-    }
-    maven {
-        name = "buildcraft"
-        url = "http://mod-buildcraft.com"
-    }
-    maven { // JEI
-        url "http://dvs1.progwml6.com/files/maven"
-    }
     if (new File("curseKey.properties").exists()) {
-        maven {
-            name = "CurseForge"
-            url = "https://minecraft.curseforge.com/api/${project.curse.api_key}"
-        }
+        //maven {
+        //    name = "CurseForge"
+        //    url = "https://minecraft.curseforge.com/api/${project.curse.api_key}"
+        //}
     }
 }
 
@@ -146,41 +132,18 @@ task deobfJar(type: Jar) {
 build.dependsOn sourceJar, deobfJar
 
 dependencies {
-    // you may put jars on which you depend on in ./libs
-    // or you may define them like so..
-    //compile "some.group:artifact:version:classifier"
-    //compile "some.group:artifact:version"
-
-    // real examples
-    //compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
-    //compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
-
-    // the 'provided' configuration is for optional dependencies that exist at compile-time but might not at runtime.
-    //provided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-
-    // the deobf configurations:  'deobfCompile' and 'deobfProvided' are the same as the normal compile and provided,
-    // except that these dependencies get remapped to your current MCP mappings
-    //deobfCompile 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-    //deobfProvided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-
-    // for more info...
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
-
-    // I dont have to specify NEI.. because gradle magic. aka: transitive dependency resolution
     deobfCompile "mezz.jei:jei_${config.minecraft_version}:${config.jei_version}"
     compile "igwmod:IGW-Mod-${config.minecraft_version}:${config.igwmod_version}:userdev"
-    compile "mcp.mobius.waila:Waila:${config.waila_version}"
-    //compile "codechicken:CodeChickenCore:${config.minecraft_version}-${config.ccc_version}:dev"
-    //compile "net.industrial-craft:industrialcraft-2:${config.ic2_version}:dev"
-    //compile "com.mod-buildcraft:buildcraft:${config.bc_version}:dev"
-    //compile "com.enderio:EnderIO:${config.minecraft_version}-${config.enderio_version}:dev"
+    deobfCompile "mcp.mobius.waila:Waila:${config.waila_version}"
+    compile "net.industrial-craft:industrialcraft-2:${config.ic2_version}:dev"
+    compile "com.enderio:EnderIO:${config.minecraft_version}-${config.enderio_version}:dev"
+    deobfCompile "com.enderio.core:EnderCore:${config.minecraft_version}-${config.endercore_version}"
     if (new File("curseKey.properties").exists()) {
-        //compile "cofhcore:CoFHCore-[${config.minecraft_version}]${config.cofhcore_version}:latest:dev"
-    }
 
-    minecraft {
-        useDepAts = true
     }
+}
+
+minecraft {
+    useDepAts = true
 }
 

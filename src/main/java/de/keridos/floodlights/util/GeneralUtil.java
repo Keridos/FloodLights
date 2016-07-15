@@ -1,6 +1,8 @@
 package de.keridos.floodlights.util;
 
 import cofh.api.energy.IEnergyContainerItem;
+import de.keridos.floodlights.compatability.ModCompatibility;
+import ic2.api.item.IElectricItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.material.Material;
@@ -16,8 +18,6 @@ import net.minecraftforge.fml.common.registry.GameData;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import java.util.logging.Logger;
-
-//import ic2.api.item.IElectricItem;
 
 /**
  * Created by Keridos on 28/11/2014.
@@ -70,11 +70,11 @@ public class GeneralUtil {
 
     public static boolean isItemStackValidElectrical(ItemStack itemStack) {
         Item item = itemStack.getItem();
-        /*if (ModCompatibility.IC2Loaded) {
+        if (ModCompatibility.IC2Loaded) {
             if (item instanceof IElectricItem) {
                 return ((IElectricItem) item).canProvideEnergy(itemStack);
             }
-        } */
+        }
         return item instanceof IEnergyContainerItem;
     }
 

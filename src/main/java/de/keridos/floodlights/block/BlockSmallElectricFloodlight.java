@@ -85,29 +85,33 @@ public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implem
 
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
-        if (!world.isRemote && heldItem == null && player.isSneaking() && player.getHeldItemMainhand() == null) {
-            ((TileEntitySmallFloodlight) world.getTileEntity(pos)).toggleInverted();
-            String invert = (((TileEntitySmallFloodlight) world.getTileEntity(pos)).getInverted() ? Names.Localizations.TRUE : Names.Localizations.FALSE);
-            player.addChatMessage(new TextComponentString(safeLocalize(Names.Localizations.INVERT) + ": " + safeLocalize(invert)));
-            return true;
-        } else if (!world.isRemote && heldItem != null) {
-            if (!ModCompatibility.WrenchAvailable && heldItem.getItem() == getMinecraftItem("stick")) {
-                ((TileEntitySmallFloodlight) world.getTileEntity(pos)).toggleRotationState();
+        if (hand == EnumHand.MAIN_HAND) {
+            if (!world.isRemote && heldItem == null && player.isSneaking()) {
+                ((TileEntitySmallFloodlight) world.getTileEntity(pos)).toggleInverted();
+                String invert = (((TileEntitySmallFloodlight) world.getTileEntity(pos)).getInverted() ? Names.Localizations.TRUE : Names.Localizations.FALSE);
+                player.addChatMessage(new TextComponentString(safeLocalize(Names.Localizations.INVERT) + ": " + safeLocalize(invert)));
                 return true;
-            } else if (player.isSneaking() && ModCompatibility.getInstance().isItemValidWrench(heldItem)) {
-                world.destroyBlock(pos, true);
+            } else if (!world.isRemote && heldItem != null) {
+                if (!ModCompatibility.WrenchAvailable && heldItem.getItem() == getMinecraftItem("stick")) {
+                    ((TileEntitySmallFloodlight) world.getTileEntity(pos)).toggleRotationState();
+                    return true;
+                } else if (player.isSneaking() && ModCompatibility.getInstance().isItemValidWrench(heldItem)) {
+                    world.destroyBlock(pos, true);
+                    return true;
+                } else if (ModCompatibility.getInstance().isItemValidWrench(heldItem)) {
+                    ((TileEntitySmallFloodlight) world.getTileEntity(pos)).toggleRotationState();
+                    return true;
+                } else if (heldItem.getItem() == Items.DYE) {
+                    ((TileEntityFL) world.getTileEntity(pos)).setColor(15 - heldItem.getItemDamage());
+                    return true;
+                }
+            }
+            if (!world.isRemote) {
+                player.openGui(FloodLights.instance, 1, world, pos.getX(), pos.getY(), pos.getZ());
                 return true;
-            } else if (ModCompatibility.getInstance().isItemValidWrench(heldItem)) {
-                ((TileEntitySmallFloodlight) world.getTileEntity(pos)).toggleRotationState();
-                return true;
-            } else if (heldItem.getItem() == Items.DYE) {
-                ((TileEntityFL) world.getTileEntity(pos)).setColor(15 - heldItem.getItemDamage());
+            } else {
                 return true;
             }
-        }
-        if (!world.isRemote) {
-            player.openGui(FloodLights.instance, 1, world, pos.getX(), pos.getY(), pos.getZ());
-            return true;
         }
         return true;
     }

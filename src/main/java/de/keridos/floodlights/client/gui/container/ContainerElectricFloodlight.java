@@ -1,10 +1,14 @@
 package de.keridos.floodlights.client.gui.container;
 
 import de.keridos.floodlights.client.gui.slot.ElectricSlot;
+import de.keridos.floodlights.core.network.message.MessageTileEntityFL;
+import de.keridos.floodlights.handler.PacketHandler;
 import de.keridos.floodlights.tileentity.TileEntityFLElectric;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
@@ -61,5 +65,15 @@ public class ContainerElectricFloodlight extends Container {
     @Override
     public boolean canInteractWith(EntityPlayer player) {
         return electricFloodlight.isUseableByPlayer(player);  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void detectAndSendChanges() {
+        super.detectAndSendChanges();
+        for (IContainerListener listener:listeners){
+            if (listener instanceof EntityPlayerMP) {
+                PacketHandler.INSTANCE.sendTo(new MessageTileEntityFL(electricFloodlight), (EntityPlayerMP) listener);
+            }
+        }
     }
 }
