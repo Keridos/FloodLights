@@ -14,6 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import static de.keridos.floodlights.compatability.ModCompatibility.IC2Loaded;
 import static de.keridos.floodlights.util.GeneralUtil.isItemStackValidElectrical;
 
 /**
@@ -26,12 +27,13 @@ import static de.keridos.floodlights.util.GeneralUtil.isItemStackValidElectrical
         @Optional.Interface(iface = "gregtech.api.interfaces.tileentity.IEnergyConnected", modid = "GregTech")})
 
 public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IEnergyHandler, IEnergySink {
-    protected boolean wasAddedToEnergyNet = false;
+    protected boolean wasAddedToEnergyNet;
     protected double storageEU;
     protected EnergyStorage storage = new EnergyStorage(50000);
 
     public TileEntityFLElectric() {
         super();
+        wasAddedToEnergyNet = false;
     }
 
     @Override
@@ -110,7 +112,7 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
     }
 
     @Optional.Method(modid = "IC2")
-    public void addToIc2EnergyNetwork() {
+    protected void addToIc2EnergyNetwork() {
         if (!worldObj.isRemote) {
             EnergyTileLoadEvent event = new EnergyTileLoadEvent(this);
             MinecraftForge.EVENT_BUS.post(event);
@@ -118,11 +120,15 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
     }
 
     @Optional.Method(modid = "IC2")
+    protected void removeFromIc2EnergyNetwork() {
+        EnergyTileUnloadEvent event = new EnergyTileUnloadEvent(this);
+        MinecraftForge.EVENT_BUS.post(event);
+    }
+
     @Override
     public void invalidate() {
-        if (!worldObj.isRemote) {
-            EnergyTileUnloadEvent event = new EnergyTileUnloadEvent(this);
-            MinecraftForge.EVENT_BUS.post(event);
+        if (!worldObj.isRemote && IC2Loaded) {
+              removeFromIc2EnergyNetwork();
         }
         super.invalidate();
     }
