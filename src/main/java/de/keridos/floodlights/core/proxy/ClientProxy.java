@@ -16,7 +16,9 @@ import de.keridos.floodlights.tileentity.TileEntityGrowLight;
 import de.keridos.floodlights.tileentity.TileEntityPhantomLight;
 import de.keridos.floodlights.tileentity.TileEntitySmallFloodlight;
 import de.keridos.floodlights.util.RenderUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
+import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 
 /**
@@ -48,5 +50,10 @@ public class ClientProxy extends CommonProxy {
         if (ModCompatibility.IGWModLoaded) {
             ModCompatibility.getInstance().igwHandler = IGWHandler.getInstance();
         }
+    }
+
+    @Override
+    public World getWorld(){
+        return Minecraft.getMinecraft().theWorld;
     }
 }

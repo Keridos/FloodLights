@@ -11,5 +11,6 @@ build/
 eclipse/
 /.idea/
 libs/
+/classes/
 out/
 curseKey.properties

@@ -3,6 +3,7 @@ package de.keridos.floodlights.tileentity;
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyHandler;
 import cpw.mods.fml.common.Optional;
+import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.util.MathUtil;
 import ic2.api.energy.event.EnergyTileLoadEvent;
@@ -14,7 +15,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import static de.keridos.floodlights.compatability.ModCompatibility.IC2Loaded;
 import static de.keridos.floodlights.util.GeneralUtil.isItemStackValidElectrical;
 
 /**
@@ -121,16 +121,23 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
 
     @Optional.Method(modid = "IC2")
     protected void removeFromIc2EnergyNetwork() {
-        EnergyTileUnloadEvent event = new EnergyTileUnloadEvent(this);
-        MinecraftForge.EVENT_BUS.post(event);
+        MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
     }
 
     @Override
     public void invalidate() {
-        if (!worldObj.isRemote && IC2Loaded) {
-              removeFromIc2EnergyNetwork();
-        }
         super.invalidate();
+        onChunkUnload();
+    }
+
+    @Override
+    public void onChunkUnload() {
+        if (wasAddedToEnergyNet &&
+                ModCompatibility.IC2Loaded) {
+            removeFromIc2EnergyNetwork();
+
+            wasAddedToEnergyNet = false;
+        }
     }
 
     @Override

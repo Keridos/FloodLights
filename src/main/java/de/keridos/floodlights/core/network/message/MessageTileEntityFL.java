@@ -1,9 +1,9 @@
 package de.keridos.floodlights.core.network.message;
 
-import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import de.keridos.floodlights.FloodLights;
 import de.keridos.floodlights.tileentity.*;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.tileentity.TileEntity;
@@ -25,7 +25,7 @@ public class MessageTileEntityFL implements IMessage {
     public static class MessageHandlerTileEntityFL implements IMessageHandler<MessageTileEntityFL, IMessage> {
         @Override
         public IMessage onMessage(MessageTileEntityFL message, MessageContext ctx) {
-            TileEntity tileEntity = FMLClientHandler.instance().getClient().theWorld.getTileEntity(message.x, message.y, message.z);
+            TileEntity tileEntity = FloodLights.proxy.getWorld().getTileEntity(message.x, message.y, message.z);
             if (tileEntity instanceof TileEntityFL) {
                 ((TileEntityFL) tileEntity).setOrientation(message.orientation);
                 ((TileEntityFL) tileEntity).setState(message.state);

@@ -26,6 +26,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -167,57 +170,81 @@ public class BlockSmallElectricFloodlight extends BlockFL implements ITileEntity
         return null;
     }
 
-
-    //
-    @Override
-    @SideOnly(Side.CLIENT)
-    public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z) {
+    public AxisAlignedBB getBoundingBox(IBlockAccess world, int x, int y, int z) {
         TileEntitySmallFloodlight tileEntitySmallFloodlight = (TileEntitySmallFloodlight) world.getTileEntity(x, y, z);
+        double minX = 0;
+        double maxX = 0;
+        double minY = 0;
+        double maxY = 0;
+        double minZ = 0;
+        double maxZ = 0;
         switch (world.getBlockMetadata(x, y, z)) {
             case 0:
                 if (!tileEntitySmallFloodlight.getRotationState()) {
-                    this.minX = 0;
-                    this.maxX = 0.1875;
-                    this.minY = 0.3125;
-                    this.maxY = 0.6875;
-                    this.minZ = 0;
-                    this.maxZ = 1;
+                    minX = 0;
+                    maxX = 0.1875;
+                    minY = 0.3125;
+                    maxY = 0.6875;
+                    minZ = 0;
+                    maxZ = 1;
                 } else {
-                    this.minX = 0;
-                    this.maxX = 0.1875;
-                    this.minY = 0;
-                    this.maxY = 1;
-                    this.minZ = 0.3125;
-                    this.maxZ = 0.6875;
+                    minX = 0;
+                    maxX = 0.1875;
+                    minY = 0;
+                    maxY = 1;
+                    minZ = 0.3125;
+                    maxZ = 0.6875;
                 }
                 break;
             case 1:
-                this.minX = 0;
-                this.maxX = 0.1875;
-                this.minY = 0;
-                this.maxY = 1;
-                this.minZ = 0;
-                this.maxZ = 1;
+                minX = 0;
+                maxX = 0.1875;
+                minY = 0;
+                maxY = 1;
+                minZ = 0;
+                maxZ = 1;
                 break;
         }
-        this.minX = this.minX - 0.5;
-        this.minY = this.minY - 0.5;
-        this.minZ = this.minZ - 0.5;
-        this.maxX = this.maxX - 0.5;
-        this.maxY = this.maxY - 0.5;
-        this.maxZ = this.maxZ - 0.5;
+        minX = minX - 0.5;
+        minY = minY - 0.5;
+        minZ = minZ - 0.5;
+        maxX = maxX - 0.5;
+        maxY = maxY - 0.5;
+        maxZ = maxZ - 0.5;
         double[] newMinTemp = MathUtil.rotateD(minX, minY, minZ, tileEntitySmallFloodlight.getOrientation());
         double[] newMaxTemp = MathUtil.rotateD(maxX, maxY, maxZ, tileEntitySmallFloodlight.getOrientation());
         double[] newMax = MathUtil.sortMinMaxToMax(newMinTemp, newMaxTemp);
         double[] newMin = MathUtil.sortMinMaxToMin(newMinTemp, newMaxTemp);
-        this.minX = newMin[0] + 0.5;
-        this.minY = newMin[1] + 0.5;
-        this.minZ = newMin[2] + 0.5;
-        this.maxX = newMax[0] + 0.5;
-        this.maxY = newMax[1] + 0.5;
-        this.maxZ = newMax[2] + 0.5;
+        minX = newMin[0] + 0.5;
+        minY = newMin[1] + 0.5;
+        minZ = newMin[2] + 0.5;
+        maxX = newMax[0] + 0.5;
+        maxY = newMax[1] + 0.5;
+        maxZ = newMax[2] + 0.5;
+        return AxisAlignedBB.getBoundingBox((double) x + minX, (double) y + minY, (double) z + minZ, (double) x + maxX, (double) y + maxY, (double) z + maxZ);
+    }
 
-        return AxisAlignedBB.getBoundingBox((double) x + this.minX, (double) y + this.minY, (double) z + this.minZ, (double) x + this.maxX, (double) y + this.maxY, (double) z + this.maxZ);
+    @Override
+    @SideOnly(Side.CLIENT)
+    public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z) {
+        return getBoundingBox(world, x, y, z);
+    }
+
+    @Override
+    public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z) {
+        AxisAlignedBB boundingBox = getBoundingBox(world, x, y, z);
+        this.minX = boundingBox.minX - x;
+        this.maxX = boundingBox.maxX - x;
+        this.minY = boundingBox.minY - y;
+        this.maxY = boundingBox.maxY - y;
+        this.minZ = boundingBox.minZ - z;
+        this.maxZ = boundingBox.maxZ - z;
+    }
+
+    @Override
+    public MovingObjectPosition collisionRayTrace(World world, int x, int y, int z, Vec3 p_149731_5_, Vec3 p_149731_6_) {
+        this.setBlockBoundsBasedOnState(world, x, y, z);
+        return super.collisionRayTrace(world, x, y, z, p_149731_5_, p_149731_6_);
     }
 
     @Override
