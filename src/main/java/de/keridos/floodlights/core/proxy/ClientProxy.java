@@ -22,6 +22,7 @@ import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 
@@ -101,5 +102,10 @@ public class ClientProxy extends CommonProxy {
         if (ModCompatibility.IGWModLoaded) {
             ModCompatibility.getInstance().igwHandler = IGWHandler.getInstance();
         }
+    }
+
+    @Override
+    public World getWorld(){
+        return Minecraft.getMinecraft().theWorld;
     }
 }
