@@ -28,6 +28,11 @@ public class PowerBar {
     public static final int HEIGHT = 50;
 
     /**
+     * The height of the power bar.
+     */
+    public static final int TEXTURE_HEIGHT_OFFSET = 50;
+
+    /**
      * Constant reference to the included gui element sheet.
      */
     private static final ResourceLocation TEXTURE_SHEET = new ResourceLocation("floodlights", "textures/gui/powerbar.png");
@@ -74,6 +79,11 @@ public class PowerBar {
         draw(holder.getEnergyStored(EnumFacing.UP), holder.getMaxEnergyStored(EnumFacing.UP));
     }
 
+    public void draw(TileEntityFLElectric holder, int x, int y) {
+
+        draw(holder.getEnergyStored(EnumFacing.UP), holder.getMaxEnergyStored(EnumFacing.UP), x, y);
+    }
+
     /**
      * Draws a power bard that represents the based power information.
      *
@@ -83,9 +93,17 @@ public class PowerBar {
     public void draw(long power, long capacity) {
 
         screen.mc.getTextureManager().bindTexture(TEXTURE_SHEET);
-        screen.drawTexturedModalRect(x, y, 3, 1, WIDTH, HEIGHT);
+        screen.drawTexturedModalRect(x, y, 0, 0, WIDTH, HEIGHT);
         long powerOffset = (power * (HEIGHT + 1)) / capacity;
-        screen.drawTexturedModalRect(x + 1, (int) (y + HEIGHT - powerOffset), 18, (int) ((HEIGHT + 1) - powerOffset), WIDTH, (int) (powerOffset + 2));
+        screen.drawTexturedModalRect(x + 1, (int) (y + HEIGHT + 2 - powerOffset), 15, (int) ((HEIGHT + TEXTURE_HEIGHT_OFFSET + 2) - powerOffset), WIDTH, (int) (powerOffset - 3));
+    }
+
+    public void draw(long power, long capacity, int x, int y) {
+
+        screen.mc.getTextureManager().bindTexture(TEXTURE_SHEET);
+        screen.drawTexturedModalRect(x, y, 0, 0, WIDTH, HEIGHT);
+        long powerOffset = (power * (HEIGHT + 1)) / capacity;
+        screen.drawTexturedModalRect(x + 1, (int) (y + HEIGHT + 2 - powerOffset), 15, (int) ((HEIGHT + TEXTURE_HEIGHT_OFFSET + 2) - powerOffset), WIDTH, (int) (powerOffset - 3));
     }
 
     /**

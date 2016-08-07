@@ -52,12 +52,12 @@ public class ConfigHandler {
         energyUsage = config.getInt("energyUsage", "general", 20, 0, 1000, "Energy Usage in RF/t for the electric FloodLight (x4 for the cone floodlights)");
         energyUsageSmallFloodlight = config.getInt("energyUsageSmallFloodlight", "general", 2, 0, 100, "Energy Usage in RF/t for the small electric FloodLight");
         energyUsageUVFloodlight = config.getInt("energyUsageUVFloodlight", "general", 80, 0, 800, "Energy Usage in RF/t for the UV FloodLight");
-        energyUsageGrowLight = config.getInt("energyUsageGrowLight", "general", 40, 0, 800, "Energy Usage in RF/t for the Grow Light");
+        energyUsageGrowLight = config.getInt("energyUsageGrowLight", "general", 25, 0, 800, "Energy Usage in RF/t for the Grow Light");
         carbonTime = config.getInt("carbonTime", "general", 300, 0, 1000, "How many seconds should 1 coal last in the carbon floodlight (quarter of that for the cone floodlights)? Default:300");
         rangeStraightFloodlight = config.getInt("rangeStraightFloodlight", "general", 64, 1, 128, "How far should the straight Floodlights go?");
         rangeConeFloodlight = config.getInt("rangeConeFloodlight", "general", 32, 1, 64, "How far should the cone floodlights go? (mind that wide only goes quarter as far) Default:32   ");
         rangeUVFloodlight = config.getInt("rangeUVFloodlight", "general", 8, 1, 32, "How far should the UV Floodlights go?");
-        chanceGrowLight = config.getFloat("chanceGrowLight", "general", 0.05F, 0F, 1F, "How big should the chance for the growlight for a growtick per second be?");
+        chanceGrowLight = config.getFloat("chanceGrowLight", "general", 0.2F, 0F, 1F, "How big should the chance for the growlight for a growtick per second be?");
         timeoutFloodlights = config.getInt("timeoutFloodlights", "general", 40, 1, 240, "How long should the timeout for turning on floodlights again be in ticks?");
         damageUVFloodlight = config.getFloat("damageUVFloodlight", "general", 4.0F, 1.0F, 16.0F, "How much damage should the UV Floodlights do per second?");
         uvLightRendered = config.getBoolean("uvLightRendered", "general", true, "Should the UV Light Block be visible?");

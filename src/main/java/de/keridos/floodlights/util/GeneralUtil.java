@@ -14,10 +14,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
+import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.fml.common.registry.GameData;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-
-import java.util.logging.Logger;
 
 /**
  * Created by Keridos on 28/11/2014.
@@ -94,9 +93,8 @@ public class GeneralUtil {
 
     public static boolean isBlockValidGrowable(Block block, World world, BlockPos blockPos) {
         boolean result = false;
-        if ((block instanceof IGrowable && ((IGrowable) block).canGrow(world, blockPos,world.getBlockState(blockPos), false))
+        if ((block instanceof IGrowable && ((IGrowable) block).canGrow(world, blockPos,world.getBlockState(blockPos), false) || (block instanceof IPlantable && block.getTickRandomly()))
                 /*|| (ModCompatibility.ACLoaded  && ModCompatibility.getInstance().isBlockValidAgriCraftSeed(block, world, blockPos)*/) {
-            Logger.getGlobal().info("blockcangrow: " + (((IGrowable) block).canGrow(world, blockPos,world.getBlockState(blockPos), false)));
             result = true;
         }
         return result;

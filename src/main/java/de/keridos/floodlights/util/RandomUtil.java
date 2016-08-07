@@ -1,5 +1,7 @@
 package de.keridos.floodlights.util;
 
+import de.keridos.floodlights.handler.ConfigHandler;
+
 import java.util.Random;
 
 /**
@@ -8,12 +10,15 @@ import java.util.Random;
  */
 public class RandomUtil {
     public static Random random;
+    public static int averageTickTimeoutGrowing;
 
     public static void init() {
         random = new Random();
+        averageTickTimeoutGrowing = MathUtil.roundDoubleToInt(20/ConfigHandler.chanceGrowLight);
     }
 
-    public static int getRandomTickTimeoutFromFloatChance(float chance) {
-        return random.nextInt(Math.round(20 / chance)) + Math.round(0.5F * 20 / chance);
+    public static int getRandomTickTimeoutGrowing(){
+        return random.nextInt(2*averageTickTimeoutGrowing)+1;
     }
 }
+

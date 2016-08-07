@@ -13,6 +13,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
+import net.minecraftforge.common.IPlantable;
 
 import static de.keridos.floodlights.block.BlockPhantomLight.UPDATE;
 import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
@@ -35,7 +36,7 @@ public class TileEntityGrowLight extends TileEntityFLElectric {
     public void growSource(boolean remove) {
         int[] rotatedCoords = rotate(1, 0, 0, this.orientation);
         int x = this.pos.getX() + rotatedCoords[0];
-        int y = this.pos.getY()+ rotatedCoords[1];
+        int y = this.pos.getY() + rotatedCoords[1];
         int z = this.pos.getZ() + rotatedCoords[2];
         BlockPos blockPos = new BlockPos(x, y, z);
         if (remove) {
@@ -43,7 +44,7 @@ public class TileEntityGrowLight extends TileEntityFLElectric {
                 TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(blockPos);
                 light.removeSource(this.pos);
             }
-        } else if (worldObj.getBlockState(blockPos).getBlock().isAir(worldObj.getBlockState(blockPos),worldObj,blockPos)) {
+        } else if (worldObj.getBlockState(blockPos).getBlock().isAir(worldObj.getBlockState(blockPos), worldObj, blockPos)) {
             setLight(blockPos);
             worldObj.setBlockState(blockPos, worldObj.getBlockState(blockPos).withProperty(UPDATE, false));
         } else if (worldObj.getBlockState(blockPos).getBlock() == ModBlocks.blockPhantomLight) {
@@ -64,30 +65,33 @@ public class TileEntityGrowLight extends TileEntityFLElectric {
                 return;
             }
             if (active && (storage.getEnergyStored() >= realEnergyUsage || storageEU >= (double) realEnergyUsage / 8.0D)) {
-                if (world.getWorldTime() > nextGrowTick) {
+                if (world.getTotalWorldTime() > nextGrowTick) {
                     BlockPos blockPosTarget = new BlockPos(this.pos.getX() + this.orientation.getFrontOffsetX() * 2, this.pos.getY() + this.orientation.getFrontOffsetY() * 2, this.pos.getZ() + this.orientation.getFrontOffsetZ() * 2);
                     BlockPos blockPosFront = new BlockPos(this.pos.getX() + this.orientation.getFrontOffsetX(), this.pos.getY() + this.orientation.getFrontOffsetY(), this.pos.getZ() + this.orientation.getFrontOffsetZ());
                     Block block = worldObj.getBlockState(blockPosTarget).getBlock();
                     Block blockFront = worldObj.getBlockState(blockPosFront).getBlock();
-                    if (GeneralUtil.isBlockValidGrowable(block, world, blockPosTarget) && blockFront.isAir(worldObj.getBlockState(blockPosFront),world, blockPosFront)) {
-                        ((IGrowable) block).grow(world, RandomUtil.random, blockPosTarget,world.getBlockState(blockPosTarget));
+                    if (GeneralUtil.isBlockValidGrowable(block, world, blockPosTarget) && blockFront.isAir(worldObj.getBlockState(blockPosFront), world, blockPosFront)) {
+                        if (block instanceof IPlantable) {
+                            for (int i= 0;i<5;i++){
+                                block.randomTick(world, blockPosTarget, world.getBlockState(blockPosTarget), RandomUtil.random);
+                            }
+                        } else if (block instanceof IGrowable)
+                            ((IGrowable) block).grow(world, RandomUtil.random, blockPosTarget, world.getBlockState(blockPosTarget));
                     }
-                    nextGrowTick = world.getWorldTime() + RandomUtil.getRandomTickTimeoutFromFloatChance(ConfigHandler.chanceGrowLight);
+                    nextGrowTick = world.getTotalWorldTime() + RandomUtil.getRandomTickTimeoutGrowing();
                 }
                 if (update) {
                     if (mode == 0) {
                         growSource(true);
                         growSource(false);
                     }
-                    world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, true), 2);
-                    world.markBlocksDirtyVertical(this.pos.getX(),this.pos.getZ(),this.pos.getX(),this.pos.getZ());
+                    world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, true), 3);
                     update = false;
                 } else if (!wasActive) {
                     if (mode == 0) {
                         growSource(false);
                     }
-                    world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, true), 2);
-                    world.markBlocksDirtyVertical(this.pos.getX(),this.pos.getZ(),this.pos.getX(),this.pos.getZ());
+                    world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, true), 3);
                 }
                 if (storageEU >= (double) realEnergyUsage / 8.0D) {
                     storageEU -= (double) realEnergyUsage / 8.0D;
@@ -99,8 +103,7 @@ public class TileEntityGrowLight extends TileEntityFLElectric {
                 if (mode == 0) {
                     growSource(true);
                 }
-                world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, false), 2);
-                world.markBlocksDirtyVertical(this.pos.getX(),this.pos.getZ(),this.pos.getX(),this.pos.getZ());
+                world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, false), 3);
                 wasActive = false;
                 timeout = ConfigHandler.timeoutFloodlights;
                 update = false;

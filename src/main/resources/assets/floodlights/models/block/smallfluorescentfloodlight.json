@@ -6,7 +6,8 @@
 			"down": {
 				"texture": "#side",
 				"tintindex": 255,
-				"rotation": 180
+				"rotation": 180,
+			    "uv": [0,13,16,16]
 			},
 			"up": {
 				"texture": "#side",
@@ -27,7 +28,8 @@
 			},
 			"east": {
 				"texture": "#sideshort",
-				"tintindex": 255
+				"tintindex": 255,
+			    "uv": [13,5,16,11]
 			}
 		}
 	}]

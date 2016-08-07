@@ -74,7 +74,7 @@ public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implem
     public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
         if (worldIn.getTileEntity(pos) instanceof TileEntitySmallFloodlight) {
             TileEntitySmallFloodlight te = ((TileEntitySmallFloodlight) worldIn.getTileEntity(pos));
-            return state.withProperty(COLOR, te.getColor()).withProperty(FACING, te.getOrientation()).withProperty(ROTATIONSTATE, te.getRotationState()).withProperty(ACTIVE, te.getWasActive());
+            return state.withProperty(COLOR, te.getColor()).withProperty(FACING, te.getOrientation()).withProperty(ROTATIONSTATE, te.getRotationState());
         } else return state.withProperty(COLOR, 16);
     }
 
@@ -122,13 +122,12 @@ public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implem
     }
 
     @Override
-    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState,World worldIn, BlockPos pos) {
-        return null;
+    public AxisAlignedBB getCollisionBoundingBox(IBlockState state, World world, BlockPos pos) {
+        return this.getBoundingBox(state, world, pos);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World world, BlockPos pos) {
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
         if (world.getTileEntity(pos) instanceof TileEntitySmallFloodlight) {
             TileEntitySmallFloodlight tileEntitySmallFloodlight = (TileEntitySmallFloodlight) world.getTileEntity(pos);
             double minX = 0;
@@ -181,14 +180,18 @@ public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implem
             maxY = newMax[1] + 0.5;
             maxZ = newMax[2] + 0.5;
 
-            return new AxisAlignedBB((double) pos.getX() + minX,
-                    (double) pos.getY() + minY,
-                    (double) pos.getZ() + minZ,
-                    (double) pos.getX() + maxX,
-                    (double) pos.getY() + maxY,
-                    (double) pos.getZ() + maxZ);
+            return new AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ);
         }
-        return super.getSelectedBoundingBox(state,world, pos);
+        return super.getBoundingBox(state, world, pos);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World world, BlockPos pos) {
+        if (world.getTileEntity(pos) instanceof TileEntitySmallFloodlight) {
+            return this.getBoundingBox(state, world, pos).offset(pos);
+        }
+        return super.getSelectedBoundingBox(state, world, pos);
     }
 
     @Override
@@ -232,5 +235,10 @@ public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implem
     @Override
     public boolean isFullCube(IBlockState state) {
         return false;
+    }
+
+    @Override
+    public int getLightValue(IBlockState state) {
+        return state.getValue(ACTIVE) ? 15 : 0;
     }
 }

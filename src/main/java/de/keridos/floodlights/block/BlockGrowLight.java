@@ -99,31 +99,24 @@ public class BlockGrowLight extends BlockFLColorableMachine {
     public TileEntity createTileEntity(@Nonnull World w, @Nonnull IBlockState state) {
         return new TileEntityGrowLight();
     }
+
     @Override
     public AxisAlignedBB getCollisionBoundingBox(IBlockState state, World world, BlockPos pos) {
-        //getSelectedBoundingBox(World world, BlockPos pos);
-        return null;
+        return this.getBoundingBox(state,world,pos);
     }
 
+    @Override
+    public AxisAlignedBB getBoundingBox(IBlockState state,IBlockAccess world, BlockPos pos) {
+        return new AxisAlignedBB(0,0.8125,0,1,1,1);
+    }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public AxisAlignedBB getSelectedBoundingBox(IBlockState state,World world, BlockPos pos) {
-
-        double minX = 0;
-        double minY = 0.8125;
-        double minZ = 0;
-        double maxX = 1;
-        double maxY = 1;
-        double maxZ = 1;
-
-        return new AxisAlignedBB((double) pos.getX() + minX,
-                (double) pos.getY() + minY,
-                (double) pos.getZ() + minZ,
-                (double) pos.getX() + maxX,
-                (double) pos.getY() + maxY,
-                (double) pos.getZ() + maxZ);
-
+    public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World world, BlockPos pos) {
+        if (world.getTileEntity(pos) instanceof TileEntityGrowLight) {
+            return this.getBoundingBox(state, world, pos).offset(pos);
+        }
+        return super.getSelectedBoundingBox(state,world, pos);
     }
 
     @Override
@@ -140,5 +133,10 @@ public class BlockGrowLight extends BlockFLColorableMachine {
             }
             ((TileEntityFL) world.getTileEntity(pos)).setOrientation(EnumFacing.DOWN);
         }
+    }
+
+    @Override
+    public boolean isFullCube(IBlockState state) {
+        return false;
     }
 }
