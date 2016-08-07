@@ -68,9 +68,6 @@ repositories {
     }
 }
 
-apply plugin: 'net.minecraftforge.gradle.forge'
-
-
 // define the properties file
 ext.configFile = file "project.properties"
 
@@ -89,7 +86,7 @@ if (hasProperty('appendBuildNumber')) {
 }
 
 group = "${config.group_id}" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "${config.mod_id}-${config.minecraft_version}${config.second_minecraft_version}"
+archivesBaseName = "${config.mod_id}-${config.minecraft_version}-${config.second_minecraft_version}"
 
 minecraft {
     version = "${config.forge_version}"
