@@ -1,0 +1,5 @@
+The UV Light is a RF/EU/Tesla powered Light that deals damage in a line in front of it.
+It deals damage to all living entities in its area of effect every quarter of a second.
+
+Toggle invert state via shift rightclicking with an empty hand.
+

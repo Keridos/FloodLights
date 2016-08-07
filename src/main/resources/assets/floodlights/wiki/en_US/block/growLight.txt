@@ -1,0 +1,5 @@
+The Grow Light is a RF/EU/Tesla powered Light that makes plants planted 2 blocks below it grow faster.
+It has a chance of advancing the grow of the plant to the next stage periodically while turned on.
+
+Toggle invert state via shift rightclicking with an empty hand.
+

@@ -6,6 +6,7 @@ import cofh.api.energy.IEnergyHandler;
 import cofh.api.energy.IEnergyReceiver;
 import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.reference.Names;
+import de.keridos.floodlights.util.BaseFLTeslaContainer;
 import de.keridos.floodlights.util.MathUtil;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
@@ -13,12 +14,15 @@ import ic2.api.energy.tile.IEnergyEmitter;
 import ic2.api.energy.tile.IEnergySink;
 import ic2.api.item.ElectricItem;
 import ic2.api.item.IElectricItem;
+import net.darkhax.tesla.capability.TeslaCapabilities;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.Optional;
 
+import static de.keridos.floodlights.compatability.ModCompatibility.TeslaLoaded;
 import static de.keridos.floodlights.util.GeneralUtil.isItemStackValidElectrical;
 
 /**
@@ -33,8 +37,9 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
     protected boolean wasAddedToEnergyNet = false;
     protected double storageEU;
     protected EnergyStorage storage = new EnergyStorage(50000);
+    private Object container;
 
-    public TileEntityFLElectric() {
+    protected TileEntityFLElectric() {
         super();
     }
 
@@ -42,6 +47,9 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
     public void readFromNBT(NBTTagCompound nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
         storage.readFromNBT(nbtTagCompound);
+        if (TeslaLoaded) {
+            getTeslaContainer(this.container).deserializeNBT(nbtTagCompound);
+        }
         if (nbtTagCompound.hasKey(Names.NBT.STORAGE_EU)) {
             this.storageEU = nbtTagCompound.getDouble(Names.NBT.STORAGE_EU);
         }
@@ -51,6 +59,9 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
     public NBTTagCompound writeToNBT(NBTTagCompound nbtTagCompound) {
         nbtTagCompound = super.writeToNBT(nbtTagCompound);
         storage.writeToNBT(nbtTagCompound);
+        if (TeslaLoaded){
+            getTeslaContainer(this.container).serializeNBT(nbtTagCompound);
+        }
         nbtTagCompound.setDouble(Names.NBT.STORAGE_EU, storageEU);
         return nbtTagCompound;
     }
@@ -125,6 +136,62 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
             EnergyTileUnloadEvent event = new EnergyTileUnloadEvent(this);
             MinecraftForge.EVENT_BUS.post(event);
         }
+    }
+
+    @Optional.Method(modid = "tesla")
+    public BaseFLTeslaContainer getTeslaContainer(Object container){
+        if (container instanceof BaseFLTeslaContainer) {
+            return (BaseFLTeslaContainer) container;
+        } else {
+            container = new BaseFLTeslaContainer();
+            return (BaseFLTeslaContainer) container;
+        }
+
+    }
+
+    @Optional.Method(modid = "tesla")
+    public void moveEnergyFromTeslaToRF(){
+        if (container instanceof BaseFLTeslaContainer) {
+            int energyNeeded = storage.getEnergyStored() -storage.getMaxEnergyStored();
+            if (energyNeeded> 0){
+                 storage.modifyEnergyStored((int)((BaseFLTeslaContainer) container).takePower(energyNeeded, false));
+            }
+        }
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+
+        // This method is where other things will try to access your TileEntity's Tesla
+        // capability. In the case of the analyzer, is a consumer, producer and holder so we
+        // can allow requests that are looking for any of those things. This example also does
+        // not care about which side is being accessed, however if you wanted to restrict which
+        // side can be used, for example only allow power input through the back, that could be
+        // done here.
+        if (capability == TeslaCapabilities.CAPABILITY_CONSUMER || capability == TeslaCapabilities.CAPABILITY_HOLDER) {
+            if (TeslaLoaded) {
+                moveEnergyFromTeslaToRF();
+                return (T) getTeslaContainer(this.container);
+            }
+        }
+
+        return super.getCapability(capability, facing);
+    }
+
+    @Override
+    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+
+        // This method replaces the instanceof checks that would be used in an interface based
+        // system. It can be used by other things to see if the TileEntity uses a capability or
+        // not. This example is a Consumer, Producer and Holder, so we return true for all
+        // three. This can also be used to restrict access on certain sides, for example if you
+        // only accept power input from the bottom of the block, you would only return true for
+        // Consumer if the facing parameter was down.
+        if (capability == TeslaCapabilities.CAPABILITY_CONSUMER || capability == TeslaCapabilities.CAPABILITY_HOLDER)
+            return true;
+
+        return super.hasCapability(capability, facing);
     }
 
     @Override

@@ -16,17 +16,13 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import net.minecraftforge.fml.common.network.NetworkCheckHandler;
-import net.minecraftforge.fml.relauncher.Side;
-
-import java.util.Map;
 
 /**
  * Created by Keridos on 28.02.14.
  * This Class is the Main Class of the Mod.
  */
 
-@Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, dependencies = Reference.DEPENDENCIES)
+@Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, dependencies = Reference.DEPENDENCIES, acceptedMinecraftVersions = Reference.ACCEPTED_MINECRAFT_VERSIONS)
 public class FloodLights {
     @Mod.Instance(Reference.MOD_ID)
     public static FloodLights instance;
@@ -39,10 +35,10 @@ public class FloodLights {
     private static ModCompatibility modCompatibility = null;
     private static GuiHandler Gui;
 
-    @NetworkCheckHandler()
+    /*@NetworkCheckHandler()
     public boolean matchModVersions(Map<String, String> remoteVersions, Side side) {
         return remoteVersions.containsKey("FloodLights") && Reference.VERSION.equals(remoteVersions.get("FloodLights"));
-    }
+    } */
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {

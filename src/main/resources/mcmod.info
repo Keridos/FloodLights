@@ -1,5 +1,5 @@
 [{
-  "modid": "FloodLights",
+  "modid": "floodlights",
   "name": "Flood Lights",
   "description": "Adds flood lights to Minecraft",
   "version": "$version",
@@ -11,7 +11,9 @@
   "logoFile": "",
   "screenshots": [ ],
   "parent": "",
-  "requiredMods": [ "Forge" ],
+  "requiredMods": [
+    "Forge"
+   ],
   "dependencies": [
     "IC2",
     "JEI"

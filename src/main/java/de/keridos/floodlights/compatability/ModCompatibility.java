@@ -30,6 +30,7 @@ public class ModCompatibility {
     public static boolean WrenchAvailable = false;
     public static boolean ColoredLightCoreLoaded = false;
     public static boolean ACLoaded = false;
+    public static boolean TeslaLoaded = false;
 
 
     private ModCompatibility() {
@@ -52,6 +53,7 @@ public class ModCompatibility {
         EnderIOLoaded = Loader.isModLoaded("EnderIO");
         ColoredLightCoreLoaded = Loader.isModLoaded("coloredlightcore");
         ACLoaded = Loader.isModLoaded("AgriCraft");
+        TeslaLoaded = Loader.isModLoaded("tesla");
     }
 
     @Optional.Method(modid = "NotEnoughItems")

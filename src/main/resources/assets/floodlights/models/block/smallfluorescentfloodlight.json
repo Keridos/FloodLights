@@ -27,8 +27,7 @@
 			},
 			"east": {
 				"texture": "#sideshort",
-				"tintindex": 255,
-			    "uv": [13,5,16,11]
+				"tintindex": 255
 			}
 		}
 	}]

@@ -18,7 +18,7 @@ tile.floodlights:growLight.name=Лампа роста
 
 #GUI – ГИП
 gui.floodlights:nonElectricFloodlightTimeRemaining=Осталось времени:
-gui.floodlights:RFStorage=Хранилище RF
+gui.floodlights:rfStorage=Хранилище RF
 gui.floodlights:invert=Инвертирован
 gui.floodlights:mode=Режим
 gui.floodlights:true=да

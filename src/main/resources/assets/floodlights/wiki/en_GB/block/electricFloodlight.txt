@@ -1,3 +1,3 @@
-The electric floodlight is the RF/EU/UE powered version of the floodlight.
+The electric floodlight is the RF/EU/UE/Tesla powered version of the floodlight.
 Toggle invert state via shift rightclicking with an empty hand. Right click with a wrench (when no wrench is available try a stick) to change mode.
 It uses 4x as much energy in Cone modes.

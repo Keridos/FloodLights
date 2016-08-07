@@ -4,6 +4,7 @@ import de.keridos.floodlights.client.gui.container.ContainerElectricFloodlight;
 import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.reference.Textures;
 import de.keridos.floodlights.tileentity.TileEntityFLElectric;
+import de.keridos.floodlights.util.PowerBar;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.EnumFacing;
@@ -17,23 +18,26 @@ import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
  * This Class implements the Gui for the Carbon floodlight.
  */
 public class GuiElectricFloodlight extends GuiContainer {
-    public static final ResourceLocation texture = new ResourceLocation(Textures.Gui.ELECTRIC_FLOODLIGHT);
-    private TileEntityFLElectric tileEntityFLElectric = null;
+    private static final ResourceLocation texture = new ResourceLocation(Textures.Gui.ELECTRIC_FLOODLIGHT);
+    private TileEntityFLElectric tileEntityFLElectric;
+    PowerBar powerBar;
 
     public GuiElectricFloodlight(InventoryPlayer invPlayer, TileEntityFLElectric entity) {
         super(new ContainerElectricFloodlight(invPlayer, entity));
         this.tileEntityFLElectric = entity;
         xSize = 176;
         ySize = 146;
+        powerBar = new PowerBar(this,guiLeft+ 8,guiTop+4);
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2) {
+    public void drawGuiContainerForegroundLayer(int par1, int par2) {
         String guiText = safeLocalize(Names.Localizations.RF_STORAGE) + ": "
                 + tileEntityFLElectric.getEnergyStored(EnumFacing.DOWN) / 1000 + "."
                 + tileEntityFLElectric.getEnergyStored(EnumFacing.DOWN) % 1000 / 100 + "k/"
                 + tileEntityFLElectric.getMaxEnergyStored(EnumFacing.DOWN) / 1000 + "k";
         fontRendererObj.drawString(guiText, 50, 26, 0x000000);
+        powerBar.draw(this.tileEntityFLElectric);
     }
 
     @Override

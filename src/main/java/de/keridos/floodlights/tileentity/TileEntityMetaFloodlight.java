@@ -12,6 +12,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.wrapper.SidedInvWrapper;
 
 import static de.keridos.floodlights.block.BlockPhantomLight.UPDATE;
 import static de.keridos.floodlights.util.GeneralUtil.getPosFromPosFacing;
@@ -27,6 +29,8 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
     protected boolean update = true;
     protected int timeout;
     protected ItemStack[] inventory;
+    private IItemHandler handlerTop = new SidedInvWrapper(this,EnumFacing.UP);
+
 
     public TileEntityMetaFloodlight() {
         super();
@@ -91,10 +95,12 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
         }
         if (nbtTagCompound.hasKey(Names.NBT.ITEMS)) {
             NBTTagList list = nbtTagCompound.getTagList(Names.NBT.ITEMS, 10);
-            NBTTagCompound item = list.getCompoundTagAt(0);
-            int slot = item.getByte(Names.NBT.ITEMS);
-            if (slot >= 0 && slot < getSizeInventory()) {
-                setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(item));
+            for (int i = 0; i < list.tagCount(); i++) {
+                NBTTagCompound item = list.getCompoundTagAt(i);
+                int slot = item.getByte(Names.NBT.ITEMS);
+                if (slot >= 0 && slot < getSizeInventory()) {
+                    setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(item));
+                }
             }
         }
     }
@@ -105,14 +111,17 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
         nbtTagCompound.setBoolean(Names.NBT.WAS_ACTIVE, wasActive);
         nbtTagCompound.setByte(Names.NBT.STATE, state);
         NBTTagList list = new NBTTagList();
-        ItemStack itemstack = getStackInSlot(0);
-        if (itemstack != null) {
-            NBTTagCompound item = new NBTTagCompound();
-            item.setByte(Names.NBT.ITEMS, (byte) 0);
-            itemstack.writeToNBT(item);
-            list.appendTag(item);
+        for (int i = 0; i < getSizeInventory(); i++) {
+            ItemStack itemstack = getStackInSlot(i);
+            if (itemstack != null) {
+                NBTTagCompound item = new NBTTagCompound();
+                item.setByte(Names.NBT.ITEMS, (byte) 0);
+                itemstack.writeToNBT(item);
+                list.appendTag(item);
+            }
         }
         nbtTagCompound.setTag(Names.NBT.ITEMS, list);
+
         return nbtTagCompound;
     }
 
@@ -138,7 +147,7 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
 
     @Override
     public ItemStack getStackInSlot(int i) {
-        worldObj.markBlocksDirtyVertical(this.pos.getX(), this.pos.getZ(), this.pos.getX(), this.pos.getZ());
+        this.markDirty();
         return inventory[i];
     }
 
@@ -227,6 +236,17 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
     @Override
     public boolean isItemValidForSlot(int i, ItemStack itemstack) {
         return true;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> T getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, net.minecraft.util.EnumFacing facing)
+    {
+        if (capability == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            return (T) handlerTop;
+        }
+
+        return super.getCapability(capability, facing);
     }
 
     public void setSource(BlockPos blockPos, boolean remove, Integer setSourceUpdate) {

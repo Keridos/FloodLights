@@ -49,13 +49,16 @@ repositories {
         name = 'tterrag'
         url = "http://maven.tterrag.com/"
     }
-    maven {
-        name = "OC repo"
-        url = "http://maven.cil.li/"
-    }
+    //maven {
+    //    name = "OC repo"
+    //    url = "http://maven.cil.li/"
+    //}
     maven {
         name = "ic2"
         url = "http://maven.ic2.player.to/"
+    }
+    maven {
+        url 'http://maven.epoxide.xyz'
     }
     if (new File("curseKey.properties").exists()) {
         //maven {
@@ -86,15 +89,11 @@ if (hasProperty('appendBuildNumber')) {
 }
 
 group = "${config.group_id}" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "${config.mod_id}-${config.minecraft_version}"
+archivesBaseName = "${config.mod_id}-${config.minecraft_version}${config.second_minecraft_version}"
 
 minecraft {
     version = "${config.forge_version}"
-    if (file('../run_1.9.4').exists()) {
-        runDir = "../run_1.9.4"
-    } else {
-        runDir = "run"
-    }
+    runDir = "run"
     // the mappings can be changed at any time, and must be in the following format.
     // snapshot_YYYYMMDD   snapshot are built nightly.
     // stable_#            stables are built at the discretion of the MCP team.
@@ -103,6 +102,7 @@ minecraft {
     mappings = "snapshot_20160518"
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
     replace '@VERSION@', project.version
+    replace '@ACCEPTEDMCVERSIONS@', "[${config.minecraft_version},${config.second_minecraft_version}]"
 }
 
 processResources{
@@ -133,11 +133,12 @@ build.dependsOn sourceJar, deobfJar
 
 dependencies {
     deobfCompile "mezz.jei:jei_${config.minecraft_version}:${config.jei_version}"
-    compile "igwmod:IGW-Mod-${config.minecraft_version}:${config.igwmod_version}:userdev"
+    compile "igwmod:IGW-Mod-${config.second_minecraft_version}:${config.igwmod_version}:userdev"
     deobfCompile "mcp.mobius.waila:Waila:${config.waila_version}"
     compile "net.industrial-craft:industrialcraft-2:${config.ic2_version}:dev"
     compile "com.enderio:EnderIO:${config.minecraft_version}-${config.enderio_version}:dev"
     deobfCompile "com.enderio.core:EnderCore:${config.minecraft_version}-${config.endercore_version}"
+    compile "net.darkhax.tesla:Tesla:${config.minecraft_version_short}-${config.tesla_version}"
     if (new File("curseKey.properties").exists()) {
 
     }

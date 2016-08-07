@@ -18,7 +18,7 @@ tile.floodlights:growLight.name=Wachstumslampe
 
 #GUI
 gui.floodlights:nonElectricFloodlightTimeRemaining=Verbleibend
-gui.floodlights:RFStorage=RF Speicher
+gui.floodlights:rfStorage=RF Speicher
 gui.floodlights:invert=Invertiert
 gui.floodlights:mode=Modus
 gui.floodlights:true=ja
