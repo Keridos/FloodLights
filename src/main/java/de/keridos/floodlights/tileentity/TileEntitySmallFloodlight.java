@@ -9,6 +9,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import static de.keridos.floodlights.block.BlockSmallElectricFloodlight.ROTATIONSTATE;
 import static de.keridos.floodlights.util.MathUtil.rotate;
 
 /**
@@ -46,7 +47,7 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
 
     public void toggleRotationState() {
         rotationState = !rotationState;
-        this.worldObj.markBlocksDirtyVertical(this.pos.getX(),this.pos.getZ(),this.pos.getX(),this.pos.getZ());;
+        this.worldObj.setBlockState(this.pos, this.worldObj.getBlockState(this.pos).withProperty(ROTATIONSTATE, rotationState),3);
     }
 
     public boolean getRotationState() {
@@ -110,13 +111,11 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
                 if (update) {
                     smallSource(true);
                     smallSource(false);
-                    world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, true), 2);
-                    world.markBlocksDirtyVertical(this.pos.getX(),this.pos.getZ(),this.pos.getX(),this.pos.getZ());;
+                    world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, true), 3);
                     update = false;
                 } else if (!wasActive) {
                     smallSource(false);
-                    world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, true), 2);
-                    world.markBlocksDirtyVertical(this.pos.getX(),this.pos.getZ(),this.pos.getX(),this.pos.getZ());;
+                    world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, true), 3);
                 }
                 if (storageEU >= (double) realEnergyUsage / 8.0D) {
                     storageEU -= (double) realEnergyUsage / 8.0D;
@@ -126,8 +125,7 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
                 wasActive = true;
             } else if ((!active || (storage.getEnergyStored() < realEnergyUsage && storageEU < (double) realEnergyUsage / 8.0D)) && wasActive) {
                 smallSource(true);
-                world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, false), 2);
-                world.markBlocksDirtyVertical(this.pos.getX(),this.pos.getZ(),this.pos.getX(),this.pos.getZ());;
+                world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, false), 3);
                 wasActive = false;
                 timeout = ConfigHandler.timeoutFloodlights;
                 update = false;

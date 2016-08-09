@@ -1,6 +1,7 @@
 package de.keridos.floodlights;
 
 import de.keridos.floodlights.compatability.ModCompatibility;
+import de.keridos.floodlights.core.EventListener;
 import de.keridos.floodlights.core.proxy.CommonProxy;
 import de.keridos.floodlights.handler.ConfigHandler;
 import de.keridos.floodlights.handler.GuiHandler;
@@ -10,6 +11,7 @@ import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.init.ModItems;
 import de.keridos.floodlights.reference.Reference;
 import de.keridos.floodlights.util.RandomUtil;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -72,7 +74,7 @@ public class FloodLights {
     }
 
     public void registerEventListeners() {
-        //MinecraftForge.EVENT_BUS.register(EventListener.getInstance());
+        MinecraftForge.EVENT_BUS.register(EventListener.getInstance());
         // some events, especially tick, are handled on FML bus
         //FMLCommonHandler.instance().bus().register(FMLEventListener.getInstance());
     }

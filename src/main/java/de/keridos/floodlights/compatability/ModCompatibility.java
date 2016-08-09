@@ -3,12 +3,15 @@ package de.keridos.floodlights.compatability;
 import crazypants.enderio.api.tool.ITool;
 import de.keridos.floodlights.handler.ConfigHandler;
 import de.keridos.floodlights.reference.Reference;
+import jline.internal.Nullable;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModAPIManager;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
+
+import static de.keridos.floodlights.util.GeneralUtil.getMinecraftItem;
 
 /**
  * Created by Keridos on 28.02.14.
@@ -85,7 +88,10 @@ public class ModCompatibility {
         WrenchAvailable = (BCLoaded || EnderIOLoaded || IC2Loaded || CofhCoreLoaded);
     }
 
-    public boolean isItemValidWrench(ItemStack stack) {
+    public boolean isItemValidWrench(@Nullable ItemStack stack) {
+        if (stack == null) {
+            return false;
+        }
         /*if (ModCompatibility.BCLoaded) {
             if (stack.getItem() instanceof IToolWrench) {
                 return true;
@@ -109,7 +115,7 @@ public class ModCompatibility {
                 return true;
             }
         }
-        return false;
+        return stack.getItem() == getMinecraftItem("stick");
     }
 
     /*@Optional.Method(modid = "AgriCraft")

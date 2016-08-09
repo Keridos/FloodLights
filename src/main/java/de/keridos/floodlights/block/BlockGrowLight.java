@@ -6,9 +6,10 @@ import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.tileentity.TileEntityFL;
 import de.keridos.floodlights.tileentity.TileEntityGrowLight;
 import de.keridos.floodlights.tileentity.TileEntityMetaFloodlight;
-import de.keridos.floodlights.tileentity.TileEntitySmallFloodlight;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.PropertyBool;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,7 +29,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static de.keridos.floodlights.util.GeneralUtil.getMinecraftItem;
 import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
 
 /**
@@ -36,23 +36,35 @@ import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
  * This Class defines the block properties of the electric floodlight.
  */
 public class BlockGrowLight extends BlockFLColorableMachine {
+    public static final PropertyBool LIGHT = PropertyBool.create("light");
 
     public BlockGrowLight() {
         super(Names.Blocks.GROW_LIGHT, Material.ROCK, SoundType.METAL, 2.5F);
         setHarvestLevel("pickaxe", 1);
+        setDefaultState(
+                this.blockState.getBaseState().withProperty(COLOR, 0).withProperty(ACTIVE, false).withProperty(FACING,
+                        EnumFacing.DOWN).withProperty(LIGHT, true));
+    }
+
+    @Override
+    protected BlockStateContainer createBlockState() {
+        return new BlockStateContainer(this, FACING, ACTIVE, COLOR, LIGHT);
+    }
+
+    @Override
+    public IBlockState getStateFromMeta(int meta) {
+        return this.getDefaultState().withProperty(LIGHT, meta == 0);
+
+    }
+
+    @Override
+    public int getMetaFromState(IBlockState state) {
+        return (state.getValue(LIGHT) ? 0 : 1);
     }
 
     @Override
     public boolean isOpaqueCube(IBlockState blockState) {
         return false;
-    }
-
-    @Override
-    public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
-        if (worldIn.getTileEntity(pos) instanceof TileEntitySmallFloodlight) {
-            TileEntitySmallFloodlight te = ((TileEntitySmallFloodlight) worldIn.getTileEntity(pos));
-            return state.withProperty(ACTIVE, te.getWasActive());
-        } else return state.withProperty(COLOR, 16);
     }
 
     @Override
@@ -64,10 +76,7 @@ public class BlockGrowLight extends BlockFLColorableMachine {
                 player.addChatMessage(new TextComponentString(safeLocalize(Names.Localizations.INVERT) + ": " + safeLocalize(invert)));
                 return true;
             } else if (!world.isRemote && heldItem != null) {
-                if (!ModCompatibility.WrenchAvailable && heldItem.getItem() == getMinecraftItem("stick")) {
-                    ((TileEntityGrowLight) world.getTileEntity(pos)).changeMode(player);
-                    return true;
-                } else if (player.isSneaking() && ModCompatibility.getInstance().isItemValidWrench(heldItem)) {
+                if (player.isSneaking() && ModCompatibility.getInstance().isItemValidWrench(heldItem)) {
                     world.destroyBlock(pos, true);
                     return true;
                 } else if (ModCompatibility.getInstance().isItemValidWrench(heldItem)) {
@@ -89,8 +98,7 @@ public class BlockGrowLight extends BlockFLColorableMachine {
     }
 
     @Override
-    public boolean hasTileEntity(IBlockState state)
-    {
+    public boolean hasTileEntity(IBlockState state) {
         return true;
     }
 
@@ -102,12 +110,12 @@ public class BlockGrowLight extends BlockFLColorableMachine {
 
     @Override
     public AxisAlignedBB getCollisionBoundingBox(IBlockState state, World world, BlockPos pos) {
-        return this.getBoundingBox(state,world,pos);
+        return this.getBoundingBox(state, world, pos);
     }
 
     @Override
-    public AxisAlignedBB getBoundingBox(IBlockState state,IBlockAccess world, BlockPos pos) {
-        return new AxisAlignedBB(0,0.8125,0,1,1,1);
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
+        return new AxisAlignedBB(0, 0.8125, 0, 1, 1, 1);
     }
 
     @Override
@@ -116,7 +124,7 @@ public class BlockGrowLight extends BlockFLColorableMachine {
         if (world.getTileEntity(pos) instanceof TileEntityGrowLight) {
             return this.getBoundingBox(state, world, pos).offset(pos);
         }
-        return super.getSelectedBoundingBox(state,world, pos);
+        return super.getSelectedBoundingBox(state, world, pos);
     }
 
     @Override
@@ -138,5 +146,10 @@ public class BlockGrowLight extends BlockFLColorableMachine {
     @Override
     public boolean isFullCube(IBlockState state) {
         return false;
+    }
+
+    @Override
+    public int getLightValue(IBlockState state) {
+        return state.getValue(ACTIVE) && state.getValue(LIGHT) ? 15 : 0;
     }
 }

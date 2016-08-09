@@ -15,6 +15,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IPlantable;
 
+import static de.keridos.floodlights.block.BlockGrowLight.LIGHT;
 import static de.keridos.floodlights.block.BlockPhantomLight.UPDATE;
 import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
 import static de.keridos.floodlights.util.MathUtil.rotate;
@@ -116,10 +117,12 @@ public class TileEntityGrowLight extends TileEntityFLElectric {
         if (!world.isRemote) {
             if (mode == 0) {
                 growSource(true);
+                this.worldObj.setBlockState(this.pos,worldObj.getBlockState(this.pos).withProperty(LIGHT, false),3);
             }
             mode = (mode == 1 ? 0 : mode + 1);
             if (active && (storage.getEnergyStored() >= ConfigHandler.energyUsage || storageEU >= ConfigHandler.energyUsage / 8.0D) && mode == 0) {
                 growSource(false);
+                this.worldObj.setBlockState(this.pos,worldObj.getBlockState(this.pos).withProperty(LIGHT, true),3);
             }
             String modeString = (mode == 0 ? Names.Localizations.LIGHTING : Names.Localizations.DARK_LIGHT);
             player.addChatMessage(new TextComponentString(safeLocalize(Names.Localizations.MODE) + ": " + safeLocalize(modeString)));

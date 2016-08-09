@@ -52,7 +52,7 @@ public class BlockCarbonFloodlight extends BlockFLColorableMachine implements IT
                 player.addChatMessage(new TextComponentString(safeLocalize(Names.Localizations.INVERT) + ": " + safeLocalize(invert)));
                 return true;
             } else if (!world.isRemote && heldItem != null) {
-                if (!ModCompatibility.WrenchAvailable && heldItem.getItem() == getMinecraftItem("stick")) {
+                if (heldItem.getItem() == getMinecraftItem("stick")) {
                     ((TileEntityCarbonFloodlight) world.getTileEntity(pos)).changeMode(player);
                     return true;
                 } else if (player.isSneaking() && ModCompatibility.getInstance().isItemValidWrench(heldItem)) {
@@ -80,6 +80,4 @@ public class BlockCarbonFloodlight extends BlockFLColorableMachine implements IT
     public TileEntityCarbonFloodlight createNewTileEntity(World world, int metadata) {
         return new TileEntityCarbonFloodlight();
     }
-
-
 }

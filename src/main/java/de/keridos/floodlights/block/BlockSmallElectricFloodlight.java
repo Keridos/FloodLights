@@ -35,7 +35,6 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.keridos.floodlights.util.GeneralUtil.getMinecraftItem;
 import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
 
 /**
@@ -74,7 +73,7 @@ public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implem
     public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
         if (worldIn.getTileEntity(pos) instanceof TileEntitySmallFloodlight) {
             TileEntitySmallFloodlight te = ((TileEntitySmallFloodlight) worldIn.getTileEntity(pos));
-            return state.withProperty(COLOR, te.getColor()).withProperty(FACING, te.getOrientation()).withProperty(ROTATIONSTATE, te.getRotationState());
+            return state.withProperty(COLOR, te.getColor()).withProperty(FACING, te.getOrientation());
         } else return state.withProperty(COLOR, 16);
     }
 
@@ -92,10 +91,7 @@ public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implem
                 player.addChatMessage(new TextComponentString(safeLocalize(Names.Localizations.INVERT) + ": " + safeLocalize(invert)));
                 return true;
             } else if (!world.isRemote && heldItem != null) {
-                if (!ModCompatibility.WrenchAvailable && heldItem.getItem() == getMinecraftItem("stick")) {
-                    ((TileEntitySmallFloodlight) world.getTileEntity(pos)).toggleRotationState();
-                    return true;
-                } else if (player.isSneaking() && ModCompatibility.getInstance().isItemValidWrench(heldItem)) {
+                if (player.isSneaking() && ModCompatibility.getInstance().isItemValidWrench(heldItem)) {
                     world.destroyBlock(pos, true);
                     return true;
                 } else if (ModCompatibility.getInstance().isItemValidWrench(heldItem)) {
@@ -136,9 +132,9 @@ public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implem
             double maxX = 0;
             double maxY = 0;
             double maxZ = 0;
-            switch (this.getMetaFromState(world.getBlockState(pos))) {
-                case 0:
-                    if (!tileEntitySmallFloodlight.getRotationState()) {
+            switch ((PropertiesEnum.EnumModelSmallLight) state.getValue(MODEL)) {
+                case SMALLELECTRICFLOODLIGHTSTRIP:
+                    if (!state.getValue(ROTATIONSTATE)) {
                         minX = 0;
                         maxX = 0.1875;
                         minY = 0.3125;
@@ -154,7 +150,7 @@ public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implem
                         maxZ = 0.6875;
                     }
                     break;
-                case 1:
+                case SMALLELECTRICFLOODLIGHTSQUARE:
                     minX = 0;
                     maxX = 0.1875;
                     minY = 0;

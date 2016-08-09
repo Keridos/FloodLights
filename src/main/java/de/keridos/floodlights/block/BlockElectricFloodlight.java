@@ -49,7 +49,7 @@ public class BlockElectricFloodlight extends BlockFLColorableMachine implements 
                 player.addChatMessage(new TextComponentString(safeLocalize(Names.Localizations.INVERT) + ": " + safeLocalize(invert)));
                 return true;
             } else if (!world.isRemote && heldItem != null) {
-                if (!ModCompatibility.WrenchAvailable && heldItem.getItem() == getMinecraftItem("stick")) {
+                if (heldItem.getItem() == getMinecraftItem("stick")) {
                     ((TileEntityElectricFloodlight) world.getTileEntity(pos)).changeMode(player);
                     return true;
                 } else if (player.isSneaking() && ModCompatibility.getInstance().isItemValidWrench(heldItem)) {
