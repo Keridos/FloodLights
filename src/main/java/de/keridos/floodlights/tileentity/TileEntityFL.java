@@ -1,13 +1,18 @@
 package de.keridos.floodlights.tileentity;
 
 import de.keridos.floodlights.block.BlockFLColorableMachine;
+import de.keridos.floodlights.core.network.message.MessageTileEntityFL;
+import de.keridos.floodlights.handler.PacketHandler;
 import de.keridos.floodlights.reference.Names;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 /**
  * Created by Keridos on 01.10.14.
@@ -80,7 +85,10 @@ public class TileEntityFL extends TileEntity {
 
     public void setColor(int color) {
         this.color = color;
-        this.worldObj.setBlockState(this.pos,this.worldObj.getBlockState(this.pos).withProperty(BlockFLColorableMachine.COLOR,color),2);
+        if (!worldObj.isRemote) {
+            this.worldObj.setBlockState(this.pos, this.worldObj.getBlockState(this.pos).withProperty(BlockFLColorableMachine.COLOR, color), 2);
+            sendChangeToClientsForRendering();
+        }
     }
 
     @Override
@@ -152,5 +160,17 @@ public class TileEntityFL extends TileEntity {
     public void handleUpdateTag(NBTTagCompound tag)
     {
         readFromNBT(tag);
+        worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos), worldObj.getBlockState(pos),1);
+    }
+
+    protected void sendChangeToClientsForRendering(){
+        PacketHandler.INSTANCE.sendToAllAround(new MessageTileEntityFL(this),new NetworkRegistry.TargetPoint(
+                worldObj.provider.getDimension(),this.pos.getX(),this.pos.getY(),this.pos.getZ(),80));
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+        super.onDataPacket(net, pkt);
+        worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos), worldObj.getBlockState(pos),1);
     }
 }

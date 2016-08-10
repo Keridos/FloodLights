@@ -1,13 +1,11 @@
 package de.keridos.floodlights.tileentity;
 
 import de.keridos.floodlights.reference.Names;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 
 import java.util.ArrayList;
@@ -27,8 +25,6 @@ public class TileEntityPhantomLight extends TileEntity {
         super();
         sources = new ArrayList<>();
     }
-
-
 
     void addSource(BlockPos pos) {
 

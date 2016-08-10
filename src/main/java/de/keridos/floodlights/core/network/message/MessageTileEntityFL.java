@@ -1,12 +1,13 @@
 package de.keridos.floodlights.core.network.message;
 
+import de.keridos.floodlights.FloodLights;
 import de.keridos.floodlights.tileentity.*;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -31,7 +32,9 @@ public class MessageTileEntityFL implements IMessage {
             Minecraft.getMinecraft().addScheduledTask(new Runnable() {
                 @Override
                 public void run() {
-                    TileEntity tileEntity = FMLClientHandler.instance().getClient().theWorld.getTileEntity(new BlockPos(message.x, message.y, message.z));
+                    World world = FloodLights.proxy.getWorld();
+                    BlockPos pos = new BlockPos(message.x, message.y, message.z);
+                    TileEntity tileEntity = world.getTileEntity(pos);
                     if (tileEntity instanceof TileEntityFL) {
                         ((TileEntityFL) tileEntity).setOrientation(message.orientation);
                         ((TileEntityFL) tileEntity).setState(message.state);
@@ -51,7 +54,6 @@ public class MessageTileEntityFL implements IMessage {
                     if (tileEntity instanceof TileEntityMetaFloodlight) {
                         ((TileEntityMetaFloodlight) tileEntity).setWasActive(message.wasActive);
                     }
-
                 }
             });
             return null;

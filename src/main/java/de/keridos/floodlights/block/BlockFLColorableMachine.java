@@ -1,5 +1,6 @@
 package de.keridos.floodlights.block;
 
+import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.tileentity.TileEntityMetaFloodlight;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -25,9 +26,8 @@ public class BlockFLColorableMachine extends BlockFL {
 
     public BlockFLColorableMachine(String unlocName, Material material, SoundType type, float hardness) {
         super(unlocName, material, type, hardness);
-        setDefaultState(
-                this.blockState.getBaseState().withProperty(COLOR, 0).withProperty(ACTIVE, false).withProperty(FACING,
-                        EnumFacing.DOWN));
+        if (unlocName != Names.Blocks.GROW_LIGHT)
+            setDefaultState(this.blockState.getBaseState().withProperty(COLOR, 0).withProperty(ACTIVE, false).withProperty(FACING, EnumFacing.DOWN));
     }
 
     @Override

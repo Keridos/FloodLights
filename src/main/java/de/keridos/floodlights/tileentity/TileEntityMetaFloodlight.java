@@ -195,12 +195,10 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
 
     @Override
     public void openInventory(EntityPlayer player) {
-
     }
 
     @Override
     public void closeInventory(EntityPlayer player) {
-
     }
 
     @Override

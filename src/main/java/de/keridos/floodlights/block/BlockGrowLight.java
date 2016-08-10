@@ -42,13 +42,12 @@ public class BlockGrowLight extends BlockFLColorableMachine {
         super(Names.Blocks.GROW_LIGHT, Material.ROCK, SoundType.METAL, 2.5F);
         setHarvestLevel("pickaxe", 1);
         setDefaultState(
-                this.blockState.getBaseState().withProperty(COLOR, 0).withProperty(ACTIVE, false).withProperty(FACING,
-                        EnumFacing.DOWN).withProperty(LIGHT, true));
+                this.blockState.getBaseState().withProperty(ACTIVE, false).withProperty(LIGHT, true));
     }
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, FACING, ACTIVE, COLOR, LIGHT);
+        return new BlockStateContainer(this, ACTIVE, LIGHT);
     }
 
     @Override
@@ -60,6 +59,14 @@ public class BlockGrowLight extends BlockFLColorableMachine {
     @Override
     public int getMetaFromState(IBlockState state) {
         return (state.getValue(LIGHT) ? 0 : 1);
+    }
+
+    @Override
+    public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
+        if (worldIn.getTileEntity(pos) instanceof TileEntityGrowLight) {
+            TileEntityGrowLight te = ((TileEntityGrowLight) worldIn.getTileEntity(pos));
+            return state.withProperty(ACTIVE,te.getWasActive());
+        } else return state;
     }
 
     @Override
