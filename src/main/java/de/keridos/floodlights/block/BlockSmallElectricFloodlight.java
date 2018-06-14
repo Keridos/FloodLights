@@ -23,6 +23,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
@@ -84,12 +85,13 @@ public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implem
     }
 
     @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        ItemStack heldItem = player.getHeldItem(EnumHand.MAIN_HAND);
         if (hand == EnumHand.MAIN_HAND) {
             if (!world.isRemote && heldItem == null && player.isSneaking()) {
                 ((TileEntitySmallFloodlight) world.getTileEntity(pos)).toggleInverted();
                 String invert = (((TileEntitySmallFloodlight) world.getTileEntity(pos)).getInverted() ? Names.Localizations.TRUE : Names.Localizations.FALSE);
-                player.addChatMessage(new TextComponentString(safeLocalize(Names.Localizations.INVERT) + ": " + safeLocalize(invert)));
+                player.sendMessage(new TextComponentString(safeLocalize(Names.Localizations.INVERT) + ": " + safeLocalize(invert)));
                 return true;
             } else if (!world.isRemote && heldItem != null) {
                 if (!ModCompatibility.WrenchAvailable && heldItem.getItem() == getMinecraftItem("stick")) {
@@ -121,8 +123,9 @@ public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implem
         return new TileEntitySmallFloodlight();
     }
 
+    @Nullable
     @Override
-    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState,World worldIn, BlockPos pos) {
+    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
         return null;
     }
 
@@ -188,7 +191,7 @@ public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implem
                     (double) pos.getY() + maxY,
                     (double) pos.getZ() + maxZ);
         }
-        return super.getSelectedBoundingBox(state,world, pos);
+        return super.getSelectedBoundingBox(state, world, pos);
     }
 
     @Override
@@ -221,11 +224,9 @@ public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implem
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    @SuppressWarnings("unchecked")
-    public void getSubBlocks(Item item, CreativeTabs tab, List subItems) {
+    public void getSubBlocks(CreativeTabs itemIn, NonNullList<ItemStack> items) {
         for (int i = 0; i < 2; i++) {
-            subItems.add(new ItemStack(ModBlocks.blockSmallElectricLight, 1, i));
+            items.add(new ItemStack(ModBlocks.blockSmallElectricLight, 1, i));
         }
     }
 

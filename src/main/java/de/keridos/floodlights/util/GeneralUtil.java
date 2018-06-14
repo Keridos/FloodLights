@@ -14,7 +14,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameData;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import java.util.logging.Logger;
@@ -26,9 +25,7 @@ import java.util.logging.Logger;
 public class GeneralUtil {
 
     public static Item getMinecraftItem(String name) {
-        Item item;
-        item = GameData.getItemRegistry().getRaw(GameData.getItemRegistry().getId(new ResourceLocation("minecraft", name)));
-        return item;
+        return Item.REGISTRY.getObject(new ResourceLocation("minecraft", name));
     }
 
     public static String safeLocalize(String text) {

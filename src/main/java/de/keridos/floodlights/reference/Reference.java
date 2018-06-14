@@ -5,7 +5,7 @@ package de.keridos.floodlights.reference;
  * This Class has all basic info constants about this mod.
  */
 public class Reference {
-    public static final String MOD_ID = "FloodLights";
+    public static final String MOD_ID = "floodlights";
     public static final String MOD_NAME = "Flood Lights";
     public static final String VERSION = "@VERSION@";
     public static final String CHANNEL = "FloodLights";

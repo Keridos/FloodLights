@@ -3,6 +3,7 @@ package de.keridos.floodlights.tileentity;
 import de.keridos.floodlights.handler.ConfigHandler;
 import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.reference.Names;
+import de.keridos.floodlights.util.MathUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -10,12 +11,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 
 import static de.keridos.floodlights.block.BlockPhantomLight.UPDATE;
 import static de.keridos.floodlights.util.GeneralUtil.getPosFromPosFacing;
-import static de.keridos.floodlights.util.MathUtil.rotate;
 
 /**
  * Created by Keridos on 06.05.2015.
@@ -37,15 +38,14 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
     public void setRedstone(boolean b) {
         active = b ^ inverted;
         this.setState((byte) (this.active ? 1 : 0));
-        this.worldObj.markBlocksDirtyVertical(this.pos.getX(), this.pos.getZ(), this.pos.getX(), this.pos.getZ());
-        ;
+        this.world.markBlocksDirtyVertical(this.pos.getX(), this.pos.getZ(), this.pos.getX(), this.pos.getZ());
     }
 
     public void toggleInverted() {
         inverted = !inverted;
         active = !active;
         this.setState((byte) (this.active ? 1 : 0));
-        this.worldObj.markBlocksDirtyVertical(this.pos.getX(), this.pos.getZ(), this.pos.getX(), this.pos.getZ());
+        this.world.markBlocksDirtyVertical(this.pos.getX(), this.pos.getZ(), this.pos.getX(), this.pos.getZ());
     }
 
     public boolean getWasActive() {
@@ -61,11 +61,11 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
     }
 
     public void setLight(BlockPos pos) {
-        if (worldObj.getBlockState(pos).getBlock() == ModBlocks.blockUVLightBlock) {
+        if (world.getBlockState(pos).getBlock() == ModBlocks.blockUVLightBlock) {
             return;
         }
-        if (worldObj.setBlockState(pos, ModBlocks.blockPhantomLight.getDefaultState(), 3)) {
-            TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(pos);
+        if (world.setBlockState(pos, ModBlocks.blockPhantomLight.getDefaultState(), 3)) {
+            TileEntityPhantomLight light = (TileEntityPhantomLight) world.getTileEntity(pos);
             light.addSource(this.pos);
         } else {
             this.toggleUpdateRun();
@@ -75,7 +75,7 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
 
     @Override
     public void update() {
-        if (!worldObj.isRemote && update && !active) {
+        if (!world.isRemote && update && !active) {
             update = false;
         }
     }
@@ -94,7 +94,8 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
             NBTTagCompound item = list.getCompoundTagAt(0);
             int slot = item.getByte(Names.NBT.ITEMS);
             if (slot >= 0 && slot < getSizeInventory()) {
-                setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(item));
+                setInventorySlotContents(slot, new ItemStack(item));
+
             }
         }
     }
@@ -137,8 +138,13 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
     }
 
     @Override
+    public boolean isEmpty() {
+        return false;
+    }
+
+    @Override
     public ItemStack getStackInSlot(int i) {
-        worldObj.markBlocksDirtyVertical(this.pos.getX(), this.pos.getZ(), this.pos.getX(), this.pos.getZ());
+        world.markBlocksDirtyVertical(this.pos.getX(), this.pos.getZ(), this.pos.getX(), this.pos.getZ());
         return inventory[i];
     }
 
@@ -147,7 +153,7 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
         ItemStack itemstack = getStackInSlot(slot);
 
         if (itemstack != null) {
-            if (itemstack.stackSize <= count) {
+            if (itemstack.getCount() <= count) {
                 setInventorySlotContents(slot, null);
             } else {
                 itemstack = itemstack.splitStack(count);
@@ -167,8 +173,8 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
     @Override
     public void setInventorySlotContents(int slot, ItemStack itemstack) {
         inventory[slot] = itemstack;
-        if (itemstack != null && itemstack.stackSize > getInventoryStackLimit()) {
-            itemstack.stackSize = getInventoryStackLimit();
+        if (itemstack != null && itemstack.getCount() > getInventoryStackLimit()) {
+            itemstack.setCount(getInventoryStackLimit());
         }
         markDirty();
     }
@@ -179,9 +185,14 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
     }
 
     @Override
-    public boolean isUseableByPlayer(EntityPlayer player) {
-        return player.getDistanceSq(this.pos.getX() + 0.5D, this.pos.getY() + 0.5D, this.pos.getZ() + 0.5D) <= 64;
+    public boolean isUsableByPlayer(EntityPlayer player) {
+        return false;
     }
+
+//    @Override
+//    public boolean isUseableByPlayer(EntityPlayer player) {
+//        return player.getDistanceSq(this.pos.getX() + 0.5D, this.pos.getY() + 0.5D, this.pos.getZ() + 0.5D) <= 64;
+//    }
 
 
     @Override
@@ -231,22 +242,22 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
 
     public void setSource(BlockPos blockPos, boolean remove, Integer setSourceUpdate) {
         if (remove) {
-            if (worldObj.getBlockState(blockPos).getBlock() == ModBlocks.blockPhantomLight && setSourceUpdate == 0) {
-                TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(blockPos);
+            if (world.getBlockState(blockPos).getBlock() == ModBlocks.blockPhantomLight && setSourceUpdate == 0) {
+                TileEntityPhantomLight light = (TileEntityPhantomLight) world.getTileEntity(blockPos);
                 light.removeSource(this.pos);
-            } else if (worldObj.getBlockState(blockPos).getBlock() == ModBlocks.blockPhantomLight) {
-                worldObj.setBlockState(blockPos, worldObj.getBlockState(blockPos).withProperty(UPDATE, false), 4);
+            } else if (world.getBlockState(blockPos).getBlock() == ModBlocks.blockPhantomLight) {
+                world.setBlockState(blockPos, world.getBlockState(blockPos).withProperty(UPDATE, false), 4);
             }
-        } else if (worldObj.getBlockState(blockPos).getBlock() == ModBlocks.blockPhantomLight && setSourceUpdate == 2) {
-            worldObj.setBlockState(blockPos, worldObj.getBlockState(blockPos).withProperty(UPDATE, false), 4);
+        } else if (world.getBlockState(blockPos).getBlock() == ModBlocks.blockPhantomLight && setSourceUpdate == 2) {
+            world.setBlockState(blockPos, world.getBlockState(blockPos).withProperty(UPDATE, false), 4);
 
-        } else if (worldObj.getBlockState(blockPos).getBlock() == ModBlocks.blockPhantomLight && setSourceUpdate == 0) {
-            worldObj.setBlockState(blockPos, worldObj.getBlockState(blockPos).withProperty(UPDATE, true), 4);
+        } else if (world.getBlockState(blockPos).getBlock() == ModBlocks.blockPhantomLight && setSourceUpdate == 0) {
+            world.setBlockState(blockPos, world.getBlockState(blockPos).withProperty(UPDATE, true), 4);
 
-        } else if (worldObj.getBlockState(blockPos).getBlock() == ModBlocks.blockPhantomLight) {
-            TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(blockPos);
+        } else if (world.getBlockState(blockPos).getBlock() == ModBlocks.blockPhantomLight) {
+            TileEntityPhantomLight light = (TileEntityPhantomLight) world.getTileEntity(blockPos);
             light.addSource(this.pos);
-        } else if (worldObj.getBlockState(blockPos).getBlock().isAir(worldObj.getBlockState(blockPos), worldObj, blockPos) && setSourceUpdate == 1) {
+        } else if (world.getBlockState(blockPos).getBlock().isAir(world.getBlockState(blockPos), world, blockPos) && setSourceUpdate == 1) {
             setLight(blockPos);
         }
     }
@@ -259,7 +270,7 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
                 int y = this.pos.getY() + this.orientation.getFrontOffsetY() * i;
                 int z = this.pos.getZ() + this.orientation.getFrontOffsetZ() * i;
                 setSource(new BlockPos(x, y, z), remove, k);
-                if (worldObj.getBlockState(new BlockPos(x, y, z)).getBlock().isOpaqueCube(worldObj.getBlockState(new BlockPos(x, y, z))) && !remove) {
+                if (world.getBlockState(new BlockPos(x, y, z)).getBlock().isOpaqueCube(world.getBlockState(new BlockPos(x, y, z))) && !remove) {
                     break;
                 }
             }
@@ -270,7 +281,7 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
         for (int k = (remove ? 1 : 2); k >= 0; k--) {
             boolean[] failedBeams = new boolean[9];
 
-            if (!remove && worldObj.getBlockState(getPosFromPosFacing(this.pos, this.orientation)).getBlock().isOpaqueCube(worldObj.getBlockState(getPosFromPosFacing(this.pos, this.orientation)))) {
+            if (!remove && world.getBlockState(getPosFromPosFacing(this.pos, this.orientation)).getBlock().isOpaqueCube(world.getBlockState(getPosFromPosFacing(this.pos, this.orientation)))) {
                 return;
             }
             for (int j = 0; j <= 16; j++) {
@@ -308,12 +319,12 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
                                 c -= i;
                                 break;
                         }
-                        int[] rotatedCoords = rotate(i, b, c, this.orientation);
+                        int[] rotatedCoords = MathUtil.rotate(i, b, c, this.orientation);
                         int x = this.pos.getX() + rotatedCoords[0];
                         int y = this.pos.getY() + rotatedCoords[1];
                         int z = this.pos.getZ() + rotatedCoords[2];
                         setSource(new BlockPos(x, y, z), remove, k);
-                        if (worldObj.getBlockState(new BlockPos(x, y, z)).getBlock().isOpaqueCube(worldObj.getBlockState(new BlockPos(x, y, z))) && !remove) {
+                        if (world.getBlockState(new BlockPos(x, y, z)).getBlock().isOpaqueCube(world.getBlockState(new BlockPos(x, y, z))) && !remove) {
                             if (i < 4) {   //This is for canceling the long rangs beams
                                 failedBeams[j] = true;
                             }
@@ -354,12 +365,12 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
                                 c -= i / 2;
                                 break;
                         }
-                        int[] rotatedCoords = rotate(i, b, c, this.orientation);
+                        int[] rotatedCoords = MathUtil.rotate(i, b, c, this.orientation);
                         int x = this.pos.getX() + rotatedCoords[0];
                         int y = this.pos.getY() + rotatedCoords[1];
                         int z = this.pos.getZ() + rotatedCoords[2];
                         setSource(new BlockPos(x, y, z), remove, k);
-                        if (worldObj.getBlockState(new BlockPos(x, y, z)).getBlock().isOpaqueCube(worldObj.getBlockState(new BlockPos(x, y, z))) && !remove) {
+                        if (world.getBlockState(new BlockPos(x, y, z)).getBlock().isOpaqueCube(world.getBlockState(new BlockPos(x, y, z))) && !remove) {
                             break;
                         }
                     }
@@ -380,7 +391,7 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
                             int y = this.pos.getY() + this.orientation.getFrontOffsetY();
                             int z = this.pos.getZ() + this.orientation.getFrontOffsetZ();
                             setSource(new BlockPos(x, y, z), remove, k);
-                            if (worldObj.getBlockState(new BlockPos(x, y, z)).getBlock().isOpaqueCube(worldObj.getBlockState(new BlockPos(x, y, z))) && !remove) {
+                            if (world.getBlockState(new BlockPos(x, y, z)).getBlock().isOpaqueCube(world.getBlockState(new BlockPos(x, y, z))) && !remove) {
                                 return;
                             }
                         }
@@ -417,12 +428,12 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
                                 c -= i / 2;
                                 break;
                         }
-                        int[] rotatedCoords = rotate(a, b, c, this.orientation); // rotate the coordinate to the correct spot in the real world :)
+                        int[] rotatedCoords = MathUtil.rotate(a, b, c, this.orientation); // rotate the coordinate to the correct spot in the real world :)
                         int x = this.pos.getX() + rotatedCoords[0];
                         int y = this.pos.getY() + rotatedCoords[1];
                         int z = this.pos.getZ() + rotatedCoords[2];
                         setSource(new BlockPos(x, y, z), remove, k);
-                        if (worldObj.getBlockState(new BlockPos(x, y, z)).getBlock().isOpaqueCube(worldObj.getBlockState(new BlockPos(x, y, z))) && !remove) {
+                        if (world.getBlockState(new BlockPos(x, y, z)).getBlock().isOpaqueCube(world.getBlockState(new BlockPos(x, y, z))) && !remove) {
                             if (i < 8) {   //This is for canceling the long rangs beams
                                 failedBeams[j] = true;
                             }
@@ -464,12 +475,12 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
                                 c -= i / 4;
                                 break;
                         }
-                        int[] rotatedCoords = rotate(a, b, c, this.orientation);
+                        int[] rotatedCoords = MathUtil.rotate(a, b, c, this.orientation);
                         int x = this.pos.getX() + rotatedCoords[0];
                         int y = this.pos.getY() + rotatedCoords[1];
                         int z = this.pos.getZ() + rotatedCoords[2];
                         setSource(new BlockPos(x, y, z), remove, k);
-                        if (worldObj.getBlockState(new BlockPos(x, y, z)).getBlock().isOpaqueCube(worldObj.getBlockState(new BlockPos(x, y, z))) && !remove) {
+                        if (world.getBlockState(new BlockPos(x, y, z)).getBlock().isOpaqueCube(world.getBlockState(new BlockPos(x, y, z))) && !remove) {
                             break;
                         }
                     }

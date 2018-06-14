@@ -130,7 +130,7 @@ public class TileEntityCarbonFloodlight extends TileEntityMetaFloodlight {
                 addSource(this.mode);
             }
             String modeString = (mode == 0 ? Names.Localizations.STRAIGHT : mode == 1 ? Names.Localizations.NARROW_CONE : Names.Localizations.WIDE_CONE);
-            player.addChatMessage(new TextComponentString(safeLocalize(Names.Localizations.MODE) + ": " + safeLocalize(modeString)));
+            player.sendMessage(new TextComponentString(safeLocalize(Names.Localizations.MODE) + ": " + safeLocalize(modeString)));
         }
     }
 }

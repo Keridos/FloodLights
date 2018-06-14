@@ -3,8 +3,8 @@ package de.keridos.floodlights.client.render.block;
 import de.keridos.floodlights.item.ItemLightDebugTool;
 import de.keridos.floodlights.tileentity.TileEntityUVLightBlock;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
@@ -32,7 +32,7 @@ public class TileEntityPhantomLightRenderer extends TileEntitySpecialRenderer {
         double zb = cube.maxZ;
 
         Tessellator tessellator = Tessellator.getInstance();
-        VertexBuffer worldRenderer = Tessellator.getInstance().getBuffer();
+        BufferBuilder worldRenderer = Tessellator.getInstance().getBuffer();
         worldRenderer.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION_COLOR);
         worldRenderer.pos(xa, ya, za).color(1F, 1F, 0.0F,1.0F).endVertex();
         worldRenderer.pos(xa, yb, za).color(1F, 1F, 0.0F,1.0F).endVertex();
@@ -64,8 +64,8 @@ public class TileEntityPhantomLightRenderer extends TileEntitySpecialRenderer {
 
 
     @Override
-    public void renderTileEntityAt(TileEntity te, double x, double y, double z,  float partialTicks, int destroyStage) {
-        EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+    public void render(TileEntity te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+        EntityPlayer player = Minecraft.getMinecraft().player;
         if (player.getHeldItem(EnumHand.MAIN_HAND) == null || !(player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof ItemLightDebugTool) || te instanceof TileEntityUVLightBlock) {
             return;
         }

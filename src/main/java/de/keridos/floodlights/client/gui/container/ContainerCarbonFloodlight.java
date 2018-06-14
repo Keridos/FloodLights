@@ -44,12 +44,12 @@ public class ContainerCarbonFloodlight extends Container {
                 return null;
             }
 
-            if (itemstack.stackSize == 0) {
+            if (itemstack.getCount() == 0) {
                 slot.putStack(null);
             } else {
                 slot.onSlotChanged();
             }
-            slot.onPickupFromSlot(player, itemstack);
+            slot.onTake(player, itemstack);
             return result;
         }
         return null;
@@ -57,6 +57,6 @@ public class ContainerCarbonFloodlight extends Container {
 
     @Override
     public boolean canInteractWith(EntityPlayer player) {
-        return carbonFloodlight.isUseableByPlayer(player);  //To change body of implemented methods use File | Settings | File Templates.
+        return carbonFloodlight.isUsableByPlayer(player);  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

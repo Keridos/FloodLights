@@ -26,12 +26,12 @@ public class TileEntityUVLightBlock extends TileEntityPhantomLight implements IT
     @Override
     @SuppressWarnings("unchecked")
     public void update() {
-        if (!worldObj.isRemote && worldObj.getWorldTime() % 20 == 5) {
+        if (!world.isRemote && world.getWorldTime() % 20 == 5) {
             AxisAlignedBB axisAlignedBB = this.getBoundingBox();
-            List<EntityLivingBase> entityList = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, axisAlignedBB);
+            List<EntityLivingBase> entityList = world.getEntitiesWithinAABB(EntityLivingBase.class, axisAlignedBB);
             ListIterator iterator = entityList.listIterator();
             while (iterator.hasNext()) {
-                ((EntityLivingBase) iterator.next()).attackEntityFrom(DamageSource.cactus, ConfigHandler.damageUVFloodlight);
+                ((EntityLivingBase) iterator.next()).attackEntityFrom(DamageSource.CACTUS, ConfigHandler.damageUVFloodlight);
             }
         }
     }

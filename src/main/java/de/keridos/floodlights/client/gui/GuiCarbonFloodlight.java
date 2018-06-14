@@ -29,7 +29,7 @@ public class GuiCarbonFloodlight extends GuiContainer {
     @Override
     protected void drawGuiContainerForegroundLayer(int par1, int par2) {
         String guiText = safeLocalize(Names.Localizations.NONELECTRIC_GUI_TEXT) + ": " + tileEntityCarbonFloodlight.timeRemaining / 1200 + safeLocalize(Names.Localizations.GUI_MINUTES_SHORT) + tileEntityCarbonFloodlight.timeRemaining / 20 % 60 + safeLocalize(Names.Localizations.GUI_SECONDS_SHORT);
-        fontRendererObj.drawString(guiText, 50, 26, 0x000000);
+        fontRenderer.drawString(guiText, 50, 26, 0x000000);
     }
 
     @Override

@@ -17,6 +17,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.Random;
 
 /**
@@ -55,13 +56,19 @@ public class BlockPhantomLight extends BlockFL implements ITileEntityProvider {
         return EnumBlockRenderType.INVISIBLE;
     }
 
+    @Nullable
     @Override
-    public AxisAlignedBB getCollisionBoundingBox(IBlockState state, World worldIn, BlockPos pos) {
+    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
         return null;
     }
 
     @Override
-    public boolean isBlockSolid(IBlockAccess worldIn, BlockPos pos, EnumFacing side) {
+    public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side) {
+        return false;
+    }
+
+    @Override
+    public boolean isTopSolid(IBlockState state) {
         return false;
     }
 
@@ -105,9 +112,10 @@ public class BlockPhantomLight extends BlockFL implements ITileEntityProvider {
         return new TileEntityPhantomLight();
     }
 
+
     @Override
-    public void neighborChanged(IBlockState state,World worldIn, BlockPos pos, Block neighborBlock) {
-        if (!worldIn.isRemote && state.getValue(UPDATE) && (neighborBlock != Blocks.AIR)) {
+    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
+        if (!worldIn.isRemote && state.getValue(UPDATE) && (blockIn != Blocks.AIR)) {
             ((TileEntityPhantomLight) worldIn.getTileEntity(pos)).updateAllSources(true);
         }
     }

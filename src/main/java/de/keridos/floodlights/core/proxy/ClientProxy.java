@@ -34,23 +34,19 @@ import static de.keridos.floodlights.util.RenderUtil.getColorAsInt;
 public class ClientProxy extends CommonProxy {
     private static final Minecraft minecraft = Minecraft.getMinecraft();
 
-    public void registerItemModel(final Item item, int meta)
-    {
+    public void registerItemModel(final Item item, int meta) {
         ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(item.getRegistryName().toString().toLowerCase()));
     }
 
-    public void registerItemModel(final Item item, int meta, final String variantName)
-    {
+    public void registerItemModel(final Item item, int meta, final String variantName) {
         ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(new ResourceLocation(item.getRegistryName().toString().toLowerCase()), variantName));
     }
 
-    public void registerBlockModelAsItem(final Block block, int meta, final String blockName)
-    {
+    public void registerBlockModelAsItem(final Block block, int meta, final String blockName) {
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), meta, new ModelResourceLocation(Reference.MOD_ID.toLowerCase() + ":" + blockName, "inventory"));
     }
 
-    public void registerBlockModelAsItem(final Block block, int meta, final String blockName, String variantName)
-    {
+    public void registerBlockModelAsItem(final Block block, int meta, final String blockName, String variantName) {
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), meta, new ModelResourceLocation(Reference.MOD_ID.toLowerCase() + ":" + blockName, variantName));
     }
 
@@ -63,17 +59,17 @@ public class ClientProxy extends CommonProxy {
             public int colorMultiplier(IBlockState state, IBlockAccess worldIn, BlockPos pos, int renderPass) {
                 return getColorAsInt(state.getValue(BlockFLColorableMachine.COLOR));
             }
-        },ModBlocks.blockCarbonLight,ModBlocks.blockElectricLight,ModBlocks.blockSmallElectricLight);
+        }, ModBlocks.blockCarbonLight, ModBlocks.blockElectricLight/*, ModBlocks.blockSmallElectricLight*/);
     }
 
     @Override
     public void preInit() {
-        registerBlockModelAsItem(ModBlocks.blockElectricLight, 0 , Names.Blocks.ELECTRIC_FLOODLIGHT);
-        registerBlockModelAsItem(ModBlocks.blockCarbonLight, 0 , Names.Blocks.CARBON_FLOODLIGHT);
-        registerBlockModelAsItem(ModBlocks.blockUVLight, 0 , Names.Blocks.UV_FLOODLIGHT);
-        registerBlockModelAsItem(ModBlocks.blockGrowLight, 0 , Names.Blocks.GROW_LIGHT);
-        registerBlockModelAsItem(ModBlocks.blockSmallElectricLight, 0 , Names.Blocks.SMALL_ELECTRIC_FLOODLIGHT,"inventory_strip");
-        registerBlockModelAsItem(ModBlocks.blockSmallElectricLight, 1 , Names.Blocks.SMALL_ELECTRIC_FLOODLIGHT,"inventory_square");
+        registerBlockModelAsItem(ModBlocks.blockElectricLight, 0, Names.Blocks.ELECTRIC_FLOODLIGHT);
+        registerBlockModelAsItem(ModBlocks.blockCarbonLight, 0, Names.Blocks.CARBON_FLOODLIGHT);
+        registerBlockModelAsItem(ModBlocks.blockUVLight, 0, Names.Blocks.UV_FLOODLIGHT);
+        registerBlockModelAsItem(ModBlocks.blockGrowLight, 0, Names.Blocks.GROW_LIGHT);
+        registerBlockModelAsItem(ModBlocks.blockSmallElectricLight, 0, Names.Blocks.SMALL_ELECTRIC_FLOODLIGHT, "inventory_strip");
+        registerBlockModelAsItem(ModBlocks.blockSmallElectricLight, 1, Names.Blocks.SMALL_ELECTRIC_FLOODLIGHT, "inventory_square");
         registerItemModel(ModItems.carbonDissolver, 0);
         registerItemModel(ModItems.carbonLantern, 0);
         registerItemModel(ModItems.glowingFilament, 0);
@@ -82,9 +78,9 @@ public class ClientProxy extends CommonProxy {
         registerItemModel(ModItems.mantle, 0);
         registerItemModel(ModItems.rawFilament, 0);
         StateMap ignoreColor = new StateMap.Builder().ignore(BlockFLColorableMachine.COLOR).build();
-        ModelLoader.setCustomStateMapper(ModBlocks.blockCarbonLight,ignoreColor);
-        ModelLoader.setCustomStateMapper(ModBlocks.blockElectricLight,ignoreColor);
-        ModelLoader.setCustomStateMapper(ModBlocks.blockUVLight,ignoreColor);
+        ModelLoader.setCustomStateMapper(ModBlocks.blockCarbonLight, ignoreColor);
+        ModelLoader.setCustomStateMapper(ModBlocks.blockElectricLight, ignoreColor);
+        ModelLoader.setCustomStateMapper(ModBlocks.blockUVLight, ignoreColor);
         ModelLoader.setCustomStateMapper(ModBlocks.blockSmallElectricLight, new StateMap.Builder().withName(BlockSmallElectricFloodlight.MODEL).ignore(BlockFLColorableMachine.COLOR).build());
         ModelLoader.setCustomStateMapper(ModBlocks.blockGrowLight, new StateMap.Builder().ignore(BlockFLColorableMachine.COLOR).ignore(BlockFLColorableMachine.FACING).build());
         ModelLoader.setCustomStateMapper(ModBlocks.blockPhantomLight, new StateMap.Builder().ignore(BlockPhantomLight.UPDATE).build());

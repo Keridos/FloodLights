@@ -44,12 +44,13 @@ public class BlockCarbonFloodlight extends BlockFLColorableMachine implements IT
     }
 
     @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        ItemStack heldItem = player.getHeldItem(hand);
         if (hand == EnumHand.MAIN_HAND) {
             if (!world.isRemote && heldItem == null && player.isSneaking()) {
                 ((TileEntityCarbonFloodlight) world.getTileEntity(pos)).toggleInverted();
                 String invert = (((TileEntityCarbonFloodlight) world.getTileEntity(pos)).getInverted() ? Names.Localizations.TRUE : Names.Localizations.FALSE);
-                player.addChatMessage(new TextComponentString(safeLocalize(Names.Localizations.INVERT) + ": " + safeLocalize(invert)));
+                player.sendMessage(new TextComponentString(safeLocalize(Names.Localizations.INVERT) + ": " + safeLocalize(invert)));
                 return true;
             } else if (!world.isRemote && heldItem != null) {
                 if (!ModCompatibility.WrenchAvailable && heldItem.getItem() == getMinecraftItem("stick")) {
@@ -73,8 +74,7 @@ public class BlockCarbonFloodlight extends BlockFLColorableMachine implements IT
                 return true;
             }
         }
-        return true;
-    }
+        return true;    }
 
     @Override
     public TileEntityCarbonFloodlight createNewTileEntity(World world, int metadata) {

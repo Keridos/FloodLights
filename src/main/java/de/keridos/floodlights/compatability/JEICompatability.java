@@ -2,6 +2,7 @@ package de.keridos.floodlights.compatability;
 
 import de.keridos.floodlights.init.ModBlocks;
 import mezz.jei.api.*;
+import mezz.jei.api.ingredients.IIngredientBlacklist;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
@@ -15,9 +16,9 @@ import javax.annotation.Nonnull;
 public class JEICompatability implements IModPlugin {
     @Override
     public void register(@Nonnull IModRegistry registry) {
-        IItemBlacklist blacklist = registry.getJeiHelpers().getItemBlacklist();
-        blacklist.addItemToBlacklist(new ItemStack(ModBlocks.blockPhantomLight));
-        blacklist.addItemToBlacklist(new ItemStack(ModBlocks.blockUVLightBlock));
+        IIngredientBlacklist blacklist = registry.getJeiHelpers().getIngredientBlacklist();
+        blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.blockPhantomLight));
+        blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.blockUVLightBlock));
     }
 
     @Override

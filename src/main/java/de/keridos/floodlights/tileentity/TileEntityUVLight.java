@@ -19,28 +19,28 @@ public class TileEntityUVLight extends TileEntityFLElectric {
     }
 
     public void setLightUV(BlockPos pos) {
-        if (worldObj.setBlockState(pos, blockUVLightBlock.getDefaultState())) {
-            TileEntityUVLightBlock light = (TileEntityUVLightBlock) worldObj.getTileEntity(pos);
+        if (world.setBlockState(pos, blockUVLightBlock.getDefaultState())) {
+            TileEntityUVLightBlock light = (TileEntityUVLightBlock) world.getTileEntity(pos);
             light.addSource(this.pos);
         }
     }
 
     public void setSource(BlockPos blockPos, boolean remove, Integer setSourceUpdate) {
         if (remove) {
-            if (worldObj.getBlockState(blockPos).getBlock() == blockUVLightBlock && setSourceUpdate == 0) {
-                TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(blockPos);
+            if (world.getBlockState(blockPos).getBlock() == blockUVLightBlock && setSourceUpdate == 0) {
+                TileEntityPhantomLight light = (TileEntityPhantomLight) world.getTileEntity(blockPos);
                 light.removeSource(this.pos);
-            } else if (worldObj.getBlockState(blockPos).getBlock() == blockUVLightBlock) {
-                worldObj.setBlockState(blockPos, worldObj.getBlockState(blockPos).withProperty(UPDATE, false), 4);
+            } else if (world.getBlockState(blockPos).getBlock() == blockUVLightBlock) {
+                world.setBlockState(blockPos, world.getBlockState(blockPos).withProperty(UPDATE, false), 4);
             }
-        } else if (worldObj.getBlockState(blockPos).getBlock() == blockUVLightBlock && setSourceUpdate == 2) {
-            worldObj.setBlockState(blockPos, worldObj.getBlockState(blockPos).withProperty(UPDATE, false), 4);
-        } else if (worldObj.getBlockState(blockPos).getBlock() == blockUVLightBlock && setSourceUpdate == 0) {
-            worldObj.setBlockState(blockPos, worldObj.getBlockState(blockPos).withProperty(UPDATE, true), 4);
-        } else if (worldObj.getBlockState(blockPos).getBlock() == blockUVLightBlock) {
-            TileEntityUVLightBlock light = (TileEntityUVLightBlock) worldObj.getTileEntity(blockPos);
+        } else if (world.getBlockState(blockPos).getBlock() == blockUVLightBlock && setSourceUpdate == 2) {
+            world.setBlockState(blockPos, world.getBlockState(blockPos).withProperty(UPDATE, false), 4);
+        } else if (world.getBlockState(blockPos).getBlock() == blockUVLightBlock && setSourceUpdate == 0) {
+            world.setBlockState(blockPos, world.getBlockState(blockPos).withProperty(UPDATE, true), 4);
+        } else if (world.getBlockState(blockPos).getBlock() == blockUVLightBlock) {
+            TileEntityUVLightBlock light = (TileEntityUVLightBlock) world.getTileEntity(blockPos);
             light.addSource(this.pos);
-        } else if (worldObj.getBlockState(blockPos).getBlock().isAir(worldObj.getBlockState(blockPos), worldObj, blockPos) && setSourceUpdate == 1) {
+        } else if (world.getBlockState(blockPos).getBlock().isAir(world.getBlockState(blockPos), world, blockPos) && setSourceUpdate == 1) {
             setLightUV(blockPos);
         }
     }
@@ -52,7 +52,7 @@ public class TileEntityUVLight extends TileEntityFLElectric {
                         this.pos.getY() + this.orientation.getFrontOffsetY() * i,
                         this.pos.getZ() + this.orientation.getFrontOffsetZ() * i);
                 setSource(tempPos, remove, k);
-                if (worldObj.getBlockState(tempPos).getBlock().isOpaqueCube(worldObj.getBlockState(tempPos))) {
+                if (world.getBlockState(tempPos).getBlock().isOpaqueCube(world.getBlockState(tempPos))) {
                     break;
                 }
             }

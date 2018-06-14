@@ -4,12 +4,11 @@ import de.keridos.floodlights.block.BlockFLColorableMachine;
 import de.keridos.floodlights.handler.ConfigHandler;
 import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.reference.Names;
+import de.keridos.floodlights.util.MathUtil;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
-import static de.keridos.floodlights.util.MathUtil.rotate;
 
 /**
  * Created by Keridos on 04.05.2015.
@@ -46,7 +45,8 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
 
     public void toggleRotationState() {
         rotationState = !rotationState;
-        this.worldObj.markBlocksDirtyVertical(this.pos.getX(),this.pos.getZ(),this.pos.getX(),this.pos.getZ());;
+        this.world.markBlocksDirtyVertical(this.pos.getX(), this.pos.getZ(), this.pos.getX(), this.pos.getZ());
+        ;
     }
 
     public boolean getRotationState() {
@@ -78,19 +78,19 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
                 a = b = 0;
                 c = -1;
             }
-            int[] rotatedCoords = rotate(a, b, c, this.orientation);
+            int[] rotatedCoords = MathUtil.rotate(a, b, c, this.orientation);
             int x = this.pos.getX() + rotatedCoords[0];
             int y = this.pos.getY() + rotatedCoords[1];
             int z = this.pos.getZ() + rotatedCoords[2];
             if (remove) {
-                if (worldObj.getBlockState(new BlockPos(x,y,z)).getBlock() == ModBlocks.blockPhantomLight) {
-                    TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(new BlockPos(x, y, z));
+                if (world.getBlockState(new BlockPos(x, y, z)).getBlock() == ModBlocks.blockPhantomLight) {
+                    TileEntityPhantomLight light = (TileEntityPhantomLight) world.getTileEntity(new BlockPos(x, y, z));
                     light.removeSource(this.pos);
                 }
-            } else if (worldObj.getBlockState(new BlockPos(x,y,z)).getBlock().isAir(worldObj.getBlockState(new BlockPos(x,y,z)),worldObj, new BlockPos(x,y,z))) {
-                setLight(new BlockPos(x,y,z));
-            } else if (worldObj.getBlockState(new BlockPos(x,y,z)).getBlock() == ModBlocks.blockPhantomLight) {
-                TileEntityPhantomLight light = (TileEntityPhantomLight) worldObj.getTileEntity(new BlockPos(x,y,z));
+            } else if (world.getBlockState(new BlockPos(x, y, z)).getBlock().isAir(world.getBlockState(new BlockPos(x, y, z)), world, new BlockPos(x, y, z))) {
+                setLight(new BlockPos(x, y, z));
+            } else if (world.getBlockState(new BlockPos(x, y, z)).getBlock() == ModBlocks.blockPhantomLight) {
+                TileEntityPhantomLight light = (TileEntityPhantomLight) world.getTileEntity(new BlockPos(x, y, z));
                 light.addSource(this.pos);
             }
         }
@@ -111,12 +111,14 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
                     smallSource(true);
                     smallSource(false);
                     world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, true), 2);
-                    world.markBlocksDirtyVertical(this.pos.getX(),this.pos.getZ(),this.pos.getX(),this.pos.getZ());;
+                    world.markBlocksDirtyVertical(this.pos.getX(), this.pos.getZ(), this.pos.getX(), this.pos.getZ());
+                    ;
                     update = false;
                 } else if (!wasActive) {
                     smallSource(false);
                     world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, true), 2);
-                    world.markBlocksDirtyVertical(this.pos.getX(),this.pos.getZ(),this.pos.getX(),this.pos.getZ());;
+                    world.markBlocksDirtyVertical(this.pos.getX(), this.pos.getZ(), this.pos.getX(), this.pos.getZ());
+                    ;
                 }
                 if (storageEU >= (double) realEnergyUsage / 8.0D) {
                     storageEU -= (double) realEnergyUsage / 8.0D;
@@ -127,7 +129,8 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
             } else if ((!active || (storage.getEnergyStored() < realEnergyUsage && storageEU < (double) realEnergyUsage / 8.0D)) && wasActive) {
                 smallSource(true);
                 world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, false), 2);
-                world.markBlocksDirtyVertical(this.pos.getX(),this.pos.getZ(),this.pos.getX(),this.pos.getZ());;
+                world.markBlocksDirtyVertical(this.pos.getX(), this.pos.getZ(), this.pos.getX(), this.pos.getZ());
+                ;
                 wasActive = false;
                 timeout = ConfigHandler.timeoutFloodlights;
                 update = false;

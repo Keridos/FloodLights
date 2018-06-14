@@ -26,6 +26,6 @@ public class IGWHandler {
 
         WikiRegistry.registerBlockAndItemPageEntry(ModBlocks.blockElectricLight, "block/electricFloodlight");
         WikiRegistry.registerBlockAndItemPageEntry(ModBlocks.blockCarbonLight, "block/carbonFloodlight");
-        WikiRegistry.registerBlockAndItemPageEntry(ModBlocks.blockSmallElectricLight, "block/smallElectricFloodlight");
+        //WikiRegistry.registerBlockAndItemPageEntry(ModBlocks.blockSmallElectricLight, "block/smallElectricFloodlight");
     }
 }

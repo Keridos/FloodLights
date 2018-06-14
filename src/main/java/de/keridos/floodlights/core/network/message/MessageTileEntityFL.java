@@ -31,7 +31,7 @@ public class MessageTileEntityFL implements IMessage {
             Minecraft.getMinecraft().addScheduledTask(new Runnable() {
                 @Override
                 public void run() {
-                    TileEntity tileEntity = FMLClientHandler.instance().getClient().theWorld.getTileEntity(new BlockPos(message.x, message.y, message.z));
+                    TileEntity tileEntity = FMLClientHandler.instance().getClient().world.getTileEntity(new BlockPos(message.x, message.y, message.z));
                     if (tileEntity instanceof TileEntityFL) {
                         ((TileEntityFL) tileEntity).setOrientation(message.orientation);
                         ((TileEntityFL) tileEntity).setState(message.state);

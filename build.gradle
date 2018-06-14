@@ -9,12 +9,12 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 
 /*
@@ -36,14 +36,17 @@ if (new File("curseKey.properties").exists()) {
 }
 
 repositories {
-    maven { url "http://dvs1.progwml6.com/files/maven" }
+    maven {
+        name = "progwml6"
+        url = "http://dvs1.progwml6.com/files/maven/"
+    }
     maven {
         name = "IGW"
         url = "http://maven.k-4u.nl/"
     }
     maven { // The repo from which to get waila
         name = "Mobius Repo"
-        url = "http://mobiusstrip.eu/maven"
+        url = "http://tehnut.info/maven"
     }
     maven { // the repo from which to get EnderIO and tterags mods
         name = 'tterrag'
@@ -100,9 +103,10 @@ minecraft {
     // stable_#            stables are built at the discretion of the MCP team.
     // Use non-default mappings at your own risk. they may not allways work.
     // simply re-run your setup task after changing the mappings to update your workspace.
-    mappings = "snapshot_20160518"
+    mappings = "snapshot_20180612"
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
     replace '@VERSION@', project.version
+    replaceIn 'Reference.java'
 }
 
 processResources{
@@ -132,12 +136,22 @@ task deobfJar(type: Jar) {
 build.dependsOn sourceJar, deobfJar
 
 dependencies {
-    deobfCompile "mezz.jei:jei_${config.minecraft_version}:${config.jei_version}"
+    compile "com.google.code.findbugs:annotations:3.0.1"
+    compile "com.google.code.gson:gson:2.8.5"
+    compile "commons-io:commons-io:2.6"
+    compile "org.lwjgl.lwjgl:lwjgl:2.9.3"
+
+    compile "mezz.jei:jei_${config.minecraft_version}:${config.jei_version}"
     compile "igwmod:IGW-Mod-${config.minecraft_version}:${config.igwmod_version}:userdev"
-    deobfCompile "mcp.mobius.waila:Waila:${config.waila_version}"
-    compile "net.industrial-craft:industrialcraft-2:${config.ic2_version}:dev"
-    compile "com.enderio:EnderIO:${config.minecraft_version}-${config.enderio_version}:dev"
-    deobfCompile "com.enderio.core:EnderCore:${config.minecraft_version}-${config.endercore_version}"
+    compile "net.industrial-craft:industrialcraft-2:${config.ic2_version}"
+    // 1.12.2 builds aren't available on Maven (https://github.com/SleepyTrousers/EnderIO/issues/4586)
+    //compile "com.enderio:EnderIO:${config.minecraft_version}-${config.enderio_version}"
+    // Loading local version from disk instead
+    compile files("../EnderIO-${config.minecraft_version}-${config.enderio_version}.jar")
+    compile "com.enderio.core:EnderCore:${config.minecraft_version}-${config.endercore_version}"
+
+    compile "mcp.mobius.waila:Hwyla:${config.hwyla_version}"
+
     if (new File("curseKey.properties").exists()) {
 
     }

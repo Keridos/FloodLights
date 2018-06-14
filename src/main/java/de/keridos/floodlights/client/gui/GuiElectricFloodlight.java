@@ -33,7 +33,7 @@ public class GuiElectricFloodlight extends GuiContainer {
                 + tileEntityFLElectric.getEnergyStored(EnumFacing.DOWN) / 1000 + "."
                 + tileEntityFLElectric.getEnergyStored(EnumFacing.DOWN) % 1000 / 100 + "k/"
                 + tileEntityFLElectric.getMaxEnergyStored(EnumFacing.DOWN) / 1000 + "k";
-        fontRendererObj.drawString(guiText, 50, 26, 0x000000);
+        fontRenderer.drawString(guiText, 50, 26, 0x000000);
     }
 
     @Override

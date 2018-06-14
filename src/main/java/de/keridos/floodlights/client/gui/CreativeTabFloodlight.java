@@ -4,6 +4,7 @@ import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.reference.Reference;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 
 /**
  * Created by Keridos on 09.05.2015.
@@ -11,9 +12,10 @@ import net.minecraft.item.Item;
  */
 public class CreativeTabFloodlight {
     public static final CreativeTabs FL_TAB = new CreativeTabs(Reference.MOD_ID.toLowerCase()) {
+
         @Override
-        public Item getTabIconItem() {
-            return Item.getItemFromBlock(ModBlocks.blockElectricLight);
+        public ItemStack getTabIconItem() {
+            return new ItemStack(Item.getItemFromBlock(ModBlocks.blockElectricLight));
         }
     };
 }

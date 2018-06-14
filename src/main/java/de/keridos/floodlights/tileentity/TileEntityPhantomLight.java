@@ -40,15 +40,15 @@ public class TileEntityPhantomLight extends TileEntity {
 
     private void removeSource(Iterator<BlockPos> iter, boolean remove) {
         iter.remove();
-        if (sources.isEmpty() && this.hasWorldObj() && remove) {
-            worldObj.setBlockToAir(this.pos);
+        if (sources.isEmpty() && this.hasWorld() && remove) {
+            world.setBlockToAir(this.pos);
         }
     }
 
     void removeSource(BlockPos pos) {
         sources.remove(pos);
-        if (sources.isEmpty() && this.hasWorldObj()) {
-            worldObj.setBlockToAir(this.pos);
+        if (sources.isEmpty() && this.hasWorld()) {
+            world.setBlockToAir(this.pos);
         }
     }
 
@@ -56,8 +56,8 @@ public class TileEntityPhantomLight extends TileEntity {
         Iterator<BlockPos> iter = sources.iterator();
         while (iter.hasNext()) {
             BlockPos pos = iter.next();
-            if (worldObj != null) {
-                TileEntity te = worldObj.getTileEntity(pos);
+            if (world != null) {
+                TileEntity te = world.getTileEntity(pos);
                 if (te != null && te instanceof TileEntityMetaFloodlight) {
                     ((TileEntityMetaFloodlight) te).toggleUpdateRun();
                 } else {

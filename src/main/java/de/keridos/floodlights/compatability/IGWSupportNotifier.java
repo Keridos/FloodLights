@@ -73,8 +73,8 @@ public class IGWSupportNotifier{
 
     @SubscribeEvent
     public void onPlayerJoin(TickEvent.PlayerTickEvent event){
-        if(event.player.worldObj.isRemote && event.player == FMLClientHandler.instance().getClientPlayerEntity()) {
-            event.player.addChatComponentMessage(ITextComponent.Serializer.jsonToComponent("[\"" + TextFormatting.GOLD + "The mod " + supportingMod + " is supporting In-Game Wiki mod. " + TextFormatting.GOLD + "However, In-Game Wiki isn't installed! " + "[\"," + "{\"text\":\"Download Latest\",\"color\":\"green\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/igwmod_download\"}}," + "\"]\"]"));
+        if(event.player.world.isRemote && event.player == FMLClientHandler.instance().getClientPlayerEntity()) {
+            event.player.sendMessage(ITextComponent.Serializer.jsonToComponent("[\"" + TextFormatting.GOLD + "The mod " + supportingMod + " is supporting In-Game Wiki mod. " + TextFormatting.GOLD + "However, In-Game Wiki isn't installed! " + "[\"," + "{\"text\":\"Download Latest\",\"color\":\"green\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/igwmod_download\"}}," + "\"]\"]"));
             FMLCommonHandler.instance().bus().unregister(this);
         }
     }
@@ -87,13 +87,13 @@ public class IGWSupportNotifier{
         }
 
         @Override
-        public String getCommandName(){
-            return "igwmod_download";
+        public String getName() {
+            return null;
         }
 
         @Override
-        public String getCommandUsage(ICommandSender p_71518_1_){
-            return getCommandName();
+        public String getUsage(ICommandSender sender) {
+            return null;
         }
 
         @Override
@@ -115,7 +115,7 @@ public class IGWSupportNotifier{
         public void run(){
 
             try {
-                if(Minecraft.getMinecraft().thePlayer != null) Minecraft.getMinecraft().thePlayer.addChatMessage(new TextComponentString("Downloading IGW-Mod..."));
+                if(Minecraft.getMinecraft().player != null) Minecraft.getMinecraft().player.sendMessage(new TextComponentString("Downloading IGW-Mod..."));
 
                 URL url = new URL(Loader.MC_VERSION.equals("1.7.10") ? DL_URL_1_7_10 : LATEST_DL_URL);
                 URLConnection connection = url.openConnection();
@@ -141,16 +141,16 @@ public class IGWSupportNotifier{
                 String mcVersion = obj.get("mcversion").getAsString();
                 File renamedFile = new File(String.format("." + File.separator + "mods" + File.separator + "IGW-Mod-%s-%s-universal.jar", mcVersion, version));
                 FileUtils.copyFile(tempFile, renamedFile);
-                if(Minecraft.getMinecraft().thePlayer != null) Minecraft.getMinecraft().thePlayer.addChatMessage(new TextComponentString(TextFormatting.GREEN + "Successfully downloaded. Restart Minecraft to apply."));
+                if(Minecraft.getMinecraft().player != null) Minecraft.getMinecraft().player.sendMessage(new TextComponentString(TextFormatting.GREEN + "Successfully downloaded. Restart Minecraft to apply."));
                 Desktop.getDesktop().open(dir);
                 if(!Loader.MC_VERSION.equals(mcVersion)) {
-                    if(Minecraft.getMinecraft().thePlayer != null) Minecraft.getMinecraft().thePlayer.addChatMessage(new TextComponentString(TextFormatting.RED + "The version of Minecraft you are running doesn't seem to match the version of IGW-Mod that has been downloaded. The mod may not work."));
+                    if(Minecraft.getMinecraft().player != null) Minecraft.getMinecraft().player.sendMessage(new TextComponentString(TextFormatting.RED + "The version of Minecraft you are running doesn't seem to match the version of IGW-Mod that has been downloaded. The mod may not work."));
                 }
 
                 finalize();
             } catch(Throwable e) {
                 e.printStackTrace();
-                if(Minecraft.getMinecraft().thePlayer != null) Minecraft.getMinecraft().thePlayer.addChatComponentMessage(new TextComponentString(TextFormatting.RED + "Failed to download"));
+                if(Minecraft.getMinecraft().player != null) Minecraft.getMinecraft().player.sendMessage(new TextComponentString(TextFormatting.RED + "Failed to download"));
                 try {
                     finalize();
                 } catch(Throwable e1) {

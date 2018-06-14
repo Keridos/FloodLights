@@ -56,12 +56,13 @@ public class BlockGrowLight extends BlockFLColorableMachine {
     }
 
     @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        ItemStack heldItem = player.getHeldItem(EnumHand.MAIN_HAND);
         if (hand == EnumHand.MAIN_HAND) {
             if (!world.isRemote && heldItem == null && player.isSneaking()) {
                 ((TileEntityMetaFloodlight) world.getTileEntity(pos)).toggleInverted();
                 String invert = (((TileEntityMetaFloodlight) world.getTileEntity(pos)).getInverted() ? Names.Localizations.TRUE : Names.Localizations.FALSE);
-                player.addChatMessage(new TextComponentString(safeLocalize(Names.Localizations.INVERT) + ": " + safeLocalize(invert)));
+                player.sendMessage(new TextComponentString(safeLocalize(Names.Localizations.INVERT) + ": " + safeLocalize(invert)));
                 return true;
             } else if (!world.isRemote && heldItem != null) {
                 if (!ModCompatibility.WrenchAvailable && heldItem.getItem() == getMinecraftItem("stick")) {
@@ -89,8 +90,7 @@ public class BlockGrowLight extends BlockFLColorableMachine {
     }
 
     @Override
-    public boolean hasTileEntity(IBlockState state)
-    {
+    public boolean hasTileEntity(IBlockState state) {
         return true;
     }
 
@@ -99,16 +99,16 @@ public class BlockGrowLight extends BlockFLColorableMachine {
     public TileEntity createTileEntity(@Nonnull World w, @Nonnull IBlockState state) {
         return new TileEntityGrowLight();
     }
+
+    @Nullable
     @Override
-    public AxisAlignedBB getCollisionBoundingBox(IBlockState state, World world, BlockPos pos) {
-        //getSelectedBoundingBox(World world, BlockPos pos);
+    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
         return null;
     }
 
-
     @Override
     @SideOnly(Side.CLIENT)
-    public AxisAlignedBB getSelectedBoundingBox(IBlockState state,World world, BlockPos pos) {
+    public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World world, BlockPos pos) {
 
         double minX = 0;
         double minY = 0.8125;

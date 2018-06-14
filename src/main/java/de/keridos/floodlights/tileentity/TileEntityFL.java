@@ -80,7 +80,7 @@ public class TileEntityFL extends TileEntity {
 
     public void setColor(int color) {
         this.color = color;
-        this.worldObj.setBlockState(this.pos,this.worldObj.getBlockState(this.pos).withProperty(BlockFLColorableMachine.COLOR,color),2);
+        this.world.setBlockState(this.pos,this.world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.COLOR,color),2);
     }
 
     @Override

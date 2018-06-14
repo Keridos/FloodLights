@@ -5,6 +5,9 @@ package de.keridos.floodlights.reference;
  * This Class contains the internal names of all blocks, items and NBT Tags.
  */
 public class Names {
+
+    public static final String MOD_ID = Reference.MOD_ID;
+
     public static final class Blocks {
         public static final String ELECTRIC_FLOODLIGHT = "electricFloodlight";
         public static final String SMALL_ELECTRIC_FLOODLIGHT = "smallElectricFloodlightMetaBlock";
@@ -55,5 +58,21 @@ public class Names {
         public static final String ROTATION_STATE = "teRotationState";
         public static final String OWNER = "owner";
         public static final String SOURCES = "sources";
+    }
+
+    /**
+     * Converts given string (block or item name) to underscore-based, which is used as a registry name.
+     */
+    public static String convertToUnderscore(String input) {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < input.length(); i++) {
+            char c = input.charAt(i);
+            if (Character.isUpperCase(c))
+                builder.append("_").append(Character.toLowerCase(c));
+            else
+                builder.append(c);
+        }
+
+        return builder.toString();
     }
 }

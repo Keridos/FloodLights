@@ -51,14 +51,14 @@ public class BlockFLColorableMachine extends BlockFL {
     }
 
     @Override
-    public void neighborChanged(IBlockState blockState, World world, BlockPos pos, Block neighborBlock) {
+    public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
         if (!world.isRemote && world.getTileEntity(pos) instanceof TileEntityMetaFloodlight) {
             if (world.isBlockIndirectlyGettingPowered(pos) != 0) {
                 ((TileEntityMetaFloodlight) world.getTileEntity(pos)).setRedstone(true);
             } else if (world.isBlockIndirectlyGettingPowered(pos) == 0) {
                 ((TileEntityMetaFloodlight) world.getTileEntity(pos)).setRedstone(false);
             }
-            if (!(neighborBlock instanceof BlockFL) && neighborBlock != Blocks.AIR) {
+            if (!(blockIn instanceof BlockFL) && blockIn != Blocks.AIR) {
                 ((TileEntityMetaFloodlight) world.getTileEntity(pos)).toggleUpdateRun();
             }
         }

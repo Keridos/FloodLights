@@ -51,12 +51,12 @@ public class ContainerElectricFloodlight extends Container {
             } else if (!mergeItemStack(itemstack, 36, 36 + 1, false)) {
                 return null;
             }
-            if (itemstack.stackSize == 0) {
+            if (itemstack.getCount() == 0) {
                 slot.putStack(null);
             } else {
                 slot.onSlotChanged();
             }
-            slot.onPickupFromSlot(player, itemstack);
+            slot.onTake(player, itemstack);
             return result;
         }
         return null;
@@ -64,7 +64,7 @@ public class ContainerElectricFloodlight extends Container {
 
     @Override
     public boolean canInteractWith(EntityPlayer player) {
-        return electricFloodlight.isUseableByPlayer(player);  //To change body of implemented methods use File | Settings | File Templates.
+        return electricFloodlight.isUsableByPlayer(player);  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override

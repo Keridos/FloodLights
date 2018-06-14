@@ -67,7 +67,7 @@ public class BlockFL extends Block {
     }
 
 
-    protected void dropInventory(World world,BlockPos pos) {
+    protected void dropInventory(World world, BlockPos pos) {
         TileEntity tileEntity = world.getTileEntity(pos);
         if (!(tileEntity instanceof IInventory)) {
             return;
@@ -75,21 +75,23 @@ public class BlockFL extends Block {
         IInventory inventory = (IInventory) tileEntity;
         for (int i = 0; i < inventory.getSizeInventory(); i++) {
             ItemStack itemStack = inventory.getStackInSlot(i);
-            if (itemStack != null && itemStack.stackSize > 0) {
+            if (itemStack != null && itemStack.getCount() > 0) {
                 Random rand = new Random();
                 float dX = rand.nextFloat() * 0.8F + 0.1F;
                 float dY = rand.nextFloat() * 0.8F + 0.1F;
                 float dZ = rand.nextFloat() * 0.8F + 0.1F;
-                EntityItem entityItem = new EntityItem(world, pos.getX() + dX, pos.getY() + dY, pos.getZ() + dZ, itemStack.copy());
+                EntityItem entityItem = new EntityItem
+                        (world, pos.getX() + dX, pos.getY() + dY, pos.getZ() + dZ, itemStack.copy());
                 if (itemStack.hasTagCompound()) {
-                    entityItem.getEntityItem().setTagCompound((NBTTagCompound) itemStack.getTagCompound().copy());
+                    itemStack.setTagCompound(itemStack.getTagCompound().copy());
+
                 }
                 float factor = 0.05F;
                 entityItem.motionX = rand.nextGaussian() * factor;
                 entityItem.motionY = rand.nextGaussian() * factor + 0.2F;
                 entityItem.motionZ = rand.nextGaussian() * factor;
-                world.spawnEntityInWorld(entityItem);
-                itemStack.stackSize = 0;
+                world.spawnEntity(entityItem);
+                itemStack.setCount(0);
             }
         }
     }
@@ -97,8 +99,10 @@ public class BlockFL extends Block {
     public EnumFacing getFacing(EntityLivingBase entityLiving) {
         float rotationYaw = MathHelper.wrapDegrees(entityLiving.rotationYaw);
         float rotationPitch = (entityLiving.rotationPitch);
-        int result = (rotationPitch < -45.0F ? 1 : (rotationPitch > 45.0F ? 0 : ((MathHelper.floor_double(rotationYaw * 4.0F / 360.0F + 0.5D) & 3) + 2)));
-        EnumFacing[] direction = {EnumFacing.UP, EnumFacing.DOWN, EnumFacing.NORTH, EnumFacing.EAST, EnumFacing.SOUTH, EnumFacing.WEST};
+        int result = (rotationPitch < -45.0F ? 1 : (rotationPitch > 45.0F
+                ? 0 : ((MathHelper.floor(rotationYaw * 4.0F / 360.0F + 0.5D) & 3) + 2)));
+        EnumFacing[] direction = {EnumFacing.UP, EnumFacing.DOWN, EnumFacing.NORTH,
+                EnumFacing.EAST, EnumFacing.SOUTH, EnumFacing.WEST};
         return direction[result];
     }
 }

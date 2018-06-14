@@ -111,7 +111,7 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
 
     @Optional.Method(modid = "IC2")
     public void addToIc2EnergyNetwork() {
-        if (!worldObj.isRemote) {
+        if (!world.isRemote) {
             EnergyTileLoadEvent event = new EnergyTileLoadEvent(this);
             MinecraftForge.EVENT_BUS.post(event);
         }
@@ -121,7 +121,7 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
     @Override
     public void invalidate() {
         super.invalidate();
-        if (!worldObj.isRemote) {
+        if (!world.isRemote) {
             EnergyTileUnloadEvent event = new EnergyTileUnloadEvent(this);
             MinecraftForge.EVENT_BUS.post(event);
         }
@@ -156,7 +156,7 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
     @Override
     public void update() {
         super.update();
-        if (ModCompatibility.IC2Loaded && !wasAddedToEnergyNet && !worldObj.isRemote) {
+        if (ModCompatibility.IC2Loaded && !wasAddedToEnergyNet && !world.isRemote) {
             addToIc2EnergyNetwork();
             wasAddedToEnergyNet = true;
         }

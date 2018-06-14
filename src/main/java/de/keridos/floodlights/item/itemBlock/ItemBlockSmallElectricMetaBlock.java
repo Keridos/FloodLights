@@ -5,6 +5,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 
 import java.util.List;
 
@@ -16,11 +17,6 @@ public class ItemBlockSmallElectricMetaBlock extends ItemBlock {
     private final static String[] subNames = {
             "smallFluorescent", "squareFluorescent"
     };
-
-    @Override
-    public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
-        super.getSubItems(itemIn, tab, subItems);
-    }
 
     public ItemBlockSmallElectricMetaBlock(Block block) {
         super(block);
