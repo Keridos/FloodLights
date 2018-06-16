@@ -7,8 +7,9 @@ import de.keridos.floodlights.reference.Names;
  * This Class is the raw filament item class. Nothing spectacular.
  */
 public class ItemRawFilament extends ItemFL {
+
     public ItemRawFilament() {
         super();
-        this.setUnlocalizedName(Names.Items.RAW_FILAMENT);
+        setNames(Names.Items.RAW_FILAMENT);
     }
 }

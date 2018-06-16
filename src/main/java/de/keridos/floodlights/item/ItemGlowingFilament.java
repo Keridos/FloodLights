@@ -7,8 +7,9 @@ import de.keridos.floodlights.reference.Names;
  * This Class is the glowing filament class. Nothing spectacular.
  */
 public class ItemGlowingFilament extends ItemFL {
+
     public ItemGlowingFilament() {
         super();
-        this.setUnlocalizedName(Names.Items.GLOWING_FILAMENT);
+        setNames(Names.Items.GLOWING_FILAMENT);
     }
 }

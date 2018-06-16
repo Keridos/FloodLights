@@ -7,8 +7,9 @@ import de.keridos.floodlights.reference.Names;
  * This Class is the carbon dissolver class. Nothing spectacular.
  */
 public class ItemCarbonDissolver extends ItemFL {
+
     public ItemCarbonDissolver() {
         super();
-        this.setUnlocalizedName(Names.Items.CARBON_DISSOLVER);
+        setNames(Names.Items.CARBON_DISSOLVER);
     }
 }

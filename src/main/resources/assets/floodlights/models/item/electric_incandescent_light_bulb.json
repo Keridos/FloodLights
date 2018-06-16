@@ -1,6 +1,6 @@
 {
 	"parent": "floodlights:item/defaultitem",
 	"textures": {
-		"layer0": "floodlights:items/electricIncandescentLightBulb"
+		"layer0": "floodlights:items/electric_incandescent_light_bulb"
 	}
 }

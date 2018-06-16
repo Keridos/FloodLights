@@ -12,7 +12,7 @@ public class CommonProxy {
         RenderUtil.setupColors();
     }
 
-    public void preInit(){
+    public void init(){
 
     }
 
@@ -21,6 +21,10 @@ public class CommonProxy {
     }
 
     public void initHandlers() {
+
+    }
+
+    public void registerModels() {
 
     }
 }

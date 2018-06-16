@@ -1,6 +1,6 @@
 {
 	"parent": "floodlights:item/defaultitem",
 	"textures": {
-		"layer0": "floodlights:items/lightDebugTool"
+		"layer0": "floodlights:items/light_debug_tool"
 	}
 }

@@ -9,7 +9,6 @@ import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.init.ModItems;
 import de.keridos.floodlights.reference.Names;
-import de.keridos.floodlights.reference.Reference;
 import de.keridos.floodlights.tileentity.TileEntityPhantomLight;
 import de.keridos.floodlights.util.RenderUtil;
 import net.minecraft.block.Block;
@@ -35,7 +34,7 @@ public class ClientProxy extends CommonProxy {
     private static final Minecraft minecraft = Minecraft.getMinecraft();
 
     public void registerItemModel(final Item item, int meta) {
-        ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(item.getRegistryName().toString().toLowerCase()));
+        ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(item.getRegistryName().toString()));
     }
 
     public void registerItemModel(final Item item, int meta, final String variantName) {
@@ -43,11 +42,11 @@ public class ClientProxy extends CommonProxy {
     }
 
     public void registerBlockModelAsItem(final Block block, int meta, final String blockName) {
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), meta, new ModelResourceLocation(Reference.MOD_ID.toLowerCase() + ":" + blockName, "inventory"));
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), meta, new ModelResourceLocation(block.getRegistryName(), "inventory"));
     }
 
     public void registerBlockModelAsItem(final Block block, int meta, final String blockName, String variantName) {
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), meta, new ModelResourceLocation(Reference.MOD_ID.toLowerCase() + ":" + blockName, variantName));
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), meta, new ModelResourceLocation(block.getRegistryName(), variantName));
     }
 
     @Override
@@ -63,7 +62,7 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void preInit() {
+    public void registerModels() {
         registerBlockModelAsItem(ModBlocks.blockElectricLight, 0, Names.Blocks.ELECTRIC_FLOODLIGHT);
         registerBlockModelAsItem(ModBlocks.blockCarbonLight, 0, Names.Blocks.CARBON_FLOODLIGHT);
         registerBlockModelAsItem(ModBlocks.blockUVLight, 0, Names.Blocks.UV_FLOODLIGHT);

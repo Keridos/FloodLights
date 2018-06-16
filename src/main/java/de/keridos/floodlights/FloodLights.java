@@ -2,16 +2,15 @@ package de.keridos.floodlights;
 
 import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.core.proxy.CommonProxy;
-import de.keridos.floodlights.handler.*;
+import de.keridos.floodlights.handler.ConfigHandler;
+import de.keridos.floodlights.handler.GuiHandler;
+import de.keridos.floodlights.handler.PacketHandler;
+import de.keridos.floodlights.handler.RecipeHandler;
 import de.keridos.floodlights.init.ModBlocks;
-import de.keridos.floodlights.init.ModItems;
 import de.keridos.floodlights.reference.Reference;
 import de.keridos.floodlights.util.RandomUtil;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -54,7 +53,6 @@ public class FloodLights {
         configHandler = ConfigHandler.getInstance();
         configHandler.initConfig(new Configuration(event.getSuggestedConfigurationFile()));
         ModBlocks.registerTileEntities();
-        proxy.preInit();
     }
 
     @Mod.EventHandler
@@ -66,6 +64,7 @@ public class FloodLights {
         modCompatibility.performModCompat();
         registerEventListeners();
         RandomUtil.init();
+        proxy.init();
         proxy.initRenderers();
         proxy.initSounds();
         proxy.initHandlers();
@@ -78,13 +77,8 @@ public class FloodLights {
     }
 
     @SubscribeEvent
-    public static void registerBlocks(RegistryEvent.Register<Block> event) {
-        ModBlocks.registerBlocks(event.getRegistry());
-    }
-
-    @SubscribeEvent
-    public static void regsiterItems(RegistryEvent.Register<Item> event) {
-        ModItems.registerItems(event.getRegistry());
+    public static void registerModels(ModelRegistryEvent event) {
+        proxy.registerModels();
     }
 
     private void registerEventListeners() {

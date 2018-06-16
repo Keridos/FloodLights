@@ -1,14 +1,17 @@
 package de.keridos.floodlights.init;
 
 import de.keridos.floodlights.item.*;
-import de.keridos.floodlights.reference.Names;
 import net.minecraft.item.Item;
-import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
  * Created by Keridos on 06.10.14.
  * This Class manages all items that the mod uses.
  */
+@SuppressWarnings("unused")
+@Mod.EventBusSubscriber
 public class ModItems {
     public static final ItemFL rawFilament = new ItemRawFilament();
     public static final ItemFL glowingFilament = new ItemGlowingFilament();
@@ -18,8 +21,9 @@ public class ModItems {
     public static final ItemFL mantle = new ItemMantle();
     public static final ItemFL lightDebugTool = new ItemLightDebugTool();
 
-    public static void registerItems(IForgeRegistry<Item> registry) {
-        registry.registerAll(
+    @SubscribeEvent
+    public static void registerItems(RegistryEvent.Register<Item> event) {
+        event.getRegistry().registerAll(
                 rawFilament,
                 glowingFilament,
                 lightBulb,
@@ -28,19 +32,5 @@ public class ModItems {
                 mantle,
                 lightDebugTool
         );
-    }
-
-    private static void setupItem(Item item, String name) {
-        item.setUnlocalizedName(name).setRegistryName(Names.convertToUnderscore(name));
-    }
-
-    static {
-        setupItem(rawFilament, Names.Items.RAW_FILAMENT);
-        setupItem(glowingFilament, Names.Items.GLOWING_FILAMENT);
-        setupItem(lightBulb, Names.Items.ELECTRIC_INCANDESCENT_LIGHT_BULB);
-        setupItem(carbonDissolver, Names.Items.CARBON_DISSOLVER);
-        setupItem(carbonLantern, Names.Items.CARBON_LANTERN);
-        setupItem(mantle, Names.Items.MANTLE);
-        setupItem(lightDebugTool, Names.Items.LIGHT_DEBUG_TOOL);
     }
 }

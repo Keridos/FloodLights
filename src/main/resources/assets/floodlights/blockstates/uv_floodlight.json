@@ -4,9 +4,9 @@
 		"model": "floodlights:colorable_cube_bottom_top",
 		"transform": "forge:default-block",
 		"textures": {
-			"top": "floodlights:blocks/uvFloodlight_top",
-			"side": "floodlights:blocks/uvFloodlight_side",
-			"bottom": "floodlights:blocks/uvFloodlight_bot"
+			"top": "floodlights:blocks/uv_floodlight_top",
+			"side": "floodlights:blocks/uv_floodlight_side",
+			"bottom": "floodlights:blocks/uv_floodlight_bot"
 		}
 	},
 	"variants": {
@@ -39,12 +39,12 @@
 		"active": {
 			"true": {
 				"textures": {
-					"top": "floodlights:blocks/uvFloodlight_top_on"
+					"top": "floodlights:blocks/uv_floodlight_top_on"
 				}
 			},
 			"false": {
 				"textures": {
-					"top": "floodlights:blocks/uvFloodlight_top"
+					"top": "floodlights:blocks/uv_floodlight_top"
 				}
 			}
 		}

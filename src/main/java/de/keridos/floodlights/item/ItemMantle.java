@@ -7,8 +7,9 @@ import de.keridos.floodlights.reference.Names;
  * This Class is the mantle class. Nothing spectacular.
  */
 public class ItemMantle extends ItemFL {
+
     public ItemMantle() {
         super();
-        this.setUnlocalizedName(Names.Items.MANTLE);
+        setNames(Names.Items.MANTLE);
     }
 }

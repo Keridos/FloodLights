@@ -1,6 +1,7 @@
 package de.keridos.floodlights.item;
 
 import de.keridos.floodlights.client.gui.CreativeTabFloodlight;
+import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.reference.Textures;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -10,12 +11,14 @@ import net.minecraft.item.ItemStack;
  * This Class is the generic Item class of this Mod.
  */
 
+@SuppressWarnings("NullableProblems")
 public class ItemFL extends Item {
+
     public ItemFL() {
         super();
-        this.maxStackSize = 64;
-        this.setNoRepair();
-        this.setCreativeTab(CreativeTabFloodlight.FL_TAB);
+        maxStackSize = 64;
+        setNoRepair();
+        setCreativeTab(CreativeTabFloodlight.FL_TAB);
     }
 
     @Override
@@ -25,10 +28,22 @@ public class ItemFL extends Item {
 
     @Override
     public String getUnlocalizedName(ItemStack itemStack) {
-        return String.format("item.%s%s", Textures.RESOURCE_PREFIX, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
+        return getUnlocalizedName();
     }
 
-    protected String getUnwrappedUnlocalizedName(String unlocalizedName) {
+    private String getUnwrappedUnlocalizedName(String unlocalizedName) {
         return unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
+    }
+
+    /**
+     * Sets unlocalized name {@link Item#setUnlocalizedName(String)} and registryName {@link Item#setRegistryName(String)}.
+     * <br>
+     * Naming convention:
+     * <li><b>camelCase</b> - unlocalized name</li>
+     * <li><b>unserscore_based</b> - registry name (automatic conversion)</li>
+     */
+    protected void setNames(String unlocalizedName) {
+        setUnlocalizedName(unlocalizedName);
+        setRegistryName(Names.MOD_ID, Names.convertToUnderscore(unlocalizedName));
     }
 }

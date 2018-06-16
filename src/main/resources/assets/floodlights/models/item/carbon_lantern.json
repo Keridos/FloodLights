@@ -1,6 +1,6 @@
 {
 	"parent": "floodlights:item/defaultitem",
 	"textures": {
-		"layer0": "floodlights:items/carbonLantern"
+		"layer0": "floodlights:items/carbon_lantern"
 	}
 }

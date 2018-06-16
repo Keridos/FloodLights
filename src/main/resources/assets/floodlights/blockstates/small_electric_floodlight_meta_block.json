@@ -1,13 +1,13 @@
 {
 	"forge_marker": 1,
 	"defaults": {
-		"model": "floodlights:squarefluorescentfloodlight",
+		"model": "floodlights:square_fluorescent_floodlight",
 		"transform": "forge:default-block",
 		"textures": {
-			"bottom": "floodlights:blocks/fluorescentSquareLight_bot",
-			"top": "floodlights:blocks/fluorescentSquareLight_top_off",
-			"side": "floodlights:blocks/fluorescentSquareLight_side_off",
-			"sideshort": "floodlights:blocks/fluorescentSquareLight_side_off"
+			"bottom": "floodlights:blocks/fluorescent_square_light_bot",
+			"top": "floodlights:blocks/fluorescent_square_light_top_off",
+			"side": "floodlights:blocks/fluorescent_square_light_side_off",
+			"sideshort": "floodlights:blocks/fluorescent_square_light_side_off"
 		}
 	},
 	"variants": {
@@ -15,12 +15,12 @@
 			{}
 		],
 		"inventory_strip": [
-			{"model": "floodlights:smallfluorescentfloodlight",
+			{"model": "floodlights:small_fluorescent_floodlight",
 				"textures": {
-					"bottom": "floodlights:blocks/fluorescentSmallLight_bot",
-					"top": "floodlights:blocks/fluorescentSmallLight_top_off",
-					"side": "floodlights:blocks/fluorescentSmallLight_side_long_off",
-					"sideshort": "floodlights:blocks/fluorescentSmallLight_side_short_off"
+					"bottom": "floodlights:blocks/fluorescent_small_light_bot",
+					"top": "floodlights:blocks/fluorescent_small_light_top_off",
+					"side": "floodlights:blocks/fluorescent_small_light_side_long_off",
+					"sideshort": "floodlights:blocks/fluorescent_small_light_side_short_off"
 				}}
 		]
 	}

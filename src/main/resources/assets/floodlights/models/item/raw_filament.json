@@ -1,6 +1,6 @@
 {
 	"parent": "floodlights:item/defaultitem",
 	"textures": {
-		"layer0": "floodlights:items/rawFilament"
+		"layer0": "floodlights:items/raw_filament"
 	}
 }

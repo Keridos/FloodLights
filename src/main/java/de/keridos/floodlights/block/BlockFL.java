@@ -12,8 +12,8 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -27,26 +27,20 @@ import java.util.Random;
  * This Class describes the generic block this mod uses.
  */
 public class BlockFL extends Block {
-    protected String unlocName;
 
     protected BlockFL(String unlocName, Material material, SoundType type, float hardness) {
         super(material);
         setHardness(hardness);
-        setUnlocalizedName(unlocName);
-        this.unlocName = unlocName;
+        setNames(unlocName);
         if (!unlocName.equals(Names.Blocks.PHANTOM_LIGHT) && !unlocName.equals(Names.Blocks.UV_LIGHTBLOCK)) {
             this.setCreativeTab(CreativeTabFloodlight.FL_TAB);
         }
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public String getUnlocalizedName() {
         return String.format("tile.%s%s", Textures.RESOURCE_PREFIX, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
-    }
-
-
-    protected String getUnwrappedUnlocalizedName(String unlocalizedName) {
-        return unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
     }
 
     @Override
@@ -104,5 +98,23 @@ public class BlockFL extends Block {
         EnumFacing[] direction = {EnumFacing.UP, EnumFacing.DOWN, EnumFacing.NORTH,
                 EnumFacing.EAST, EnumFacing.SOUTH, EnumFacing.WEST};
         return direction[result];
+    }
+
+
+    /**
+     * Sets unlocalized name {@link Item#setUnlocalizedName(String)} and registryName {@link Item#setRegistryName(String)}.
+     * <br>
+     * Naming convention:
+     * <li><b>camelCase</b> - unlocalized name</li>
+     * <li><b>unserscore_based</b> - registry name (automatic conversion)</li>
+     */
+    private void setNames(String unlocalizedName) {
+        setUnlocalizedName(unlocalizedName);
+        setRegistryName(Names.MOD_ID, Names.convertToUnderscore(unlocalizedName));
+    }
+
+
+    private String getUnwrappedUnlocalizedName(String unlocalizedName) {
+        return unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
     }
 }

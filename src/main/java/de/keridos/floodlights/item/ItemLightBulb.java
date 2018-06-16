@@ -7,8 +7,9 @@ import de.keridos.floodlights.reference.Names;
  * This Class is the light bulb item class. Nothing spectacular.
  */
 public class ItemLightBulb extends ItemFL {
+
     public ItemLightBulb() {
         super();
-        this.setUnlocalizedName(Names.Items.ELECTRIC_INCANDESCENT_LIGHT_BULB);
+        setNames(Names.Items.ELECTRIC_INCANDESCENT_LIGHT_BULB);
     }
 }

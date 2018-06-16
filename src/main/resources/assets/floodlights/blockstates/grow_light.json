@@ -1,13 +1,14 @@
 {
 	"forge_marker": 1,
 	"defaults": {
-		"model": "floodlights:squarefluorescentfloodlight",
+		"model": "floodlights:square_fluorescent_floodlight",
 		"transform": "forge:default-block",
 		"textures": {
-			"bottom": "floodlights:blocks/growLight_bot",
-			"topon": "floodlights:blocks/growLight_top_on",
-			"side": "floodlights:blocks/growLight_side",
-			"topoff": "floodlights:blocks/growLight_top_off"
+			"bottom": "floodlights:blocks/grow_light_bot",
+			"topon": "floodlights:blocks/grow_light_top_on",
+			"side": "floodlights:blocks/grow_light_side",
+			"topoff": "floodlights:blocks/grow_light_top_off",
+			"particle": "floodlights:blocks/grow_light_side"
 		}
 	},
 	"variants": {

@@ -7,8 +7,9 @@ import de.keridos.floodlights.reference.Names;
  * This Class is the carbon lantern class. Nothing spectacular.
  */
 public class ItemLightDebugTool extends ItemFL {
+
     public ItemLightDebugTool() {
         super();
-        this.setUnlocalizedName(Names.Items.LIGHT_DEBUG_TOOL);
+        setNames(Names.Items.LIGHT_DEBUG_TOOL);
     }
 }

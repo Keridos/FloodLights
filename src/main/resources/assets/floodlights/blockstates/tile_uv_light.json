@@ -1,7 +1,7 @@
 {
 	"forge_marker": 1,
 	"defaults": {
-		"model": "floodlights:uvlightblock",
+		"model": "floodlights:uv_light_block",
 		"transform": "forge:default-block"
 	},
 	"variants": {
