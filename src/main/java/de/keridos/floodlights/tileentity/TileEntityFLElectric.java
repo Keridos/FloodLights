@@ -127,11 +127,6 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
         }
     }
 
-    @Override
-    protected boolean canInsertItem(ItemStack itemStack) {
-        return isItemStackValidElectrical(itemStack);
-    }
-
     protected void tryDischargeItem(ItemStack itemStack) {
         if (itemStack != null) {
             if (ModCompatibility.IC2Loaded) {

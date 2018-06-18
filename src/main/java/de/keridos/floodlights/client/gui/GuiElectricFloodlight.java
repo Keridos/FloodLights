@@ -17,8 +17,8 @@ import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
  * This Class implements the Gui for the Carbon floodlight.
  */
 public class GuiElectricFloodlight extends GuiContainer {
-    public static final ResourceLocation texture = new ResourceLocation(Textures.Gui.ELECTRIC_FLOODLIGHT);
-    private TileEntityFLElectric tileEntityFLElectric = null;
+    private static final ResourceLocation texture = new ResourceLocation(Textures.Gui.ELECTRIC_FLOODLIGHT);
+    private TileEntityFLElectric tileEntityFLElectric;
 
     public GuiElectricFloodlight(InventoryPlayer invPlayer, TileEntityFLElectric entity) {
         super(new ContainerElectricFloodlight(invPlayer, entity));

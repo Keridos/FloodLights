@@ -20,8 +20,7 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric {
         super.update();
         World world = this.getWorld();
         if (!world.isRemote) {
-            int realEnergyUsage = ConfigHandler.energyUsage * (mode == 0 ? 1 : 4);
-            ;
+            int realEnergyUsage = ConfigHandler.energyUsage * (_mode == LIGHT_MODE_STRAIGHT ? 1 : 4);
             tryDischargeItem(inventory.getStackInSlot(0));
             if (timeout > 0) {
                 timeout--;
@@ -29,12 +28,12 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric {
             }
             if (active && (storage.getEnergyStored() >= realEnergyUsage || storageEU >= (double) realEnergyUsage / 8.0D)) {
                 if (update) {
-                    removeSource(this.mode);
-                    addSource(this.mode);
+                    removeSource(this._mode);
+                    addSource(this._mode);
                     world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, true), 2);
                     update = false;
                 } else if (!wasActive) {
-                    addSource(this.mode);
+                    addSource(this._mode);
                     world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, true), 2);
                 }
                 if (storageEU >= (double) realEnergyUsage / 8.0D) {
@@ -44,7 +43,7 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric {
                 }
                 wasActive = true;
             } else if ((!active || (storage.getEnergyStored() < realEnergyUsage && storageEU < (double) realEnergyUsage / 8.0D)) && wasActive) {
-                removeSource(this.mode);
+                removeSource(this._mode);
                 world.setBlockState(this.pos, world.getBlockState(this.pos).getBlock().getStateFromMeta(this.getOrientation().ordinal()), 2);
                 wasActive = false;
                 timeout = ConfigHandler.timeoutFloodlights;
@@ -53,9 +52,9 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric {
         }
     }
 
-    public void addSource(int mode) {
+    private void addSource(int mode) {
         if (mode == -1) {
-            mode = this.mode;
+            mode = this._mode;
         }
         if (mode == 0) {
             straightSource(false);
@@ -68,7 +67,7 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric {
 
     public void removeSource(int mode) {
         if (mode == -1) {
-            mode = this.mode;
+            mode = this._mode;
         }
         if (mode == 0) {
             straightSource(true);
@@ -82,14 +81,25 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric {
     public void changeMode(EntityPlayer player) {
         World world = this.getWorld();
         if (!world.isRemote) {
-            int realEnergyUsage = ConfigHandler.energyUsage * (mode == 0 ? 1 : 4);
-            ;
-            removeSource(this.mode);
-            mode = (mode == 2 ? 0 : mode + 1);
+            int realEnergyUsage = ConfigHandler.energyUsage * (_mode == LIGHT_MODE_STRAIGHT ? 1 : 4);
+
+            removeSource(this._mode);
+            _mode = (_mode == LIGHT_MODE_WIDE_CONE ? LIGHT_MODE_STRAIGHT : _mode + 1);
             if (active && (storage.getEnergyStored() >= realEnergyUsage || storageEU >= realEnergyUsage / 8.0D)) {
-                addSource(this.mode);
+                addSource(this._mode);
             }
-            String modeString = (mode == 0 ? Names.Localizations.STRAIGHT : mode == 1 ? Names.Localizations.NARROW_CONE : Names.Localizations.WIDE_CONE);
+            String modeString = "";
+            switch (_mode) {
+                case LIGHT_MODE_STRAIGHT:
+                    modeString = Names.Localizations.STRAIGHT;
+                    break;
+                case LIGHT_MODE_NARROW_CONE:
+                    modeString = Names.Localizations.NARROW_CONE;
+                    break;
+                case LIGHT_MODE_WIDE_CONE:
+                    modeString = Names.Localizations.WIDE_CONE;
+                    break;
+            }
             player.sendMessage(new TextComponentString(safeLocalize(Names.Localizations.MODE) + ": " + safeLocalize(modeString)));
         }
     }

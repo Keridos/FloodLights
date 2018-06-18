@@ -13,12 +13,18 @@ import net.minecraft.world.World;
  * Created by Keridos on 01.10.14.
  * This Class is the base for all TileEntities within this mod.
  */
+@SuppressWarnings("WeakerAccess")
 public class TileEntityFL extends TileEntity {
+
+    protected static final int LIGHT_MODE_STRAIGHT = 0;
+    protected static final int LIGHT_MODE_NARROW_CONE = 1;
+    protected static final int LIGHT_MODE_WIDE_CONE = 2;
+
     protected EnumFacing orientation;
     protected byte state;
     protected String customName;
     protected String owner;
-    protected int mode;
+    protected int _mode;
     protected boolean inverted;
     protected int color;
 
@@ -67,11 +73,12 @@ public class TileEntityFL extends TileEntity {
     }
 
     public int getMode() {
-        return mode;
+        return _mode;
     }
 
     public void setMode(int mode) {
-        this.mode = mode;
+        if (mode >= 0 && mode <= 2)
+            this._mode = mode;
     }
 
     public int getColor() {
@@ -102,7 +109,7 @@ public class TileEntityFL extends TileEntity {
             this.owner = nbtTagCompound.getString(Names.NBT.OWNER);
         }
         if (nbtTagCompound.hasKey(Names.NBT.MODE)) {
-            this.mode = nbtTagCompound.getInteger(Names.NBT.MODE);
+            this._mode = nbtTagCompound.getInteger(Names.NBT.MODE);
         }
         if (nbtTagCompound.hasKey(Names.NBT.COLOR)) {
             this.color = nbtTagCompound.getInteger(Names.NBT.COLOR);
@@ -115,7 +122,7 @@ public class TileEntityFL extends TileEntity {
         nbtTagCompound.setByte(Names.NBT.DIRECTION, (byte) orientation.ordinal());
         nbtTagCompound.setBoolean(Names.NBT.INVERT, inverted);
         nbtTagCompound.setByte(Names.NBT.STATE, state);
-        nbtTagCompound.setInteger(Names.NBT.MODE, mode);
+        nbtTagCompound.setInteger(Names.NBT.MODE, _mode);
         nbtTagCompound.setInteger(Names.NBT.COLOR, color);
         if (this.hasCustomName()) {
             nbtTagCompound.setString(Names.NBT.CUSTOM_NAME, customName);

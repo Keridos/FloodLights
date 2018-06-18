@@ -16,8 +16,8 @@ import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
  * This Class implements the Gui for the Carbon floodlight.
  */
 public class GuiCarbonFloodlight extends GuiContainer {
-    public static final ResourceLocation texture = new ResourceLocation(Textures.Gui.CARBON_FLOODLIGHT);
-    private TileEntityCarbonFloodlight tileEntityCarbonFloodlight = null;
+    private static final ResourceLocation texture = new ResourceLocation(Textures.Gui.CARBON_FLOODLIGHT);
+    private TileEntityCarbonFloodlight tileEntityCarbonFloodlight;
 
     public GuiCarbonFloodlight(InventoryPlayer invPlayer, TileEntityCarbonFloodlight entity) {
         super(new ContainerCarbonFloodlight(invPlayer, entity));
@@ -28,7 +28,11 @@ public class GuiCarbonFloodlight extends GuiContainer {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int par1, int par2) {
-        String guiText = safeLocalize(Names.Localizations.NONELECTRIC_GUI_TEXT) + ": " + tileEntityCarbonFloodlight.timeRemaining / 1200 + safeLocalize(Names.Localizations.GUI_MINUTES_SHORT) + tileEntityCarbonFloodlight.timeRemaining / 20 % 60 + safeLocalize(Names.Localizations.GUI_SECONDS_SHORT);
+        String guiText = safeLocalize(Names.Localizations.NONELECTRIC_GUI_TEXT) + ": "
+                + tileEntityCarbonFloodlight.timeRemaining / 1200
+                + safeLocalize(Names.Localizations.GUI_MINUTES_SHORT)
+                + tileEntityCarbonFloodlight.timeRemaining / 20 % 60
+                + safeLocalize(Names.Localizations.GUI_SECONDS_SHORT);
         fontRenderer.drawString(guiText, 50, 26, 0x000000);
     }
 

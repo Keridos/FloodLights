@@ -32,6 +32,7 @@ public class TileEntityGrowLight extends TileEntityFLElectric {
     }
 
 
+    @SuppressWarnings("ConstantConditions")
     public void growSource(boolean remove) {
         int[] rotatedCoords = MathUtil.rotate(1, 0, 0, this.orientation);
 
@@ -77,7 +78,7 @@ public class TileEntityGrowLight extends TileEntityFLElectric {
                     nextGrowTick = world.getWorldTime() + RandomUtil.getRandomTickTimeoutFromFloatChance(ConfigHandler.chanceGrowLight);
                 }
                 if (update) {
-                    if (mode == 0) {
+                    if (_mode == LIGHT_MODE_STRAIGHT) {
                         growSource(true);
                         growSource(false);
                     }
@@ -85,7 +86,7 @@ public class TileEntityGrowLight extends TileEntityFLElectric {
                     world.markBlocksDirtyVertical(this.pos.getX(), this.pos.getZ(), this.pos.getX(), this.pos.getZ());
                     update = false;
                 } else if (!wasActive) {
-                    if (mode == 0) {
+                    if (_mode == LIGHT_MODE_STRAIGHT) {
                         growSource(false);
                     }
                     world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, true), 2);
@@ -98,7 +99,7 @@ public class TileEntityGrowLight extends TileEntityFLElectric {
                 }
                 wasActive = true;
             } else if ((!active || (storage.getEnergyStored() < realEnergyUsage && storageEU < (double) realEnergyUsage / 8.0D)) && wasActive) {
-                if (mode == 0) {
+                if (_mode == LIGHT_MODE_STRAIGHT) {
                     growSource(true);
                 }
                 world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, false), 2);
@@ -113,14 +114,15 @@ public class TileEntityGrowLight extends TileEntityFLElectric {
     public void changeMode(EntityPlayer player) {
         World world = this.getWorld();
         if (!world.isRemote) {
-            if (mode == 0) {
+            if (_mode == LIGHT_MODE_STRAIGHT) {
                 growSource(true);
             }
-            mode = (mode == 1 ? 0 : mode + 1);
-            if (active && (storage.getEnergyStored() >= ConfigHandler.energyUsage || storageEU >= ConfigHandler.energyUsage / 8.0D) && mode == 0) {
+            _mode = (_mode == LIGHT_MODE_NARROW_CONE ? LIGHT_MODE_STRAIGHT : _mode + 1);
+            if (active && (storage.getEnergyStored() >= ConfigHandler.energyUsage
+                    || storageEU >= ConfigHandler.energyUsage / 8.0D) && _mode == LIGHT_MODE_STRAIGHT) {
                 growSource(false);
             }
-            String modeString = (mode == 0 ? Names.Localizations.LIGHTING : Names.Localizations.DARK_LIGHT);
+            String modeString = (_mode == LIGHT_MODE_STRAIGHT ? Names.Localizations.LIGHTING : Names.Localizations.DARK_LIGHT);
             player.sendMessage(new TextComponentString(safeLocalize(Names.Localizations.MODE) + ": " + safeLocalize(modeString)));
         }
     }
