@@ -1,9 +1,5 @@
 package de.keridos.floodlights.block;
 
-/*import buildcraft.api.tools.IToolWrench;
-import cofh.api.item.IToolHammer;
-import crazypants.enderio.api.tool.ITool;*/
-
 import de.keridos.floodlights.FloodLights;
 import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.reference.Names;
@@ -16,6 +12,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
@@ -47,12 +44,12 @@ public class BlockCarbonFloodlight extends BlockFLColorableMachine implements IT
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         ItemStack heldItem = player.getHeldItem(hand);
         if (hand == EnumHand.MAIN_HAND) {
-            if (!world.isRemote && heldItem == null && player.isSneaking()) {
+            if (!world.isRemote && player.isSneaking()) {
                 ((TileEntityCarbonFloodlight) world.getTileEntity(pos)).toggleInverted();
                 String invert = (((TileEntityCarbonFloodlight) world.getTileEntity(pos)).getInverted() ? Names.Localizations.TRUE : Names.Localizations.FALSE);
                 player.sendMessage(new TextComponentString(safeLocalize(Names.Localizations.INVERT) + ": " + safeLocalize(invert)));
                 return true;
-            } else if (!world.isRemote && heldItem != null) {
+            } else if (!world.isRemote) {
                 if (!ModCompatibility.WrenchAvailable && heldItem.getItem() == getMinecraftItem("stick")) {
                     ((TileEntityCarbonFloodlight) world.getTileEntity(pos)).changeMode(player);
                     return true;
@@ -74,7 +71,8 @@ public class BlockCarbonFloodlight extends BlockFLColorableMachine implements IT
                 return true;
             }
         }
-        return true;    }
+        return true;
+    }
 
     @Override
     public TileEntityCarbonFloodlight createNewTileEntity(World world, int metadata) {

@@ -7,7 +7,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 import java.util.logging.Logger;
@@ -43,13 +42,8 @@ public class TileEntityCarbonFloodlight extends TileEntityMetaFloodlight {
     }
 
     @Override
-    public boolean canInsertItem(int i, ItemStack itemstack, EnumFacing facing) {
-        return (i == 0 && getBurnTime(itemstack) > 0);
-    }
-
-    @Override
-    public boolean isItemValidForSlot(int i, ItemStack itemstack) {
-        return (getBurnTime(itemstack) > 0);
+    protected boolean canInsertItem(ItemStack itemStack) {
+        return getBurnTime(itemStack) > 0;
     }
 
     @Override
@@ -57,9 +51,9 @@ public class TileEntityCarbonFloodlight extends TileEntityMetaFloodlight {
         super.update();
         World world = this.getWorld();
         if (!world.isRemote) {
-            if (timeRemaining == 0 && inventory[0] != null) {
-                timeRemaining = ConfigHandler.carbonTime * getBurnTime(inventory[0]) / 1600 * (mode == 0 ? 20 : 10);
-                decrStackSize(0, 1);
+            if (timeRemaining == 0 && !inventory.getStackInSlot(0).isEmpty()) {
+                timeRemaining = ConfigHandler.carbonTime * getBurnTime(inventory.getStackInSlot(0)) / 1600 * (mode == 0 ? 20 : 10);
+                inventory.extractItem(0, 1, false);
             }
             if (timeout > 0) {
                 timeout--;

@@ -65,7 +65,7 @@ public class TileEntityUVLight extends TileEntityFLElectric {
         World world = this.getWorld();
         if (!world.isRemote) {
             int realEnergyUsage = ConfigHandler.energyUsageUVFloodlight;
-            tryDischargeItem(inventory[0]);
+            tryDischargeItem(inventory.getStackInSlot(0));
             if (active && (storage.getEnergyStored() >= realEnergyUsage || storageEU >= (double) realEnergyUsage / 8.0D)) {
                 if (update) {
                     UVSource(true);

@@ -101,7 +101,7 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
         World world = this.getWorld();
         if (!world.isRemote) {
             int realEnergyUsage = ConfigHandler.energyUsageSmallFloodlight;
-            tryDischargeItem(inventory[0]);
+            tryDischargeItem(inventory.getStackInSlot(0));
             if (timeout > 0) {
                 timeout--;
                 return;

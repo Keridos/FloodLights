@@ -15,6 +15,6 @@ public class PacketHandler {
     public static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(Reference.CHANNEL);
 
     public static void init() {
-        //INSTANCE.registerMessage(MessageTileEntityFL.MessageTileEntityFLHandler.class, MessageTileEntityFL.class, 0, Side.CLIENT);
+        INSTANCE.registerMessage(MessageTileEntityFL.MessageTileEntityFLHandler.class, MessageTileEntityFL.class, 0, Side.CLIENT);
     }
 }

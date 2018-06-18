@@ -4,16 +4,19 @@ import de.keridos.floodlights.handler.ConfigHandler;
 import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.util.MathUtil;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import static de.keridos.floodlights.block.BlockPhantomLight.UPDATE;
 import static de.keridos.floodlights.util.GeneralUtil.getPosFromPosFacing;
@@ -22,18 +25,39 @@ import static de.keridos.floodlights.util.GeneralUtil.getPosFromPosFacing;
  * Created by Keridos on 06.05.2015.
  * This Class
  */
-public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInventory, ITickable {
+@SuppressWarnings("WeakerAccess")
+public abstract class TileEntityMetaFloodlight extends TileEntityFL implements ITickable {
     protected boolean active;
     protected boolean wasActive;
     protected boolean update = true;
     protected int timeout;
-    protected ItemStack[] inventory;
+    protected ItemStackHandler inventory;
 
     public TileEntityMetaFloodlight() {
         super();
         this.wasActive = false;
-        inventory = new ItemStack[1];
+
+        inventory = new ItemStackHandler(1) {
+            @Override
+            protected void onContentsChanged(int slot) {
+                super.onContentsChanged(slot);
+                markDirty();
+            }
+
+            @Nonnull
+            @Override
+            public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
+                if (!canInsertItem(stack))
+                    return stack;
+                return super.insertItem(slot, stack, simulate);
+            }
+        };
     }
+
+    /**
+     * Returns whether given item can be placed into the slot.
+     */
+    protected abstract boolean canInsertItem(ItemStack itemStack);
 
     public void setRedstone(boolean b) {
         active = b ^ inverted;
@@ -70,7 +94,6 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
         } else {
             this.toggleUpdateRun();
         }
-
     }
 
     @Override
@@ -89,15 +112,8 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
         if (nbtTagCompound.hasKey(Names.NBT.WAS_ACTIVE)) {
             this.wasActive = nbtTagCompound.getBoolean(Names.NBT.WAS_ACTIVE);
         }
-        if (nbtTagCompound.hasKey(Names.NBT.ITEMS)) {
-            NBTTagList list = nbtTagCompound.getTagList(Names.NBT.ITEMS, 10);
-            NBTTagCompound item = list.getCompoundTagAt(0);
-            int slot = item.getByte(Names.NBT.ITEMS);
-            if (slot >= 0 && slot < getSizeInventory()) {
-                setInventorySlotContents(slot, new ItemStack(item));
-
-            }
-        }
+        if (nbtTagCompound.hasKey(Names.NBT.ITEMS))
+            inventory.deserializeNBT(nbtTagCompound.getCompoundTag(Names.NBT.ITEMS));
     }
 
     @Override
@@ -106,138 +122,30 @@ public class TileEntityMetaFloodlight extends TileEntityFL implements ISidedInve
         nbtTagCompound.setBoolean(Names.NBT.WAS_ACTIVE, wasActive);
         nbtTagCompound.setByte(Names.NBT.STATE, state);
         NBTTagList list = new NBTTagList();
-        ItemStack itemstack = getStackInSlot(0);
-        if (itemstack != null) {
-            NBTTagCompound item = new NBTTagCompound();
-            item.setByte(Names.NBT.ITEMS, (byte) 0);
-            itemstack.writeToNBT(item);
-            list.appendTag(item);
-        }
-        nbtTagCompound.setTag(Names.NBT.ITEMS, list);
+        nbtTagCompound.setTag(Names.NBT.ITEMS, inventory.serializeNBT());
         return nbtTagCompound;
     }
 
     @Override
-    public int[] getSlotsForFace(EnumFacing facing) {
-        return new int[]{0};
+    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
     }
 
+    @SuppressWarnings("unchecked")
+    @Nullable
     @Override
-    public boolean canInsertItem(int i, ItemStack itemstack, EnumFacing facing) {
-        return true;
+    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY ? (T) inventory : super.getCapability(capability, facing);
     }
 
-    @Override
-    public boolean canExtractItem(int i, ItemStack itemstack, EnumFacing facing) {
-        return false;
-    }
-
-    @Override
-    public int getSizeInventory() {
-        return inventory.length;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return false;
-    }
-
-    @Override
-    public ItemStack getStackInSlot(int i) {
-        world.markBlocksDirtyVertical(this.pos.getX(), this.pos.getZ(), this.pos.getX(), this.pos.getZ());
-        return inventory[i];
-    }
-
-    @Override
-    public ItemStack decrStackSize(int slot, int count) {
-        ItemStack itemstack = getStackInSlot(slot);
-
-        if (itemstack != null) {
-            if (itemstack.getCount() <= count) {
-                setInventorySlotContents(slot, null);
-            } else {
-                itemstack = itemstack.splitStack(count);
-                markDirty();
-            }
-        }
-        return itemstack;
-    }
-
-    @Override
-    public ItemStack removeStackFromSlot(int slot) {
-        ItemStack itemstack = getStackInSlot(slot);
-        setInventorySlotContents(slot, null);
-        return itemstack;
-    }
-
-    @Override
-    public void setInventorySlotContents(int slot, ItemStack itemstack) {
-        inventory[slot] = itemstack;
-        if (itemstack != null && itemstack.getCount() > getInventoryStackLimit()) {
-            itemstack.setCount(getInventoryStackLimit());
-        }
-        markDirty();
-    }
-
-    @Override
-    public int getInventoryStackLimit() {
-        return 64;
-    }
-
-    @Override
-    public boolean isUsableByPlayer(EntityPlayer player) {
-        return false;
-    }
-
-//    @Override
+    //    @Override
 //    public boolean isUseableByPlayer(EntityPlayer player) {
 //        return player.getDistanceSq(this.pos.getX() + 0.5D, this.pos.getY() + 0.5D, this.pos.getZ() + 0.5D) <= 64;
 //    }
 
-
-    @Override
-    public void openInventory(EntityPlayer player) {
-
-    }
-
-    @Override
-    public void closeInventory(EntityPlayer player) {
-
-    }
-
-    @Override
-    public int getField(int id) {
-        return 0;
-    }
-
-    @Override
-    public void setField(int id, int value) {
-
-    }
-
-    @Override
-    public int getFieldCount() {
-        return 0;
-    }
-
-    @Override
-    public void clear() {
-
-    }
-
-    @Override
-    public String getName() {
-        return null;
-    }
-
     @Override
     public ITextComponent getDisplayName() {
         return null;
-    }
-
-    @Override
-    public boolean isItemValidForSlot(int i, ItemStack itemstack) {
-        return true;
     }
 
     public void setSource(BlockPos blockPos, boolean remove, Integer setSourceUpdate) {

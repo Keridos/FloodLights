@@ -128,21 +128,17 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
     }
 
     @Override
-    public boolean isItemValidForSlot(int i, ItemStack itemstack) {
-        return isItemStackValidElectrical(itemstack);
-    }
-
-    @Override
-    public boolean canInsertItem(int i, ItemStack itemstack, EnumFacing facing) {
-        return isItemStackValidElectrical(itemstack);
+    protected boolean canInsertItem(ItemStack itemStack) {
+        return isItemStackValidElectrical(itemStack);
     }
 
     protected void tryDischargeItem(ItemStack itemStack) {
         if (itemStack != null) {
             if (ModCompatibility.IC2Loaded) {
-                if (inventory[0].getItem() instanceof IElectricItem) {
+                if (inventory.getStackInSlot(0).getItem() instanceof IElectricItem) {
                     double dischargeValue = (storage.getMaxEnergyStored() - (double) storage.getEnergyStored()) / 8.0D;
-                    storage.modifyEnergyStored(MathUtil.truncateDoubleToInt(8 * ElectricItem.manager.discharge(inventory[0], dischargeValue, 4, false, true, false)));
+                    storage.modifyEnergyStored(MathUtil.truncateDoubleToInt(
+                            8 * ElectricItem.manager.discharge(inventory.getStackInSlot(0), dischargeValue, 4, false, true, false)));
                 }
             }
             if (itemStack.getItem() instanceof IEnergyContainerItem) {

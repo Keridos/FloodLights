@@ -1,6 +1,5 @@
 package de.keridos.floodlights.client.gui.container;
 
-import de.keridos.floodlights.client.gui.slot.ElectricSlot;
 import de.keridos.floodlights.core.network.message.MessageTileEntityFL;
 import de.keridos.floodlights.handler.PacketHandler;
 import de.keridos.floodlights.tileentity.TileEntityFLElectric;
@@ -11,6 +10,11 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.SlotItemHandler;
+
+import javax.annotation.Nonnull;
 
 import static de.keridos.floodlights.util.GeneralUtil.isItemStackValidElectrical;
 
@@ -32,45 +36,55 @@ public class ContainerElectricFloodlight extends Container {
             this.addSlotToContainer(new Slot(invPlayer, x, 8 + x * 18, 116));
         }
 
-        this.addSlotToContainer(new ElectricSlot(entity, 0, 26, 22));
+        IItemHandler inventory = entity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+        addSlotToContainer(new SlotItemHandler(inventory, 0, 26, 22) {
+            @Override
+            public boolean isItemValid(@Nonnull ItemStack stack) {
+                return isItemStackValidElectrical(stack);
+            }
+
+            @Override
+            public void onSlotChanged() {
+                super.onSlotChanged();
+                entity.markDirty();
+            }
+        });
     }
 
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int i) {
         Slot slot = getSlot(i);
-        if (slot != null && slot.getHasStack()) {
+        if (slot.getHasStack()) {
             ItemStack itemstack = slot.getStack();
             ItemStack result = itemstack.copy();
-            if (!isItemStackValidElectrical(itemstack)) {
-                return null;
-            }
+
             if (i >= 36) {
                 if (!mergeItemStack(itemstack, 0, 36, false)) {
-                    return null;
+                    return ItemStack.EMPTY;
                 }
             } else if (!mergeItemStack(itemstack, 36, 36 + 1, false)) {
-                return null;
+                return ItemStack.EMPTY;
             }
             if (itemstack.getCount() == 0) {
-                slot.putStack(null);
+                slot.putStack(ItemStack.EMPTY);
             } else {
                 slot.onSlotChanged();
             }
             slot.onTake(player, itemstack);
             return result;
         }
-        return null;
+        return ItemStack.EMPTY;
     }
 
     @Override
     public boolean canInteractWith(EntityPlayer player) {
-        return electricFloodlight.isUsableByPlayer(player);  //To change body of implemented methods use File | Settings | File Templates.
+        return true;
     }
 
     @Override
     public void detectAndSendChanges() {
         super.detectAndSendChanges();
-        for (IContainerListener listener:listeners){
+        for (IContainerListener listener : listeners) {
             if (listener instanceof EntityPlayerMP) {
                 PacketHandler.INSTANCE.sendTo(new MessageTileEntityFL(electricFloodlight), (EntityPlayerMP) listener);
             }

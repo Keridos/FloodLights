@@ -34,10 +34,10 @@ public class TileEntityGrowLight extends TileEntityFLElectric {
 
     public void growSource(boolean remove) {
         int[] rotatedCoords = MathUtil.rotate(1, 0, 0, this.orientation);
-        
-        
+
+
         int x = this.pos.getX() + rotatedCoords[0];
-        int y = this.pos.getY()+ rotatedCoords[1];
+        int y = this.pos.getY() + rotatedCoords[1];
         int z = this.pos.getZ() + rotatedCoords[2];
         BlockPos blockPos = new BlockPos(x, y, z);
         if (remove) {
@@ -45,7 +45,7 @@ public class TileEntityGrowLight extends TileEntityFLElectric {
                 TileEntityPhantomLight light = (TileEntityPhantomLight) world.getTileEntity(blockPos);
                 light.removeSource(this.pos);
             }
-        } else if (world.getBlockState(blockPos).getBlock().isAir(world.getBlockState(blockPos),world,blockPos)) {
+        } else if (world.getBlockState(blockPos).getBlock().isAir(world.getBlockState(blockPos), world, blockPos)) {
             setLight(blockPos);
             world.setBlockState(blockPos, world.getBlockState(blockPos).withProperty(UPDATE, false));
         } else if (world.getBlockState(blockPos).getBlock() == ModBlocks.blockPhantomLight) {
@@ -60,7 +60,7 @@ public class TileEntityGrowLight extends TileEntityFLElectric {
         World world = this.getWorld();
         if (!world.isRemote) {
             int realEnergyUsage = ConfigHandler.energyUsageGrowLight;
-            tryDischargeItem(inventory[0]);
+            tryDischargeItem(inventory.getStackInSlot(0));
             if (timeout > 0) {
                 timeout--;
                 return;
@@ -71,8 +71,8 @@ public class TileEntityGrowLight extends TileEntityFLElectric {
                     BlockPos blockPosFront = new BlockPos(this.pos.getX() + this.orientation.getFrontOffsetX(), this.pos.getY() + this.orientation.getFrontOffsetY(), this.pos.getZ() + this.orientation.getFrontOffsetZ());
                     Block block = world.getBlockState(blockPosTarget).getBlock();
                     Block blockFront = world.getBlockState(blockPosFront).getBlock();
-                    if (GeneralUtil.isBlockValidGrowable(block, world, blockPosTarget) && blockFront.isAir(world.getBlockState(blockPosFront),world, blockPosFront)) {
-                        ((IGrowable) block).grow(world, RandomUtil.random, blockPosTarget,world.getBlockState(blockPosTarget));
+                    if (GeneralUtil.isBlockValidGrowable(block, world, blockPosTarget) && blockFront.isAir(world.getBlockState(blockPosFront), world, blockPosFront)) {
+                        ((IGrowable) block).grow(world, RandomUtil.random, blockPosTarget, world.getBlockState(blockPosTarget));
                     }
                     nextGrowTick = world.getWorldTime() + RandomUtil.getRandomTickTimeoutFromFloatChance(ConfigHandler.chanceGrowLight);
                 }
@@ -82,14 +82,14 @@ public class TileEntityGrowLight extends TileEntityFLElectric {
                         growSource(false);
                     }
                     world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, true), 2);
-                    world.markBlocksDirtyVertical(this.pos.getX(),this.pos.getZ(),this.pos.getX(),this.pos.getZ());
+                    world.markBlocksDirtyVertical(this.pos.getX(), this.pos.getZ(), this.pos.getX(), this.pos.getZ());
                     update = false;
                 } else if (!wasActive) {
                     if (mode == 0) {
                         growSource(false);
                     }
                     world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, true), 2);
-                    world.markBlocksDirtyVertical(this.pos.getX(),this.pos.getZ(),this.pos.getX(),this.pos.getZ());
+                    world.markBlocksDirtyVertical(this.pos.getX(), this.pos.getZ(), this.pos.getX(), this.pos.getZ());
                 }
                 if (storageEU >= (double) realEnergyUsage / 8.0D) {
                     storageEU -= (double) realEnergyUsage / 8.0D;
@@ -102,7 +102,7 @@ public class TileEntityGrowLight extends TileEntityFLElectric {
                     growSource(true);
                 }
                 world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, false), 2);
-                world.markBlocksDirtyVertical(this.pos.getX(),this.pos.getZ(),this.pos.getX(),this.pos.getZ());
+                world.markBlocksDirtyVertical(this.pos.getX(), this.pos.getZ(), this.pos.getX(), this.pos.getZ());
                 wasActive = false;
                 timeout = ConfigHandler.timeoutFloodlights;
                 update = false;

@@ -4,7 +4,6 @@ import de.keridos.floodlights.block.BlockFLColorableMachine;
 import de.keridos.floodlights.handler.ConfigHandler;
 import de.keridos.floodlights.reference.Names;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 
@@ -15,14 +14,15 @@ import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
  * This Class is the electric floodlight TileEntity.
  */
 
-public class TileEntityElectricFloodlight extends TileEntityFLElectric implements ISidedInventory {
+public class TileEntityElectricFloodlight extends TileEntityFLElectric {
     @Override
     public void update() {
         super.update();
         World world = this.getWorld();
         if (!world.isRemote) {
-            int realEnergyUsage = ConfigHandler.energyUsage * (mode == 0 ? 1 : 4);;
-            tryDischargeItem(inventory[0]);
+            int realEnergyUsage = ConfigHandler.energyUsage * (mode == 0 ? 1 : 4);
+            ;
+            tryDischargeItem(inventory.getStackInSlot(0));
             if (timeout > 0) {
                 timeout--;
                 return;
@@ -82,7 +82,8 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric implement
     public void changeMode(EntityPlayer player) {
         World world = this.getWorld();
         if (!world.isRemote) {
-            int realEnergyUsage = ConfigHandler.energyUsage * (mode == 0 ? 1 : 4);;
+            int realEnergyUsage = ConfigHandler.energyUsage * (mode == 0 ? 1 : 4);
+            ;
             removeSource(this.mode);
             mode = (mode == 2 ? 0 : mode + 1);
             if (active && (storage.getEnergyStored() >= realEnergyUsage || storageEU >= realEnergyUsage / 8.0D)) {
