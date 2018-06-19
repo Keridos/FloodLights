@@ -1,9 +1,11 @@
 package de.keridos.floodlights.tileentity;
 
+import de.keridos.floodlights.core.NetworkDataList;
 import de.keridos.floodlights.handler.ConfigHandler;
 import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.util.MathUtil;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
@@ -13,6 +15,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import static de.keridos.floodlights.block.BlockPhantomLight.UPDATE;
@@ -108,6 +111,19 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
         nbtTagCompound.setByte(Names.NBT.STATE, state);
         nbtTagCompound.setTag(Names.NBT.ITEMS, inventory.serializeNBT());
         return nbtTagCompound;
+    }
+
+    @Override
+    public NetworkDataList getSyncData(@Nonnull NetworkDataList data) {
+        super.getSyncData(data);
+        data.add(active);
+        return data;
+    }
+
+    @Override
+    public void applySyncData(ByteBuf buffer) {
+        super.applySyncData(buffer);
+        active = buffer.readBoolean();
     }
 
     @Override

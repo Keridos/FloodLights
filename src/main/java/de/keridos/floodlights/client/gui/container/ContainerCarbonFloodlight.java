@@ -43,6 +43,8 @@ public class ContainerCarbonFloodlight extends Container {
                 entity.markDirty();
             }
         });
+
+        entity.onInventoryOpen(invPlayer.player);
     }
 
     @Override

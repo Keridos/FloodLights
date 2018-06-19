@@ -31,7 +31,7 @@ public class GuiCarbonFloodlight extends GuiContainer {
         String guiText = safeLocalize(Names.Localizations.NONELECTRIC_GUI_TEXT) + ": "
                 + tileEntityCarbonFloodlight.timeRemaining / 1200
                 + safeLocalize(Names.Localizations.GUI_MINUTES_SHORT)
-                + tileEntityCarbonFloodlight.timeRemaining / 20 % 60
+                + String.format("%02d", tileEntityCarbonFloodlight.timeRemaining / 20 % 60)
                 + safeLocalize(Names.Localizations.GUI_SECONDS_SHORT);
         fontRenderer.drawString(guiText, 50, 26, 0x000000);
     }
