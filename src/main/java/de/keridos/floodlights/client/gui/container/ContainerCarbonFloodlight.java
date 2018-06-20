@@ -20,7 +20,10 @@ import static de.keridos.floodlights.util.GeneralUtil.getBurnTime;
  */
 public class ContainerCarbonFloodlight extends Container {
 
+    private TileEntityCarbonFloodlight entity;
+
     public ContainerCarbonFloodlight(InventoryPlayer invPlayer, TileEntityCarbonFloodlight entity) {
+        this.entity = entity;
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 9; x++) {
                 this.addSlotToContainer(new Slot(invPlayer, 9 + x + y * 9, 8 + x * 18, 58 + y * 18));
@@ -45,6 +48,12 @@ public class ContainerCarbonFloodlight extends Container {
         });
 
         entity.onInventoryOpen(invPlayer.player);
+    }
+
+    @Override
+    public void onContainerClosed(EntityPlayer playerIn) {
+        super.onContainerClosed(playerIn);
+        entity.onInventoryClose(playerIn);
     }
 
     @Override
