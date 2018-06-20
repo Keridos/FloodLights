@@ -1,0 +1,24 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "result": {
+        "item": "floodlights:mantle"
+    },
+    "conditions": [
+        {
+            "type": "floodlights:carbon_floodlight"
+        }
+    ],
+    "pattern": [
+        "SSS",
+        "SRS",
+        "SSS"
+    ],
+    "key": {
+        "R": {
+            "item": "minecraft:redstone"
+        },
+        "S": {
+            "item": "minecraft:string"
+        }
+    }
+}

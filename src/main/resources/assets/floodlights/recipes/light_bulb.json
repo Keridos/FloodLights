@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "result": {
+        "item": "floodlights:electric_incandescent_light_bulb"
+    },
+    "conditions": [
+        {
+            "type": "floodlights:electric_ingredients"
+        }
+    ],
+    "pattern": [
+        " G ",
+        "GFG",
+        " I "
+    ],
+    "key": {
+        "G": {
+            "item": "minecraft:glass_pane"
+        },
+        "F": {
+            "item": "floodlights:glowing_filament"
+        },
+        "I": {
+            "type": "forge:ore_dict",
+            "ore": "ingotIron"
+        }
+    }
+}

@@ -1,0 +1,33 @@
+{
+    "type": "forge:ore_shaped",
+    "result": {
+        "item": "floodlights:uv_floodlight"
+    },
+    "conditions": [
+        {
+            "type": "floodlights:uv_floodlight"
+        }
+    ],
+    "pattern": [
+        "CIC",
+        "IGB",
+        "CIC"
+    ],
+    "key": {
+        "C": {
+            "type": "forge:ore_dict",
+            "ore": "cobblestone"
+        },
+        "I": {
+            "type": "forge:ore_dict",
+            "ore": "ingotIron"
+        },
+        "B": {
+            "item": "floodlights:electric_incandescent_light_bulb"
+        },
+        "G": {
+            "type": "forge:ore_dict",
+            "ore": "blockGlass"
+        }
+    }
+}

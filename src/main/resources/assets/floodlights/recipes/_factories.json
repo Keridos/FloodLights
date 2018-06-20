@@ -1,0 +1,10 @@
+{
+    "conditions": {
+        "electric_ingredients": "de.keridos.floodlights.handler.RecipeConditions$ElectricIngredientsCondition",
+        "electric_floodlight": "de.keridos.floodlights.handler.RecipeConditions$ElectricFloodlightCondition",
+        "small_electric_floodlight": "de.keridos.floodlights.handler.RecipeConditions$SmallElectricFloodlightCondition",
+        "carbon_floodlight": "de.keridos.floodlights.handler.RecipeConditions$CarbonFloodlightCondition",
+        "uv_floodlight": "de.keridos.floodlights.handler.RecipeConditions$UVFloodlightCondition",
+        "grow_light": "de.keridos.floodlights.handler.RecipeConditions$GrowLightCondition"
+    }
+}

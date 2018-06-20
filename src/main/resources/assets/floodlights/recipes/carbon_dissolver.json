@@ -1,0 +1,27 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "result": {
+        "item": "floodlights:carbon_dissolver"
+    },
+    "conditions": [
+        {
+            "type": "floodlights:carbon_floodlight"
+        }
+    ],
+    "pattern": [
+        "GRG",
+        "IGI",
+        " R "
+    ],
+    "key": {
+        "R": {
+            "item": "minecraft:redstone"
+        },
+        "G": {
+            "item": "minecraft:glass_pane"
+        },
+        "I": {
+            "item": "minecraft:iron_ingot"
+        }
+    }
+}

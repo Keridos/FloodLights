@@ -1,0 +1,18 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "result": {
+        "item": "floodlights:small_electric_floodlight_meta_block",
+        "data": 0
+    },
+    "conditions": [
+        {
+            "type": "floodlights:small_electric_floodlight"
+        }
+    ],
+    "ingredients": [
+        {
+            "item": "floodlights:small_electric_floodlight_meta_block",
+            "data": 1
+        }
+    ]
+}

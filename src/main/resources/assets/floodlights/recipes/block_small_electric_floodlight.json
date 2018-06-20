@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "result": {
+        "item": "floodlights:small_electric_floodlight_meta_block",
+        "data": 0
+    },
+    "conditions": [
+        {
+            "type": "floodlights:small_electric_floodlight"
+        }
+    ],
+    "pattern": [
+        " G ",
+        "GBG",
+        "III"
+    ],
+    "key": {
+        "I": {
+            "item": "minecraft:iron_ingot"
+        },
+        "B": {
+            "item": "floodlights:electric_incandescent_light_bulb"
+        },
+        "G": {
+            "item": "minecraft:glass"
+        }
+    }
+}

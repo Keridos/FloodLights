@@ -1,0 +1,27 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "result": {
+        "item": "floodlights:raw_filament"
+    },
+    "conditions": [
+        {
+            "type": "floodlights:electric_ingredients"
+        }
+    ],
+    "pattern": [
+        " L ",
+        "RGR",
+        " L "
+    ],
+    "key": {
+        "R": {
+            "item": "minecraft:redstone"
+        },
+        "G": {
+            "item": "minecraft:gold_ingot"
+        },
+        "L": {
+            "item": "minecraft:glowstone_dust"
+        }
+    }
+}

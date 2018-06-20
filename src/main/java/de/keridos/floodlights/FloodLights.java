@@ -5,10 +5,12 @@ import de.keridos.floodlights.core.proxy.CommonProxy;
 import de.keridos.floodlights.handler.ConfigHandler;
 import de.keridos.floodlights.handler.GuiHandler;
 import de.keridos.floodlights.handler.PacketHandler;
-import de.keridos.floodlights.handler.RecipeHandler;
 import de.keridos.floodlights.init.ModBlocks;
+import de.keridos.floodlights.init.ModItems;
 import de.keridos.floodlights.reference.Reference;
 import de.keridos.floodlights.util.RandomUtil;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Mod;
@@ -38,7 +40,6 @@ public class FloodLights {
     public static CommonProxy proxy;
 
     private static ConfigHandler configHandler = null;
-    private static RecipeHandler recipeHandler = null;
     private static ModCompatibility modCompatibility = null;
     private static GuiHandler Gui;
 
@@ -57,10 +58,8 @@ public class FloodLights {
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
-        recipeHandler = RecipeHandler.getInstance();
         modCompatibility = ModCompatibility.getInstance();
         PacketHandler.init();
-        recipeHandler.initRecipes();
         modCompatibility.performModCompat();
         registerEventListeners();
         RandomUtil.init();
@@ -69,6 +68,9 @@ public class FloodLights {
         proxy.initSounds();
         proxy.initHandlers();
         Gui = GuiHandler.getInstance();
+
+        if (ConfigHandler.electricFloodlight || ConfigHandler.smallElectricFloodlight || ConfigHandler.uvFloodlight)
+            FurnaceRecipes.instance().addSmeltingRecipe(new ItemStack(ModItems.rawFilament, 1), new ItemStack(ModItems.glowingFilament, 1), 0.1F);
     }
 
     @Mod.EventHandler

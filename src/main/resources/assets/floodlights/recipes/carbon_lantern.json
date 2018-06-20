@@ -1,0 +1,33 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "result": {
+        "item": "floodlights:carbon_lantern"
+    },
+    "conditions": [
+        {
+            "type": "floodlights:carbon_floodlight"
+        }
+    ],
+    "pattern": [
+        " G ",
+        "GMG",
+        "DFI"
+    ],
+    "key": {
+        "G": {
+            "item": "minecraft:glass_pane"
+        },
+        "M": {
+            "item": "floodlights:mantle"
+        },
+        "I": {
+            "item": "minecraft:iron_ingot"
+        },
+        "D": {
+            "item": "floodlights:carbon_dissolver"
+        },
+        "F": {
+            "item": "minecraft:flint_and_steel"
+        }
+    }
+}
