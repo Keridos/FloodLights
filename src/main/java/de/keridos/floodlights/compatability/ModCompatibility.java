@@ -7,7 +7,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModAPIManager;
-import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
 
 /**
@@ -15,6 +14,7 @@ import net.minecraftforge.fml.common.event.FMLInterModComms;
  * This Class will be used for Mod Compatibility functions.
  */
 
+@SuppressWarnings("WeakerAccess")
 public class ModCompatibility {
     private static ModCompatibility instance = null;
 
@@ -43,23 +43,16 @@ public class ModCompatibility {
     }
 
     private void checkForMods() {
-        IC2Loaded = Loader.isModLoaded("IC2");
-        IGWModLoaded = Loader.isModLoaded("IGWMod");
+        IC2Loaded = Loader.isModLoaded("ic2");
+        IGWModLoaded = Loader.isModLoaded("igwmod");
         BCLoaded = ModAPIManager.INSTANCE.hasAPI("BuildCraftAPI|tools");
-        CofhCoreLoaded = ModAPIManager.INSTANCE.hasAPI("CoFHAPI|item");
-        NEILoaded = Loader.isModLoaded("NotEnoughItems");
-        JEILoaded = Loader.isModLoaded("JEI");
-        EnderIOLoaded = Loader.isModLoaded("EnderIO");
+        CofhCoreLoaded = ModAPIManager.INSTANCE.hasAPI("cofhapi");
+        NEILoaded = Loader.isModLoaded("notenoughitems");
+        JEILoaded = Loader.isModLoaded("jei");
+        EnderIOLoaded = Loader.isModLoaded("enderio");
         ColoredLightCoreLoaded = Loader.isModLoaded("coloredlightcore");
-        ACLoaded = Loader.isModLoaded("AgriCraft");
+        ACLoaded = Loader.isModLoaded("agricraft");
     }
-
-    @Optional.Method(modid = "NotEnoughItems")
-    private void hideNEIItems() {
-        //hideItem(new ItemStack(ModBlocks.blockPhantomLight));
-        //hideItem(new ItemStack(ModBlocks.blockUVLightBlock));
-    }
-
 
     private void addVersionCheckerInfo() {
         NBTTagCompound versionchecker = new NBTTagCompound();
@@ -74,9 +67,6 @@ public class ModCompatibility {
         checkForMods();
         if (ConfigHandler.IGWNotifierEnabled) {
             new IGWSupportNotifier();
-        }
-        if (NEILoaded) {
-            hideNEIItems();
         }
         addVersionCheckerInfo();
         //FMLInterModComms.sendMessage("Waila", "register", "de.keridos.floodlights.compatability.WailaTileHandler.callbackRegister");
@@ -103,9 +93,7 @@ public class ModCompatibility {
             if (stack.getItem().getUnlocalizedName().equals("ic2.itemToolWrench")) {
                 return true;
             }
-            if (stack.getItem().getUnlocalizedName().equals("ic2.itemToolWrenchElectric")) {
-                return true;
-            }
+            return stack.getItem().getUnlocalizedName().equals("ic2.itemToolWrenchElectric");
         }
         return false;
     }
