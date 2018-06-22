@@ -6,7 +6,6 @@ import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.util.MathUtil;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -38,10 +37,10 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
         return nbtTagCompound;
     }
 
-    @Override
+    /*@Override
     public boolean canConnectEnergy(EnumFacing facing) {
         return (facing.getOpposite().ordinal() == orientation.ordinal());
-    }
+    }*/
 
     public void toggleRotationState() {
         rotationState = !rotationState;
@@ -106,7 +105,7 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
                 timeout--;
                 return;
             }
-            if (active && (storage.getEnergyStored() >= realEnergyUsage || storageEU >= (double) realEnergyUsage / 8.0D)) {
+            if (active && energy.getEnergyStored() >= realEnergyUsage) {
                 if (update) {
                     smallSource(true);
                     smallSource(false);
@@ -118,15 +117,11 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
                     smallSource(false);
                     world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, true), 2);
                     world.markBlocksDirtyVertical(this.pos.getX(), this.pos.getZ(), this.pos.getX(), this.pos.getZ());
-                    ;
                 }
-                if (storageEU >= (double) realEnergyUsage / 8.0D) {
-                    storageEU -= (double) realEnergyUsage / 8.0D;
-                } else {
-                    storage.modifyEnergyStored(-realEnergyUsage);
-                }
+
+                energy.extractEnergy(realEnergyUsage, false);
                 wasActive = true;
-            } else if ((!active || (storage.getEnergyStored() < realEnergyUsage && storageEU < (double) realEnergyUsage / 8.0D)) && wasActive) {
+            } else if ((!active || energy.getEnergyStored() < realEnergyUsage) && wasActive) {
                 smallSource(true);
                 world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, false), 2);
                 world.markBlocksDirtyVertical(this.pos.getX(), this.pos.getZ(), this.pos.getX(), this.pos.getZ());

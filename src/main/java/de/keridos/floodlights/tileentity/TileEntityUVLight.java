@@ -66,7 +66,7 @@ public class TileEntityUVLight extends TileEntityFLElectric {
         if (!world.isRemote) {
             int realEnergyUsage = ConfigHandler.energyUsageUVFloodlight;
             tryDischargeItem(inventory.getStackInSlot(0));
-            if (active && (storage.getEnergyStored() >= realEnergyUsage || storageEU >= (double) realEnergyUsage / 8.0D)) {
+            if (active && energy.getEnergyStored() >= realEnergyUsage) {
                 if (update) {
                     UVSource(true);
                     UVSource(false);
@@ -76,13 +76,10 @@ public class TileEntityUVLight extends TileEntityFLElectric {
                     UVSource(false);
                     world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, true), 2);
                 }
-                if (storageEU >= (double) realEnergyUsage / 8.0D) {
-                    storageEU -= (double) realEnergyUsage / 8.0D;
-                } else {
-                    storage.modifyEnergyStored(-realEnergyUsage);
-                }
+
+                energy.extractEnergy(realEnergyUsage, false);
                 wasActive = true;
-            } else if ((!active || (storage.getEnergyStored() < realEnergyUsage && storageEU < (double) realEnergyUsage / 8.0D)) && wasActive) {
+            } else if ((!active || energy.getEnergyStored() < realEnergyUsage) && wasActive) {
                 UVSource(true);
                 world.setBlockState(this.pos, world.getBlockState(this.pos).getBlock().getStateFromMeta(this.getOrientation().ordinal()), 2);
                 wasActive = false;

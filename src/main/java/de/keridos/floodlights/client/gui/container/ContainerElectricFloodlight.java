@@ -84,6 +84,8 @@ public class ContainerElectricFloodlight extends Container {
     @Override
     public void detectAndSendChanges() {
         super.detectAndSendChanges();
+
+        // TODO: inefficient solution: use single packet when inventory is being opened
         for (IContainerListener listener : listeners) {
             if (listener instanceof EntityPlayerMP) {
                 PacketHandler.INSTANCE.sendTo(new MessageTileEntityFL(electricFloodlight), (EntityPlayerMP) listener);

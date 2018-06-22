@@ -60,6 +60,14 @@ repositories {
         name = "ic2"
         url = "http://maven.ic2.player.to/"
     }
+    maven {
+        name = "CoFHCore"
+        url = "http://maven.covers1624.net"
+    }
+    maven {
+        name = "ChickenBones"
+        url = "http://chickenbones.net/maven/"
+    }
     if (new File("curseKey.properties").exists()) {
         //maven {
         //    name = "CurseForge"
@@ -151,6 +159,7 @@ dependencies {
     compile "com.enderio.core:EnderCore:${config.minecraft_version}-${config.endercore_version}"
 
     compile "mcp.mobius.waila:Hwyla:${config.hwyla_version}"
+    compile "cofh:RedstoneFlux:${config.redstoneflux_version}:deobf"
 
     if (new File("curseKey.properties").exists()) {
 

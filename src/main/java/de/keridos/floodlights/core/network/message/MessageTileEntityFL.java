@@ -5,7 +5,6 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -83,7 +82,7 @@ public class MessageTileEntityFL implements IMessage {
                 this.rotationState = false;
             }
             if (tileEntity instanceof TileEntityFLElectric) {
-                this.rfStorage = ((TileEntityFLElectric) tileEntity).getEnergyStored(EnumFacing.UP);
+                this.rfStorage = ((TileEntityFLElectric) tileEntity).energy.getEnergyStored();
             } else {
                 this.rfStorage = 0;
             }

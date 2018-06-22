@@ -30,9 +30,9 @@ public class GuiElectricFloodlight extends GuiContainer {
     @Override
     protected void drawGuiContainerForegroundLayer(int par1, int par2) {
         String guiText = safeLocalize(Names.Localizations.RF_STORAGE) + ": "
-                + tileEntityFLElectric.getEnergyStored(EnumFacing.DOWN) / 1000 + "."
-                + tileEntityFLElectric.getEnergyStored(EnumFacing.DOWN) % 1000 / 100 + "k/"
-                + tileEntityFLElectric.getMaxEnergyStored(EnumFacing.DOWN) / 1000 + "k";
+                + tileEntityFLElectric.energy.getEnergyStored() / 1000 + "."
+                + tileEntityFLElectric.energy.getEnergyStored() % 1000 / 100 + "k/"
+                + tileEntityFLElectric.energy.getMaxEnergyStored() / 1000 + "k";
         fontRenderer.drawString(guiText, 50, 26, 0x000000);
     }
 

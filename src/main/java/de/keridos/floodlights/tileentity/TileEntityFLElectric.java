@@ -1,9 +1,6 @@
 package de.keridos.floodlights.tileentity;
 
-import cofh.api.energy.EnergyStorage;
-import cofh.api.energy.IEnergyContainerItem;
-import cofh.api.energy.IEnergyHandler;
-import cofh.api.energy.IEnergyReceiver;
+import cofh.redstoneflux.api.IEnergyContainerItem;
 import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.util.MathUtil;
@@ -17,22 +14,28 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.fml.common.Optional;
 
-import static de.keridos.floodlights.util.GeneralUtil.isItemStackValidElectrical;
+import javax.annotation.Nullable;
 
 /**
  * Created by Keridos on 04.05.2015.
  * This Class
  */
 
+@SuppressWarnings("WeakerAccess")
 @Optional.InterfaceList({
-        @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink", modid = "IC2"),
-        @Optional.Interface(iface = "gregtech.api.interfaces.tileentity.IEnergyConnected", modid = "GregTech")})
-public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IEnergyHandler, IEnergyReceiver, IEnergySink {
+        @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink", modid = "ic2")})
+public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IEnergySink {
+
+    // 1 EU = 4 RF
+    private static final int EU_TO_RF_RATE = 4;
+
     protected boolean wasAddedToEnergyNet = false;
-    protected double storageEU;
-    protected EnergyStorage storage = new EnergyStorage(50000);
+    public CustomEnergyStorage energy = new CustomEnergyStorage(50000);
 
     public TileEntityFLElectric() {
         super();
@@ -41,75 +44,59 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
     @Override
     public void readFromNBT(NBTTagCompound nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
-        storage.readFromNBT(nbtTagCompound);
-        if (nbtTagCompound.hasKey(Names.NBT.STORAGE_EU)) {
-            this.storageEU = nbtTagCompound.getDouble(Names.NBT.STORAGE_EU);
-        }
+        energy.readFromNBT(nbtTagCompound);
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound nbtTagCompound) {
         nbtTagCompound = super.writeToNBT(nbtTagCompound);
-        storage.writeToNBT(nbtTagCompound);
-        nbtTagCompound.setDouble(Names.NBT.STORAGE_EU, storageEU);
+        energy.writeToNBT(nbtTagCompound);
         return nbtTagCompound;
     }
 
     @Override
-    public boolean canConnectEnergy(EnumFacing facing) {
-        return true;
+    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+        return capability == CapabilityEnergy.ENERGY || super.hasCapability(capability, facing);
     }
 
+    @SuppressWarnings("unchecked")
+    @Nullable
     @Override
-    public int receiveEnergy(EnumFacing facing, int maxReceive, boolean simulate) {
-        return storage.receiveEnergy(maxReceive, simulate);
-    }
-
-    @Override
-    public int getEnergyStored(EnumFacing facing) {
-        return storage.getEnergyStored();
-    }
-
-    @Override
-    public int getMaxEnergyStored(EnumFacing facing) {
-        return storage.getMaxEnergyStored();
+    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+        if (capability == CapabilityEnergy.ENERGY)
+            return (T) energy;
+        return super.getCapability(capability, facing);
     }
 
     public void setEnergyStored(int energyStored) {
-        storage.setEnergyStored(energyStored);
+        energy.setEnergyStored(energyStored);
     }
 
-    @Optional.Method(modid = "IC2")
+    @Optional.Method(modid = "ic2")
     @Override
-    public double injectEnergy(EnumFacing forgeDirection, double v, double v1) {
-        if ((double) (storage.getMaxEnergyStored() - storage.getEnergyStored()) >= (v * 8.0D)) {
-            storage.modifyEnergyStored(MathUtil.truncateDoubleToInt(v * 8.0D));
-        } else {
-            storageEU += v - ((double) (storage.getMaxEnergyStored() - storage.getEnergyStored()) / 8.0D);
-            storage.modifyEnergyStored(MathUtil.truncateDoubleToInt(v * 8.0D));
-        }
-        return 0.0D;
+    public double injectEnergy(EnumFacing forgeDirection, double amount, double voltage) {
+        return energy.receiveEU(amount);
     }
 
-    @Optional.Method(modid = "IC2")
+    @Optional.Method(modid = "ic2")
     @Override
     public int getSinkTier() {
         return 4;
     }
 
-    @Optional.Method(modid = "IC2")
+    @Optional.Method(modid = "ic2")
     @Override
     public double getDemandedEnergy() {
-        return Math.max(4000D - storageEU, 0.0D);
+        return energy.getMaxEnergyStored() / EU_TO_RF_RATE;
     }
 
-    @Optional.Method(modid = "IC2")
+    @Optional.Method(modid = "ic2")
     @Override
     public boolean acceptsEnergyFrom(IEnergyEmitter iEnergyEmitter, EnumFacing forgeDirection) {
         return true;
     }
 
-    @Optional.Method(modid = "IC2")
+    @Optional.Method(modid = "ic2")
     public void addToIc2EnergyNetwork() {
         if (!world.isRemote) {
             EnergyTileLoadEvent event = new EnergyTileLoadEvent(this);
@@ -117,7 +104,7 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
         }
     }
 
-    @Optional.Method(modid = "IC2")
+    @Optional.Method(modid = "ic2")
     @Override
     public void invalidate() {
         super.invalidate();
@@ -131,15 +118,15 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
         if (itemStack != null) {
             if (ModCompatibility.IC2Loaded) {
                 if (inventory.getStackInSlot(0).getItem() instanceof IElectricItem) {
-                    double dischargeValue = (storage.getMaxEnergyStored() - (double) storage.getEnergyStored()) / 8.0D;
-                    storage.modifyEnergyStored(MathUtil.truncateDoubleToInt(
-                            8 * ElectricItem.manager.discharge(inventory.getStackInSlot(0), dischargeValue, 4, false, true, false)));
+                    double dischargeValue = (energy.getMaxEnergyStored() - (double) energy.getEnergyStored()) / 8.0D;
+                    double discharged = ElectricItem.manager.discharge(inventory.getStackInSlot(0), dischargeValue, 4, false, true, false);
+                    energy.receiveEnergy(MathUtil.truncateDoubleToInt(8 * discharged), false);
                 }
             }
             if (itemStack.getItem() instanceof IEnergyContainerItem) {
                 IEnergyContainerItem item = (IEnergyContainerItem) itemStack.getItem();
-                int dischargeValue = Math.min(item.getEnergyStored(itemStack), (storage.getMaxEnergyStored() - storage.getEnergyStored()));
-                storage.modifyEnergyStored(item.extractEnergy(itemStack, dischargeValue, false));
+                int dischargeValue = Math.min(item.getEnergyStored(itemStack), (energy.getMaxEnergyStored() - energy.getEnergyStored()));
+                energy.receiveEnergy(item.extractEnergy(itemStack, dischargeValue, false), false);
             }
         }
     }
@@ -150,6 +137,31 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
         if (ModCompatibility.IC2Loaded && !wasAddedToEnergyNet && !world.isRemote) {
             addToIc2EnergyNetwork();
             wasAddedToEnergyNet = true;
+        }
+    }
+
+    public static class CustomEnergyStorage extends EnergyStorage {
+
+        public CustomEnergyStorage(int capacity) {
+            super(capacity);
+        }
+
+        public void setEnergyStored(int energy) {
+            this.energy = Math.max(0, Math.min(energy, capacity));
+        }
+
+        public double receiveEU(double amount) {
+            int received = receiveEnergy((int) Math.round(amount * EU_TO_RF_RATE), false);
+            return amount - received / EU_TO_RF_RATE;
+        }
+
+        public void readFromNBT(NBTTagCompound nbtTagCompound) {
+            if (nbtTagCompound.hasKey(Names.NBT.STORAGE_FE))
+                setEnergyStored(nbtTagCompound.getInteger(Names.NBT.STORAGE_FE));
+        }
+
+        public void writeToNBT(NBTTagCompound nbtTagCompound) {
+            nbtTagCompound.setInteger(Names.NBT.STORAGE_FE, energy);
         }
     }
 }

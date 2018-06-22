@@ -48,6 +48,7 @@ public class Names {
         public static final String ITEMS = "Items";
         public static final String INVERT = "inverted";
         public static final String TIME_REMAINING = "timeRemaining";
+        public static final String STORAGE_FE = "storageFE";
         public static final String STORAGE_EU = "storageEU";
         public static final String COLOR = "color";
         public static final String MODE = "teState";

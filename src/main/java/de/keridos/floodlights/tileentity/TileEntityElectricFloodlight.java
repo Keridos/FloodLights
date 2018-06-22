@@ -26,7 +26,7 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric {
                 timeout--;
                 return;
             }
-            if (active && (storage.getEnergyStored() >= realEnergyUsage || storageEU >= (double) realEnergyUsage / 8.0D)) {
+            if (active && (energy.getEnergyStored() >= realEnergyUsage)) {
                 if (update) {
                     removeSource(this._mode);
                     addSource(this._mode);
@@ -36,13 +36,10 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric {
                     addSource(this._mode);
                     world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, true), 2);
                 }
-                if (storageEU >= (double) realEnergyUsage / 8.0D) {
-                    storageEU -= (double) realEnergyUsage / 8.0D;
-                } else {
-                    storage.modifyEnergyStored(-realEnergyUsage);
-                }
+
+                energy.extractEnergy(realEnergyUsage, false);
                 wasActive = true;
-            } else if ((!active || (storage.getEnergyStored() < realEnergyUsage && storageEU < (double) realEnergyUsage / 8.0D)) && wasActive) {
+            } else if ((!active || energy.getEnergyStored() < realEnergyUsage) && wasActive) {
                 removeSource(this._mode);
                 world.setBlockState(this.pos, world.getBlockState(this.pos).getBlock().getStateFromMeta(this.getOrientation().ordinal()), 2);
                 wasActive = false;
@@ -85,7 +82,7 @@ public class TileEntityElectricFloodlight extends TileEntityFLElectric {
 
             removeSource(this._mode);
             _mode = (_mode == LIGHT_MODE_WIDE_CONE ? LIGHT_MODE_STRAIGHT : _mode + 1);
-            if (active && (storage.getEnergyStored() >= realEnergyUsage || storageEU >= realEnergyUsage / 8.0D)) {
+            if (active && energy.getEnergyStored() >= realEnergyUsage) {
                 addSource(this._mode);
             }
             String modeString = "";

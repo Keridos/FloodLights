@@ -1,6 +1,6 @@
 package de.keridos.floodlights.util;
 
-import cofh.api.energy.IEnergyContainerItem;
+import cofh.redstoneflux.api.IEnergyContainerItem;
 import de.keridos.floodlights.compatability.ModCompatibility;
 import ic2.api.item.IElectricItem;
 import net.minecraft.block.Block;

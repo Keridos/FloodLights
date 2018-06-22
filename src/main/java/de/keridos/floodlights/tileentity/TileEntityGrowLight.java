@@ -10,7 +10,6 @@ import de.keridos.floodlights.util.RandomUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.IGrowable;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
@@ -26,10 +25,10 @@ import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
 public class TileEntityGrowLight extends TileEntityFLElectric {
     private long nextGrowTick = 0;
 
-    @Override
+    /*@Override
     public boolean canConnectEnergy(EnumFacing from) {
         return (from.getOpposite().ordinal() == orientation.ordinal());
-    }
+    }*/
 
 
     @SuppressWarnings("ConstantConditions")
@@ -66,7 +65,7 @@ public class TileEntityGrowLight extends TileEntityFLElectric {
                 timeout--;
                 return;
             }
-            if (active && (storage.getEnergyStored() >= realEnergyUsage || storageEU >= (double) realEnergyUsage / 8.0D)) {
+            if (active && energy.getEnergyStored() >= realEnergyUsage) {
                 if (world.getWorldTime() > nextGrowTick) {
                     BlockPos blockPosTarget = new BlockPos(this.pos.getX() + this.orientation.getFrontOffsetX() * 2, this.pos.getY() + this.orientation.getFrontOffsetY() * 2, this.pos.getZ() + this.orientation.getFrontOffsetZ() * 2);
                     BlockPos blockPosFront = new BlockPos(this.pos.getX() + this.orientation.getFrontOffsetX(), this.pos.getY() + this.orientation.getFrontOffsetY(), this.pos.getZ() + this.orientation.getFrontOffsetZ());
@@ -92,13 +91,10 @@ public class TileEntityGrowLight extends TileEntityFLElectric {
                     world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, true), 2);
                     world.markBlocksDirtyVertical(this.pos.getX(), this.pos.getZ(), this.pos.getX(), this.pos.getZ());
                 }
-                if (storageEU >= (double) realEnergyUsage / 8.0D) {
-                    storageEU -= (double) realEnergyUsage / 8.0D;
-                } else {
-                    storage.modifyEnergyStored(-realEnergyUsage);
-                }
+
+                energy.extractEnergy(realEnergyUsage, false);
                 wasActive = true;
-            } else if ((!active || (storage.getEnergyStored() < realEnergyUsage && storageEU < (double) realEnergyUsage / 8.0D)) && wasActive) {
+            } else if ((!active || energy.getEnergyStored() < realEnergyUsage) && wasActive) {
                 if (_mode == LIGHT_MODE_STRAIGHT) {
                     growSource(true);
                 }
@@ -118,8 +114,7 @@ public class TileEntityGrowLight extends TileEntityFLElectric {
                 growSource(true);
             }
             _mode = (_mode == LIGHT_MODE_NARROW_CONE ? LIGHT_MODE_STRAIGHT : _mode + 1);
-            if (active && (storage.getEnergyStored() >= ConfigHandler.energyUsage
-                    || storageEU >= ConfigHandler.energyUsage / 8.0D) && _mode == LIGHT_MODE_STRAIGHT) {
+            if (active && energy.getEnergyStored() >= ConfigHandler.energyUsage && _mode == LIGHT_MODE_STRAIGHT) {
                 growSource(false);
             }
             String modeString = (_mode == LIGHT_MODE_STRAIGHT ? Names.Localizations.LIGHTING : Names.Localizations.DARK_LIGHT);
