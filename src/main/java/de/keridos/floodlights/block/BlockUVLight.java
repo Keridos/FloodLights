@@ -19,8 +19,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 
-import javax.annotation.Nullable;
-
 import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
 
 /**
@@ -73,7 +71,7 @@ public class BlockUVLight extends BlockFLColorableMachine implements ITileEntity
 
     @Override
     public void breakBlock(World world, BlockPos pos, IBlockState blockState) {
-        ((TileEntityUVLight) world.getTileEntity(pos)).UVSource(true);
+        ((TileEntityUVLight) world.getTileEntity(pos)).uvSource(true);
         super.breakBlock(world, pos, blockState);
     }
 }

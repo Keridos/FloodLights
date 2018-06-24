@@ -1,6 +1,6 @@
 {
 	"parent": "minecraft:block/cube_all",
 	"textures": {
-		"all": "floodlights:blocks/tileUVLight"
+		"all": "floodlights:blocks/tile_uv_light"
 	}
 }
