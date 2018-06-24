@@ -1,7 +1,7 @@
 package de.keridos.floodlights.client.render.block;
 
 import de.keridos.floodlights.item.ItemLightDebugTool;
-import de.keridos.floodlights.tileentity.TileEntityUVLightBlock;
+import de.keridos.floodlights.tileentity.TileEntityPhantomUVLight;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
@@ -66,7 +66,7 @@ public class TileEntityPhantomLightRenderer extends TileEntitySpecialRenderer {
     @Override
     public void render(TileEntity te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         EntityPlayer player = Minecraft.getMinecraft().player;
-        if (player.getHeldItem(EnumHand.MAIN_HAND) == null || !(player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof ItemLightDebugTool) || te instanceof TileEntityUVLightBlock) {
+        if (player.getHeldItem(EnumHand.MAIN_HAND) == null || !(player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof ItemLightDebugTool) || te instanceof TileEntityPhantomUVLight) {
             return;
         }
         try {

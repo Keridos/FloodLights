@@ -3,7 +3,7 @@ package de.keridos.floodlights.block;
 import de.keridos.floodlights.handler.ConfigHandler;
 import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.reference.Names;
-import de.keridos.floodlights.tileentity.TileEntityUVLightBlock;
+import de.keridos.floodlights.tileentity.TileEntityPhantomUVLight;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -20,15 +20,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Created by Keridos on 15/09/2015.
  * This Class
  */
-public class BlockUVLightBlock extends BlockPhantomLight {
+public class BlockPhantomUVLight extends BlockPhantomLight {
 
-    public BlockUVLightBlock() {
-        super(Names.Blocks.UV_LIGHTBLOCK, Material.AIR, SoundType.CLOTH, 0.0F);
+    public BlockPhantomUVLight() {
+        super(Names.Blocks.PHANTOM_UV_LIGHT, Material.AIR, SoundType.CLOTH, 0.0F);
     }
 
     @Override
-    public TileEntityUVLightBlock createNewTileEntity(World world, int metadata) {
-        return new TileEntityUVLightBlock();
+    public TileEntityPhantomUVLight createNewTileEntity(World world, int metadata) {
+        return new TileEntityPhantomUVLight();
     }
 
     @Override
@@ -38,7 +38,7 @@ public class BlockUVLightBlock extends BlockPhantomLight {
 
     @Override
     public boolean shouldSideBeRendered(IBlockState state,IBlockAccess world, BlockPos pos, EnumFacing side) {
-        return ConfigHandler.uvLightRendered && (!world.getBlockState(pos.offset(side)).getBlock().isOpaqueCube(world.getBlockState(pos.offset(side))) && world.getBlockState(pos.offset(side)).getBlock() != ModBlocks.blockUVLightBlock);
+        return ConfigHandler.uvLightRendered && (!world.getBlockState(pos.offset(side)).getBlock().isOpaqueCube(world.getBlockState(pos.offset(side))) && world.getBlockState(pos.offset(side)).getBlock() != ModBlocks.blockPhantomUVLight);
     }
 
     @Override

@@ -13,9 +13,9 @@ import java.util.ListIterator;
  * Created by Keridos on 15/09/2015.
  * This Class
  */
-public class TileEntityUVLightBlock extends TileEntityPhantomLight implements ITickable {
+public class TileEntityPhantomUVLight extends TileEntityPhantomLight implements ITickable {
 
-    public TileEntityUVLightBlock() {
+    public TileEntityPhantomUVLight() {
         super();
     }
 

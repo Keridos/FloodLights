@@ -5,7 +5,7 @@ import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.tileentity.TileEntityFL;
 import de.keridos.floodlights.tileentity.TileEntityMetaFloodlight;
-import de.keridos.floodlights.tileentity.TileEntityUVLight;
+import de.keridos.floodlights.tileentity.TileEntityUVFloodlight;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -25,9 +25,9 @@ import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
  * Created by Keridos on 15/09/2015.
  * This Class
  */
-public class BlockUVLight extends BlockFLColorableMachine implements ITileEntityProvider {
+public class BlockUVFloodlight extends BlockFLColorableMachine implements ITileEntityProvider {
 
-    public BlockUVLight() {
+    public BlockUVFloodlight() {
         super(Names.Blocks.UV_FLOODLIGHT, Material.ROCK, SoundType.METAL, 2.5F);
         setHarvestLevel("pickaxe", 1);
     }
@@ -38,8 +38,8 @@ public class BlockUVLight extends BlockFLColorableMachine implements ITileEntity
     }
 
     @Override
-    public TileEntityUVLight createNewTileEntity(World world, int metadata) {
-        return new TileEntityUVLight();
+    public TileEntityUVFloodlight createNewTileEntity(World world, int metadata) {
+        return new TileEntityUVFloodlight();
     }
 
     @Override
@@ -71,7 +71,7 @@ public class BlockUVLight extends BlockFLColorableMachine implements ITileEntity
 
     @Override
     public void breakBlock(World world, BlockPos pos, IBlockState blockState) {
-        ((TileEntityUVLight) world.getTileEntity(pos)).uvSource(true);
+        ((TileEntityUVFloodlight) world.getTileEntity(pos)).uvSource(true);
         super.breakBlock(world, pos, blockState);
     }
 }

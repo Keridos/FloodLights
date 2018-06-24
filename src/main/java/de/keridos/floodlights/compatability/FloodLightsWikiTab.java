@@ -24,7 +24,7 @@ public class FloodLightsWikiTab extends BaseWikiTab {
 
     @Override
     public ItemStack renderTabIcon(GuiWiki gui) {
-        return new ItemStack(ModBlocks.blockElectricLight);
+        return new ItemStack(ModBlocks.blockElectricFloodlight);
     }
 
     @Override

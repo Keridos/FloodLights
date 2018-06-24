@@ -24,8 +24,8 @@ public class IGWHandler {
     private void initTab() {
         WikiRegistry.registerWikiTab(new FloodLightsWikiTab());
 
-        WikiRegistry.registerBlockAndItemPageEntry(ModBlocks.blockElectricLight, "block/electricFloodlight");
-        WikiRegistry.registerBlockAndItemPageEntry(ModBlocks.blockCarbonLight, "block/carbonFloodlight");
+        WikiRegistry.registerBlockAndItemPageEntry(ModBlocks.blockElectricFloodlight, "block/electricFloodlight");
+        WikiRegistry.registerBlockAndItemPageEntry(ModBlocks.blockCarbonFloodlight, "block/carbonFloodlight");
         //WikiRegistry.registerBlockAndItemPageEntry(ModBlocks.blockSmallElectricLight, "block/smallElectricFloodlight");
     }
 }

@@ -15,7 +15,7 @@ public class CreativeTabFloodlight {
 
         @Override
         public ItemStack getTabIconItem() {
-            return new ItemStack(Item.getItemFromBlock(ModBlocks.blockElectricLight));
+            return new ItemStack(Item.getItemFromBlock(ModBlocks.blockElectricFloodlight));
         }
     };
 }

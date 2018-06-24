@@ -18,7 +18,7 @@ public class JEICompatability implements IModPlugin {
     public void register(@Nonnull IModRegistry registry) {
         IIngredientBlacklist blacklist = registry.getJeiHelpers().getIngredientBlacklist();
         blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.blockPhantomLight));
-        blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.blockUVLightBlock));
+        blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.blockPhantomUVLight));
     }
 
     @Override

@@ -12,10 +12,10 @@ public class Names {
         public static final String ELECTRIC_FLOODLIGHT = "electricFloodlight";
         public static final String SMALL_ELECTRIC_FLOODLIGHT = "smallElectricFloodlightMetaBlock";
         public static final String CARBON_FLOODLIGHT = "carbonFloodlight";
-        public static final String PHANTOM_LIGHT = "tilePhantomLight";
-        public static final String UV_LIGHTBLOCK = "tileUVLight";
         public static final String UV_FLOODLIGHT = "uvFloodlight";
         public static final String GROW_LIGHT = "growLight";
+        public static final String PHANTOM_LIGHT = "phantomLight";
+        public static final String PHANTOM_UV_LIGHT = "phantomUVLight";
     }
 
     public static final class Items {
@@ -49,7 +49,6 @@ public class Names {
         public static final String INVERT = "inverted";
         public static final String TIME_REMAINING = "timeRemaining";
         public static final String STORAGE_FE = "storageFE";
-        public static final String STORAGE_EU = "storageEU";
         public static final String COLOR = "color";
         public static final String MODE = "teState";
         public static final String STATE = "teMode";

@@ -5,22 +5,22 @@ import de.keridos.floodlights.handler.ConfigHandler;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import static de.keridos.floodlights.init.ModBlocks.blockUVLightBlock;
+import static de.keridos.floodlights.init.ModBlocks.blockPhantomUVLight;
 
 /**
  * Created by Keridos on 15/09/2015.
  * This Class
  */
-public class TileEntityUVLight extends TileEntityFLElectric {
+public class TileEntityUVFloodlight extends TileEntityFLElectric {
 
-    public TileEntityUVLight() {
+    public TileEntityUVFloodlight() {
         super();
     }
 
     @Override
     public void setLight(BlockPos pos) {
-        if (world.setBlockState(pos, blockUVLightBlock.getDefaultState())) {
-            TileEntityUVLightBlock light = (TileEntityUVLightBlock) world.getTileEntity(pos);
+        if (world.setBlockState(pos, blockPhantomUVLight.getDefaultState())) {
+            TileEntityPhantomUVLight light = (TileEntityPhantomUVLight) world.getTileEntity(pos);
             light.addSource(this.pos);
         }
     }

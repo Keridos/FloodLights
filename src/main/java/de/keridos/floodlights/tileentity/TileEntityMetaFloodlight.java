@@ -73,7 +73,7 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
 
     @SuppressWarnings("ConstantConditions")
     public void setLight(BlockPos pos) {
-        if (world.getBlockState(pos).getBlock() == ModBlocks.blockUVLightBlock) {
+        if (world.getBlockState(pos).getBlock() == ModBlocks.blockPhantomUVLight) {
             return;
         }
         if (world.setBlockState(pos, ModBlocks.blockPhantomLight.getDefaultState(), 3)) {
