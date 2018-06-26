@@ -1,13 +1,13 @@
 package de.keridos.floodlights.client.render.block;
 
 import de.keridos.floodlights.item.ItemLightDebugTool;
-import de.keridos.floodlights.tileentity.TileEntityPhantomUVLight;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -23,7 +23,7 @@ public class TileEntityPhantomLightRenderer extends TileEntitySpecialRenderer {
         super();
     }
 
-    public static void drawCube(AxisAlignedBB cube) {
+    private static void drawCube(AxisAlignedBB cube) {
         double xa = cube.minX;
         double xb = cube.maxX;
         double ya = cube.minY;
@@ -66,7 +66,7 @@ public class TileEntityPhantomLightRenderer extends TileEntitySpecialRenderer {
     @Override
     public void render(TileEntity te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         EntityPlayer player = Minecraft.getMinecraft().player;
-        if (player.getHeldItem(EnumHand.MAIN_HAND) == null || !(player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof ItemLightDebugTool) || te instanceof TileEntityPhantomUVLight) {
+        if (player.getHeldItem(EnumHand.MAIN_HAND) == ItemStack.EMPTY || !(player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof ItemLightDebugTool)) {
             return;
         }
         try {

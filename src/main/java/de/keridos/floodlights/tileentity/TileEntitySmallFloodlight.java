@@ -1,13 +1,12 @@
 package de.keridos.floodlights.tileentity;
 
-import de.keridos.floodlights.block.BlockFLColorableMachine;
 import de.keridos.floodlights.handler.ConfigHandler;
 import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.util.MathUtil;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 /**
  * Created by Keridos on 04.05.2015.
@@ -15,11 +14,13 @@ import net.minecraft.world.World;
  */
 
 public class TileEntitySmallFloodlight extends TileEntityFLElectric {
-    private boolean rotationState = false;
+    private boolean rotationState;
 
     public TileEntitySmallFloodlight() {
         super();
-        this.rotationState = false;
+        rotationState = false;
+        mode = LIGHT_MODE_STRAIGHT;
+        energyUsage = ConfigHandler.energyUsageSmallFloodlight;
     }
 
     @Override
@@ -37,17 +38,6 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
         return nbtTagCompound;
     }
 
-    /*@Override
-    public boolean canConnectEnergy(EnumFacing facing) {
-        return (facing.getOpposite().ordinal() == orientation.ordinal());
-    }*/
-
-    public void toggleRotationState() {
-        rotationState = !rotationState;
-        this.world.markBlocksDirtyVertical(this.pos.getX(), this.pos.getZ(), this.pos.getX(), this.pos.getZ());
-        ;
-    }
-
     public boolean getRotationState() {
         return rotationState;
     }
@@ -56,7 +46,8 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
         this.rotationState = rotationState;
     }
 
-    public void smallSource(boolean remove) {
+    @Override
+    public void straightSource(boolean remove) {
         for (int i = 0; i < 5; i++) {
             int a = 0;
             int b = 0;
@@ -95,41 +86,16 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
         }
     }
 
-    public void update() {
-        super.update();
-        World world = this.getWorld();
-        if (!world.isRemote) {
-            int realEnergyUsage = ConfigHandler.energyUsageSmallFloodlight;
-            tryDischargeItem(inventory.getStackInSlot(0));
-            if (timeout > 0) {
-                timeout--;
-                return;
-            }
-            if (active && energy.getEnergyStored() >= realEnergyUsage) {
-                if (update) {
-                    smallSource(true);
-                    smallSource(false);
-                    world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, true), 2);
-                    world.markBlocksDirtyVertical(this.pos.getX(), this.pos.getZ(), this.pos.getX(), this.pos.getZ());
-                    ;
-                    update = false;
-                } else if (!wasActive) {
-                    smallSource(false);
-                    world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, true), 2);
-                    world.markBlocksDirtyVertical(this.pos.getX(), this.pos.getZ(), this.pos.getX(), this.pos.getZ());
-                }
+    @Override
+    public void setMode(int mode) {
+        // Mode cannot be changed
+    }
 
-                energy.extractEnergy(realEnergyUsage, false);
-                wasActive = true;
-            } else if ((!active || energy.getEnergyStored() < realEnergyUsage) && wasActive) {
-                smallSource(true);
-                world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, false), 2);
-                world.markBlocksDirtyVertical(this.pos.getX(), this.pos.getZ(), this.pos.getX(), this.pos.getZ());
-                ;
-                wasActive = false;
-                timeout = ConfigHandler.timeoutFloodlights;
-                update = false;
-            }
-        }
+    @Override
+    public void changeMode(EntityPlayer player) {
+        // Mode cannot be changed
+        rotationState = !rotationState;
+        //this.world.markBlocksDirtyVertical(this.pos.getX(), this.pos.getZ(), this.pos.getX(), this.pos.getZ());
+        markDirty();
     }
 }

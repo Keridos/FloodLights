@@ -19,6 +19,10 @@ import net.minecraft.world.World;
  * This Class handles the GUIs that this mod uses (will use soon).
  */
 public class GuiHandler implements IGuiHandler {
+
+    public static final int GUI_CARBON_FLOODLIGHT = 0;
+    public static final int GUI_ELECTIC_FLOODLIGHT = 1;
+
     private static GuiHandler instance = null;
 
     private GuiHandler() {
@@ -34,17 +38,17 @@ public class GuiHandler implements IGuiHandler {
 
     @Override
     public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
-        TileEntity entity = world.getTileEntity(new BlockPos(x,y,z));
+        TileEntity entity = world.getTileEntity(new BlockPos(x, y, z));
 
         switch (id) {
-            case 0:
-                if (entity != null && entity instanceof TileEntityCarbonFloodlight) {
+            case GUI_CARBON_FLOODLIGHT:
+                if (entity instanceof TileEntityCarbonFloodlight) {
                     return new ContainerCarbonFloodlight(player.inventory, (TileEntityCarbonFloodlight) entity);
                 } else {
                     return null;
                 }
-            case 1:
-                if (entity != null && entity instanceof TileEntityFLElectric) {
+            case GUI_ELECTIC_FLOODLIGHT:
+                if (entity instanceof TileEntityFLElectric) {
                     return new ContainerElectricFloodlight(player.inventory, (TileEntityFLElectric) entity);
                 } else {
                     return null;
@@ -56,17 +60,17 @@ public class GuiHandler implements IGuiHandler {
 
     @Override
     public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
-        TileEntity entity = world.getTileEntity(new BlockPos(x,y,z));
+        TileEntity entity = world.getTileEntity(new BlockPos(x, y, z));
 
         switch (id) {
-            case 0:
-                if (entity != null && entity instanceof TileEntityCarbonFloodlight) {
+            case GUI_CARBON_FLOODLIGHT:
+                if (entity instanceof TileEntityCarbonFloodlight) {
                     return new GuiCarbonFloodlight(player.inventory, (TileEntityCarbonFloodlight) entity);
                 } else {
                     return null;
                 }
-            case 1:
-                if (entity != null && entity instanceof TileEntityFLElectric) {
+            case GUI_ELECTIC_FLOODLIGHT:
+                if (entity instanceof TileEntityFLElectric) {
                     return new GuiElectricFloodlight(player.inventory, (TileEntityFLElectric) entity);
                 } else {
                     return null;

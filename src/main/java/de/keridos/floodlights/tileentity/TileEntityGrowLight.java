@@ -1,21 +1,12 @@
 package de.keridos.floodlights.tileentity;
 
-import de.keridos.floodlights.block.BlockFLColorableMachine;
 import de.keridos.floodlights.handler.ConfigHandler;
-import de.keridos.floodlights.init.ModBlocks;
-import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.util.GeneralUtil;
-import de.keridos.floodlights.util.MathUtil;
 import de.keridos.floodlights.util.RandomUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.IGrowable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.world.World;
-
-import static de.keridos.floodlights.block.BlockPhantomLight.UPDATE;
-import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
 
 /**
  * Created by Keridos on 04.05.2015.
@@ -30,11 +21,17 @@ public class TileEntityGrowLight extends TileEntityFLElectric {
         return (from.getOpposite().ordinal() == orientation.ordinal());
     }*/
 
+    public TileEntityGrowLight() {
+        mode = LIGHT_MODE_STRAIGHT;
+        rangeStraight = 1;
+        energyUsage = ConfigHandler.energyUsageGrowLight;
+    }
 
-    @SuppressWarnings("ConstantConditions")
-    public void growSource(boolean remove) {
+
+    /*@SuppressWarnings("ConstantConditions")
+    @Override
+    public void straightSource(boolean remove) {
         int[] rotatedCoords = MathUtil.rotate(1, 0, 0, this.orientation);
-
 
         int x = this.pos.getX() + rotatedCoords[0];
         int y = this.pos.getY() + rotatedCoords[1];
@@ -53,72 +50,43 @@ public class TileEntityGrowLight extends TileEntityFLElectric {
             light.addSource(this.pos);
         }
 
-    }
+    }*/
 
     public void update() {
         super.update();
-        World world = this.getWorld();
-        if (!world.isRemote) {
-            int realEnergyUsage = ConfigHandler.energyUsageGrowLight;
-            tryDischargeItem(inventory.getStackInSlot(0));
-            if (timeout > 0) {
-                timeout--;
-                return;
-            }
-            if (active && energy.getEnergyStored() >= realEnergyUsage) {
-                if (world.getWorldTime() > nextGrowTick) {
-                    BlockPos blockPosTarget = new BlockPos(this.pos.getX() + this.orientation.getFrontOffsetX() * 2, this.pos.getY() + this.orientation.getFrontOffsetY() * 2, this.pos.getZ() + this.orientation.getFrontOffsetZ() * 2);
-                    BlockPos blockPosFront = new BlockPos(this.pos.getX() + this.orientation.getFrontOffsetX(), this.pos.getY() + this.orientation.getFrontOffsetY(), this.pos.getZ() + this.orientation.getFrontOffsetZ());
-                    Block block = world.getBlockState(blockPosTarget).getBlock();
-                    Block blockFront = world.getBlockState(blockPosFront).getBlock();
-                    if (GeneralUtil.isBlockValidGrowable(block, world, blockPosTarget) && blockFront.isAir(world.getBlockState(blockPosFront), world, blockPosFront)) {
-                        ((IGrowable) block).grow(world, RandomUtil.random, blockPosTarget, world.getBlockState(blockPosTarget));
-                    }
-                    nextGrowTick = world.getWorldTime() + RandomUtil.getRandomTickTimeoutFromFloatChance(ConfigHandler.chanceGrowLight);
-                }
-                if (update) {
-                    if (_mode == LIGHT_MODE_STRAIGHT) {
-                        growSource(true);
-                        growSource(false);
-                    }
-                    world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, true), 2);
-                    world.markBlocksDirtyVertical(this.pos.getX(), this.pos.getZ(), this.pos.getX(), this.pos.getZ());
-                    update = false;
-                } else if (!wasActive) {
-                    if (_mode == LIGHT_MODE_STRAIGHT) {
-                        growSource(false);
-                    }
-                    world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, true), 2);
-                    world.markBlocksDirtyVertical(this.pos.getX(), this.pos.getZ(), this.pos.getX(), this.pos.getZ());
-                }
 
-                energy.extractEnergy(realEnergyUsage, false);
-                wasActive = true;
-            } else if ((!active || energy.getEnergyStored() < realEnergyUsage) && wasActive) {
-                if (_mode == LIGHT_MODE_STRAIGHT) {
-                    growSource(true);
-                }
-                world.setBlockState(this.pos, world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.ACTIVE, false), 2);
-                world.markBlocksDirtyVertical(this.pos.getX(), this.pos.getZ(), this.pos.getX(), this.pos.getZ());
-                wasActive = false;
-                timeout = ConfigHandler.timeoutFloodlights;
-                update = false;
+        if (world.isRemote || !isReady() || !active && !hasEnergy())
+            return;
+
+        // GrowLight-only logic below
+        if (world.getWorldTime() > nextGrowTick) {
+            BlockPos blockPosTarget = new BlockPos(
+                    pos.getX() + orientation.getFrontOffsetX() * 2,
+                    pos.getY() + orientation.getFrontOffsetY() * 2,
+                    pos.getZ() + orientation.getFrontOffsetZ() * 2
+            );
+            BlockPos blockPosFront = new BlockPos(
+                    pos.getX() + orientation.getFrontOffsetX(),
+                    pos.getY() + orientation.getFrontOffsetY(),
+                    pos.getZ() + orientation.getFrontOffsetZ()
+            );
+            Block block = world.getBlockState(blockPosTarget).getBlock();
+            Block blockFront = world.getBlockState(blockPosFront).getBlock();
+            if (GeneralUtil.isBlockValidGrowable(block, world, blockPosTarget) && blockFront.isAir(world.getBlockState(blockPosFront), world, blockPosFront)) {
+                ((IGrowable) block).grow(world, RandomUtil.random, blockPosTarget, world.getBlockState(blockPosTarget));
             }
+
+            nextGrowTick = world.getWorldTime() + RandomUtil.getRandomTickTimeoutFromFloatChance(ConfigHandler.chanceGrowLight);
         }
     }
 
+    @Override
+    public void setMode(int mode) {
+        // Mode cannot be changed
+    }
+
+    @Override
     public void changeMode(EntityPlayer player) {
-        World world = this.getWorld();
-        if (!world.isRemote) {
-            if (_mode == LIGHT_MODE_STRAIGHT) {
-                growSource(true);
-            }
-            _mode = (_mode == LIGHT_MODE_NARROW_CONE ? LIGHT_MODE_STRAIGHT : _mode + 1);
-            if (active && energy.getEnergyStored() >= ConfigHandler.energyUsage && _mode == LIGHT_MODE_STRAIGHT) {
-                growSource(false);
-            }
-            String modeString = (_mode == LIGHT_MODE_STRAIGHT ? Names.Localizations.LIGHTING : Names.Localizations.DARK_LIGHT);
-            player.sendMessage(new TextComponentString(safeLocalize(Names.Localizations.MODE) + ": " + safeLocalize(modeString)));
-        }
+        // Mode cannot be changed
     }
 }

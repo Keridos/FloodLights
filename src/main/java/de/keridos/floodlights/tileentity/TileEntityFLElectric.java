@@ -1,7 +1,9 @@
 package de.keridos.floodlights.tileentity;
 
 import cofh.redstoneflux.api.IEnergyContainerItem;
+import de.keridos.floodlights.block.BlockFLColorableMachine;
 import de.keridos.floodlights.compatability.ModCompatibility;
+import de.keridos.floodlights.handler.ConfigHandler;
 import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.util.MathUtil;
 import ic2.api.energy.event.EnergyTileLoadEvent;
@@ -10,6 +12,7 @@ import ic2.api.energy.tile.IEnergyEmitter;
 import ic2.api.energy.tile.IEnergySink;
 import ic2.api.item.ElectricItem;
 import ic2.api.item.IElectricItem;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -34,11 +37,94 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
     // 1 EU = 4 RF
     private static final int EU_TO_RF_RATE = 4;
 
+    /**
+     * Base energy usage.
+     */
+    protected int energyUsage = ConfigHandler.energyUsage;
+    /**
+     * Real energy usage - with light mode taken into acocunt.
+     */
+    protected int realEnergyUsage;
+
     protected boolean wasAddedToEnergyNet = false;
     public CustomEnergyStorage energy = new CustomEnergyStorage(50000);
 
     public TileEntityFLElectric() {
         super();
+    }
+
+    @Override
+    public void update() {
+        super.update();
+
+        if (ModCompatibility.IC2Loaded && !wasAddedToEnergyNet && !world.isRemote) {
+            addToIc2EnergyNetwork();
+            wasAddedToEnergyNet = true;
+        }
+
+        if (world.isRemote || !isReady())
+            return;
+
+        tryDischargeItem(inventory.getStackInSlot(0));
+        if (active && hasEnergy()) {
+            energy.extractEnergy(realEnergyUsage, false);
+
+            if (update) {
+                lightSource(true);
+                lightSource(false);
+                world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockFLColorableMachine.ACTIVE, true), 2);
+                update = false;
+            } else if (!wasActive) {
+                lightSource(false);
+                world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockFLColorableMachine.ACTIVE, true), 2);
+            }
+
+            wasActive = true;
+        } else if ((!active || !hasEnergy()) && wasActive) {
+            lightSource(true);
+            //world.setBlockState(pos, world.getBlockState(pos).getBlock().getStateFromMeta(getOrientation().ordinal()), 2);
+            markDirty();
+            wasActive = false;
+            timeout = ConfigHandler.timeoutFloodlights;
+            update = false;
+        }
+
+    }
+
+    @Override
+    protected boolean hasEnergy() {
+        return energy.getEnergyStored() >= realEnergyUsage;
+    }
+
+    private void tryDischargeItem(ItemStack itemStack) {
+        if (itemStack != ItemStack.EMPTY) {
+            if (ModCompatibility.IC2Loaded && inventory.getStackInSlot(0).getItem() instanceof IElectricItem) {
+                double dischargeValue = (energy.getMaxEnergyStored() - (double) energy.getEnergyStored()) / 8.0D;
+                double discharged = ElectricItem.manager.discharge(inventory.getStackInSlot(0), dischargeValue, 4, false, true, false);
+                energy.receiveEnergy(MathUtil.truncateDoubleToInt(8 * discharged), false);
+            }
+            if (itemStack.getItem() instanceof IEnergyContainerItem) {
+                IEnergyContainerItem item = (IEnergyContainerItem) itemStack.getItem();
+                int dischargeValue = Math.min(item.getEnergyStored(itemStack), (energy.getMaxEnergyStored() - energy.getEnergyStored()));
+                energy.receiveEnergy(item.extractEnergy(itemStack, dischargeValue, false), false);
+            }
+        }
+    }
+
+    @Override
+    public void setMode(int mode) {
+        super.setMode(mode);
+        updateEnergyUsage();
+    }
+
+    @Override
+    public void changeMode(EntityPlayer player) {
+        super.changeMode(player);
+        updateEnergyUsage();
+    }
+
+    private void updateEnergyUsage() {
+        realEnergyUsage = energyUsage * (mode == LIGHT_MODE_STRAIGHT ? 1 : 4);
     }
 
     @Override
@@ -111,32 +197,6 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
         if (!world.isRemote) {
             EnergyTileUnloadEvent event = new EnergyTileUnloadEvent(this);
             MinecraftForge.EVENT_BUS.post(event);
-        }
-    }
-
-    protected void tryDischargeItem(ItemStack itemStack) {
-        if (itemStack != null) {
-            if (ModCompatibility.IC2Loaded) {
-                if (inventory.getStackInSlot(0).getItem() instanceof IElectricItem) {
-                    double dischargeValue = (energy.getMaxEnergyStored() - (double) energy.getEnergyStored()) / 8.0D;
-                    double discharged = ElectricItem.manager.discharge(inventory.getStackInSlot(0), dischargeValue, 4, false, true, false);
-                    energy.receiveEnergy(MathUtil.truncateDoubleToInt(8 * discharged), false);
-                }
-            }
-            if (itemStack.getItem() instanceof IEnergyContainerItem) {
-                IEnergyContainerItem item = (IEnergyContainerItem) itemStack.getItem();
-                int dischargeValue = Math.min(item.getEnergyStored(itemStack), (energy.getMaxEnergyStored() - energy.getEnergyStored()));
-                energy.receiveEnergy(item.extractEnergy(itemStack, dischargeValue, false), false);
-            }
-        }
-    }
-
-    @Override
-    public void update() {
-        super.update();
-        if (ModCompatibility.IC2Loaded && !wasAddedToEnergyNet && !world.isRemote) {
-            addToIc2EnergyNetwork();
-            wasAddedToEnergyNet = true;
         }
     }
 

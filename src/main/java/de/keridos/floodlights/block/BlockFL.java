@@ -5,6 +5,7 @@ import de.keridos.floodlights.client.gui.CreativeTabFloodlight;
 import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.reference.Textures;
 import de.keridos.floodlights.tileentity.TileEntityFL;
+import de.keridos.floodlights.tileentity.TileEntityMetaFloodlight;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -26,11 +27,13 @@ import java.util.Random;
  * Created by Keridos on 28.02.14.
  * This Class describes the generic block this mod uses.
  */
+@SuppressWarnings({"WeakerAccess", "NullableProblems"})
 public class BlockFL extends Block {
 
     protected BlockFL(String unlocName, Material material, SoundType type, float hardness) {
         super(material);
         setHardness(hardness);
+        setSoundType(type);
         setNames(unlocName);
         if (!unlocName.equals(Names.Blocks.PHANTOM_LIGHT) && !unlocName.equals(Names.Blocks.PHANTOM_UV_LIGHT)) {
             this.setCreativeTab(CreativeTabFloodlight.FL_TAB);
@@ -46,6 +49,9 @@ public class BlockFL extends Block {
     @Override
     public void breakBlock(World world, BlockPos pos, IBlockState blockState) {
         dropInventory(world, pos);
+        TileEntity tileEntity = world.getTileEntity(pos);
+        if (tileEntity instanceof TileEntityMetaFloodlight)
+            ((TileEntityMetaFloodlight) tileEntity).lightSource(true);
         super.breakBlock(world, pos, blockState);
     }
 
@@ -69,7 +75,7 @@ public class BlockFL extends Block {
         IInventory inventory = (IInventory) tileEntity;
         for (int i = 0; i < inventory.getSizeInventory(); i++) {
             ItemStack itemStack = inventory.getStackInSlot(i);
-            if (itemStack != null && itemStack.getCount() > 0) {
+            if (itemStack != ItemStack.EMPTY && itemStack.getCount() > 0) {
                 Random rand = new Random();
                 float dX = rand.nextFloat() * 0.8F + 0.1F;
                 float dY = rand.nextFloat() * 0.8F + 0.1F;
@@ -77,8 +83,8 @@ public class BlockFL extends Block {
                 EntityItem entityItem = new EntityItem
                         (world, pos.getX() + dX, pos.getY() + dY, pos.getZ() + dZ, itemStack.copy());
                 if (itemStack.hasTagCompound()) {
+                    //noinspection ConstantConditions
                     itemStack.setTagCompound(itemStack.getTagCompound().copy());
-
                 }
                 float factor = 0.05F;
                 entityItem.motionX = rand.nextGaussian() * factor;

@@ -3,11 +3,12 @@ package de.keridos.floodlights.block;
 import de.keridos.floodlights.handler.ConfigHandler;
 import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.reference.Names;
-import de.keridos.floodlights.tileentity.TileEntityPhantomUVLight;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -24,11 +25,6 @@ public class BlockPhantomUVLight extends BlockPhantomLight {
 
     public BlockPhantomUVLight() {
         super(Names.Blocks.PHANTOM_UV_LIGHT, Material.AIR, SoundType.CLOTH, 0.0F);
-    }
-
-    @Override
-    public TileEntityPhantomUVLight createNewTileEntity(World world, int metadata) {
-        return new TileEntityPhantomUVLight();
     }
 
     @Override
@@ -61,5 +57,10 @@ public class BlockPhantomUVLight extends BlockPhantomLight {
     @Override
     public boolean isReplaceable(IBlockAccess worldIn, BlockPos pos) {
         return true;
+    }
+
+    @Override
+    public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn) {
+        entityIn.attackEntityFrom(DamageSource.CACTUS, ConfigHandler.damageUVFloodlight);
     }
 }

@@ -1,10 +1,8 @@
 package de.keridos.floodlights.block;
 
-import de.keridos.floodlights.FloodLights;
-import de.keridos.floodlights.compatability.ModCompatibility;
+import de.keridos.floodlights.handler.GuiHandler;
 import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.reference.Names;
-import de.keridos.floodlights.tileentity.TileEntityFL;
 import de.keridos.floodlights.tileentity.TileEntitySmallFloodlight;
 import de.keridos.floodlights.util.MathUtil;
 import de.keridos.floodlights.util.PropertiesEnum;
@@ -16,17 +14,11 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -35,9 +27,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-
-import static de.keridos.floodlights.util.GeneralUtil.getMinecraftItem;
-import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
 
 /**
  * Created by Keridos on 01.10.14.
@@ -53,6 +42,7 @@ public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implem
                 this.blockState.getBaseState().withProperty(COLOR, 0).withProperty(ACTIVE, false).withProperty(FACING,
                         EnumFacing.DOWN).withProperty(MODEL, PropertiesEnum.EnumModelSmallLight.values()[0]).withProperty(ROTATIONSTATE, false));
         setHarvestLevel("pickaxe", 1);
+        guiId = GuiHandler.GUI_ELECTIC_FLOODLIGHT;
     }
 
     @Override
@@ -82,40 +72,6 @@ public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implem
     @Override
     protected BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, FACING, ACTIVE, COLOR, ROTATIONSTATE, MODEL);
-    }
-
-    @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        ItemStack heldItem = player.getHeldItem(EnumHand.MAIN_HAND);
-        if (hand == EnumHand.MAIN_HAND) {
-            if (!world.isRemote && heldItem == null && player.isSneaking()) {
-                ((TileEntitySmallFloodlight) world.getTileEntity(pos)).toggleInverted();
-                String invert = (((TileEntitySmallFloodlight) world.getTileEntity(pos)).getInverted() ? Names.Localizations.TRUE : Names.Localizations.FALSE);
-                player.sendMessage(new TextComponentString(safeLocalize(Names.Localizations.INVERT) + ": " + safeLocalize(invert)));
-                return true;
-            } else if (!world.isRemote && heldItem != null) {
-                if (!ModCompatibility.WrenchAvailable && heldItem.getItem() == getMinecraftItem("stick")) {
-                    ((TileEntitySmallFloodlight) world.getTileEntity(pos)).toggleRotationState();
-                    return true;
-                } else if (player.isSneaking() && ModCompatibility.getInstance().isItemValidWrench(heldItem)) {
-                    world.destroyBlock(pos, true);
-                    return true;
-                } else if (ModCompatibility.getInstance().isItemValidWrench(heldItem)) {
-                    ((TileEntitySmallFloodlight) world.getTileEntity(pos)).toggleRotationState();
-                    return true;
-                } else if (heldItem.getItem() == Items.DYE) {
-                    ((TileEntityFL) world.getTileEntity(pos)).setColor(15 - heldItem.getItemDamage());
-                    return true;
-                }
-            }
-            if (!world.isRemote) {
-                player.openGui(FloodLights.instance, 1, world, pos.getX(), pos.getY(), pos.getZ());
-                return true;
-            } else {
-                return true;
-            }
-        }
-        return true;
     }
 
     @Override
@@ -192,23 +148,6 @@ public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implem
                     (double) pos.getZ() + maxZ);
         }
         return super.getSelectedBoundingBox(state, world, pos);
-    }
-
-    @Override
-    public void breakBlock(World world, BlockPos pos, IBlockState blockState) {
-        ((TileEntitySmallFloodlight) world.getTileEntity(pos)).smallSource(true);
-        super.breakBlock(world, pos, blockState);
-    }
-
-    @Override
-    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-        if (world.getTileEntity(pos) instanceof TileEntityFL) {
-            if (stack.hasDisplayName()) {
-                ((TileEntityFL) world.getTileEntity(pos)).setCustomName(stack.getDisplayName());
-            }
-            ((TileEntityFL) world.getTileEntity(pos)).setOrientation(
-                    getFacing(placer));
-        }
     }
 
     @Override

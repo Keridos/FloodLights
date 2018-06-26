@@ -62,7 +62,6 @@ public class ModBlocks {
         GameRegistry.registerTileEntity(TileEntitySmallFloodlight.class, Reference.MOD_ID.toLowerCase() + ":" + Names.Blocks.SMALL_ELECTRIC_FLOODLIGHT);
         GameRegistry.registerTileEntity(TileEntityUVFloodlight.class, Reference.MOD_ID.toLowerCase() + ":" + Names.Blocks.UV_FLOODLIGHT);
         GameRegistry.registerTileEntity(TileEntityPhantomLight.class, Reference.MOD_ID.toLowerCase() + ":" + Names.Blocks.PHANTOM_LIGHT);
-        GameRegistry.registerTileEntity(TileEntityPhantomUVLight.class, Reference.MOD_ID.toLowerCase() + ":" + Names.Blocks.PHANTOM_UV_LIGHT);
         GameRegistry.registerTileEntity(TileEntityGrowLight.class, Reference.MOD_ID.toLowerCase() + ":" + Names.Blocks.GROW_LIGHT);
     }
 }

@@ -22,7 +22,7 @@ import java.util.HashSet;
  * Created by Keridos on 01.10.14.
  * This Class is the base for all TileEntities within this mod.
  */
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "NullableProblems"})
 public class TileEntityFL extends TileEntity {
 
     protected static final int LIGHT_MODE_STRAIGHT = 0;
@@ -35,7 +35,7 @@ public class TileEntityFL extends TileEntity {
     protected byte state;
     protected String customName;
     protected String owner;
-    protected int _mode;
+    protected int mode;
     protected boolean inverted;
     protected int color;
 
@@ -84,12 +84,12 @@ public class TileEntityFL extends TileEntity {
     }
 
     public int getMode() {
-        return _mode;
+        return mode;
     }
 
     public void setMode(int mode) {
         if (mode >= 0 && mode <= 2)
-            this._mode = mode;
+            this.mode = mode;
     }
 
     public int getColor() {
@@ -120,7 +120,7 @@ public class TileEntityFL extends TileEntity {
             this.owner = nbtTagCompound.getString(Names.NBT.OWNER);
         }
         if (nbtTagCompound.hasKey(Names.NBT.MODE)) {
-            this._mode = nbtTagCompound.getInteger(Names.NBT.MODE);
+            this.mode = nbtTagCompound.getInteger(Names.NBT.MODE);
         }
         if (nbtTagCompound.hasKey(Names.NBT.COLOR)) {
             this.color = nbtTagCompound.getInteger(Names.NBT.COLOR);
@@ -133,7 +133,7 @@ public class TileEntityFL extends TileEntity {
         nbtTagCompound.setByte(Names.NBT.DIRECTION, (byte) orientation.ordinal());
         nbtTagCompound.setBoolean(Names.NBT.INVERT, inverted);
         nbtTagCompound.setByte(Names.NBT.STATE, state);
-        nbtTagCompound.setInteger(Names.NBT.MODE, _mode);
+        nbtTagCompound.setInteger(Names.NBT.MODE, mode);
         nbtTagCompound.setInteger(Names.NBT.COLOR, color);
         if (this.hasCustomName()) {
             nbtTagCompound.setString(Names.NBT.CUSTOM_NAME, customName);
@@ -181,7 +181,7 @@ public class TileEntityFL extends TileEntity {
      */
     public NetworkDataList getSyncData(@Nonnull NetworkDataList data) {
         data.add(state);
-        data.add(_mode);
+        data.add(mode);
         data.add(inverted);
         data.add(color);
         return data;
@@ -192,7 +192,7 @@ public class TileEntityFL extends TileEntity {
      */
     public void applySyncData(ByteBuf buffer) {
         state = buffer.readByte();
-        _mode = buffer.readInt();
+        mode = buffer.readInt();
         inverted = buffer.readBoolean();
         color = buffer.readInt();
     }
