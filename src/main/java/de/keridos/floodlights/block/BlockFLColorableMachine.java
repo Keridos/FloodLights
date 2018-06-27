@@ -107,7 +107,7 @@ public class BlockFLColorableMachine extends BlockFL {
     @Override
     public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
         if (!world.isRemote && world.getTileEntity(pos) instanceof TileEntityMetaFloodlight) {
-            ((TileEntityMetaFloodlight) world.getTileEntity(pos)).setRedstone(world.isBlockIndirectlyGettingPowered(pos) > 0);
+            ((TileEntityMetaFloodlight) world.getTileEntity(pos)).setHasRedstoneSignal(world.isBlockIndirectlyGettingPowered(pos) > 0);
 
             if (!(blockIn instanceof BlockFL) && blockIn != Blocks.AIR)
                 ((TileEntityMetaFloodlight) world.getTileEntity(pos)).toggleUpdateRun();
@@ -118,14 +118,14 @@ public class BlockFLColorableMachine extends BlockFL {
     @Override
     public void onBlockAdded(World world, BlockPos pos, IBlockState block) {
         if (!world.isRemote && world.getTileEntity(pos) instanceof TileEntityMetaFloodlight)
-            ((TileEntityMetaFloodlight) world.getTileEntity(pos)).setRedstone(world.isBlockIndirectlyGettingPowered(pos) > 0);
+            ((TileEntityMetaFloodlight) world.getTileEntity(pos)).setHasRedstoneSignal(world.isBlockIndirectlyGettingPowered(pos) > 0);
     }
 
     @Override
     public void breakBlock(World world, BlockPos pos, IBlockState blockState) {
         TileEntity tileEntity = world.getTileEntity(pos);
         if (tileEntity instanceof TileEntityMetaFloodlight)
-            ((TileEntityMetaFloodlight) tileEntity).lightSource(true);
+            ((TileEntityMetaFloodlight) tileEntity).setHasRedstoneSignal(false);
 
         super.breakBlock(world, pos, blockState);
     }

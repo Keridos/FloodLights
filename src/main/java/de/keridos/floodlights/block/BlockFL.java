@@ -51,7 +51,7 @@ public class BlockFL extends Block {
         dropInventory(world, pos);
         TileEntity tileEntity = world.getTileEntity(pos);
         if (tileEntity instanceof TileEntityMetaFloodlight)
-            ((TileEntityMetaFloodlight) tileEntity).lightSource(true);
+            ((TileEntityMetaFloodlight) tileEntity).setHasRedstoneSignal(false);
         super.breakBlock(world, pos, blockState);
     }
 

@@ -33,7 +33,6 @@ public class MessageTileEntityFL implements IMessage {
                     TileEntity tileEntity = FMLClientHandler.instance().getClient().world.getTileEntity(new BlockPos(message.x, message.y, message.z));
                     if (tileEntity instanceof TileEntityFL) {
                         ((TileEntityFL) tileEntity).setOrientation(message.orientation);
-                        ((TileEntityFL) tileEntity).setState(message.state);
                         ((TileEntityFL) tileEntity).setCustomName(message.customName);
                         ((TileEntityFL) tileEntity).setOwner(message.owner);
                         ((TileEntityFL) tileEntity).setColor(message.color);
@@ -46,9 +45,6 @@ public class MessageTileEntityFL implements IMessage {
                     }
                     if (tileEntity instanceof TileEntityFLElectric) {
                         ((TileEntityFLElectric) tileEntity).setEnergyStored(message.rfStorage);
-                    }
-                    if (tileEntity instanceof TileEntityMetaFloodlight) {
-                        ((TileEntityMetaFloodlight) tileEntity).setWasActive(message.wasActive);
                     }
 
                 }
@@ -67,7 +63,6 @@ public class MessageTileEntityFL implements IMessage {
             this.y = tileEntityFL.getPos().getY();
             this.z = tileEntityFL.getPos().getZ();
             this.orientation = (byte) tileEntityFL.getOrientation().ordinal();
-            this.state = (byte) tileEntityFL.getState();
             this.customName = tileEntityFL.getCustomName();
             this.owner = tileEntityFL.getOwner();
             this.color = tileEntityFL.getColor();
@@ -85,11 +80,6 @@ public class MessageTileEntityFL implements IMessage {
                 this.rfStorage = ((TileEntityFLElectric) tileEntity).energy.getEnergyStored();
             } else {
                 this.rfStorage = 0;
-            }
-            if (tileEntity instanceof TileEntityMetaFloodlight) {
-                this.wasActive = ((TileEntityMetaFloodlight) tileEntity).getWasActive();
-            } else {
-                this.wasActive = false;
             }
         }
     }

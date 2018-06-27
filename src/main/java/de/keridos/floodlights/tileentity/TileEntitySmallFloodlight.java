@@ -21,6 +21,7 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
         rotationState = false;
         mode = LIGHT_MODE_STRAIGHT;
         energyUsage = ConfigHandler.energyUsageSmallFloodlight;
+        updateEnergyUsage();
     }
 
     @Override
@@ -78,7 +79,7 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
                     light.removeSource(this.pos);
                 }
             } else if (world.getBlockState(new BlockPos(x, y, z)).getBlock().isAir(world.getBlockState(new BlockPos(x, y, z)), world, new BlockPos(x, y, z))) {
-                setLight(new BlockPos(x, y, z));
+                updateLightBlock(new BlockPos(x, y, z));
             } else if (world.getBlockState(new BlockPos(x, y, z)).getBlock() == ModBlocks.blockPhantomLight) {
                 TileEntityPhantomLight light = (TileEntityPhantomLight) world.getTileEntity(new BlockPos(x, y, z));
                 light.addSource(this.pos);

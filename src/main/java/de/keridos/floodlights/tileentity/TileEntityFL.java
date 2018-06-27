@@ -32,7 +32,6 @@ public class TileEntityFL extends TileEntity {
     protected HashSet<EntityPlayer> inventoryAccessors = new HashSet<>();
 
     protected EnumFacing orientation;
-    protected byte state;
     protected String customName;
     protected String owner;
     protected int mode;
@@ -41,7 +40,6 @@ public class TileEntityFL extends TileEntity {
 
     public TileEntityFL() {
         orientation = EnumFacing.SOUTH;
-        state = 0;
         customName = "";
         owner = "";
         color = 0;
@@ -57,14 +55,6 @@ public class TileEntityFL extends TileEntity {
 
     public void setOrientation(EnumFacing orientation) {
         this.orientation = orientation;
-    }
-
-    public short getState() {
-        return state;
-    }
-
-    public void setState(byte state) {
-        this.state = state;
     }
 
     public String getCustomName() {
@@ -110,9 +100,6 @@ public class TileEntityFL extends TileEntity {
         if (nbtTagCompound.hasKey(Names.NBT.INVERT)) {
             this.inverted = nbtTagCompound.getBoolean(Names.NBT.INVERT);
         }
-        if (nbtTagCompound.hasKey(Names.NBT.STATE)) {
-            this.state = nbtTagCompound.getByte(Names.NBT.STATE);
-        }
         if (nbtTagCompound.hasKey(Names.NBT.CUSTOM_NAME)) {
             this.customName = nbtTagCompound.getString(Names.NBT.CUSTOM_NAME);
         }
@@ -132,7 +119,6 @@ public class TileEntityFL extends TileEntity {
         nbtTagCompound = super.writeToNBT(nbtTagCompound);
         nbtTagCompound.setByte(Names.NBT.DIRECTION, (byte) orientation.ordinal());
         nbtTagCompound.setBoolean(Names.NBT.INVERT, inverted);
-        nbtTagCompound.setByte(Names.NBT.STATE, state);
         nbtTagCompound.setInteger(Names.NBT.MODE, mode);
         nbtTagCompound.setInteger(Names.NBT.COLOR, color);
         if (this.hasCustomName()) {
@@ -180,7 +166,6 @@ public class TileEntityFL extends TileEntity {
      * no synchronization is required.
      */
     public NetworkDataList getSyncData(@Nonnull NetworkDataList data) {
-        data.add(state);
         data.add(mode);
         data.add(inverted);
         data.add(color);
@@ -191,7 +176,6 @@ public class TileEntityFL extends TileEntity {
      * Called when tile entity sync packet arrives. Read data in exactly the same order as in {@link #getSyncData(NetworkDataList)}.
      */
     public void applySyncData(ByteBuf buffer) {
-        state = buffer.readByte();
         mode = buffer.readInt();
         inverted = buffer.readBoolean();
         color = buffer.readInt();

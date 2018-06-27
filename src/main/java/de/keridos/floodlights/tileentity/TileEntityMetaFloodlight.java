@@ -21,7 +21,6 @@ import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.logging.Logger;
 
 import static de.keridos.floodlights.block.BlockPhantomLight.UPDATE;
 import static de.keridos.floodlights.util.GeneralUtil.getPosFromPosFacing;
@@ -33,19 +32,22 @@ import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
  */
 @SuppressWarnings({"WeakerAccess", "NullableProblems"})
 public abstract class TileEntityMetaFloodlight extends TileEntityFL implements ITickable {
+
     protected boolean active;
     protected boolean wasActive;
-    protected boolean update = true;
+    protected boolean hasRedstone;
     protected int timeout;
     protected ItemStackHandler inventory;
 
     protected Block lightBlock = ModBlocks.blockPhantomLight;
     protected int rangeStraight = ConfigHandler.rangeStraightFloodlight;
     protected int rangeCone = ConfigHandler.rangeConeFloodlight;
+    protected int currentRange = rangeStraight;
+
+    private boolean hasLight;
 
     public TileEntityMetaFloodlight() {
         super();
-        this.wasActive = false;
 
         inventory = new ItemStackHandler(1) {
             @Override
@@ -56,16 +58,15 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
         };
     }
 
-    public void setRedstone(boolean b) {
-        active = b ^ inverted;
-        this.setState((byte) (this.active ? 1 : 0));
-        //this.world.markBlocksDirtyVertical(this.pos.getX(), this.pos.getZ(), this.pos.getX(), this.pos.getZ());
+    public void setHasRedstoneSignal(boolean hasSignal) {
+        // Light blocks are managed in the update() method
+        hasRedstone = hasSignal;
+        active = hasRedstone ^ inverted;
     }
 
     public void toggleInverted() {
         inverted = !inverted;
-        active = !active;
-        this.setState((byte) (this.active ? 1 : 0));
+        active = hasRedstone ^ inverted;
         //this.world.markBlocksDirtyVertical(this.pos.getX(), this.pos.getZ(), this.pos.getX(), this.pos.getZ());
     }
 
@@ -73,16 +74,15 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
         return wasActive;
     }
 
-    public void setWasActive(boolean wasActive) {
-        this.wasActive = wasActive;
-    }
-
     public void toggleUpdateRun() {
-        update = true;
+        //update = true;
     }
 
+    /**
+     * Adds this tile entity as source to the a phantom light at given position.
+     */
     @SuppressWarnings("ConstantConditions")
-    public void setLight(BlockPos pos) {
+    protected void updateLightBlock(BlockPos pos) {
         if (world.setBlockState(pos, lightBlock.getDefaultState(), 3)) {
             TileEntityPhantomLight light = (TileEntityPhantomLight) world.getTileEntity(pos);
             light.addSource(pos);
@@ -93,36 +93,24 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
 
     @Override
     public void update() {
-        if (!world.isRemote && update && !active) {
-            update = false;
-        }
+        if (world.isRemote)
+            return;
 
         if (timeout > 0) {
             timeout--;
             return;
         }
 
-        if (active && hasEnergy()) {
-            if (update) {
-                lightSource(true);
-                lightSource(false);
-                world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockFLColorableMachine.ACTIVE, true), 2);
-                update = false;
-            } else if (!wasActive) {
-                lightSource(false);
-                Logger.getGlobal().info("rotation: " + orientation.toString());
-                world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockFLColorableMachine.ACTIVE, true), 2);
-            }
-            wasActive = true;
-        } else {
-            // Shutdown this floodlight
-            if (wasActive) {
-                lightSource(true);
-                world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockFLColorableMachine.ACTIVE, false), 2);
-                wasActive = false;
-                timeout = ConfigHandler.timeoutFloodlights;
-                update = false;
-            }
+        // Energy itself is handled in one of the derived classes
+        if (active && hasEnergy() && (wasActive != active || !hasLight)) {
+            // Spawn phantom lights
+            lightSource(false);
+            wasActive = active;
+        } else if ((active && !hasEnergy()) || (!active && wasActive)) {
+            // A floodlight just run out of energy or was shut down - deactivate it
+            lightSource(true);
+            timeout = ConfigHandler.timeoutFloodlights;
+            wasActive = false;
         }
     }
 
@@ -144,22 +132,26 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
     @Override
     public void readFromNBT(NBTTagCompound nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
-        if (nbtTagCompound.hasKey(Names.NBT.STATE)) {
-            this.active = (nbtTagCompound.getInteger(Names.NBT.STATE) != 0);
-        }
-        if (nbtTagCompound.hasKey(Names.NBT.WAS_ACTIVE)) {
-            this.wasActive = nbtTagCompound.getBoolean(Names.NBT.WAS_ACTIVE);
-        }
+        if (nbtTagCompound.hasKey(Names.NBT.WAS_ACTIVE))
+            wasActive = nbtTagCompound.getBoolean(Names.NBT.WAS_ACTIVE);
+        if (nbtTagCompound.hasKey(Names.NBT.LIGHT))
+            hasLight = nbtTagCompound.getBoolean(Names.NBT.LIGHT);
+        if (nbtTagCompound.hasKey(Names.NBT.HAS_REDSTONE))
+            setHasRedstoneSignal(nbtTagCompound.getBoolean(Names.NBT.HAS_REDSTONE));
         if (nbtTagCompound.hasKey(Names.NBT.ITEMS))
             inventory.deserializeNBT(nbtTagCompound.getCompoundTag(Names.NBT.ITEMS));
+        if (nbtTagCompound.hasKey(Names.NBT.CURRENT_RANGE))
+            currentRange = nbtTagCompound.getInteger(Names.NBT.CURRENT_RANGE);
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound nbtTagCompound) {
         nbtTagCompound = super.writeToNBT(nbtTagCompound);
         nbtTagCompound.setBoolean(Names.NBT.WAS_ACTIVE, wasActive);
-        nbtTagCompound.setByte(Names.NBT.STATE, state);
+        nbtTagCompound.setBoolean(Names.NBT.LIGHT, hasLight);
+        nbtTagCompound.setBoolean(Names.NBT.HAS_REDSTONE, hasRedstone);
         nbtTagCompound.setTag(Names.NBT.ITEMS, inventory.serializeNBT());
+        nbtTagCompound.setInteger(Names.NBT.CURRENT_RANGE, currentRange);
         return nbtTagCompound;
     }
 
@@ -167,6 +159,7 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
     public NetworkDataList getSyncData(@Nonnull NetworkDataList data) {
         super.getSyncData(data);
         data.add(active);
+        data.add(hasLight);
         return data;
     }
 
@@ -174,6 +167,7 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
     public void applySyncData(ByteBuf buffer) {
         super.applySyncData(buffer);
         active = buffer.readBoolean();
+        hasLight = buffer.readBoolean();
     }
 
     @Override
@@ -212,11 +206,25 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
             TileEntityPhantomLight light = (TileEntityPhantomLight) world.getTileEntity(blockPos);
             light.addSource(this.pos);
         } else if (world.getBlockState(blockPos).getBlock().isAir(world.getBlockState(blockPos), world, blockPos) && setSourceUpdate == 1) {
-            setLight(blockPos);
+            updateLightBlock(blockPos);
         }
     }
 
-    public void lightSource(boolean remove) {
+    private void lightSource(boolean remove) {
+        if (hasLight == !remove)
+            return;
+
+        if (mode >= 0 && mode <= 2) {
+            hasLight = !remove;
+            // Update block appearance
+            world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockFLColorableMachine.ACTIVE, hasLight), 2);
+        }
+
+        if (remove) {
+            // Apply light range from config
+            updateCurrentRange();
+        }
+
         switch (mode) {
             case LIGHT_MODE_STRAIGHT:
                 straightSource(remove);
@@ -230,9 +238,12 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
         }
     }
 
-    public void straightSource(boolean remove) {
+    /**
+     * This method is called by the {@link TileEntityMetaFloodlight} class. Don't call it manually.
+     */
+    protected void straightSource(boolean remove) {
         for (int k = (remove ? 1 : 2); k >= 0; k--) {
-            for (int i = 1; i <= rangeStraight; i++) {
+            for (int i = 1; i <= currentRange; i++) {
 
                 int x = this.pos.getX() + this.orientation.getFrontOffsetX() * i;
                 int y = this.pos.getY() + this.orientation.getFrontOffsetY() * i;
@@ -245,7 +256,10 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
         }
     }
 
-    public void wideConeSource(boolean remove) {
+    /**
+     * This method is called by the {@link TileEntityMetaFloodlight} class. Don't call it manually.
+     */
+    protected void wideConeSource(boolean remove) {
         for (int k = (remove ? 1 : 2); k >= 0; k--) {
             boolean[] failedBeams = new boolean[9];
 
@@ -254,7 +268,7 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
             }
             for (int j = 0; j <= 16; j++) {
                 if (j <= 8) {
-                    for (int i = 1; i <= rangeCone / 4; i++) {
+                    for (int i = 1; i <= currentRange / 4; i++) {
                         int b = 0;
                         int c = 0;
                         switch (j) {
@@ -347,12 +361,15 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
         }
     }
 
-    public void narrowConeSource(boolean remove) {
+    /**
+     * This method is called by the {@link TileEntityMetaFloodlight} class. Don't call it manually.
+     */
+    protected void narrowConeSource(boolean remove) {
         for (int k = (remove ? 1 : 2); k >= 0; k--) {
             boolean[] failedBeams = new boolean[9];    // for the additional beam to cancel when the main beams fail.
             for (int j = 0; j <= 16; j++) {
                 if (j <= 8) {     // This is the main beams
-                    for (int i = 1; i <= rangeCone; i++) {
+                    for (int i = 1; i <= currentRange; i++) {
                         // for 1st light:
                         if (i == 1) {
                             int x = this.pos.getX() + this.orientation.getFrontOffsetX();
@@ -455,15 +472,20 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
         }
     }
 
+    @Override
+    public void setMode(int mode) {
+        super.setMode(mode);
+        updateCurrentRange();
+    }
+
     public void changeMode(EntityPlayer player) {
         if (world.isRemote)
             return;
 
+        // Light will be restored automatically, if necessary
         lightSource(true);
         mode = (mode == LIGHT_MODE_WIDE_CONE ? LIGHT_MODE_STRAIGHT : mode + 1);
-
-        if (active && hasEnergy())
-            lightSource(false);
+        updateCurrentRange();
 
         String modeString = "";
         switch (mode) {
@@ -478,5 +500,12 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
                 break;
         }
         player.sendMessage(new TextComponentString(safeLocalize(Names.Localizations.MODE) + ": " + safeLocalize(modeString)));
+    }
+
+    private void updateCurrentRange() {
+        if (mode == LIGHT_MODE_STRAIGHT)
+            currentRange = rangeStraight;
+        else
+            currentRange = rangeCone;
     }
 }

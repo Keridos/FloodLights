@@ -1,7 +1,6 @@
 package de.keridos.floodlights.tileentity;
 
 import cofh.redstoneflux.api.IEnergyContainerItem;
-import de.keridos.floodlights.block.BlockFLColorableMachine;
 import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.handler.ConfigHandler;
 import de.keridos.floodlights.reference.Names;
@@ -51,6 +50,7 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
 
     public TileEntityFLElectric() {
         super();
+        updateEnergyUsage();
     }
 
     @Override
@@ -65,30 +65,10 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
         if (world.isRemote || !isReady())
             return;
 
+        // Note: machine will shut down automatically if there is not enough energy
         tryDischargeItem(inventory.getStackInSlot(0));
-        if (active && hasEnergy()) {
+        if (active && hasEnergy())
             energy.extractEnergy(realEnergyUsage, false);
-
-            if (update) {
-                lightSource(true);
-                lightSource(false);
-                world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockFLColorableMachine.ACTIVE, true), 2);
-                update = false;
-            } else if (!wasActive) {
-                lightSource(false);
-                world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockFLColorableMachine.ACTIVE, true), 2);
-            }
-
-            wasActive = true;
-        } else if ((!active || !hasEnergy()) && wasActive) {
-            lightSource(true);
-            //world.setBlockState(pos, world.getBlockState(pos).getBlock().getStateFromMeta(getOrientation().ordinal()), 2);
-            markDirty();
-            wasActive = false;
-            timeout = ConfigHandler.timeoutFloodlights;
-            update = false;
-        }
-
     }
 
     @Override
@@ -123,7 +103,7 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
         updateEnergyUsage();
     }
 
-    private void updateEnergyUsage() {
+    protected void updateEnergyUsage() {
         realEnergyUsage = energyUsage * (mode == LIGHT_MODE_STRAIGHT ? 1 : 4);
     }
 

@@ -51,8 +51,10 @@ public class Names {
         public static final String STORAGE_FE = "storageFE";
         public static final String COLOR = "color";
         public static final String MODE = "teState";
-        public static final String STATE = "teMode";
+        public static final String LIGHT = "teLight";
         public static final String WAS_ACTIVE = "wasActive";
+        public static final String HAS_REDSTONE = "teRedstone";
+        public static final String CURRENT_RANGE = "teRange";
         public static final String CUSTOM_NAME = "CustomName";
         public static final String DIRECTION = "teDirection";
         public static final String ROTATION_STATE = "teRotationState";

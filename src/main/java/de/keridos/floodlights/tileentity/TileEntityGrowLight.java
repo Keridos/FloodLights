@@ -14,43 +14,15 @@ import net.minecraft.util.math.BlockPos;
  */
 
 public class TileEntityGrowLight extends TileEntityFLElectric {
-    private long nextGrowTick = 0;
 
-    /*@Override
-    public boolean canConnectEnergy(EnumFacing from) {
-        return (from.getOpposite().ordinal() == orientation.ordinal());
-    }*/
+    private long nextGrowTick = 0;
 
     public TileEntityGrowLight() {
         mode = LIGHT_MODE_STRAIGHT;
         rangeStraight = 1;
         energyUsage = ConfigHandler.energyUsageGrowLight;
+        updateEnergyUsage();
     }
-
-
-    /*@SuppressWarnings("ConstantConditions")
-    @Override
-    public void straightSource(boolean remove) {
-        int[] rotatedCoords = MathUtil.rotate(1, 0, 0, this.orientation);
-
-        int x = this.pos.getX() + rotatedCoords[0];
-        int y = this.pos.getY() + rotatedCoords[1];
-        int z = this.pos.getZ() + rotatedCoords[2];
-        BlockPos blockPos = new BlockPos(x, y, z);
-        if (remove) {
-            if (world.getBlockState(blockPos).getBlock() == ModBlocks.blockPhantomLight) {
-                TileEntityPhantomLight light = (TileEntityPhantomLight) world.getTileEntity(blockPos);
-                light.removeSource(this.pos);
-            }
-        } else if (world.getBlockState(blockPos).getBlock().isAir(world.getBlockState(blockPos), world, blockPos)) {
-            setLight(blockPos);
-            world.setBlockState(blockPos, world.getBlockState(blockPos).withProperty(UPDATE, false));
-        } else if (world.getBlockState(blockPos).getBlock() == ModBlocks.blockPhantomLight) {
-            TileEntityPhantomLight light = (TileEntityPhantomLight) world.getTileEntity(blockPos);
-            light.addSource(this.pos);
-        }
-
-    }*/
 
     public void update() {
         super.update();
