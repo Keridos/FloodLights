@@ -3,7 +3,6 @@ package de.keridos.floodlights.block;
 import de.keridos.floodlights.handler.GuiHandler;
 import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.tileentity.TileEntityGrowLight;
-import de.keridos.floodlights.tileentity.TileEntitySmallFloodlight;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -34,16 +33,6 @@ public class BlockGrowLight extends BlockFLColorableMachine {
     @Override
     public boolean isOpaqueCube(IBlockState blockState) {
         return false;
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    @Override
-    public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
-        if (worldIn.getTileEntity(pos) instanceof TileEntitySmallFloodlight) {
-            TileEntitySmallFloodlight te = (TileEntitySmallFloodlight) worldIn.getTileEntity(pos);
-            return state.withProperty(ACTIVE, te.getWasActive());
-        } else
-            return state.withProperty(COLOR, 16);
     }
 
     @Override

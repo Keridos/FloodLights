@@ -15,7 +15,7 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -32,30 +32,30 @@ import java.util.List;
  * Created by Keridos on 01.10.14.
  * This Class defines the block properties of the electric floodlight.
  */
+@SuppressWarnings({"NullableProblems", "deprecation"})
 public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implements ITileEntityProvider {
-    public static final PropertyBool ROTATIONSTATE = PropertyBool.create("rotationstate");
-    public static final PropertyEnum MODEL = PropertyEnum.create("model", PropertiesEnum.EnumModelSmallLight.class);
 
+    public static final PropertyEnum MODEL = PropertyEnum.create("model", PropertiesEnum.EnumModelSmallLight.class);
+    public static final PropertyBool ROTATIONSTATE = PropertyBool.create("rotationstate");
+
+    @SuppressWarnings("unchecked")
     public BlockSmallElectricFloodlight() {
         super(Names.Blocks.SMALL_ELECTRIC_FLOODLIGHT, Material.ROCK, SoundType.METAL, 2.5F);
-        setDefaultState(
-                this.blockState.getBaseState().withProperty(COLOR, 0).withProperty(ACTIVE, false).withProperty(FACING,
-                        EnumFacing.DOWN).withProperty(MODEL, PropertiesEnum.EnumModelSmallLight.values()[0]).withProperty(ROTATIONSTATE, false));
         setHarvestLevel("pickaxe", 1);
         guiId = GuiHandler.GUI_ELECTIC_FLOODLIGHT;
+
+        setDefaultState(getDefaultState()
+                .withProperty(MODEL, PropertiesEnum.EnumModelSmallLight.values()[0])
+                .withProperty(ROTATIONSTATE, false));
     }
 
-    @Override
-    public boolean isOpaqueCube(IBlockState blockState) {
-        return false;
-    }
-
-    @Override
     @SuppressWarnings("unchecked")
+    @Override
     public IBlockState getStateFromMeta(int meta) {
         return this.getDefaultState().withProperty(MODEL, PropertiesEnum.EnumModelSmallLight.values()[meta]);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public int getMetaFromState(IBlockState state) {
         return (((PropertiesEnum.EnumModelSmallLight) state.getValue(MODEL)).getID());
@@ -63,20 +63,29 @@ public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implem
 
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
-        if (worldIn.getTileEntity(pos) instanceof TileEntitySmallFloodlight) {
-            TileEntitySmallFloodlight te = ((TileEntitySmallFloodlight) worldIn.getTileEntity(pos));
-            return state.withProperty(COLOR, te.getColor()).withProperty(FACING, te.getOrientation()).withProperty(ROTATIONSTATE, te.getRotationState()).withProperty(ACTIVE, te.getWasActive());
-        } else return state.withProperty(COLOR, 16);
+        TileEntity tile = worldIn.getTileEntity(pos);
+        if (tile instanceof TileEntitySmallFloodlight) {
+            return super.getActualState(state, worldIn, pos)
+                    .withProperty(ROTATIONSTATE, ((TileEntitySmallFloodlight) tile).getRotationState());
+        }
+
+        return super.getActualState(state, worldIn, pos);
     }
 
     @Override
-    protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, FACING, ACTIVE, COLOR, ROTATIONSTATE, MODEL);
+    protected void buildBlockState(BlockStateContainer.Builder builder) {
+        super.buildBlockState(builder);
+        builder.add(MODEL).add(ROTATIONSTATE);
     }
 
     @Override
     public TileEntitySmallFloodlight createNewTileEntity(World world, int metadata) {
         return new TileEntitySmallFloodlight();
+    }
+
+    @Override
+    public boolean isOpaqueCube(IBlockState blockState) {
+        return false;
     }
 
     @Nullable
@@ -85,6 +94,7 @@ public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implem
         return null;
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World world, BlockPos pos) {
@@ -152,7 +162,7 @@ public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implem
 
     @Override
     public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
-        ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
+        ArrayList<ItemStack> drops = new ArrayList<>();
         drops.add(0, new ItemStack(ModBlocks.blockSmallElectricLight, 1, this.getMetaFromState(state)));
         return drops;
     }

@@ -1,6 +1,5 @@
 package de.keridos.floodlights.tileentity;
 
-import de.keridos.floodlights.block.BlockFLColorableMachine;
 import de.keridos.floodlights.core.NetworkDataList;
 import de.keridos.floodlights.handler.ConfigHandler;
 import de.keridos.floodlights.init.ModBlocks;
@@ -8,6 +7,7 @@ import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.util.MathUtil;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -62,16 +62,13 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
         // Light blocks are managed in the update() method
         hasRedstone = hasSignal;
         active = hasRedstone ^ inverted;
+        syncData();
     }
 
     public void toggleInverted() {
         inverted = !inverted;
         active = hasRedstone ^ inverted;
-        //this.world.markBlocksDirtyVertical(this.pos.getX(), this.pos.getZ(), this.pos.getX(), this.pos.getZ());
-    }
-
-    public boolean getWasActive() {
-        return wasActive;
+        syncData();
     }
 
     public void toggleUpdateRun() {
@@ -217,7 +214,9 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
         if (mode >= 0 && mode <= 2) {
             hasLight = !remove;
             // Update block appearance
-            world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockFLColorableMachine.ACTIVE, hasLight), 2);
+            //world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockFLColorableMachine.ACTIVE, hasLight), 2);
+            IBlockState state = world.getBlockState(pos);
+            world.notifyBlockUpdate(pos, state, state, 3);
         }
 
         if (remove) {
@@ -236,6 +235,13 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
                 wideConeSource(remove);
                 break;
         }
+    }
+
+    /**
+     * Returns whether this floowlight emits light.
+     */
+    public boolean hasLight() {
+        return hasLight;
     }
 
     /**

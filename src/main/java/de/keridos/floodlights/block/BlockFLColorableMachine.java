@@ -21,7 +21,10 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.world.ChunkCache;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 
 import static de.keridos.floodlights.util.GeneralUtil.getMinecraftItem;
 import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
@@ -32,36 +35,48 @@ import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
  */
 @SuppressWarnings({"deprecation", "NullableProblems", "WeakerAccess"})
 public class BlockFLColorableMachine extends BlockFL {
-    public static final PropertyInteger COLOR = PropertyInteger.create("color", 0, 16);
+
     public static final PropertyDirection FACING = PropertyDirection.create("facing");
     public static final PropertyBool ACTIVE = PropertyBool.create("active");
+    public static final PropertyInteger COLOR = PropertyInteger.create("color", 0, 15);
 
     protected int guiId = -1;
 
     public BlockFLColorableMachine(String unlocName, Material material, SoundType type, float hardness) {
         super(unlocName, material, type, hardness);
-        setDefaultState(this.blockState.getBaseState()
-                .withProperty(COLOR, 0).withProperty(ACTIVE, false).withProperty(FACING, EnumFacing.DOWN));
-    }
-
-    @Override
-    public IBlockState getStateFromMeta(int meta) {
-        if (meta > 7) {
-            return this.getDefaultState().withProperty(FACING, EnumFacing.getFront(meta - 8)).withProperty(ACTIVE,
-                    true);
-        } else {
-            return this.getDefaultState().withProperty(FACING, EnumFacing.getFront(meta)).withProperty(ACTIVE, false);
-        }
+        setDefaultState(blockState.getBaseState()
+                .withProperty(COLOR, 0)
+                .withProperty(ACTIVE, false)
+                .withProperty(FACING, EnumFacing.DOWN));
     }
 
     @Override
     public int getMetaFromState(IBlockState state) {
-        return 8 * (state.getValue(ACTIVE) ? 1 : 0) + state.getValue(FACING).ordinal();
+        return 0;
     }
 
     @Override
-    protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, FACING, ACTIVE, COLOR);
+    public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
+        TileEntity tile = worldIn instanceof ChunkCache ? ((ChunkCache)worldIn).getTileEntity(pos, Chunk.EnumCreateEntityType.CHECK) : worldIn.getTileEntity(pos);
+        if (tile instanceof TileEntityMetaFloodlight) {
+            return state
+                    .withProperty(FACING, ((TileEntityMetaFloodlight) tile).getOrientation())
+                    .withProperty(ACTIVE, ((TileEntityMetaFloodlight) tile).hasLight())
+                    .withProperty(COLOR, ((TileEntityMetaFloodlight) tile).getColor());
+        }
+
+        return state;
+    }
+
+    @Override
+    protected final BlockStateContainer createBlockState() {
+        BlockStateContainer.Builder builder = new BlockStateContainer.Builder(this);
+        buildBlockState(builder);
+        return builder.build();
+    }
+
+    protected void buildBlockState(BlockStateContainer.Builder builder) {
+        builder.add(COLOR).add(FACING).add(ACTIVE);
     }
 
     @Override
@@ -73,34 +88,38 @@ public class BlockFLColorableMachine extends BlockFL {
         if (tileEntity == null)
             return true;
 
-        ItemStack heldItem = player.getHeldItem(hand);
-        if (hand == EnumHand.MAIN_HAND) {
-            if (heldItem == ItemStack.EMPTY && player.isSneaking()) {
-                tileEntity.toggleInverted();
-                String invert = (tileEntity.getInverted() ? Names.Localizations.TRUE : Names.Localizations.FALSE);
-                player.sendMessage(new TextComponentString(safeLocalize(Names.Localizations.INVERT) + ": " + safeLocalize(invert)));
-                return true;
-            } else if (heldItem != ItemStack.EMPTY) {
-                if (!ModCompatibility.WrenchAvailable && heldItem.getItem() == getMinecraftItem("stick")) {
-                    tileEntity.changeMode(player);
-                    return true;
-                } else if (player.isSneaking() && ModCompatibility.getInstance().isItemValidWrench(heldItem)) {
-                    world.destroyBlock(pos, true);
-                    return true;
-                } else if (ModCompatibility.getInstance().isItemValidWrench(heldItem)) {
-                    tileEntity.changeMode(player);
-                    return true;
-                } else if (heldItem.getItem() == Items.DYE) {
-                    tileEntity.setColor(15 - heldItem.getItemDamage());
-                    return true;
-                }
-            }
-
-            player.openGui(FloodLights.instance, guiId, world, pos.getX(), pos.getY(), pos.getZ());
+        ItemStack heldItem = player.getHeldItem(EnumHand.MAIN_HAND);
+        if (heldItem == ItemStack.EMPTY && player.isSneaking()) {
+            tileEntity.toggleInverted();
+            String invert = (tileEntity.getInverted() ? Names.Localizations.TRUE : Names.Localizations.FALSE);
+            player.sendMessage(new TextComponentString(safeLocalize(Names.Localizations.INVERT) + ": " + safeLocalize(invert)));
             return true;
+        } else if (heldItem != ItemStack.EMPTY) {
+            if (!ModCompatibility.WrenchAvailable && heldItem.getItem() == getMinecraftItem("stick")) {
+                tileEntity.changeMode(player);
+                return true;
+            } else if (player.isSneaking() && ModCompatibility.getInstance().isItemValidWrench(heldItem)) {
+                world.destroyBlock(pos, true);
+                return true;
+            } else if (ModCompatibility.getInstance().isItemValidWrench(heldItem)) {
+                tileEntity.changeMode(player);
+                return true;
+            } else if (heldItem.getItem() == Items.DYE) {
+                tileEntity.setColor(15 - heldItem.getItemDamage());
+                return true;
+            }
         }
 
+        player.openGui(FloodLights.instance, guiId, world, pos.getX(), pos.getY(), pos.getZ());
         return true;
+    }
+
+    @Override
+    public boolean rotateBlock(World world, BlockPos pos, EnumFacing axis) {
+        // Automatic block rotation is triggered when using a wrench from other mod.
+        // After the block is rotated, wrench tells Minecraft that something has been done
+        // and in result the onBlockActivated() method isn't called (on server side).
+        return false;
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -109,6 +128,7 @@ public class BlockFLColorableMachine extends BlockFL {
         if (!world.isRemote && world.getTileEntity(pos) instanceof TileEntityMetaFloodlight) {
             ((TileEntityMetaFloodlight) world.getTileEntity(pos)).setHasRedstoneSignal(world.isBlockIndirectlyGettingPowered(pos) > 0);
 
+            // TODO: what's this for?
             if (!(blockIn instanceof BlockFL) && blockIn != Blocks.AIR)
                 ((TileEntityMetaFloodlight) world.getTileEntity(pos)).toggleUpdateRun();
         }

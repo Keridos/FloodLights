@@ -55,17 +55,20 @@ public class BlockFL extends Block {
         super.breakBlock(world, pos, blockState);
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-        if (!world.isRemote && world.getTileEntity(pos) instanceof TileEntityFL) {
-            if (stack.hasDisplayName()) {
-                ((TileEntityFL) world.getTileEntity(pos)).setCustomName(stack.getDisplayName());
-            }
-            ((TileEntityFL) world.getTileEntity(pos)).setOrientation(getFacing(placer));
-            world.setBlockState(pos, this.getStateFromMeta(getFacing(placer).ordinal()), 2);
-        }
-    }
+        // This method must be called on both client and server in order to prevent orientation from being
+        // quickly changed from default to correct value when synchronization packet arrives to a tile entity.
+        TileEntity tile = world.getTileEntity(pos);
+        if (!(tile instanceof TileEntityFL))
+            return;
 
+        if (stack.hasDisplayName())
+            ((TileEntityFL) tile).setCustomName(stack.getDisplayName());
+
+        ((TileEntityFL) tile).setOrientation(getFacing(placer));
+    }
 
     protected void dropInventory(World world, BlockPos pos) {
         TileEntity tileEntity = world.getTileEntity(pos);

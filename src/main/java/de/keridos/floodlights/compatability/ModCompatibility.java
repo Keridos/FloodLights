@@ -3,6 +3,7 @@ package de.keridos.floodlights.compatability;
 import crazypants.enderio.api.tool.ITool;
 import de.keridos.floodlights.handler.ConfigHandler;
 import de.keridos.floodlights.reference.Reference;
+import ic2.core.item.tool.ItemToolWrench;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.Loader;
@@ -89,12 +90,9 @@ public class ModCompatibility {
                 return true;
             }
         } */
-        if (ModCompatibility.IC2Loaded) {
-            if (stack.getItem().getUnlocalizedName().equals("ic2.itemToolWrench")) {
-                return true;
-            }
-            return stack.getItem().getUnlocalizedName().equals("ic2.itemToolWrenchElectric");
-        }
+        if (ModCompatibility.IC2Loaded && stack.getItem() instanceof ItemToolWrench)
+            return true;
+
         return false;
     }
 

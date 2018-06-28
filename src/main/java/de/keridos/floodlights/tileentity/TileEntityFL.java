@@ -1,6 +1,5 @@
 package de.keridos.floodlights.tileentity;
 
-import de.keridos.floodlights.block.BlockFLColorableMachine;
 import de.keridos.floodlights.core.NetworkDataList;
 import de.keridos.floodlights.core.network.message.TileEntitySyncMessage;
 import de.keridos.floodlights.handler.PacketHandler;
@@ -30,6 +29,7 @@ public class TileEntityFL extends TileEntity {
     protected static final int LIGHT_MODE_WIDE_CONE = 2;
 
     protected HashSet<EntityPlayer> inventoryAccessors = new HashSet<>();
+    protected boolean shouldRerender;
 
     protected EnumFacing orientation;
     protected String customName;
@@ -51,10 +51,12 @@ public class TileEntityFL extends TileEntity {
 
     public void setOrientation(int orientation) {
         this.orientation = EnumFacing.getFront(orientation);
+        syncData();
     }
 
     public void setOrientation(EnumFacing orientation) {
         this.orientation = orientation;
+        syncData();
     }
 
     public String getCustomName() {
@@ -88,7 +90,7 @@ public class TileEntityFL extends TileEntity {
 
     public void setColor(int color) {
         this.color = color;
-        this.world.setBlockState(this.pos, this.world.getBlockState(this.pos).withProperty(BlockFLColorableMachine.COLOR, color), 2);
+        syncData();
     }
 
     @Override
@@ -162,6 +164,17 @@ public class TileEntityFL extends TileEntity {
     }
 
     /**
+     * Triggers data synchronization between server and client - use to synchronize rendering-related data has changed.
+     */
+    public void syncData() {
+        if (!hasWorld() || world.isRemote)
+            return;
+
+        NetworkDataList data = getSyncData(new NetworkDataList());
+        PacketHandler.INSTANCE.sendToAll(new TileEntitySyncMessage(pos, world, data));
+    }
+
+    /**
      * Returns the tile entity data that will be sent to client when synchronization is required. Return null if
      * no synchronization is required.
      */
@@ -169,16 +182,26 @@ public class TileEntityFL extends TileEntity {
         data.add(mode);
         data.add(inverted);
         data.add(color);
+        data.add(orientation.getIndex());
         return data;
     }
 
     /**
      * Called when tile entity sync packet arrives. Read data in exactly the same order as in {@link #getSyncData(NetworkDataList)}.
+     * When block state has changed and it should be rerendered, set the {@link #shouldRerender} to <code>true</code>.
      */
     public void applySyncData(ByteBuf buffer) {
         mode = buffer.readInt();
-        inverted = buffer.readBoolean();
-        color = buffer.readInt();
+        boolean inverted = buffer.readBoolean();
+        int color = buffer.readInt();
+        EnumFacing orientation = EnumFacing.getFront(buffer.readInt());
+
+        if (this.inverted != inverted || this.color != color || this.orientation != orientation)
+            shouldRerender = true;
+
+        this.inverted = inverted;
+        this.color = color;
+        this.orientation = orientation;
     }
 
     /**
@@ -195,6 +218,18 @@ public class TileEntityFL extends TileEntity {
                     (EntityPlayerMP) player
             );
         }
+    }
+
+    /**
+     * Called after synchronization data has been applied and triggers block state synchronization.
+     */
+    public void rerenderBlock() {
+        if (!shouldRerender)
+            return;
+        shouldRerender = false;
+
+        if (hasWorld())
+            world.markBlockRangeForRenderUpdate(pos, pos);
     }
 
     public boolean hasCustomName() {

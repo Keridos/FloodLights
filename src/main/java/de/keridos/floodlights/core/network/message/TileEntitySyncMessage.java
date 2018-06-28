@@ -9,8 +9,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -68,8 +66,10 @@ public class TileEntitySyncMessage implements IMessage {
                 return null;
 
             TileEntity tileEntity = player.world.getTileEntity(pos);
-            if (tileEntity instanceof TileEntityFL)
+            if (tileEntity instanceof TileEntityFL) {
                 ((TileEntityFL) tileEntity).applySyncData(message.buffer);
+                ((TileEntityFL) tileEntity).rerenderBlock();
+            }
 
             return null;
         }
