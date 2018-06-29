@@ -1,13 +1,9 @@
 package de.keridos.floodlights.client.gui.container;
 
-import de.keridos.floodlights.core.network.message.MessageTileEntityFL;
-import de.keridos.floodlights.handler.PacketHandler;
 import de.keridos.floodlights.tileentity.TileEntityFLElectric;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -22,6 +18,7 @@ import static de.keridos.floodlights.util.GeneralUtil.isItemStackValidElectrical
  * Created by Keridos on 09/10/2014.
  * This Class describes the Container for the Carbon Floodlight.
  */
+@SuppressWarnings("NullableProblems")
 public class ContainerElectricFloodlight extends Container {
     private TileEntityFLElectric electricFloodlight;
 
@@ -49,9 +46,18 @@ public class ContainerElectricFloodlight extends Container {
                 entity.markDirty();
             }
         });
+
+        electricFloodlight.onInventoryOpen(invPlayer.player);
     }
 
     @Override
+    public void onContainerClosed(EntityPlayer playerIn) {
+        super.onContainerClosed(playerIn);
+        electricFloodlight.onInventoryClose(playerIn);
+    }
+
+    @Override
+    @Nonnull
     public ItemStack transferStackInSlot(EntityPlayer player, int i) {
         Slot slot = getSlot(i);
         if (slot.getHasStack()) {
@@ -77,19 +83,7 @@ public class ContainerElectricFloodlight extends Container {
     }
 
     @Override
-    public boolean canInteractWith(EntityPlayer player) {
+    public boolean canInteractWith(@Nonnull EntityPlayer player) {
         return true;
-    }
-
-    @Override
-    public void detectAndSendChanges() {
-        super.detectAndSendChanges();
-
-        // TODO: inefficient solution: use single packet when inventory is being opened
-        for (IContainerListener listener : listeners) {
-            if (listener instanceof EntityPlayerMP) {
-                PacketHandler.INSTANCE.sendTo(new MessageTileEntityFL(electricFloodlight), (EntityPlayerMP) listener);
-            }
-        }
     }
 }

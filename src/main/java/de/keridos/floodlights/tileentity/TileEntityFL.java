@@ -251,11 +251,6 @@ public class TileEntityFL extends TileEntity {
 
     @Override
     public NBTTagCompound getUpdateTag() {
-        return this.writeToNBT(new NBTTagCompound());
-    }
-
-    @Override
-    public void handleUpdateTag(NBTTagCompound tag) {
-        readFromNBT(tag);
+        return writeToNBT(super.getUpdateTag());
     }
 }

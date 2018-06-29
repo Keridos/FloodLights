@@ -2,6 +2,7 @@ package de.keridos.floodlights.tileentity;
 
 import cofh.redstoneflux.api.IEnergyContainerItem;
 import de.keridos.floodlights.compatability.ModCompatibility;
+import de.keridos.floodlights.core.NetworkDataList;
 import de.keridos.floodlights.handler.ConfigHandler;
 import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.util.MathUtil;
@@ -11,6 +12,7 @@ import ic2.api.energy.tile.IEnergyEmitter;
 import ic2.api.energy.tile.IEnergySink;
 import ic2.api.item.ElectricItem;
 import ic2.api.item.IElectricItem;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -21,6 +23,7 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.fml.common.Optional;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -67,8 +70,13 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
 
         // Note: machine will shut down automatically if there is not enough energy
         tryDischargeItem(inventory.getStackInSlot(0));
-        if (active && hasEnergy())
+        if (active && hasEnergy()) {
             energy.extractEnergy(realEnergyUsage, false);
+
+            // Update client GUI when amount of stored energy has changed
+            if (energy.storageChanged())
+                syncWithAccessors();
+        }
     }
 
     @Override
@@ -121,6 +129,19 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
     }
 
     @Override
+    public NetworkDataList getSyncData(@Nonnull NetworkDataList data) {
+        super.getSyncData(data);
+        data.add(energy.getEnergyStored());
+        return data;
+    }
+
+    @Override
+    public void applySyncData(ByteBuf buffer) {
+        super.applySyncData(buffer);
+        energy.setEnergyStored(buffer.readInt());
+    }
+
+    @Override
     public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
         return capability == CapabilityEnergy.ENERGY || super.hasCapability(capability, facing);
     }
@@ -132,10 +153,6 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
         if (capability == CapabilityEnergy.ENERGY)
             return (T) energy;
         return super.getCapability(capability, facing);
-    }
-
-    public void setEnergyStored(int energyStored) {
-        energy.setEnergyStored(energyStored);
     }
 
     @Optional.Method(modid = "ic2")
@@ -182,6 +199,8 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
 
     public static class CustomEnergyStorage extends EnergyStorage {
 
+        private int prevStorageRatio;
+
         public CustomEnergyStorage(int capacity) {
             super(capacity);
         }
@@ -193,6 +212,18 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
         public double receiveEU(double amount) {
             int received = receiveEnergy((int) Math.round(amount * EU_TO_RF_RATE), false);
             return amount - received / EU_TO_RF_RATE;
+        }
+
+        /**
+         * Returns whether amount of stored energy has changed significantly since last call.
+         */
+        public boolean storageChanged() {
+            int ratio = Math.round(energy * 1000f / capacity);
+            if (Math.abs(ratio - prevStorageRatio) > 5 || (ratio != prevStorageRatio && (ratio == 0 || ratio == 1000))) {
+                prevStorageRatio = ratio;
+                return true;
+            }
+            return false;
         }
 
         public void readFromNBT(NBTTagCompound nbtTagCompound) {

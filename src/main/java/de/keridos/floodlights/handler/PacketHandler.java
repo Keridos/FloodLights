@@ -1,7 +1,6 @@
 package de.keridos.floodlights.handler;
 
 
-import de.keridos.floodlights.core.network.message.MessageTileEntityFL;
 import de.keridos.floodlights.core.network.message.TileEntitySyncMessage;
 import de.keridos.floodlights.reference.Reference;
 import io.netty.buffer.ByteBuf;
@@ -24,7 +23,6 @@ public class PacketHandler {
     @SuppressWarnings("UnusedAssignment")
     public static void init() {
         int id = 0;
-        INSTANCE.registerMessage(MessageTileEntityFL.MessageTileEntityFLHandler.class, MessageTileEntityFL.class, id++, Side.CLIENT);
         INSTANCE.registerMessage(TileEntitySyncMessage.Handler.class, TileEntitySyncMessage.class, id++, Side.CLIENT);
     }
 
