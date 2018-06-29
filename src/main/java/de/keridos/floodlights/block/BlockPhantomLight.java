@@ -24,8 +24,10 @@ import java.util.Random;
  * Created by Keridos on 01.10.14.
  * This Class implements the invisible light block the mod uses to light up areas.
  */
+@SuppressWarnings({"WeakerAccess", "deprecation"})
 public class BlockPhantomLight extends BlockFL implements ITileEntityProvider {
     public static final PropertyBool UPDATE = PropertyBool.create("update");
+
     public BlockPhantomLight() {
         super(Names.Blocks.PHANTOM_LIGHT, Material.AIR, SoundType.CLOTH, 0.0F);
     }
@@ -38,12 +40,12 @@ public class BlockPhantomLight extends BlockFL implements ITileEntityProvider {
 
     @Override
     public IBlockState getStateFromMeta(int meta) {
-          return this.getDefaultState().withProperty(UPDATE, (meta == 1));
+        return this.getDefaultState().withProperty(UPDATE, (meta == 1));
     }
 
     @Override
     public int getMetaFromState(IBlockState state) {
-        return (state.getValue(UPDATE)? 1 : 0);
+        return (state.getValue(UPDATE) ? 1 : 0);
     }
 
     @Override
@@ -98,7 +100,7 @@ public class BlockPhantomLight extends BlockFL implements ITileEntityProvider {
     }
 
     @Override
-    public boolean canBeReplacedByLeaves(IBlockState state,IBlockAccess world, BlockPos pos) {
+    public boolean canBeReplacedByLeaves(IBlockState state, IBlockAccess world, BlockPos pos) {
         return true;
     }
 
@@ -112,18 +114,17 @@ public class BlockPhantomLight extends BlockFL implements ITileEntityProvider {
         return new TileEntityPhantomLight();
     }
 
-
     @Override
     public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
         if (!worldIn.isRemote && state.getValue(UPDATE) && (blockIn != Blocks.AIR)) {
-            ((TileEntityPhantomLight) worldIn.getTileEntity(pos)).updateAllSources(true);
+            ((TileEntityPhantomLight) worldIn.getTileEntity(pos)).invalidateSources();
         }
     }
 
     @Override
     public void breakBlock(World world, BlockPos pos, IBlockState blockState) {
-        ((TileEntityPhantomLight) world.getTileEntity(pos)).updateAllSources(true);
-        super.breakBlock(world,pos,blockState);
+        ((TileEntityPhantomLight) world.getTileEntity(pos)).invalidateSources();
+        super.breakBlock(world, pos, blockState);
     }
 
     @Override

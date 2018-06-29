@@ -1,15 +1,14 @@
 package de.keridos.floodlights.tileentity;
 
 import de.keridos.floodlights.reference.Names;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -21,47 +20,38 @@ import static de.keridos.floodlights.util.GeneralUtil.getPosFromIntArray;
  * This Class is the base for all TileEntities within this mod.
  */
 public class TileEntityPhantomLight extends TileEntity {
-    private ArrayList<BlockPos> sources;
-
-    public TileEntityPhantomLight() {
-        super();
-        sources = new ArrayList<>();
-    }
-
-
+    private ArrayList<BlockPos> sources = new ArrayList<>();
 
     void addSource(BlockPos pos) {
-
-        if (sources.contains(pos)) {
+        if (sources.contains(pos))
             return;
-        }
-        sources.add(pos);
-    }
 
-    private void removeSource(Iterator<BlockPos> iter, boolean remove) {
-        iter.remove();
-        if (sources.isEmpty() && this.hasWorld() && remove) {
-            world.setBlockToAir(this.pos);
-        }
+        sources.add(pos);
+        markDirty();
     }
 
     void removeSource(BlockPos pos) {
-        sources.remove(pos);
-        if (sources.isEmpty() && this.hasWorld()) {
-            world.setBlockToAir(this.pos);
-        }
+        removeSource(pos, true);
     }
 
-    public void updateAllSources(boolean remove) {
+    private void removeSource(BlockPos pos, boolean updateSources) {
+        if (updateSources) {
+            sources.remove(pos);
+            markDirty();
+        }
+        if (sources.isEmpty() && this.hasWorld())
+            world.setBlockToAir(this.pos);
+    }
+
+    public void invalidateSources() {
         Iterator<BlockPos> iter = sources.iterator();
         while (iter.hasNext()) {
             BlockPos pos = iter.next();
-            if (world != null) {
+            if (hasWorld()) {
                 TileEntity te = world.getTileEntity(pos);
-                if (te != null && te instanceof TileEntityMetaFloodlight) {
-                    ((TileEntityMetaFloodlight) te).toggleUpdateRun();
-                } else {
-                    this.removeSource(iter, remove);
+                if (!(te instanceof TileEntityMetaFloodlight)) {
+                    removeSource(pos, false);
+                    iter.remove();
                 }
             }
         }
@@ -79,6 +69,7 @@ public class TileEntityPhantomLight extends TileEntity {
     }
 
     @Override
+    @Nonnull
     public NBTTagCompound writeToNBT(NBTTagCompound nbtTagCompound) {
         nbtTagCompound = super.writeToNBT(nbtTagCompound);
         if (!this.sources.isEmpty()) {

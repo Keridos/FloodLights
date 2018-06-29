@@ -165,10 +165,14 @@ public class TileEntityFL extends TileEntity {
 
     /**
      * Triggers data synchronization between server and client - use to synchronize rendering-related data has changed.
+     * To sync GUI-related data, use {@link #syncWithAccessors()} instead.
      */
     public void syncData() {
         if (!hasWorld() || world.isRemote)
             return;
+
+        // Tile entity data has changed and needs to be saved
+        markDirty();
 
         NetworkDataList data = getSyncData(new NetworkDataList());
         PacketHandler.INSTANCE.sendToAll(new TileEntitySyncMessage(pos, world, data));

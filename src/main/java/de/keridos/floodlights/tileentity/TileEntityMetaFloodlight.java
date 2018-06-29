@@ -82,7 +82,7 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
     protected void updateLightBlock(BlockPos pos) {
         if (world.setBlockState(pos, lightBlock.getDefaultState(), 3)) {
             TileEntityPhantomLight light = (TileEntityPhantomLight) world.getTileEntity(pos);
-            light.addSource(pos);
+            light.addSource(this.pos);
         } else {
             this.toggleUpdateRun();
         }
