@@ -68,15 +68,15 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
         if (world.isRemote || !isReady())
             return;
 
-        // Note: machine will shut down automatically if there is not enough energy
         tryDischargeItem(inventory.getStackInSlot(0));
-        if (active && hasEnergy()) {
-            energy.extractEnergy(realEnergyUsage, false);
 
-            // Update client GUI when amount of stored energy has changed
-            if (energy.storageChanged())
-                syncWithAccessors();
-        }
+        // Update client GUI when amount of stored energy has changed
+        if (energy.storageChanged())
+            syncWithAccessors();
+
+        // Note: machine will shut down automatically if there is not enough energy
+        if (active && hasEnergy())
+            energy.extractEnergy(realEnergyUsage, false);
     }
 
     @Override
@@ -219,7 +219,7 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
          */
         public boolean storageChanged() {
             int ratio = Math.round(energy * 1000f / capacity);
-            if (Math.abs(ratio - prevStorageRatio) > 5 || (ratio != prevStorageRatio && (ratio == 0 || ratio == 1000))) {
+            if (Math.abs(ratio - prevStorageRatio) > 10 || (ratio != prevStorageRatio && (energy == 0 || energy == capacity))) {
                 prevStorageRatio = ratio;
                 return true;
             }
