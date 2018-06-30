@@ -76,6 +76,16 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
     }
 
     /**
+     * Notifies this machine that a container block has been removed and the tile entity is about to be destroyed.
+     */
+    public void notifyBlockRemoved() {
+        if (world.isRemote)
+            return;
+
+        lightSource(true);
+    }
+
+    /**
      * Adds this tile entity as source to the a phantom light at given position.
      */
     @SuppressWarnings("ConstantConditions")

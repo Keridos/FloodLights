@@ -5,7 +5,6 @@ import de.keridos.floodlights.client.gui.CreativeTabFloodlight;
 import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.reference.Textures;
 import de.keridos.floodlights.tileentity.TileEntityFL;
-import de.keridos.floodlights.tileentity.TileEntityMetaFloodlight;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -49,9 +48,6 @@ public class BlockFL extends Block {
     @Override
     public void breakBlock(World world, BlockPos pos, IBlockState blockState) {
         dropInventory(world, pos);
-        TileEntity tileEntity = world.getTileEntity(pos);
-        if (tileEntity instanceof TileEntityMetaFloodlight)
-            ((TileEntityMetaFloodlight) tileEntity).setHasRedstoneSignal(false);
         super.breakBlock(world, pos, blockState);
     }
 

@@ -144,8 +144,10 @@ public class BlockFLColorableMachine extends BlockFL {
     @Override
     public void breakBlock(World world, BlockPos pos, IBlockState blockState) {
         TileEntity tileEntity = world.getTileEntity(pos);
-        if (tileEntity instanceof TileEntityMetaFloodlight)
+        if (tileEntity instanceof TileEntityMetaFloodlight) {
             ((TileEntityMetaFloodlight) tileEntity).setHasRedstoneSignal(false);
+            ((TileEntityMetaFloodlight) tileEntity).notifyBlockRemoved();
+        }
 
         super.breakBlock(world, pos, blockState);
     }
