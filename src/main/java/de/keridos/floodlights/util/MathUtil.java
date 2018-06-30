@@ -15,26 +15,26 @@ public class MathUtil {
         switch (direction) {
             case DOWN:
                 result[0] = y;
-                result[1] = -x;
+                result[1] = 1 - x;
                 result[2] = z;
                 break;
             case UP:
-                result[0] = -y;
+                result[0] = 1 - y;
                 result[1] = x;
                 result[2] = z;
                 break;
             case NORTH:
                 result[0] = z;
                 result[1] = y;
-                result[2] = -x;
+                result[2] = 1 - x;
                 break;
             case SOUTH:
-                result[0] = -z;
+                result[0] = 1 - z;
                 result[1] = y;
                 result[2] = x;
                 break;
             case WEST:
-                result[0] = -x;
+                result[0] = 1 - x;
                 result[1] = y;
                 result[2] = z;
                 break;
@@ -84,26 +84,11 @@ public class MathUtil {
         return result;
     }
 
-    public static double[] sortMinMaxToMax(double[] min, double[] max) {
-        double[] newMax = new double[3];
-        newMax[0] = Math.max(min[0], max[0]);
-        newMax[1] = Math.max(min[1], max[1]);
-        newMax[2] = Math.max(min[2], max[2]);
-        return newMax;
-    }
-
-    public static double[] sortMinMaxToMin(double[] min, double[] max) {
-        double[] newMin = new double[3];
-        newMin[0] = Math.min(min[0], max[0]);
-        newMin[1] = Math.min(min[1], max[1]);
-        newMin[2] = Math.min(min[2], max[2]);
-        return newMin;
-    }
-
     public static int truncateDoubleToInt(double number) {
         return (int) Math.floor(number);
     }
+
     public static int roundDoubleToInt(double number) {
-        return (int) Math.floor(number+0.5D);
+        return (int) Math.floor(number + 0.5D);
     }
 }

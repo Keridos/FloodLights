@@ -8,7 +8,7 @@ import net.minecraft.util.IStringSerializable;
  */
 public class PropertiesEnum {
     public enum EnumModelSmallLight implements IStringSerializable {
-        SMALL_ELECTRIC_FLOODLIGHTS_TRIP(0, "small_electric_floodlight_strip"),
+        SMALL_ELECTRIC_FLOODLIGHTS_STRIP(0, "small_electric_floodlight_strip"),
         SMALL_ELECTRIC_FLOODLIGHT_SQUARE(1, "small_electric_floodlight_square");
 
         private int ID;

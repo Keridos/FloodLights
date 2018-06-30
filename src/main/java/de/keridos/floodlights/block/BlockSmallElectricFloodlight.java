@@ -16,6 +16,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -24,7 +25,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,6 +47,8 @@ public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implem
         setDefaultState(getDefaultState()
                 .withProperty(MODEL, PropertiesEnum.EnumModelSmallLight.values()[0])
                 .withProperty(ROTATIONSTATE, false));
+
+        // TODO: allow to change ROTATIONSTATE of this block (for example a shift click with a tool)
     }
 
     @SuppressWarnings("unchecked")
@@ -88,76 +90,51 @@ public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implem
         return false;
     }
 
-    @Nullable
-    @Override
-    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
-        return null;
-    }
-
-    @SuppressWarnings("ConstantConditions")
+    @SuppressWarnings({"unchecked"})
     @Override
     @SideOnly(Side.CLIENT)
-    public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World world, BlockPos pos) {
-        if (world.getTileEntity(pos) instanceof TileEntitySmallFloodlight) {
-            TileEntitySmallFloodlight tileEntitySmallFloodlight = (TileEntitySmallFloodlight) world.getTileEntity(pos);
-            double minX = 0;
-            double minY = 0;
-            double minZ = 0;
-            double maxX = 0;
-            double maxY = 0;
-            double maxZ = 0;
-            switch (this.getMetaFromState(world.getBlockState(pos))) {
-                case 0:
-                    if (!tileEntitySmallFloodlight.getRotationState()) {
-                        minX = 0;
-                        maxX = 0.1875;
-                        minY = 0.3125;
-                        maxY = 0.6875;
-                        minZ = 0;
-                        maxZ = 1;
-                    } else {
-                        minX = 0;
-                        maxX = 0.1875;
-                        minY = 0;
-                        maxY = 1;
-                        minZ = 0.3125;
-                        maxZ = 0.6875;
-                    }
-                    break;
-                case 1:
-                    minX = 0;
-                    maxX = 0.1875;
-                    minY = 0;
-                    maxY = 1;
-                    minZ = 0;
-                    maxZ = 1;
-                    break;
-            }
-            minX = minX - 0.5;
-            minY = minY - 0.5;
-            minZ = minZ - 0.5;
-            maxX = maxX - 0.5;
-            maxY = maxY - 0.5;
-            maxZ = maxZ - 0.5;
-            double[] newMinTemp = MathUtil.rotateD(minX, minY, minZ, tileEntitySmallFloodlight.getOrientation());
-            double[] newMaxTemp = MathUtil.rotateD(maxX, maxY, maxZ, tileEntitySmallFloodlight.getOrientation());
-            double[] newMax = MathUtil.sortMinMaxToMax(newMinTemp, newMaxTemp);
-            double[] newMin = MathUtil.sortMinMaxToMin(newMinTemp, newMaxTemp);
-            minX = newMin[0] + 0.5;
-            minY = newMin[1] + 0.5;
-            minZ = newMin[2] + 0.5;
-            maxX = newMax[0] + 0.5;
-            maxY = newMax[1] + 0.5;
-            maxZ = newMax[2] + 0.5;
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
+        if (state.getBlock() != this)
+            return super.getBoundingBox(state, world, pos);
 
-            return new AxisAlignedBB((double) pos.getX() + minX,
-                    (double) pos.getY() + minY,
-                    (double) pos.getZ() + minZ,
-                    (double) pos.getX() + maxX,
-                    (double) pos.getY() + maxY,
-                    (double) pos.getZ() + maxZ);
+        IBlockState actualState = state.getActualState(world, pos);
+        boolean rotated = actualState.getValue(ROTATIONSTATE);
+
+        switch (((PropertiesEnum.EnumModelSmallLight) actualState.getValue(MODEL))) {
+            case SMALL_ELECTRIC_FLOODLIGHTS_STRIP:
+                switch (actualState.getValue(FACING)) {
+                    case NORTH:
+                        return rotated ? BoundingBoxes.StripRotated.NORTH : BoundingBoxes.Strip.NORTH;
+                    case SOUTH:
+                        return rotated ? BoundingBoxes.StripRotated.SOUTH : BoundingBoxes.Strip.SOUTH;
+                    default:
+                    case EAST:
+                        return rotated ? BoundingBoxes.StripRotated.EAST : BoundingBoxes.Strip.EAST;
+                    case WEST:
+                        return rotated ? BoundingBoxes.StripRotated.WEST : BoundingBoxes.Strip.WEST;
+                    case UP:
+                        return rotated ? BoundingBoxes.StripRotated.UP : BoundingBoxes.Strip.UP;
+                    case DOWN:
+                        return rotated ? BoundingBoxes.StripRotated.DOWN : BoundingBoxes.Strip.DOWN;
+                }
+            default:
+            case SMALL_ELECTRIC_FLOODLIGHT_SQUARE:
+                switch (actualState.getValue(FACING)) {
+                    case NORTH:
+                        return BoundingBoxes.Square.NORTH;
+                    case SOUTH:
+                        return BoundingBoxes.Square.SOUTH;
+                    default:
+                    case EAST:
+                        return BoundingBoxes.Square.EAST;
+                    case WEST:
+                        return BoundingBoxes.Square.WEST;
+                    case UP:
+                        return BoundingBoxes.Square.UP;
+                    case DOWN:
+                        return BoundingBoxes.Square.DOWN;
+                }
         }
-        return super.getSelectedBoundingBox(state, world, pos);
     }
 
     @Override
@@ -169,7 +146,7 @@ public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implem
 
     @Override
     public int damageDropped(IBlockState state) {
-        return super.damageDropped(state);
+        return getMetaFromState(state);
     }
 
     @Override
@@ -182,5 +159,66 @@ public class BlockSmallElectricFloodlight extends BlockFLColorableMachine implem
     @Override
     public boolean isFullCube(IBlockState state) {
         return false;
+    }
+
+    private static class BoundingBoxes {
+        static class Strip {
+            static AxisAlignedBB NORTH;
+            static AxisAlignedBB SOUTH;
+            static AxisAlignedBB EAST;
+            static AxisAlignedBB WEST;
+            static AxisAlignedBB UP;
+            static AxisAlignedBB DOWN;
+        }
+
+        static class StripRotated {
+            static AxisAlignedBB NORTH;
+            static AxisAlignedBB SOUTH;
+            static AxisAlignedBB EAST;
+            static AxisAlignedBB WEST;
+            static AxisAlignedBB UP;
+            static AxisAlignedBB DOWN;
+        }
+
+        static class Square {
+            static AxisAlignedBB NORTH;
+            static AxisAlignedBB SOUTH;
+            static AxisAlignedBB EAST;
+            static AxisAlignedBB WEST;
+            static AxisAlignedBB UP;
+            static AxisAlignedBB DOWN;
+        }
+    }
+
+    private static AxisAlignedBB rotateAABB(AxisAlignedBB source, EnumFacing direction) {
+        double[] min = MathUtil.rotateD(source.minX, source.minY, source.minZ, direction);
+        double[] max = MathUtil.rotateD(source.maxX, source.maxY, source.maxZ, direction);
+        //double[] finallMin = MathUtil.sortMinMaxToMin(min, max);
+        //double[] finalMax = MathUtil.sortMinMaxToMax(min, max);
+        //return new AxisAlignedBB(finallMin[0], finallMin[1], finallMin[2], finalMax[0], finalMax[1], finalMax[2]);
+        return new AxisAlignedBB(min[0], min[1], min[2], max[0], max[1], max[2]);
+    }
+
+    static {
+        BoundingBoxes.Strip.EAST = new AxisAlignedBB(0, 0.3125, 0, 0.1875, 0.6875, 1);
+        BoundingBoxes.Strip.NORTH = rotateAABB(BoundingBoxes.Strip.EAST, EnumFacing.NORTH);
+        BoundingBoxes.Strip.SOUTH = rotateAABB(BoundingBoxes.Strip.EAST, EnumFacing.SOUTH);
+        BoundingBoxes.Strip.WEST = rotateAABB(BoundingBoxes.Strip.EAST, EnumFacing.WEST);
+        BoundingBoxes.Strip.UP = rotateAABB(BoundingBoxes.Strip.EAST, EnumFacing.UP);
+        BoundingBoxes.Strip.DOWN = rotateAABB(BoundingBoxes.Strip.EAST, EnumFacing.DOWN);
+
+        BoundingBoxes.StripRotated.EAST = new AxisAlignedBB(0, 0, 0.3125, 0.1875, 1, 0.6875);
+        BoundingBoxes.StripRotated.NORTH = rotateAABB(BoundingBoxes.StripRotated.EAST, EnumFacing.NORTH);
+        BoundingBoxes.StripRotated.SOUTH = rotateAABB(BoundingBoxes.StripRotated.EAST, EnumFacing.SOUTH);
+        BoundingBoxes.StripRotated.WEST = rotateAABB(BoundingBoxes.StripRotated.EAST, EnumFacing.WEST);
+        BoundingBoxes.StripRotated.UP = rotateAABB(BoundingBoxes.StripRotated.EAST, EnumFacing.UP);
+        BoundingBoxes.StripRotated.DOWN = rotateAABB(BoundingBoxes.StripRotated.EAST, EnumFacing.DOWN);
+
+        BoundingBoxes.Square.EAST = new AxisAlignedBB(0, 0, 0, 0.1875, 1, 1);
+        BoundingBoxes.Square.NORTH = rotateAABB(BoundingBoxes.Square.EAST, EnumFacing.NORTH);
+        BoundingBoxes.Square.SOUTH = rotateAABB(BoundingBoxes.Square.EAST, EnumFacing.SOUTH);
+        BoundingBoxes.Square.WEST = rotateAABB(BoundingBoxes.Square.EAST, EnumFacing.WEST);
+        BoundingBoxes.Square.UP = rotateAABB(BoundingBoxes.Square.EAST, EnumFacing.UP);
+        BoundingBoxes.Square.DOWN = rotateAABB(BoundingBoxes.Square.EAST, EnumFacing.DOWN);
     }
 }
