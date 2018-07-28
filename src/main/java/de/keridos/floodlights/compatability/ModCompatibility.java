@@ -74,26 +74,12 @@ public class ModCompatibility {
         WrenchAvailable = (BCLoaded || EnderIOLoaded || IC2Loaded || CofhCoreLoaded);
     }
 
+    @SuppressWarnings("ConstantConditions")
     public boolean isItemValidWrench(ItemStack stack) {
-        /*if (ModCompatibility.BCLoaded) {
-            if (stack.getItem() instanceof IToolWrench) {
-                return true;
-            }
-        }*/
-        if (ModCompatibility.EnderIOLoaded) {
-            if (stack.getItem() instanceof ITool) {
-                return true;
-            }
-        }
-        /*if (ModCompatibility.CofhCoreLoaded) {
-            if (stack.getItem() instanceof IToolHammer) {
-                return true;
-            }
-        } */
-        if (ModCompatibility.IC2Loaded && stack.getItem() instanceof ItemToolWrench)
-            return true;
-
-        return false;
+        return ModCompatibility.EnderIOLoaded && stack.getItem() instanceof ITool
+                || ModCompatibility.IC2Loaded && stack.getItem() instanceof ItemToolWrench
+                || stack.getItem().getRegistryName().toString().equals("thermalfoundation:wrench")
+                || stack.getItem().getRegistryName().toString().equals("buildcraftcore:wrench");
     }
 
     /*@Optional.Method(modid = "AgriCraft")
