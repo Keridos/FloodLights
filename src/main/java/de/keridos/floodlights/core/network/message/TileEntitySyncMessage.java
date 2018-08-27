@@ -12,6 +12,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * A message type used to synchronize tile entities' states between client and server.
@@ -59,17 +61,20 @@ public class TileEntitySyncMessage implements IMessage {
     public static class Handler implements IMessageHandler<TileEntitySyncMessage, IMessage> {
 
         @Override
+        @SideOnly(Side.CLIENT)
         public IMessage onMessage(TileEntitySyncMessage message, MessageContext ctx) {
             EntityPlayer player = Minecraft.getMinecraft().player;
             BlockPos pos = new BlockPos(message.x, message.y, message.z);
             if (!player.world.isBlockLoaded(pos))
                 return null;
 
-            TileEntity tileEntity = player.world.getTileEntity(pos);
-            if (tileEntity instanceof TileEntityFL) {
-                ((TileEntityFL) tileEntity).applySyncData(message.buffer);
-                ((TileEntityFL) tileEntity).rerenderBlock();
-            }
+            Minecraft.getMinecraft().addScheduledTask(() -> {
+                TileEntity tileEntity = player.world.getTileEntity(pos);
+                if (tileEntity instanceof TileEntityFL) {
+                    ((TileEntityFL) tileEntity).applySyncData(message.buffer);
+                    ((TileEntityFL) tileEntity).rerenderBlock();
+                }
+            });
 
             return null;
         }
