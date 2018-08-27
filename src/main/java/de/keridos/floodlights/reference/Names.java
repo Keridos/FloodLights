@@ -38,6 +38,7 @@ public class Names {
         public static final String STRAIGHT = "gui.floodlights:straight";
         public static final String NARROW_CONE = "gui.floodlights:narrowCone";
         public static final String WIDE_CONE = "gui.floodlights:wideCone";
+        public static final String MACHINE_ENABLED_ERROR = "gui.floodlights:machineEnabledError";
         public static final String GUI_MINUTES_SHORT = "gui.floodlights:minutesShort";
         public static final String GUI_SECONDS_SHORT = "gui.floodlights:secondsShort";
         public static final String LIGHTING = "gui.floodlights:growLightLighting";

@@ -26,6 +26,7 @@ gui.floodlights:false=false
 gui.floodlights:straight=straight
 gui.floodlights:narrowCone=narrow cone
 gui.floodlights:wideCone=wide cone
+gui.floodlights:machineEnabledError=Cannot change mode while machine is turned on
 gui.floodlights:minutesShort=m
 gui.floodlights:secondsShort=s
 gui.floodlights:growLightLighting=Normal lighting

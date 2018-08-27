@@ -124,6 +124,13 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
     }
 
     /**
+     * Returns whether this machine is ready - no active timeouts etc.
+     */
+    protected boolean isCooledDown() {
+        return timeout == 0 && !executorActive.get();
+    }
+
+    /**
      * Whether this machine has electric, heat or any other energy type required to operate.
      */
     protected boolean hasEnergy() {
@@ -504,23 +511,25 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
         if (world.isRemote)
             return;
 
-        // Light will be restored automatically, if necessary
-        lightSource(true);
-        mode = (mode == LIGHT_MODE_WIDE_CONE ? LIGHT_MODE_STRAIGHT : mode + 1);
-        updateCurrentRange();
-
         String modeString = "";
-        switch (mode) {
-            case LIGHT_MODE_STRAIGHT:
-                modeString = Names.Localizations.STRAIGHT;
-                break;
-            case LIGHT_MODE_NARROW_CONE:
-                modeString = Names.Localizations.NARROW_CONE;
-                break;
-            case LIGHT_MODE_WIDE_CONE:
-                modeString = Names.Localizations.WIDE_CONE;
-                break;
-        }
+        if (!active && isCooledDown()) {
+            mode = (mode == LIGHT_MODE_WIDE_CONE ? LIGHT_MODE_STRAIGHT : mode + 1);
+            updateCurrentRange();
+
+            switch (mode) {
+                case LIGHT_MODE_STRAIGHT:
+                    modeString = Names.Localizations.STRAIGHT;
+                    break;
+                case LIGHT_MODE_NARROW_CONE:
+                    modeString = Names.Localizations.NARROW_CONE;
+                    break;
+                case LIGHT_MODE_WIDE_CONE:
+                    modeString = Names.Localizations.WIDE_CONE;
+                    break;
+            }
+        } else
+            modeString = Names.Localizations.MACHINE_ENABLED_ERROR;
+
         player.sendMessage(new TextComponentString(safeLocalize(Names.Localizations.MODE) + ": " + safeLocalize(modeString)));
     }
 
