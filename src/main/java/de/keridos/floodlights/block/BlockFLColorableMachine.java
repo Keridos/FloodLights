@@ -13,7 +13,6 @@ import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -125,13 +124,8 @@ public class BlockFLColorableMachine extends BlockFL {
     @SuppressWarnings("ConstantConditions")
     @Override
     public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
-        if (!world.isRemote && world.getTileEntity(pos) instanceof TileEntityMetaFloodlight) {
+        if (!world.isRemote && world.getTileEntity(pos) instanceof TileEntityMetaFloodlight)
             ((TileEntityMetaFloodlight) world.getTileEntity(pos)).setHasRedstoneSignal(world.isBlockIndirectlyGettingPowered(pos) > 0);
-
-            // TODO: what's this for?
-            if (!(blockIn instanceof BlockFL) && blockIn != Blocks.AIR)
-                ((TileEntityMetaFloodlight) world.getTileEntity(pos)).toggleUpdateRun();
-        }
     }
 
     @SuppressWarnings("ConstantConditions")

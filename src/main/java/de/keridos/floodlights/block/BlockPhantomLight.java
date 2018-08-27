@@ -123,7 +123,8 @@ public class BlockPhantomLight extends BlockFL implements ITileEntityProvider {
 
     @Override
     public void breakBlock(World world, BlockPos pos, IBlockState blockState) {
-        ((TileEntityPhantomLight) world.getTileEntity(pos)).invalidateSources();
+        if (!world.isRemote && blockState.getValue(UPDATE))
+            ((TileEntityPhantomLight) world.getTileEntity(pos)).invalidateSources();
         super.breakBlock(world, pos, blockState);
     }
 

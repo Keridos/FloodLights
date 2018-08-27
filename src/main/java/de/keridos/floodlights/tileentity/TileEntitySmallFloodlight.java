@@ -1,7 +1,6 @@
 package de.keridos.floodlights.tileentity;
 
 import de.keridos.floodlights.handler.ConfigHandler;
-import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.util.MathUtil;
 import net.minecraft.entity.player.EntityPlayer;
@@ -49,6 +48,7 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
 
     @Override
     public void straightSource(boolean remove) {
+        LightSwitchExecutor executor = new LightSwitchExecutor(remove);
         for (int i = 0; i < 5; i++) {
             int a = 0;
             int b = 0;
@@ -73,18 +73,11 @@ public class TileEntitySmallFloodlight extends TileEntityFLElectric {
             int x = this.pos.getX() + rotatedCoords[0];
             int y = this.pos.getY() + rotatedCoords[1];
             int z = this.pos.getZ() + rotatedCoords[2];
-            if (remove) {
-                if (world.getBlockState(new BlockPos(x, y, z)).getBlock() == ModBlocks.blockPhantomLight) {
-                    TileEntityPhantomLight light = (TileEntityPhantomLight) world.getTileEntity(new BlockPos(x, y, z));
-                    light.removeSource(this.pos);
-                }
-            } else if (world.getBlockState(new BlockPos(x, y, z)).getBlock().isAir(world.getBlockState(new BlockPos(x, y, z)), world, new BlockPos(x, y, z))) {
-                updateLightBlock(new BlockPos(x, y, z));
-            } else if (world.getBlockState(new BlockPos(x, y, z)).getBlock() == ModBlocks.blockPhantomLight) {
-                TileEntityPhantomLight light = (TileEntityPhantomLight) world.getTileEntity(new BlockPos(x, y, z));
-                light.addSource(this.pos);
-            }
+
+            executor.add(new BlockPos(x, y, z));
         }
+
+        executor.execute();
     }
 
     @Override

@@ -8,19 +8,26 @@ import de.keridos.floodlights.util.MathUtil;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.IThreadListener;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static de.keridos.floodlights.block.BlockPhantomLight.UPDATE;
 import static de.keridos.floodlights.util.GeneralUtil.getPosFromPosFacing;
@@ -44,6 +51,7 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
     protected int rangeCone = ConfigHandler.rangeConeFloodlight;
     protected int currentRange = rangeStraight;
 
+    private AtomicBoolean executorActive = new AtomicBoolean(false);
     private boolean hasLight;
 
     public TileEntityMetaFloodlight() {
@@ -71,10 +79,6 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
         syncData();
     }
 
-    public void toggleUpdateRun() {
-        //update = true;
-    }
-
     /**
      * Notifies this machine that a container block has been removed and the tile entity is about to be destroyed.
      */
@@ -86,15 +90,13 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
     }
 
     /**
-     * Adds this tile entity as source to the a phantom light at given position.
+     * Creates new phantom light (depending on the {@link #lightBlock} field) at given position.
      */
     @SuppressWarnings("ConstantConditions")
-    protected void updateLightBlock(BlockPos pos) {
+    protected void createPhantomLight(BlockPos pos) {
         if (world.setBlockState(pos, lightBlock.getDefaultState(), 3)) {
             TileEntityPhantomLight light = (TileEntityPhantomLight) world.getTileEntity(pos);
             light.addSource(this.pos);
-        } else {
-            this.toggleUpdateRun();
         }
     }
 
@@ -116,7 +118,7 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
         } else if ((active && !hasEnergy()) || (!active && wasActive)) {
             // A floodlight just run out of energy or was shut down - deactivate it
             lightSource(true);
-            timeout = ConfigHandler.timeoutFloodlights;
+            timeout = ConfigHandler.timeoutFloodlights + 10;
             wasActive = false;
         }
     }
@@ -195,31 +197,30 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
     }
 
     @SuppressWarnings("ConstantConditions")
-    public void setSource(BlockPos blockPos, boolean remove, Integer setSourceUpdate) {
-        if (remove) {
-            if (world.getBlockState(blockPos).getBlock() == lightBlock && setSourceUpdate == 0) {
-                TileEntityPhantomLight light = (TileEntityPhantomLight) world.getTileEntity(blockPos);
-                light.removeSource(this.pos);
-            } else if (world.getBlockState(blockPos).getBlock() == lightBlock) {
-                world.setBlockState(blockPos, world.getBlockState(blockPos).withProperty(UPDATE, false), 4);
-            }
-        } else if (world.getBlockState(blockPos).getBlock() == lightBlock && setSourceUpdate == 2) {
-            world.setBlockState(blockPos, world.getBlockState(blockPos).withProperty(UPDATE, false), 4);
-
-        } else if (world.getBlockState(blockPos).getBlock() == lightBlock && setSourceUpdate == 0) {
-            world.setBlockState(blockPos, world.getBlockState(blockPos).withProperty(UPDATE, true), 4);
-
-        } else if (world.getBlockState(blockPos).getBlock() == lightBlock) {
-            TileEntityPhantomLight light = (TileEntityPhantomLight) world.getTileEntity(blockPos);
-            light.addSource(this.pos);
-        } else if (world.getBlockState(blockPos).getBlock().isAir(world.getBlockState(blockPos), world, blockPos) && setSourceUpdate == 1) {
-            updateLightBlock(blockPos);
-        }
-    }
 
     private void lightSource(boolean remove) {
+        lightSource(remove, true);
+    }
+
+    private void lightSource(boolean remove, boolean wait) {
         if (hasLight == !remove)
             return;
+
+        if (executorActive.get() && wait) {
+            // Executor haven't finished executing "!remove" action yet - wait for it to finish.
+            new Thread(() -> {
+                for (int i = 0; i < 10; i++) {
+                    if (executorActive.get()) {
+                        try {
+                            Thread.sleep(400);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    } else
+                        lightSource(remove, false);
+                }
+            }).start();
+        }
 
         if (mode >= 0 && mode <= 2) {
             hasLight = !remove;
@@ -258,234 +259,237 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
      * This method is called by the {@link TileEntityMetaFloodlight} class. Don't call it manually.
      */
     protected void straightSource(boolean remove) {
-        for (int k = (remove ? 1 : 2); k >= 0; k--) {
-            for (int i = 1; i <= currentRange; i++) {
+        LightSwitchExecutor executor = new LightSwitchExecutor(remove);
+        for (int i = 1; i <= currentRange; i++) {
+            int x = this.pos.getX() + this.orientation.getFrontOffsetX() * i;
+            int y = this.pos.getY() + this.orientation.getFrontOffsetY() * i;
+            int z = this.pos.getZ() + this.orientation.getFrontOffsetZ() * i;
+            executor.add(new BlockPos(x, y, z));
 
-                int x = this.pos.getX() + this.orientation.getFrontOffsetX() * i;
-                int y = this.pos.getY() + this.orientation.getFrontOffsetY() * i;
-                int z = this.pos.getZ() + this.orientation.getFrontOffsetZ() * i;
-                setSource(new BlockPos(x, y, z), remove, k);
-
-                if (world.getBlockState(new BlockPos(x, y, z)).isOpaqueCube() && !remove)
-                    break;
-            }
+            if (world.getBlockState(new BlockPos(x, y, z)).isOpaqueCube() && !remove)
+                break;
         }
+
+        executor.execute();
     }
 
     /**
      * This method is called by the {@link TileEntityMetaFloodlight} class. Don't call it manually.
      */
     protected void wideConeSource(boolean remove) {
-        for (int k = (remove ? 1 : 2); k >= 0; k--) {
-            boolean[] failedBeams = new boolean[9];
+        LightSwitchExecutor executor = new LightSwitchExecutor(remove);
+        boolean[] failedBeams = new boolean[9];
 
-            if (!remove && world.getBlockState(getPosFromPosFacing(this.pos, this.orientation)).isOpaqueCube()) {
-                return;
-            }
-            for (int j = 0; j <= 16; j++) {
-                if (j <= 8) {
-                    for (int i = 1; i <= currentRange / 4; i++) {
-                        int b = 0;
-                        int c = 0;
-                        switch (j) {
-                            case 0:
-                                b += i;
-                                break;
-                            case 1:
-                                b -= i;
-                                break;
-                            case 2:
-                                c += i;
-                                break;
-                            case 3:
-                                c -= i;
-                                break;
-                            case 4:
-                                b += i;
-                                c += i;
-                                break;
-                            case 5:
-                                b += i;
-                                c -= i;
-                                break;
-                            case 6:
-                                b -= i;
-                                c += i;
-                                break;
-                            case 7:
-                                b -= i;
-                                c -= i;
-                                break;
-                        }
-                        int[] rotatedCoords = MathUtil.rotate(i, b, c, this.orientation);
-                        int x = this.pos.getX() + rotatedCoords[0];
-                        int y = this.pos.getY() + rotatedCoords[1];
-                        int z = this.pos.getZ() + rotatedCoords[2];
-                        setSource(new BlockPos(x, y, z), remove, k);
-                        if (world.getBlockState(new BlockPos(x, y, z)).isOpaqueCube() && !remove) {
-                            if (i < 4) {   //This is for canceling the long rangs beams
-                                failedBeams[j] = true;
-                            }
+        if (!remove && world.getBlockState(getPosFromPosFacing(this.pos, this.orientation)).isOpaqueCube()) {
+            return;
+        }
+        for (int j = 0; j <= 16; j++) {
+            if (j <= 8) {
+                for (int i = 1; i <= currentRange / 4; i++) {
+                    int b = 0;
+                    int c = 0;
+                    switch (j) {
+                        case 0:
+                            b += i;
                             break;
-                        }
+                        case 1:
+                            b -= i;
+                            break;
+                        case 2:
+                            c += i;
+                            break;
+                        case 3:
+                            c -= i;
+                            break;
+                        case 4:
+                            b += i;
+                            c += i;
+                            break;
+                        case 5:
+                            b += i;
+                            c -= i;
+                            break;
+                        case 6:
+                            b -= i;
+                            c += i;
+                            break;
+                        case 7:
+                            b -= i;
+                            c -= i;
+                            break;
                     }
-                } else if (!failedBeams[j - 9] || remove) { // This is for the inner beams at longer range
-                    for (int i = 4; i <= rangeCone / 4; i++) {
-                        int b = 0;
-                        int c = 0;
-                        switch (j) {
-                            case 9:
-                                b += i / 2;
-                                break;
-                            case 10:
-                                b -= i / 2;
-                                break;
-                            case 11:
-                                c += i / 2;
-                                break;
-                            case 12:
-                                c -= i / 2;
-                                break;
-                            case 13:
-                                b += i / 2;
-                                c += i / 2;
-                                break;
-                            case 14:
-                                b += i / 2;
-                                c -= i / 2;
-                                break;
-                            case 15:
-                                b -= i / 2;
-                                c += i / 2;
-                                break;
-                            case 16:
-                                b -= i / 2;
-                                c -= i / 2;
-                                break;
+                    int[] rotatedCoords = MathUtil.rotate(i, b, c, this.orientation);
+                    int x = this.pos.getX() + rotatedCoords[0];
+                    int y = this.pos.getY() + rotatedCoords[1];
+                    int z = this.pos.getZ() + rotatedCoords[2];
+                    executor.add(new BlockPos(x, y, z));
+                    if (world.getBlockState(new BlockPos(x, y, z)).isOpaqueCube() && !remove) {
+                        if (i < 4) {   //This is for canceling the long rangs beams
+                            failedBeams[j] = true;
                         }
-                        int[] rotatedCoords = MathUtil.rotate(i, b, c, this.orientation);
-                        int x = this.pos.getX() + rotatedCoords[0];
-                        int y = this.pos.getY() + rotatedCoords[1];
-                        int z = this.pos.getZ() + rotatedCoords[2];
-                        setSource(new BlockPos(x, y, z), remove, k);
-                        if (world.getBlockState(new BlockPos(x, y, z)).isOpaqueCube() && !remove) {
+                        break;
+                    }
+                }
+            } else if (!failedBeams[j - 9] || remove) { // This is for the inner beams at longer range
+                for (int i = 4; i <= rangeCone / 4; i++) {
+                    int b = 0;
+                    int c = 0;
+                    switch (j) {
+                        case 9:
+                            b += i / 2;
                             break;
-                        }
+                        case 10:
+                            b -= i / 2;
+                            break;
+                        case 11:
+                            c += i / 2;
+                            break;
+                        case 12:
+                            c -= i / 2;
+                            break;
+                        case 13:
+                            b += i / 2;
+                            c += i / 2;
+                            break;
+                        case 14:
+                            b += i / 2;
+                            c -= i / 2;
+                            break;
+                        case 15:
+                            b -= i / 2;
+                            c += i / 2;
+                            break;
+                        case 16:
+                            b -= i / 2;
+                            c -= i / 2;
+                            break;
+                    }
+                    int[] rotatedCoords = MathUtil.rotate(i, b, c, this.orientation);
+                    int x = this.pos.getX() + rotatedCoords[0];
+                    int y = this.pos.getY() + rotatedCoords[1];
+                    int z = this.pos.getZ() + rotatedCoords[2];
+                    executor.add(new BlockPos(x, y, z));
+                    if (world.getBlockState(new BlockPos(x, y, z)).isOpaqueCube() && !remove) {
+                        break;
                     }
                 }
             }
         }
+
+        executor.execute();
     }
 
     /**
      * This method is called by the {@link TileEntityMetaFloodlight} class. Don't call it manually.
      */
     protected void narrowConeSource(boolean remove) {
-        for (int k = (remove ? 1 : 2); k >= 0; k--) {
-            boolean[] failedBeams = new boolean[9];    // for the additional beam to cancel when the main beams fail.
-            for (int j = 0; j <= 16; j++) {
-                if (j <= 8) {     // This is the main beams
-                    for (int i = 1; i <= currentRange; i++) {
-                        // for 1st light:
-                        if (i == 1) {
-                            int x = this.pos.getX() + this.orientation.getFrontOffsetX();
-                            int y = this.pos.getY() + this.orientation.getFrontOffsetY();
-                            int z = this.pos.getZ() + this.orientation.getFrontOffsetZ();
-                            setSource(new BlockPos(x, y, z), remove, k);
-                            if (world.getBlockState(new BlockPos(x, y, z)).isOpaqueCube() && !remove) {
-                                return;
-                            }
-                        }
-                        int b = 0;
-                        int c = 0;
-                        switch (j) {
-                            case 0:
-                                b += i / 2;
-                                break;
-                            case 1:
-                                b -= i / 2;
-                                break;
-                            case 2:
-                                c += i / 2;
-                                break;
-                            case 3:
-                                c -= i / 2;
-                                break;
-                            case 4:
-                                b += i / 2;
-                                c += i / 2;
-                                break;
-                            case 5:
-                                b += i / 2;
-                                c -= i / 2;
-                                break;
-                            case 6:
-                                b -= i / 2;
-                                c += i / 2;
-                                break;
-                            case 7:
-                                b -= i / 2;
-                                c -= i / 2;
-                                break;
-                        }
-                        int[] rotatedCoords = MathUtil.rotate(i, b, c, this.orientation); // rotate the coordinate to the correct spot in the real world :)
-                        int x = this.pos.getX() + rotatedCoords[0];
-                        int y = this.pos.getY() + rotatedCoords[1];
-                        int z = this.pos.getZ() + rotatedCoords[2];
-                        setSource(new BlockPos(x, y, z), remove, k);
+        LightSwitchExecutor executor = new LightSwitchExecutor(remove);
+
+        boolean[] failedBeams = new boolean[9];    // for the additional beam to cancel when the main beams fail.
+        for (int j = 0; j <= 16; j++) {
+            if (j <= 8) {     // This is the main beams
+                for (int i = 1; i <= currentRange; i++) {
+                    // for 1st light:
+                    if (i == 1) {
+                        int x = this.pos.getX() + this.orientation.getFrontOffsetX();
+                        int y = this.pos.getY() + this.orientation.getFrontOffsetY();
+                        int z = this.pos.getZ() + this.orientation.getFrontOffsetZ();
+                        executor.add(new BlockPos(x, y, z));
                         if (world.getBlockState(new BlockPos(x, y, z)).isOpaqueCube() && !remove) {
-                            if (i < 8) {   //This is for canceling the long rangs beams
-                                failedBeams[j] = true;
-                            }
-                            break;
+                            return;
                         }
                     }
-                } else if (!failedBeams[j - 9] || remove) { // This is for the inner beams at longer range
-                    for (int i = 8; i <= rangeCone; i++) {
-                        int b = 0;
-                        int c = 0;
-                        switch (j) {
-                            case 9:
-                                b += i / 4;
-                                break;
-                            case 10:
-                                b -= i / 4;
-                                break;
-                            case 11:
-                                c += i / 4;
-                                break;
-                            case 12:
-                                c -= i / 4;
-                                break;
-                            case 13:
-                                b += i / 4;
-                                c += i / 4;
-                                break;
-                            case 14:
-                                b += i / 4;
-                                c -= i / 4;
-                                break;
-                            case 15:
-                                b -= i / 4;
-                                c += i / 4;
-                                break;
-                            case 16:
-                                b -= i / 4;
-                                c -= i / 4;
-                                break;
-                        }
-                        int[] rotatedCoords = MathUtil.rotate(i, b, c, this.orientation);
-                        int x = this.pos.getX() + rotatedCoords[0];
-                        int y = this.pos.getY() + rotatedCoords[1];
-                        int z = this.pos.getZ() + rotatedCoords[2];
-                        setSource(new BlockPos(x, y, z), remove, k);
-                        if (world.getBlockState(new BlockPos(x, y, z)).isOpaqueCube() && !remove) {
+                    int b = 0;
+                    int c = 0;
+                    switch (j) {
+                        case 0:
+                            b += i / 2;
                             break;
+                        case 1:
+                            b -= i / 2;
+                            break;
+                        case 2:
+                            c += i / 2;
+                            break;
+                        case 3:
+                            c -= i / 2;
+                            break;
+                        case 4:
+                            b += i / 2;
+                            c += i / 2;
+                            break;
+                        case 5:
+                            b += i / 2;
+                            c -= i / 2;
+                            break;
+                        case 6:
+                            b -= i / 2;
+                            c += i / 2;
+                            break;
+                        case 7:
+                            b -= i / 2;
+                            c -= i / 2;
+                            break;
+                    }
+                    int[] rotatedCoords = MathUtil.rotate(i, b, c, this.orientation); // rotate the coordinate to the correct spot in the real world :)
+                    int x = this.pos.getX() + rotatedCoords[0];
+                    int y = this.pos.getY() + rotatedCoords[1];
+                    int z = this.pos.getZ() + rotatedCoords[2];
+                    executor.add(new BlockPos(x, y, z));
+                    if (world.getBlockState(new BlockPos(x, y, z)).isOpaqueCube() && !remove) {
+                        if (i < 8) {   //This is for canceling the long rangs beams
+                            failedBeams[j] = true;
                         }
+                        break;
+                    }
+                }
+            } else if (!failedBeams[j - 9] || remove) { // This is for the inner beams at longer range
+                for (int i = 8; i <= rangeCone; i++) {
+                    int b = 0;
+                    int c = 0;
+                    switch (j) {
+                        case 9:
+                            b += i / 4;
+                            break;
+                        case 10:
+                            b -= i / 4;
+                            break;
+                        case 11:
+                            c += i / 4;
+                            break;
+                        case 12:
+                            c -= i / 4;
+                            break;
+                        case 13:
+                            b += i / 4;
+                            c += i / 4;
+                            break;
+                        case 14:
+                            b += i / 4;
+                            c -= i / 4;
+                            break;
+                        case 15:
+                            b -= i / 4;
+                            c += i / 4;
+                            break;
+                        case 16:
+                            b -= i / 4;
+                            c -= i / 4;
+                            break;
+                    }
+                    int[] rotatedCoords = MathUtil.rotate(i, b, c, this.orientation);
+                    int x = this.pos.getX() + rotatedCoords[0];
+                    int y = this.pos.getY() + rotatedCoords[1];
+                    int z = this.pos.getZ() + rotatedCoords[2];
+                    executor.add(new BlockPos(x, y, z));
+                    if (world.getBlockState(new BlockPos(x, y, z)).isOpaqueCube() && !remove) {
+                        break;
                     }
                 }
             }
         }
+
+        executor.execute();
     }
 
     @Override
@@ -523,5 +527,107 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
             currentRange = rangeStraight;
         else
             currentRange = rangeCone;
+    }
+
+    /**
+     * This class handles placing and destroying light blocks ({@link de.keridos.floodlights.block.BlockPhantomLight}).
+     *
+     * Work is divided into batches - this should prevent from leaving invalid light sources in a world after
+     * disabling a floodlight.
+     */
+    protected class LightSwitchExecutor implements Runnable {
+
+        private static final int BATCH_SIZE = 5;
+        private static final int BATCH_DELAY = 150;
+
+        private static final int SOURCE_MODE_DISABLE_UPDATES = 0;
+        private static final int SOURCE_MODE_CHANGE = 1;
+        private static final int SOURCE_MODE_ENABLE_UPDATES = 2;
+
+        private List<BlockPos> blocks = new ArrayList<>();
+        private IThreadListener threadListener;
+        private boolean remove;
+
+        /**
+         * Initializes LightSwitchExecutor.
+         * @param remove wither light sources should be removed from world.
+         */
+        public LightSwitchExecutor(boolean remove) {
+            this.remove = remove;
+
+            if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
+                threadListener = Minecraft.getMinecraft();
+            else
+                threadListener = FMLCommonHandler.instance().getMinecraftServerInstance();
+        }
+
+        /**
+         * Adds new position of light block to be placed or removed.
+         */
+        public void add(BlockPos pos) {
+            blocks.add(pos);
+        }
+
+        /**
+         * Starts placing or removing previously {@link #add}ed blocks.
+         */
+        public void execute() {
+            new Thread(this).start();
+        }
+
+        @Override
+        public void run() {
+            executorActive.set(true);
+            try {
+                doRun();
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
+            executorActive.set(false);
+        }
+
+        private void doRun() throws Throwable {
+            int batches = (int) Math.ceil((float) blocks.size() / BATCH_SIZE);
+
+            for (int mode = 0; mode <= (remove ? SOURCE_MODE_CHANGE : SOURCE_MODE_ENABLE_UPDATES); mode++) {
+                final int finalMode = mode;
+                for (int batch = 0; batch < batches; batch++) {
+                    final int finalBatch = batch;
+                    threadListener.addScheduledTask(() -> {
+                        for (int i = finalBatch * BATCH_SIZE; i < finalBatch * BATCH_SIZE + BATCH_SIZE && i < blocks.size(); i++) {
+                            setSource(blocks.get(i), finalMode);
+                        }
+                    });
+
+                    if (mode == SOURCE_MODE_CHANGE)
+                        Thread.sleep(BATCH_DELAY);
+                }
+            }
+        }
+
+        @SuppressWarnings("ConstantConditions")
+        private void setSource(BlockPos blockPos, int sourceMode) {
+            boolean lightExists = world.getBlockState(blockPos).getBlock() == lightBlock;
+            switch (sourceMode) {
+                case SOURCE_MODE_DISABLE_UPDATES:
+                    if (lightExists)
+                        world.setBlockState(blockPos, world.getBlockState(blockPos).withProperty(UPDATE, false), 4);
+                    break;
+                case SOURCE_MODE_CHANGE:
+                    if (remove && lightExists) {
+                        // Remove existing phantom light
+                        TileEntityPhantomLight light = (TileEntityPhantomLight) world.getTileEntity(blockPos);
+                        light.removeSource(pos);
+                    } else if (!remove && lightExists) {
+                        // Add this floodlight as a source to the existing phantom light
+                        TileEntityPhantomLight light = (TileEntityPhantomLight) world.getTileEntity(blockPos);
+                        light.addSource(pos);
+                    } else if (!remove && !lightExists && world.isAirBlock(blockPos)) {
+                        // Create new phantom light
+                        createPhantomLight(blockPos);
+                    }
+                case SOURCE_MODE_ENABLE_UPDATES:
+            }
+        }
     }
 }
