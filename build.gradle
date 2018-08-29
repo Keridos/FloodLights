@@ -48,10 +48,6 @@ repositories {
         name = "Mobius Repo"
         url = "http://tehnut.info/maven"
     }
-    maven { // the repo from which to get EnderIO and tterags mods
-        name = 'tterrag'
-        url = "http://maven.tterrag.com/"
-    }
     maven {
         name = "OC repo"
         url = "http://maven.cil.li/"
@@ -152,11 +148,6 @@ dependencies {
     compile "mezz.jei:jei_${config.minecraft_version}:${config.jei_version}"
     compile "igwmod:IGW-Mod-${config.minecraft_version}:${config.igwmod_version}:userdev"
     compile "net.industrial-craft:industrialcraft-2:${config.ic2_version}"
-    // 1.12.2 builds aren't available on Maven (https://github.com/SleepyTrousers/EnderIO/issues/4586)
-    //compile "com.enderio:EnderIO:${config.minecraft_version}-${config.enderio_version}"
-    // Loading local version from disk instead
-    compile files("../EnderIO-${config.minecraft_version}-${config.enderio_version}.jar")
-    compile "com.enderio.core:EnderCore:${config.minecraft_version}-${config.endercore_version}"
 
     compile "mcp.mobius.waila:Hwyla:${config.hwyla_version}"
     compile "cofh:RedstoneFlux:${config.redstoneflux_version}:deobf"

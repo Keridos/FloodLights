@@ -1,6 +1,5 @@
 package de.keridos.floodlights.compatability;
 
-import crazypants.enderio.api.tool.ITool;
 import de.keridos.floodlights.handler.ConfigHandler;
 import de.keridos.floodlights.reference.Reference;
 import ic2.core.item.tool.ItemToolWrench;
@@ -76,8 +75,8 @@ public class ModCompatibility {
 
     @SuppressWarnings("ConstantConditions")
     public boolean isItemValidWrench(ItemStack stack) {
-        return ModCompatibility.EnderIOLoaded && stack.getItem() instanceof ITool
-                || ModCompatibility.IC2Loaded && stack.getItem() instanceof ItemToolWrench
+        return ModCompatibility.IC2Loaded && stack.getItem() instanceof ItemToolWrench
+                || stack.getItem().getRegistryName().toString().equals("enderio:item_yeta_wrench")
                 || stack.getItem().getRegistryName().toString().equals("thermalfoundation:wrench")
                 || stack.getItem().getRegistryName().toString().equals("buildcraftcore:wrench");
     }
