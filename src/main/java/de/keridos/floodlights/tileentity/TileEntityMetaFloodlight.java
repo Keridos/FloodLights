@@ -50,6 +50,7 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
     protected int rangeStraight = ConfigHandler.rangeStraightFloodlight;
     protected int rangeCone = ConfigHandler.rangeConeFloodlight;
     protected int currentRange = rangeStraight;
+    protected int lightBlockStep = 2;
 
     private AtomicBoolean executorActive = new AtomicBoolean(false);
     private boolean hasLight;
@@ -237,10 +238,8 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
             world.notifyBlockUpdate(pos, state, state, 3);
         }
 
-        if (remove) {
-            // Apply light range from config
-            updateCurrentRange();
-        }
+        // Apply light range from config
+        updateCurrentRange();
 
         switch (mode) {
             case LIGHT_MODE_STRAIGHT:
@@ -267,14 +266,15 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
      */
     protected void straightSource(boolean remove) {
         LightSwitchExecutor executor = new LightSwitchExecutor(remove);
-        for (int i = 1; i <= currentRange; i += 2) {
+        for (int i = 1; i <= currentRange; i += lightBlockStep) {
             int x = this.pos.getX() + this.orientation.getFrontOffsetX() * i;
             int y = this.pos.getY() + this.orientation.getFrontOffsetY() * i;
             int z = this.pos.getZ() + this.orientation.getFrontOffsetZ() * i;
-            executor.add(new BlockPos(x, y, z));
 
-            if (world.getBlockState(new BlockPos(x, y, z)).isOpaqueCube() && !remove)
+            BlockPos blockPos = new BlockPos(x, y, z);
+            if ((!world.isAirBlock(blockPos) && world.getBlockState(blockPos).getBlock() != blockType) && !remove)
                 break;
+            executor.add(blockPos);
         }
 
         executor.execute();
@@ -292,7 +292,7 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
         }
         for (int j = 0; j <= 16; j++) {
             if (j <= 8) {
-                for (int i = 1; i <= currentRange / 4; i += 2) {
+                for (int i = 1; i <= currentRange / 4; i += lightBlockStep) {
                     int b = 0;
                     int c = 0;
                     switch (j) {
@@ -338,7 +338,7 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
                     }
                 }
             } else if (!failedBeams[j - 9] || remove) { // This is for the inner beams at longer range
-                for (int i = 4; i <= rangeCone / 4; i += 2) {
+                for (int i = 4; i <= rangeCone / 4; i += lightBlockStep) {
                     int b = 0;
                     int c = 0;
                     switch (j) {
@@ -395,7 +395,7 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
         boolean[] failedBeams = new boolean[9];    // for the additional beam to cancel when the main beams fail.
         for (int j = 0; j <= 16; j++) {
             if (j <= 8) {     // This is the main beams
-                for (int i = 1; i <= currentRange; i += 2) {
+                for (int i = 1; i <= currentRange; i += lightBlockStep) {
                     // for 1st light:
                     if (i == 1) {
                         int x = this.pos.getX() + this.orientation.getFrontOffsetX();
@@ -452,7 +452,7 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
                     }
                 }
             } else if (!failedBeams[j - 9] || remove) { // This is for the inner beams at longer range
-                for (int i = 8; i <= rangeCone; i += 2) {
+                for (int i = 8; i <= rangeCone; i += lightBlockStep) {
                     int b = 0;
                     int c = 0;
                     switch (j) {

@@ -12,6 +12,7 @@ public class TileEntityUVFloodlight extends TileEntityFLElectric {
     public TileEntityUVFloodlight() {
         lightBlock = ModBlocks.blockPhantomUVLight;
         rangeStraight = ConfigHandler.rangeUVFloodlight;
+        lightBlockStep = 1;
     }
 }
 
