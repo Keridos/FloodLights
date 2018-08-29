@@ -33,4 +33,8 @@ gui.floodlights:growLightDarkLight=Black light
 # Creative Tabs
 itemGroup.floodlights=Flood Lights
 
+# Damage source
+death.attack.floodlights:uvlight=%1$s died from UV radiation
+death.attack.floodlights:uvlight.player=%1$s walked into UV light beam whilst fighting %2$s
+
 

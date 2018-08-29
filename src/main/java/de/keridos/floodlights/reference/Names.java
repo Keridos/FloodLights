@@ -61,6 +61,10 @@ public class Names {
         public static final String SOURCES = "sources";
     }
 
+    public static final class DamageSources {
+        public static final String UV_LIGHT = "floodlights:uvlight";
+    }
+
     /**
      * Converts given string (block or item name) to underscore-based, which is used as a registry name.
      */

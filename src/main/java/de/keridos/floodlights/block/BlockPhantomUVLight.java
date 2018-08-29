@@ -23,6 +23,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class BlockPhantomUVLight extends BlockPhantomLight {
 
+    private static final DamageSource UV_DAMAGE_SOURCE = new DamageSource(Names.DamageSources.UV_LIGHT);
+
     public BlockPhantomUVLight() {
         super(Names.Blocks.PHANTOM_UV_LIGHT, Material.AIR, SoundType.CLOTH, 0.0F);
     }
@@ -61,6 +63,6 @@ public class BlockPhantomUVLight extends BlockPhantomLight {
 
     @Override
     public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn) {
-        entityIn.attackEntityFrom(DamageSource.CACTUS, ConfigHandler.damageUVFloodlight);
+        entityIn.attackEntityFrom(UV_DAMAGE_SOURCE, ConfigHandler.damageUVFloodlight);
     }
 }
