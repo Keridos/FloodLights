@@ -28,12 +28,13 @@ public class GeneralUtil {
         return Item.REGISTRY.getObject(new ResourceLocation("minecraft", name));
     }
 
-    public static String safeLocalize(String text) {
-        if (I18n.translateToLocal(text) != null) {
-            return I18n.translateToLocal(text);
-        } else {
-            return I18n.translateToFallback(text);
-        }
+    @SuppressWarnings("deprecation")
+    public static String safeLocalize(String key) {
+        String translation = I18n.translateToLocal(key);
+        if (translation.equals(key))
+            translation = I18n.translateToFallback(key);
+
+        return translation;
     }
 
     public static int getBurnTime(ItemStack itemStack) {

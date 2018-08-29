@@ -16,7 +16,7 @@ import net.minecraft.util.IThreadListener;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
@@ -530,7 +530,7 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
         } else
             modeString = Names.Localizations.MACHINE_ENABLED_ERROR;
 
-        player.sendMessage(new TextComponentString(safeLocalize(Names.Localizations.MODE) + ": " + safeLocalize(modeString)));
+        player.sendMessage(new TextComponentTranslation(Names.Localizations.MODE, safeLocalize(modeString)));
     }
 
     private void updateCurrentRange() {

@@ -19,7 +19,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.ChunkCache;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -90,8 +90,8 @@ public class BlockFLColorableMachine extends BlockFL {
         ItemStack heldItem = player.getHeldItem(EnumHand.MAIN_HAND);
         if (heldItem == ItemStack.EMPTY && player.isSneaking()) {
             tileEntity.toggleInverted();
-            String invert = (tileEntity.getInverted() ? Names.Localizations.TRUE : Names.Localizations.FALSE);
-            player.sendMessage(new TextComponentString(safeLocalize(Names.Localizations.INVERT) + ": " + safeLocalize(invert)));
+            String invert = safeLocalize(tileEntity.getInverted() ? Names.Localizations.TRUE : Names.Localizations.FALSE);
+            player.sendMessage(new TextComponentTranslation(Names.Localizations.INVERT, invert));
             return true;
         } else if (heldItem != ItemStack.EMPTY) {
             if (!ModCompatibility.WrenchAvailable && heldItem.getItem() == getMinecraftItem("stick")) {

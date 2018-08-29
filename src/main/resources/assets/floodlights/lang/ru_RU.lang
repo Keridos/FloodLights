@@ -17,17 +17,15 @@ tile.floodlights:smallElectricFloodlightMetaBlock_squareFluorescent.name=Ква�
 tile.floodlights:growLight.name=Лампа роста
 
 #GUI – ГИП
-gui.floodlights:nonElectricFloodlightTimeRemaining=Осталось времени:
-gui.floodlights:RFStorage=Хранилище RF
-gui.floodlights:invert=Инвертирован
-gui.floodlights:mode=Режим
+gui.floodlights:nonElectricFloodlightTimeRemaining=Осталось времени: %s:%s
+gui.floodlights:RFStorage=Хранилище RF: %s/%s
+gui.floodlights:invert=Инвертирован: %s
+gui.floodlights:mode=Режим: %s
 gui.floodlights:true=да
 gui.floodlights:false=нет
 gui.floodlights:straight=прямой
 gui.floodlights:narrowCone=узкий конус
 gui.floodlights:wideCone=широкий конус
-gui.floodlights:minutesShort=м
-gui.floodlights:secondsShort=с
 gui.floodlights:growLightLighting=Обычное освещение
 gui.floodlights:growLightDarkLight=Чёрный свет
 

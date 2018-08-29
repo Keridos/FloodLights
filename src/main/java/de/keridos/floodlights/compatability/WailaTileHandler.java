@@ -1,11 +1,15 @@
 package de.keridos.floodlights.compatability;
 
 import de.keridos.floodlights.reference.Names;
-import de.keridos.floodlights.tileentity.*;
+import de.keridos.floodlights.tileentity.TileEntityCarbonFloodlight;
+import de.keridos.floodlights.tileentity.TileEntityElectricFloodlight;
+import de.keridos.floodlights.tileentity.TileEntityFL;
+import de.keridos.floodlights.tileentity.TileEntityGrowLight;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
 import mcp.mobius.waila.api.IWailaRegistrar;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -15,8 +19,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 
 import java.util.List;
-
-import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
 
 /**
  * Created by Keridos on 20.04.2015.
@@ -79,15 +81,15 @@ public class WailaTileHandler implements IWailaDataProvider {
     public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
         boolean invert = accessor.getNBTData().getBoolean("inverted");
         int mode = accessor.getNBTData().getInteger("teState");
-        String inverted = (invert ? Names.Localizations.TRUE : Names.Localizations.FALSE);
-        currenttip.add(safeLocalize(Names.Localizations.INVERT) + ": " + safeLocalize(inverted));
+        String inverted = I18n.format(invert ? Names.Localizations.TRUE : Names.Localizations.FALSE);
+        currenttip.add(I18n.format(Names.Localizations.INVERT, inverted));
         if (mode < 3 && (accessor.getTileEntity() instanceof TileEntityElectricFloodlight || accessor.getTileEntity() instanceof  TileEntityCarbonFloodlight)) {
             String modeString = (mode == 0 ? Names.Localizations.STRAIGHT : mode == 1 ? Names.Localizations.NARROW_CONE : Names.Localizations.WIDE_CONE);
-            currenttip.add(safeLocalize(Names.Localizations.MODE) + ": " + safeLocalize(modeString));
+            currenttip.add(I18n.format(Names.Localizations.MODE, I18n.format(modeString)));
         }
         if (mode < 2 && accessor.getTileEntity() instanceof TileEntityGrowLight) {
             String modeString = (mode == 0 ? Names.Localizations.LIGHTING : Names.Localizations.DARK_LIGHT);
-            currenttip.add(safeLocalize(Names.Localizations.MODE) + ": " + safeLocalize(modeString));
+            currenttip.add(I18n.format(Names.Localizations.MODE, I18n.format(modeString)));
         }
         return currenttip;
     }

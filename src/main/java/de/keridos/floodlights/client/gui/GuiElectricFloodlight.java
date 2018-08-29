@@ -5,12 +5,10 @@ import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.reference.Textures;
 import de.keridos.floodlights.tileentity.TileEntityFLElectric;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
-
-import static de.keridos.floodlights.util.GeneralUtil.safeLocalize;
 
 /**
  * Created by Keridos on 09/10/2014.
@@ -29,11 +27,12 @@ public class GuiElectricFloodlight extends GuiContainer {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int par1, int par2) {
-        String guiText = safeLocalize(Names.Localizations.RF_STORAGE) + ": "
-                + tileEntityFLElectric.energy.getEnergyStored() / 1000 + "."
-                + tileEntityFLElectric.energy.getEnergyStored() % 1000 / 100 + "k/"
-                + tileEntityFLElectric.energy.getMaxEnergyStored() / 1000 + "k";
-        fontRenderer.drawString(guiText, 50, 26, 0x000000);
+        String format = I18n.format(
+                Names.Localizations.RF_STORAGE,
+                String.format("%.1fk", tileEntityFLElectric.energy.getEnergyStored() / 1000f),
+                tileEntityFLElectric.energy.getMaxEnergyStored() / 1000 + "k"
+        );
+        fontRenderer.drawString(format, 50, 26, 0x000000);
     }
 
     @Override

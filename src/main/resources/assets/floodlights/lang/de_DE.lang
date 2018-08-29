@@ -17,17 +17,15 @@ tile.floodlights:smallElectricFloodlightMetaBlock_squareFluorescent.name=Quadrat
 tile.floodlights:growLight.name=Wachstumslampe
 
 #GUI
-gui.floodlights:nonElectricFloodlightTimeRemaining=Verbleibend
-gui.floodlights:RFStorage=RF Speicher
-gui.floodlights:invert=Invertiert
-gui.floodlights:mode=Modus
+gui.floodlights:nonElectricFloodlightTimeRemaining=Verbleibend: %s:%s
+gui.floodlights:RFStorage=RF Speicher: %s/%s
+gui.floodlights:invert=Invertiert: %s
+gui.floodlights:mode=Modus: %s
 gui.floodlights:true=ja
 gui.floodlights:false=nein
 gui.floodlights:straight=gerade
 gui.floodlights:narrowCone=enger Kegel
 gui.floodlights:wideCone=weiter Kegel
-gui.floodlights:minutesShort=m
-gui.floodlights:secondsShort=s
 gui.floodlights:growLightLighting=Normales Licht
 gui.floodlights:growLightDarkLight=Schwarzlicht
 
