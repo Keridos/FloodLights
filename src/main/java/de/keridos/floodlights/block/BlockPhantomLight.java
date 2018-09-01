@@ -10,12 +10,14 @@ import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 
 import javax.annotation.Nullable;
 import java.util.Random;
@@ -36,6 +38,7 @@ public class BlockPhantomLight extends BlockFL implements ITileEntityProvider {
         super(name, material, soundType, hardness);
         setHarvestLevel("pickaxe", 1);
         setDefaultState(this.blockState.getBaseState().withProperty(UPDATE, false));
+        setTickRandomly(true);
     }
 
     @Override
@@ -122,7 +125,11 @@ public class BlockPhantomLight extends BlockFL implements ITileEntityProvider {
                 && !(worldIn.getBlockState(fromPos).getBlock() instanceof BlockPhantomLight)
                 && state.getValue(UPDATE)
                 && (blockIn != Blocks.AIR)) {
-            ((TileEntityPhantomLight) worldIn.getTileEntity(pos)).invalidateSources();
+            TileEntity tile = worldIn.getChunkFromBlockCoords(pos).getTileEntity(pos, Chunk.EnumCreateEntityType.CHECK);
+            if (tile instanceof TileEntityPhantomLight)
+                ((TileEntityPhantomLight) tile).invalidateSources();
+            else
+                worldIn.setBlockToAir(pos);
         }
     }
 
@@ -131,6 +138,19 @@ public class BlockPhantomLight extends BlockFL implements ITileEntityProvider {
         if (!world.isRemote && blockState.getValue(UPDATE))
             ((TileEntityPhantomLight) world.getTileEntity(pos)).invalidateSources();
         super.breakBlock(world, pos, blockState);
+    }
+
+    /**
+     * Handles natural decay of invalid phantom lights.
+     */
+    @Override
+    public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
+        if (worldIn.isRemote)
+            return;
+
+        TileEntity tile = worldIn.getChunkFromBlockCoords(pos).getTileEntity(pos, Chunk.EnumCreateEntityType.CHECK);
+        if (!(tile instanceof TileEntityPhantomLight))
+            worldIn.setBlockToAir(pos);
     }
 
     @Override
