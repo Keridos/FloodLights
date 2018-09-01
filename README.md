@@ -1,9 +1,14 @@
 FloodLights
 ===========
-[![Build Status](https://jenkins.ironhide.de/buildStatus/icon?job=FloodLights-1.9.4&style=plastic)](https://travis-ci.org/Keridos/FloodLights)
+
+[![Build Status](https://travis-ci.org/Keridos/FloodLights.svg?branch=1.12.2)](https://travis-ci.org/Keridos/FloodLights)
+
 Minecraft Mod for Flood Lights (alternative for GregsLighting)
 
-Downloads at https://minecraft.curseforge.com/mc-mods/224728-floodlights/files
+### Links:
+* Project page: https://minecraft.curseforge.com/projects/floodlights
+* Stable downloads: https://minecraft.curseforge.com/projects/floodlights/files
+* Unstable downloads: https://jenkins.ironhide.de/job/Keridos%20Mods/job/FloodLights-1.12
 
 
-IlyanPaine has taken over this mods development.
+IlynPayne has taken over this mods development.
