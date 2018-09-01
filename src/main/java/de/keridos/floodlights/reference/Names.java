@@ -54,11 +54,13 @@ public class Names {
         public static final String WAS_ACTIVE = "wasActive";
         public static final String HAS_REDSTONE = "teRedstone";
         public static final String CURRENT_RANGE = "teRange";
+        public static final String FLOODLIGHT_ID = "floodlightId";
         public static final String CUSTOM_NAME = "CustomName";
         public static final String DIRECTION = "teDirection";
         public static final String ROTATION_STATE = "teRotationState";
         public static final String OWNER = "owner";
         public static final String SOURCES = "sources";
+        public static final String LIGHT_BLOCK = "lightBlock";
     }
 
     public static final class DamageSources {

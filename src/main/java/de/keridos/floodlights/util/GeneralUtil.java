@@ -82,14 +82,6 @@ public class GeneralUtil {
                 pos.getZ() + facing.getFrontOffsetZ());
     }
 
-    public static BlockPos getPosFromIntArray(int[] array) {
-        return (new BlockPos(array[0], array[1], array[2]));
-    }
-
-    public static int[] getIntArrayFromPos(BlockPos pos) {
-        return new int[]{pos.getX(), pos.getY(), pos.getZ()};
-    }
-
     public static boolean isBlockValidGrowable(Block block, World world, BlockPos blockPos) {
         boolean result = false;
         if ((block instanceof IGrowable && ((IGrowable) block).canGrow(world, blockPos,world.getBlockState(blockPos), false))

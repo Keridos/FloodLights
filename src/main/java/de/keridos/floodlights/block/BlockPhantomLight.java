@@ -111,12 +111,17 @@ public class BlockPhantomLight extends BlockFL implements ITileEntityProvider {
 
     @Override
     public TileEntityPhantomLight createNewTileEntity(World world, int metadata) {
-        return new TileEntityPhantomLight();
+        TileEntityPhantomLight tile = new TileEntityPhantomLight();
+        tile.setLightBlock(this);
+        return tile;
     }
 
     @Override
     public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
-        if (!worldIn.isRemote && state.getValue(UPDATE) && (blockIn != Blocks.AIR)) {
+        if (!worldIn.isRemote
+                && !(worldIn.getBlockState(fromPos).getBlock() instanceof BlockPhantomLight)
+                && state.getValue(UPDATE)
+                && (blockIn != Blocks.AIR)) {
             ((TileEntityPhantomLight) worldIn.getTileEntity(pos)).invalidateSources();
         }
     }
