@@ -63,9 +63,6 @@ repositories {
     }
 }
 
-apply plugin: 'net.minecraftforge.gradle.forge'
-
-
 // define the properties file
 ext.configFile = file "project.properties"
 
@@ -142,13 +139,8 @@ dependencies {
 
     compile "mcp.mobius.waila:Hwyla:${config.hwyla_version}"
     compile "cofh:RedstoneFlux:${config.redstoneflux_version}:deobf"
-
-    if (new File("curseKey.properties").exists()) {
-
-    }
 }
 
 minecraft {
     useDepAts = true
 }
-
