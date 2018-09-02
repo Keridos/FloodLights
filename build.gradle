@@ -13,16 +13,12 @@ buildscript {
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = targetCompatibility = 1.8
 
-
-/*
-// for people who want stable - not yet functional for MC 1.8.8 - we require the forgegradle 2.1 snapshot
-plugins {
-    id "net.minecraftforge.gradle.forge" version "2.0.2"
+compileJava {
+    sourceCompatibility = targetCompatibility = '1.8'
 }
-*/
+
 if (new File("curseKey.properties").exists()) {
     // define the properties file
     ext.configFile = file "curseKey.properties"
@@ -36,6 +32,7 @@ if (new File("curseKey.properties").exists()) {
 }
 
 repositories {
+	mavenCentral()
     maven {
         name = "progwml6"
         url = "http://dvs1.progwml6.com/files/maven/"
@@ -63,12 +60,6 @@ repositories {
     maven {
         name = "ChickenBones"
         url = "http://chickenbones.net/maven/"
-    }
-    if (new File("curseKey.properties").exists()) {
-        //maven {
-        //    name = "CurseForge"
-        //    url = "https://minecraft.curseforge.com/api/${project.curse.api_key}"
-        //}
     }
 }
 
