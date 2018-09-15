@@ -5,27 +5,16 @@ import igwmod.api.WikiRegistry;
 
 /**
  * Created by Keridos on 02/12/2014.
- * This Class
+ * This class handles initialization of the IGW mod-related content.
  */
+@SuppressWarnings("unused")
 public class IGWHandler {
-    private static IGWHandler instance = null;
 
-    private IGWHandler() {
-        initTab();
-    }
-
-    public static IGWHandler getInstance() {
-        if (instance == null) {
-            instance = new IGWHandler();
-        }
-        return instance;
-    }
-
-    private void initTab() {
+    public static void init() {
         WikiRegistry.registerWikiTab(new FloodLightsWikiTab());
 
-        WikiRegistry.registerBlockAndItemPageEntry(ModBlocks.blockElectricFloodlight, "block/electricFloodlight");
-        WikiRegistry.registerBlockAndItemPageEntry(ModBlocks.blockCarbonFloodlight, "block/carbonFloodlight");
-        //WikiRegistry.registerBlockAndItemPageEntry(ModBlocks.blockSmallElectricLight, "block/smallElectricFloodlight");
+        WikiRegistry.registerBlockAndItemPageEntry(ModBlocks.blockElectricFloodlight, "block/electric_floodlight");
+        WikiRegistry.registerBlockAndItemPageEntry(ModBlocks.blockCarbonFloodlight, "block/carbon_floodlight");
+        WikiRegistry.registerBlockAndItemPageEntry(ModBlocks.blockSmallElectricLight, "block/small_electric_floodlight");
     }
 }

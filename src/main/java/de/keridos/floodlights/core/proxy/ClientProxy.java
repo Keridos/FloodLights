@@ -4,8 +4,6 @@ import de.keridos.floodlights.block.BlockFLColorableMachine;
 import de.keridos.floodlights.block.BlockPhantomLight;
 import de.keridos.floodlights.block.BlockSmallElectricFloodlight;
 import de.keridos.floodlights.client.render.block.TileEntityPhantomLightRenderer;
-import de.keridos.floodlights.compatability.IGWHandler;
-import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.init.ModBlocks;
 import de.keridos.floodlights.init.ModItems;
 import de.keridos.floodlights.reference.Names;
@@ -23,6 +21,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.common.event.FMLInterModComms;
 
 import static de.keridos.floodlights.util.RenderUtil.getColorAsInt;
 
@@ -93,8 +92,6 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void initHandlers() {
-        if (ModCompatibility.IGWModLoaded) {
-            ModCompatibility.getInstance().igwHandler = IGWHandler.getInstance();
-        }
+        FMLInterModComms.sendMessage("igwmod", "de.keridos.floodlights.compatability.IGWHandler", "init");
     }
 }

@@ -18,10 +18,7 @@ import net.minecraftforge.fml.common.event.FMLInterModComms;
 public class ModCompatibility {
     private static ModCompatibility instance = null;
 
-    public IGWHandler igwHandler = null;
-
     public static boolean IC2Loaded = false;
-    public static boolean IGWModLoaded = false;
     public static boolean BCLoaded = false;
     public static boolean CofhCoreLoaded = false;
     public static boolean NEILoaded = false;
@@ -44,7 +41,6 @@ public class ModCompatibility {
 
     private void checkForMods() {
         IC2Loaded = Loader.isModLoaded("ic2");
-        IGWModLoaded = Loader.isModLoaded("igwmod");
         BCLoaded = ModAPIManager.INSTANCE.hasAPI("BuildCraftAPI|tools");
         CofhCoreLoaded = ModAPIManager.INSTANCE.hasAPI("cofhapi");
         NEILoaded = Loader.isModLoaded("notenoughitems");

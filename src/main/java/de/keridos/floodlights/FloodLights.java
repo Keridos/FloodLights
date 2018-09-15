@@ -54,6 +54,7 @@ public class FloodLights {
         configHandler = ConfigHandler.getInstance();
         configHandler.initConfig(new Configuration(event.getSuggestedConfigurationFile()));
         ModBlocks.registerTileEntities();
+        proxy.initHandlers();
     }
 
     @Mod.EventHandler
@@ -66,7 +67,6 @@ public class FloodLights {
         proxy.init();
         proxy.initRenderers();
         proxy.initSounds();
-        proxy.initHandlers();
         Gui = GuiHandler.getInstance();
 
         if (ConfigHandler.electricFloodlight || ConfigHandler.smallElectricFloodlight || ConfigHandler.uvFloodlight)
