@@ -30,6 +30,8 @@ import java.util.Random;
 public class BlockPhantomLight extends BlockFL implements ITileEntityProvider {
     public static final PropertyBool UPDATE = PropertyBool.create("update");
 
+    private static final Random random = new Random();
+
     public BlockPhantomLight() {
         super(Names.Blocks.PHANTOM_LIGHT, Material.AIR, SoundType.CLOTH, 0.0F);
     }
@@ -151,6 +153,9 @@ public class BlockPhantomLight extends BlockFL implements ITileEntityProvider {
         TileEntity tile = worldIn.getChunkFromBlockCoords(pos).getTileEntity(pos, Chunk.EnumCreateEntityType.CHECK);
         if (!(tile instanceof TileEntityPhantomLight))
             worldIn.setBlockToAir(pos);
+        else if (random.nextInt(3) == 0)
+            ((TileEntityPhantomLight) tile).invalidateSources();
+
     }
 
     @Override
