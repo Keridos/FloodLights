@@ -272,9 +272,9 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
     protected void straightSource(boolean remove) {
         LightSwitchExecutor executor = new LightSwitchExecutor(remove);
         for (int i = 1; i <= currentRange; i += lightBlockStep) {
-            int x = this.pos.getX() + this.orientation.getFrontOffsetX() * i;
-            int y = this.pos.getY() + this.orientation.getFrontOffsetY() * i;
-            int z = this.pos.getZ() + this.orientation.getFrontOffsetZ() * i;
+            int x = this.pos.getX() + getOrientation().getFrontOffsetX() * i;
+            int y = this.pos.getY() + getOrientation().getFrontOffsetY() * i;
+            int z = this.pos.getZ() + getOrientation().getFrontOffsetZ() * i;
 
             BlockPos blockPos = new BlockPos(x, y, z);
             if ((!world.isAirBlock(blockPos) && world.getBlockState(blockPos).getBlock() != blockType) && !remove)
@@ -292,7 +292,7 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
         LightSwitchExecutor executor = new LightSwitchExecutor(remove);
         boolean[] failedBeams = new boolean[9];
 
-        if (!remove && world.getBlockState(getPosFromPosFacing(this.pos, this.orientation)).isOpaqueCube()) {
+        if (!remove && world.getBlockState(getPosFromPosFacing(this.pos, getOrientation())).isOpaqueCube()) {
             return;
         }
         for (int j = 0; j <= 16; j++) {
@@ -330,7 +330,7 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
                             c -= i;
                             break;
                     }
-                    int[] rotatedCoords = MathUtil.rotate(i, b, c, this.orientation);
+                    int[] rotatedCoords = MathUtil.rotate(i, b, c, getOrientation());
                     int x = this.pos.getX() + rotatedCoords[0];
                     int y = this.pos.getY() + rotatedCoords[1];
                     int z = this.pos.getZ() + rotatedCoords[2];
@@ -376,7 +376,7 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
                             c -= i / 2;
                             break;
                     }
-                    int[] rotatedCoords = MathUtil.rotate(i, b, c, this.orientation);
+                    int[] rotatedCoords = MathUtil.rotate(i, b, c, getOrientation());
                     int x = this.pos.getX() + rotatedCoords[0];
                     int y = this.pos.getY() + rotatedCoords[1];
                     int z = this.pos.getZ() + rotatedCoords[2];
@@ -403,9 +403,9 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
                 for (int i = 1; i <= currentRange; i += lightBlockStep) {
                     // for 1st light:
                     if (i == 1) {
-                        int x = this.pos.getX() + this.orientation.getFrontOffsetX();
-                        int y = this.pos.getY() + this.orientation.getFrontOffsetY();
-                        int z = this.pos.getZ() + this.orientation.getFrontOffsetZ();
+                        int x = this.pos.getX() + getOrientation().getFrontOffsetX();
+                        int y = this.pos.getY() + getOrientation().getFrontOffsetY();
+                        int z = this.pos.getZ() + getOrientation().getFrontOffsetZ();
                         executor.add(new BlockPos(x, y, z));
                         if (world.getBlockState(new BlockPos(x, y, z)).isOpaqueCube() && !remove) {
                             return;
@@ -443,7 +443,7 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
                             c -= i / 2;
                             break;
                     }
-                    int[] rotatedCoords = MathUtil.rotate(i, b, c, this.orientation); // rotate the coordinate to the correct spot in the real world :)
+                    int[] rotatedCoords = MathUtil.rotate(i, b, c, getOrientation()); // rotate the coordinate to the correct spot in the real world :)
                     int x = this.pos.getX() + rotatedCoords[0];
                     int y = this.pos.getY() + rotatedCoords[1];
                     int z = this.pos.getZ() + rotatedCoords[2];
@@ -490,7 +490,7 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
                             c -= i / 4;
                             break;
                     }
-                    int[] rotatedCoords = MathUtil.rotate(i, b, c, this.orientation);
+                    int[] rotatedCoords = MathUtil.rotate(i, b, c, getOrientation());
                     int x = this.pos.getX() + rotatedCoords[0];
                     int y = this.pos.getY() + rotatedCoords[1];
                     int z = this.pos.getZ() + rotatedCoords[2];

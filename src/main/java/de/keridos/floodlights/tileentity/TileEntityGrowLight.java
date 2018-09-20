@@ -6,6 +6,7 @@ import de.keridos.floodlights.util.RandomUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.IGrowable;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 
 /**
@@ -33,14 +34,14 @@ public class TileEntityGrowLight extends TileEntityFLElectric {
         // GrowLight-only logic below
         if (world.getWorldTime() > nextGrowTick) {
             BlockPos blockPosTarget = new BlockPos(
-                    pos.getX() + orientation.getFrontOffsetX() * 2,
-                    pos.getY() + orientation.getFrontOffsetY() * 2,
-                    pos.getZ() + orientation.getFrontOffsetZ() * 2
+                    pos.getX() + getOrientation().getFrontOffsetX() * 2,
+                    pos.getY() + getOrientation().getFrontOffsetY() * 2,
+                    pos.getZ() + getOrientation().getFrontOffsetZ() * 2
             );
             BlockPos blockPosFront = new BlockPos(
-                    pos.getX() + orientation.getFrontOffsetX(),
-                    pos.getY() + orientation.getFrontOffsetY(),
-                    pos.getZ() + orientation.getFrontOffsetZ()
+                    pos.getX() + getOrientation().getFrontOffsetX(),
+                    pos.getY() + getOrientation().getFrontOffsetY(),
+                    pos.getZ() + getOrientation().getFrontOffsetZ()
             );
             Block block = world.getBlockState(blockPosTarget).getBlock();
             Block blockFront = world.getBlockState(blockPosFront).getBlock();
@@ -60,5 +61,10 @@ public class TileEntityGrowLight extends TileEntityFLElectric {
     @Override
     public void changeMode(EntityPlayer player) {
         // Mode cannot be changed
+    }
+
+    @Override
+    public EnumFacing getOrientation() {
+        return EnumFacing.DOWN;
     }
 }

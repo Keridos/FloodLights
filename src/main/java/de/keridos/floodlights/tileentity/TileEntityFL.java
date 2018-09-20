@@ -119,7 +119,7 @@ public class TileEntityFL extends TileEntity {
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound nbtTagCompound) {
         nbtTagCompound = super.writeToNBT(nbtTagCompound);
-        nbtTagCompound.setByte(Names.NBT.DIRECTION, (byte) orientation.ordinal());
+        nbtTagCompound.setByte(Names.NBT.DIRECTION, (byte) getOrientation().ordinal());
         nbtTagCompound.setBoolean(Names.NBT.INVERT, inverted);
         nbtTagCompound.setInteger(Names.NBT.MODE, mode);
         nbtTagCompound.setInteger(Names.NBT.COLOR, color);
@@ -186,7 +186,7 @@ public class TileEntityFL extends TileEntity {
         data.add(mode);
         data.add(inverted);
         data.add(color);
-        data.add(orientation.getIndex());
+        data.add(getOrientation().getIndex());
         return data;
     }
 
