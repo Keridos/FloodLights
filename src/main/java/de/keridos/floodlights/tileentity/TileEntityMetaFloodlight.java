@@ -632,7 +632,7 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
                         executeMode(SOURCE_MODE_ENABLE_UPDATES, false);
                 };
 
-                if (!async)
+                if (async)
                     threadListener.addScheduledTask(task);
                 else
                     task.run();
