@@ -271,15 +271,17 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
      */
     protected void straightSource(boolean remove) {
         LightSwitchExecutor executor = new LightSwitchExecutor(remove);
-        for (int i = 1; i <= currentRange; i += lightBlockStep) {
+        for (int i = 1; i <= currentRange; i++) {
             int x = this.pos.getX() + getOrientation().getFrontOffsetX() * i;
             int y = this.pos.getY() + getOrientation().getFrontOffsetY() * i;
             int z = this.pos.getZ() + getOrientation().getFrontOffsetZ() * i;
 
             BlockPos blockPos = new BlockPos(x, y, z);
-            if ((!world.isAirBlock(blockPos) && world.getBlockState(blockPos).getBlock() != blockType) && !remove)
+            if ((!world.isAirBlock(blockPos) && world.getBlockState(blockPos).getBlock() != lightBlock) && !remove)
                 break;
-            executor.add(blockPos);
+
+            if ((i - 1) % lightBlockStep == 0)
+                executor.add(blockPos);
         }
 
         executor.execute();
@@ -297,7 +299,7 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
         }
         for (int j = 0; j <= 16; j++) {
             if (j <= 8) {
-                for (int i = 1; i <= currentRange / 4; i += lightBlockStep) {
+                for (int i = 1; i <= currentRange / 4; i++) {
                     int b = 0;
                     int c = 0;
                     switch (j) {
@@ -334,16 +336,18 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
                     int x = this.pos.getX() + rotatedCoords[0];
                     int y = this.pos.getY() + rotatedCoords[1];
                     int z = this.pos.getZ() + rotatedCoords[2];
-                    executor.add(new BlockPos(x, y, z));
                     if (world.getBlockState(new BlockPos(x, y, z)).isOpaqueCube() && !remove) {
                         if (i < 4) {   //This is for canceling the long rangs beams
                             failedBeams[j] = true;
                         }
                         break;
                     }
+
+                    if ((i - 1) % lightBlockStep == 0)
+                        executor.add(new BlockPos(x, y, z));
                 }
             } else if (!failedBeams[j - 9] || remove) { // This is for the inner beams at longer range
-                for (int i = 4; i <= rangeCone / 4; i += lightBlockStep) {
+                for (int i = 4; i <= rangeCone / 4; i++) {
                     int b = 0;
                     int c = 0;
                     switch (j) {
@@ -380,10 +384,11 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
                     int x = this.pos.getX() + rotatedCoords[0];
                     int y = this.pos.getY() + rotatedCoords[1];
                     int z = this.pos.getZ() + rotatedCoords[2];
-                    executor.add(new BlockPos(x, y, z));
-                    if (world.getBlockState(new BlockPos(x, y, z)).isOpaqueCube() && !remove) {
+                    if (world.getBlockState(new BlockPos(x, y, z)).isOpaqueCube() && !remove)
                         break;
-                    }
+
+                    if ((i - 1) % lightBlockStep == 0)
+                        executor.add(new BlockPos(x, y, z));
                 }
             }
         }
@@ -400,16 +405,16 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
         boolean[] failedBeams = new boolean[9];    // for the additional beam to cancel when the main beams fail.
         for (int j = 0; j <= 16; j++) {
             if (j <= 8) {     // This is the main beams
-                for (int i = 1; i <= currentRange; i += lightBlockStep) {
+                for (int i = 1; i <= currentRange; i++) {
                     // for 1st light:
                     if (i == 1) {
                         int x = this.pos.getX() + getOrientation().getFrontOffsetX();
                         int y = this.pos.getY() + getOrientation().getFrontOffsetY();
                         int z = this.pos.getZ() + getOrientation().getFrontOffsetZ();
-                        executor.add(new BlockPos(x, y, z));
-                        if (world.getBlockState(new BlockPos(x, y, z)).isOpaqueCube() && !remove) {
+                        if (world.getBlockState(new BlockPos(x, y, z)).isOpaqueCube() && !remove)
                             return;
-                        }
+
+                        executor.add(new BlockPos(x, y, z));
                     }
                     int b = 0;
                     int c = 0;
@@ -448,16 +453,18 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
                     int y = this.pos.getY() + rotatedCoords[1];
                     int z = this.pos.getZ() + rotatedCoords[2];
                     BlockPos sourcePos = new BlockPos(x, y, z);
-                    executor.add(sourcePos);
                     if (world.getBlockState(sourcePos).isOpaqueCube() && !remove) {
                         if (i < 8) {   //This is for canceling the long rangs beams
                             failedBeams[j] = true;
                         }
                         break;
                     }
+
+                    if ((i - 1) % lightBlockStep == 0)
+                        executor.add(sourcePos);
                 }
             } else if (!failedBeams[j - 9] || remove) { // This is for the inner beams at longer range
-                for (int i = 8; i <= rangeCone; i += lightBlockStep) {
+                for (int i = 8; i <= rangeCone; i++) {
                     int b = 0;
                     int c = 0;
                     switch (j) {
@@ -495,10 +502,11 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
                     int y = this.pos.getY() + rotatedCoords[1];
                     int z = this.pos.getZ() + rotatedCoords[2];
                     BlockPos sourcePos = new BlockPos(x, y, z);
-                    executor.add(sourcePos);
-                    if (world.getBlockState(sourcePos).isOpaqueCube() && !remove) {
+                    if (world.getBlockState(sourcePos).isOpaqueCube() && !remove)
                         break;
-                    }
+
+                    if ((i - 1) % lightBlockStep == 0)
+                        executor.add(sourcePos);
                 }
             }
         }
@@ -547,7 +555,7 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
 
     /**
      * This class handles placing and destroying light blocks ({@link de.keridos.floodlights.block.BlockPhantomLight}).
-     *
+     * <p>
      * Work is divided into batches - this should prevent from leaving invalid light sources in a world after
      * disabling a floodlight.
      */
@@ -568,6 +576,7 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
 
         /**
          * Initializes LightSwitchExecutor.
+         *
          * @param remove wither light sources should be removed from world.
          */
         public LightSwitchExecutor(boolean remove) {
