@@ -14,7 +14,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.event.ForgeEventFactory;
 
 import java.util.logging.Logger;
 
@@ -46,6 +46,7 @@ public class GeneralUtil {
                 return 150;
             }
 
+            //noinspection deprecation
             if (block.getMaterial(block.getStateFromMeta(itemStack.getItemDamage())) == Material.WOOD) {
                 return 300;
             }
@@ -63,7 +64,7 @@ public class GeneralUtil {
         if (item == Items.LAVA_BUCKET) return 20000;
         if (item == Item.getItemFromBlock(Blocks.SAPLING)) return 100;
         if (item == Items.BLAZE_ROD) return 2400;
-        return GameRegistry.getFuelValue(itemStack);
+        return ForgeEventFactory.getItemBurnTime(itemStack);
     }
 
     public static boolean isItemStackValidElectrical(ItemStack itemStack) {
@@ -73,7 +74,8 @@ public class GeneralUtil {
                 return ((IElectricItem) item).canProvideEnergy(itemStack);
             }
         }
-        return item instanceof IEnergyContainerItem;
+
+        return ModCompatibility.CofhCoreLoaded && item instanceof IEnergyContainerItem;
     }
 
     public static BlockPos getPosFromPosFacing(BlockPos pos, EnumFacing facing) {
@@ -84,9 +86,9 @@ public class GeneralUtil {
 
     public static boolean isBlockValidGrowable(Block block, World world, BlockPos blockPos) {
         boolean result = false;
-        if ((block instanceof IGrowable && ((IGrowable) block).canGrow(world, blockPos,world.getBlockState(blockPos), false))
-                /*|| (ModCompatibility.ACLoaded  && ModCompatibility.getInstance().isBlockValidAgriCraftSeed(block, world, blockPos)*/) {
-            Logger.getGlobal().info("blockcangrow: " + (((IGrowable) block).canGrow(world, blockPos,world.getBlockState(blockPos), false)));
+        if ((block instanceof IGrowable && ((IGrowable) block).canGrow(world, blockPos, world.getBlockState(blockPos), false))
+            /*|| (ModCompatibility.ACLoaded  && ModCompatibility.getInstance().isBlockValidAgriCraftSeed(block, world, blockPos)*/) {
+            Logger.getGlobal().info("blockcangrow: " + (((IGrowable) block).canGrow(world, blockPos, world.getBlockState(blockPos), false)));
             result = true;
         }
         return result;
