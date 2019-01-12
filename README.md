@@ -3,7 +3,8 @@ FloodLights
 
 [![Build Status](https://travis-ci.org/Keridos/FloodLights.svg?branch=1.12.2)](https://travis-ci.org/Keridos/FloodLights)
 
-Minecraft Mod for Flood Lights (alternative for GregsLighting)
+
+Minecraft Mod for Flood Lights (alternative to GregsLighting)
 
 ### Links:
 * Project page: https://minecraft.curseforge.com/projects/floodlights
