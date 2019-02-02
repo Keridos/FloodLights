@@ -10,7 +10,8 @@
 			"sideshorton": "floodlights:blocks/fluorescent_small_light_side_short_on",
 			"topoff": "floodlights:blocks/fluorescent_small_light_top_off",
 			"sideoff": "floodlights:blocks/fluorescent_small_light_side_long_off",
-			"sideshortoff": "floodlights:blocks/fluorescent_small_light_side_short_off"
+			"sideshortoff": "floodlights:blocks/fluorescent_small_light_side_short_off",
+			"particle": "floodlights:blocks/fluorescent_small_light_bot"
 		}
 	},
 	"variants": {

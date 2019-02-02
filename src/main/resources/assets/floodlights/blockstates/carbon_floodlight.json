@@ -6,7 +6,8 @@
 		"textures": {
 			"top": "FloodLights:blocks/carbon_floodlight_top",
 			"side": "FloodLights:blocks/carbon_floodlight_side",
-			"bottom": "FloodLights:blocks/carbon_floodlight_bot"
+			"bottom": "FloodLights:blocks/carbon_floodlight_bot",
+			"particle": "FloodLights:blocks/carbon_floodlight_side"
 		}
 	},
 	"variants": {

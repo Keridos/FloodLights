@@ -6,7 +6,8 @@
 		"textures": {
 			"top": "floodlights:blocks/uv_floodlight_top",
 			"side": "floodlights:blocks/uv_floodlight_side",
-			"bottom": "floodlights:blocks/uv_floodlight_bot"
+			"bottom": "floodlights:blocks/uv_floodlight_bot",
+			"particle": "floodlights:blocks/uv_floodlight_side"
 		}
 	},
 	"variants": {

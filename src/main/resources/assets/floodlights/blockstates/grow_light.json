@@ -4,11 +4,11 @@
 		"model": "floodlights:square_fluorescent_floodlight",
 		"transform": "forge:default-block",
 		"textures": {
-			"bottom": "floodlights:blocks/grow_light_bot",
+			"bottom": "floodlights:blocks/uv_floodlight_bot",
 			"topon": "floodlights:blocks/grow_light_top_on",
 			"side": "floodlights:blocks/grow_light_side",
 			"topoff": "floodlights:blocks/grow_light_top_off",
-			"particle": "floodlights:blocks/grow_light_side"
+			"particle": "floodlights:blocks/uv_floodlight_bot"
 		}
 	},
 	"variants": {
