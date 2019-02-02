@@ -2,12 +2,14 @@ package de.keridos.floodlights.tileentity;
 
 import de.keridos.floodlights.reference.Names;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nonnull;
@@ -101,6 +103,11 @@ public class TileEntityPhantomLight extends TileEntity {
             lightBlock = Blocks.STONE;
 
         invalidateSources();
+    }
+
+    @Override
+    public boolean shouldRefresh(World world, BlockPos pos, @Nonnull IBlockState oldState, @Nonnull IBlockState newSate) {
+        return oldState.getBlock() != newSate.getBlock();
     }
 
     @SuppressWarnings("ConstantConditions")
