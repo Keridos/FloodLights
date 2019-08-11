@@ -2,7 +2,6 @@ package de.keridos.floodlights.compatability;
 
 import de.keridos.floodlights.handler.ConfigHandler;
 import de.keridos.floodlights.reference.Reference;
-import ic2.core.item.tool.ItemToolWrench;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.Loader;
@@ -71,7 +70,8 @@ public class ModCompatibility {
 
     @SuppressWarnings("ConstantConditions")
     public boolean isItemValidWrench(ItemStack stack) {
-        return ModCompatibility.IC2Loaded && stack.getItem() instanceof ItemToolWrench
+        return stack.getItem().getRegistryName().toString().equals("ic2:wrench")
+                || stack.getItem().getRegistryName().toString().equals("ic2:wrench_new")
                 || stack.getItem().getRegistryName().toString().equals("enderio:item_yeta_wrench")
                 || stack.getItem().getRegistryName().toString().equals("thermalfoundation:wrench")
                 || stack.getItem().getRegistryName().toString().equals("buildcraftcore:wrench");

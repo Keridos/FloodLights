@@ -10,11 +10,13 @@ buildscript {
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath 'de.undercouch:gradle-download-task:4.0.0'
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
-sourceCompatibility = targetCompatibility = 1.8
+apply plugin: 'de.undercouch.download'
 
+sourceCompatibility = targetCompatibility = 1.8
 compileJava {
     sourceCompatibility = targetCompatibility = '1.8'
 }
@@ -61,6 +63,10 @@ repositories {
         name = "ChickenBones"
         url = "http://chickenbones.net/maven/"
     }
+
+    flatDir {
+        dirs "libs"
+    }
 }
 
 // define the properties file
@@ -85,11 +91,8 @@ archivesBaseName = "${config.mod_id}-${config.minecraft_version}"
 
 minecraft {
     version = "${config.forge_version}"
-    if (file('../run_1.9.4').exists()) {
-        runDir = "../run_1.9.4"
-    } else {
-        runDir = "run"
-    }
+    runDir = "run"
+
     // the mappings can be changed at any time, and must be in the following format.
     // snapshot_YYYYMMDD   snapshot are built nightly.
     // stable_#            stables are built at the discretion of the MCP team.
@@ -109,11 +112,11 @@ processResources{
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
-                
+
         // replace version and mcversion
         expand 'version':project.version, 'mcversion':project.minecraft.version
     }
-        
+
     // copy everything else, thats not the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
@@ -125,7 +128,36 @@ task deobfJar(type: Jar) {
     classifier = 'dev'
 }
 
-build.dependsOn sourceJar, deobfJar
+task downloadDirectDependencies {
+    doLast {
+        def libs = new File("libs")
+        if (!libs.isDirectory())
+            libs.mkdir()
+
+        final PREFIX = "direct."
+        def properties = new Properties()
+        properties.load(new FileInputStream("project.properties"))
+        properties.propertyNames().each { _name ->
+            def name = _name as String
+            if (!name.startsWith(PREFIX))
+                return
+
+            def url = properties.getProperty(name)
+            def artifactName = url.substring(url.lastIndexOf('/') + 1)
+            def artifactFile = new File(libs, artifactName)
+            if (artifactFile.exists())
+                return
+
+            download {
+                src url
+                dest libs
+                overwrite false
+            }
+        }
+    }
+}
+
+build.dependsOn sourceJar, deobfJar, downloadDirectDependencies
 
 dependencies {
     compile "com.google.code.findbugs:annotations:3.0.1"
@@ -135,10 +167,12 @@ dependencies {
 
     compile "mezz.jei:jei_${config.minecraft_version}:${config.jei_version}"
     compile "igwmod:IGW-Mod-${config.minecraft_version}:${config.igwmod_version}:userdev"
-    compile "net.industrial-craft:industrialcraft-2:${config.ic2_version}"
+    compile "net.industrial-craft:industrialcraft-2:${config.ic2_version}:api"
 
     compile "mcp.mobius.waila:Hwyla:${config.hwyla_version}"
     compile "cofh:RedstoneFlux:${config.redstoneflux_version}:deobf"
+
+    compile fileTree(dir: "libs", includes: ["*.jar"])
 }
 
 minecraft {

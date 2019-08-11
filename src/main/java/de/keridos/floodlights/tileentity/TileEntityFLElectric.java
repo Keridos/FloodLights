@@ -119,6 +119,7 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
     public void readFromNBT(NBTTagCompound nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
         energy.readFromNBT(nbtTagCompound);
+        updateEnergyUsage();
     }
 
     @Override
