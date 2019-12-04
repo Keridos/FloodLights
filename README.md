@@ -13,3 +13,8 @@ Minecraft Mod for Flood Lights (alternative to GregsLighting)
 
 
 IlynPayne has taken over this mods development.
+
+
+### Development
+
+If all mod textures are missing when running from Intellij IDEA, go to settings -> build, execution, deployment -> build tools -> Gradle and change the option *build and run using* to *Intellij IDEA*

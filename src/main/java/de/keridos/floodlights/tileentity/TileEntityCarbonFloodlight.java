@@ -24,6 +24,16 @@ public class TileEntityCarbonFloodlight extends TileEntityMetaFloodlight {
     }
 
     @Override
+    protected int getInventorySize() {
+        return 2;
+    }
+
+    @Override
+    public boolean supportsCloak() {
+        return true;
+    }
+
+    @Override
     public void readFromNBT(NBTTagCompound nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
         if (nbtTagCompound.hasKey(Names.NBT.TIME_REMAINING)) {

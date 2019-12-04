@@ -1,18 +1,19 @@
 package de.keridos.floodlights.handler;
 
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.network.IGuiHandler;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 import de.keridos.floodlights.FloodLights;
 import de.keridos.floodlights.client.gui.GuiCarbonFloodlight;
 import de.keridos.floodlights.client.gui.GuiElectricFloodlight;
-import de.keridos.floodlights.client.gui.container.ContainerCarbonFloodlight;
-import de.keridos.floodlights.client.gui.container.ContainerElectricFloodlight;
+import de.keridos.floodlights.client.gui.container.CarbonFloodlightContainer;
+import de.keridos.floodlights.client.gui.container.ElectricFloodlightContainer;
 import de.keridos.floodlights.tileentity.TileEntityCarbonFloodlight;
+import de.keridos.floodlights.tileentity.TileEntityElectricFloodlight;
 import de.keridos.floodlights.tileentity.TileEntityFLElectric;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.IGuiHandler;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 /**
  * Created by Keridos on 28.02.14.
@@ -22,6 +23,7 @@ public class GuiHandler implements IGuiHandler {
 
     public static final int GUI_CARBON_FLOODLIGHT = 0;
     public static final int GUI_ELECTIC_FLOODLIGHT = 1;
+    public static final int GUI_ELECTIC_FLOODLIGHT_CLOAK = 2;
 
     private static GuiHandler instance = null;
 
@@ -43,19 +45,18 @@ public class GuiHandler implements IGuiHandler {
         switch (id) {
             case GUI_CARBON_FLOODLIGHT:
                 if (entity instanceof TileEntityCarbonFloodlight) {
-                    return new ContainerCarbonFloodlight(player.inventory, (TileEntityCarbonFloodlight) entity);
-                } else {
-                    return null;
+                    return CarbonFloodlightContainer.create(player.inventory, (TileEntityCarbonFloodlight) entity);
                 }
             case GUI_ELECTIC_FLOODLIGHT:
                 if (entity instanceof TileEntityFLElectric) {
-                    return new ContainerElectricFloodlight(player.inventory, (TileEntityFLElectric) entity);
-                } else {
-                    return null;
+                    return ElectricFloodlightContainer.create(player.inventory, (TileEntityFLElectric) entity, false);
                 }
-            default:
-                return null;
+            case GUI_ELECTIC_FLOODLIGHT_CLOAK:
+                if (entity instanceof TileEntityFLElectric) {
+                    return ElectricFloodlightContainer.create(player.inventory, (TileEntityFLElectric) entity, true);
+                }
         }
+        return null;
     }
 
     @Override
@@ -71,12 +72,18 @@ public class GuiHandler implements IGuiHandler {
                 }
             case GUI_ELECTIC_FLOODLIGHT:
                 if (entity instanceof TileEntityFLElectric) {
-                    return new GuiElectricFloodlight(player.inventory, (TileEntityFLElectric) entity);
+                    return new GuiElectricFloodlight(player.inventory, (TileEntityFLElectric) entity, false);
                 } else {
                     return null;
                 }
-            default:
-                return null;
+            case GUI_ELECTIC_FLOODLIGHT_CLOAK:
+                if (entity instanceof TileEntityElectricFloodlight) {
+                    return new GuiElectricFloodlight(player.inventory, (TileEntityFLElectric) entity, true);
+                } else {
+                    return null;
+                }
         }
+
+        return null;
     }
 }

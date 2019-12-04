@@ -61,6 +61,8 @@ public class Names {
         public static final String OWNER = "owner";
         public static final String SOURCES = "sources";
         public static final String LIGHT_BLOCK = "lightBlock";
+        public static final String CLOAK_BLOCK = "cloakBlock";
+        public static final String CLOAK_BLOCKSTATE = "cloakBlockState";
     }
 
     public static final class DamageSources {

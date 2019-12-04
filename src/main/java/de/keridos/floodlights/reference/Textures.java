@@ -22,5 +22,6 @@ public class Textures {
         private static final String GUI_TEXTURE_LOCATION = RESOURCE_PREFIX + "textures/gui/";
         public static final String CARBON_FLOODLIGHT = GUI_TEXTURE_LOCATION + "carbon_floodlight.png";
         public static final String ELECTRIC_FLOODLIGHT = GUI_TEXTURE_LOCATION + "electric_floodlight.png";
+        public static final String ELECTRIC_FLOODLIGHT_CLOAK = GUI_TEXTURE_LOCATION + "electric_floodlight_cloak.png";
     }
 }

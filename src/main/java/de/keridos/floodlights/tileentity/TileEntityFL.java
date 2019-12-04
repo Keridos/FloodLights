@@ -5,14 +5,18 @@ import de.keridos.floodlights.core.network.message.TileEntitySyncMessage;
 import de.keridos.floodlights.handler.PacketHandler;
 import de.keridos.floodlights.reference.Names;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 import javax.annotation.Nonnull;
 import java.util.HashSet;
@@ -37,6 +41,8 @@ public class TileEntityFL extends TileEntity {
     protected int mode;
     protected boolean inverted;
     protected int color;
+
+    private IBlockState cloak;
 
     public TileEntityFL() {
         orientation = EnumFacing.SOUTH;
@@ -93,6 +99,24 @@ public class TileEntityFL extends TileEntity {
         syncData();
     }
 
+    public boolean supportsCloak() {
+        return false;
+    }
+
+    public IBlockState getCloak() {
+        return supportsCloak() ? cloak : null;
+    }
+
+    public void setCloak(IBlockState cloak) {
+        if (supportsCloak()) {
+            this.cloak = cloak;
+            markDirty();
+            if (hasWorld())
+                world.markBlockRangeForRenderUpdate(pos, pos);
+        }
+    }
+
+    @SuppressWarnings("deprecation")
     @Override
     public void readFromNBT(NBTTagCompound nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
@@ -114,6 +138,13 @@ public class TileEntityFL extends TileEntity {
         if (nbtTagCompound.hasKey(Names.NBT.COLOR)) {
             this.color = nbtTagCompound.getInteger(Names.NBT.COLOR);
         }
+
+        if (supportsCloak() && nbtTagCompound.hasKey(Names.NBT.CLOAK_BLOCK) && nbtTagCompound.hasKey(Names.NBT.CLOAK_BLOCKSTATE)) {
+            Block cloakBlock = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(nbtTagCompound.getString(Names.NBT.CLOAK_BLOCK)));
+            if (cloakBlock != null) {
+                this.cloak = cloakBlock.getStateFromMeta(nbtTagCompound.getByte(Names.NBT.CLOAK_BLOCKSTATE));
+            }
+        }
     }
 
     @Override
@@ -129,6 +160,13 @@ public class TileEntityFL extends TileEntity {
         if (this.hasOwner()) {
             nbtTagCompound.setString(Names.NBT.OWNER, owner);
         }
+
+        if (supportsCloak() && cloak != null && !Block.isEqualTo(Blocks.AIR, cloak.getBlock())) {
+            //noinspection ConstantConditions
+            nbtTagCompound.setString(Names.NBT.CLOAK_BLOCK, cloak.getBlock().getRegistryName().toString());
+            nbtTagCompound.setByte(Names.NBT.CLOAK_BLOCKSTATE, (byte) cloak.getBlock().getMetaFromState(cloak));
+        }
+
         return nbtTagCompound;
     }
 

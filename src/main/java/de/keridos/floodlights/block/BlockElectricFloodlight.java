@@ -19,7 +19,7 @@ public class BlockElectricFloodlight extends BlockFLColorableMachine implements 
     public BlockElectricFloodlight() {
         super(Names.Blocks.ELECTRIC_FLOODLIGHT, Material.ROCK, SoundType.METAL, 2.5F);
         setHarvestLevel("pickaxe", 1);
-        guiId = GuiHandler.GUI_ELECTIC_FLOODLIGHT;
+        guiId = GuiHandler.GUI_ELECTIC_FLOODLIGHT_CLOAK;
     }
 
     @Override

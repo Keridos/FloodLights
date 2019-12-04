@@ -1,6 +1,6 @@
 package de.keridos.floodlights.client.gui;
 
-import de.keridos.floodlights.client.gui.container.ContainerCarbonFloodlight;
+import de.keridos.floodlights.client.gui.container.CarbonFloodlightContainer;
 import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.reference.Textures;
 import de.keridos.floodlights.tileentity.TileEntityCarbonFloodlight;
@@ -19,10 +19,10 @@ public class GuiCarbonFloodlight extends GuiContainer {
     private TileEntityCarbonFloodlight tileEntityCarbonFloodlight;
 
     public GuiCarbonFloodlight(InventoryPlayer invPlayer, TileEntityCarbonFloodlight entity) {
-        super(new ContainerCarbonFloodlight(invPlayer, entity));
+        super(CarbonFloodlightContainer.create(invPlayer, entity));
         this.tileEntityCarbonFloodlight = entity;
         xSize = 176;
-        ySize = 146;
+        ySize = 156;
     }
 
     @Override
@@ -32,7 +32,7 @@ public class GuiCarbonFloodlight extends GuiContainer {
                 tileEntityCarbonFloodlight.timeRemaining / 1200,
                 String.format("%02d", tileEntityCarbonFloodlight.timeRemaining / 20 % 60)
         );
-        fontRenderer.drawString(format, 50, 26, 0x000000);
+        fontRenderer.drawString(format, 50, 20, 0x000000);
     }
 
     @Override

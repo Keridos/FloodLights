@@ -9,7 +9,12 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemAir;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IThreadListener;
@@ -59,14 +64,7 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
 
     public TileEntityMetaFloodlight() {
         super();
-
-        inventory = new ItemStackHandler(1) {
-            @Override
-            protected void onContentsChanged(int slot) {
-                super.onContentsChanged(slot);
-                markDirty();
-            }
-        };
+        inventory = createInventory();
     }
 
     public void setHasRedstoneSignal(boolean hasSignal) {
@@ -148,6 +146,29 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
         return timeout == 0;
     }
 
+    protected ItemStackHandler createInventory() {
+        return new ItemStackHandler(getInventorySize()) {
+            @Override
+            protected void onContentsChanged(int slot) {
+                if (slot == 1 && supportsCloak()) {
+                    Item item = getStackInSlot(slot).getItem();
+                    if (item instanceof ItemAir) {
+                        setCloak(null);
+                    } else if (item instanceof ItemBlock && (getCloak() == null || !Block.isEqualTo(((ItemBlock) item).getBlock(), getCloak().getBlock()))) {
+                        setCloak(((ItemBlock) item).getBlock().getDefaultState());
+                    }
+                }
+
+                super.onContentsChanged(slot);
+                markDirty();
+            }
+        };
+    }
+
+    protected int getInventorySize() {
+        return 1;
+    }
+
     @Override
     public void readFromNBT(NBTTagCompound nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
@@ -157,8 +178,29 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
             hasLight = nbtTagCompound.getBoolean(Names.NBT.LIGHT);
         if (nbtTagCompound.hasKey(Names.NBT.HAS_REDSTONE))
             setHasRedstoneSignal(nbtTagCompound.getBoolean(Names.NBT.HAS_REDSTONE));
-        if (nbtTagCompound.hasKey(Names.NBT.ITEMS))
+        if (nbtTagCompound.hasKey(Names.NBT.ITEMS)) {
             inventory.deserializeNBT(nbtTagCompound.getCompoundTag(Names.NBT.ITEMS));
+
+            if (inventory.getSlots() != getInventorySize()) {
+                List<ItemStack> itemStacks = new ArrayList<>();
+                for (int i = 0; i < inventory.getSlots(); i++) {
+                    itemStacks.add(inventory.getStackInSlot(i));
+                }
+
+                ItemStackHandler newInventory = createInventory();
+                for (ItemStack current : itemStacks) {
+                    for (int j = 0; j < newInventory.getSlots() && !current.isEmpty(); j++) {
+                        current = newInventory.insertItem(j, current, false);
+                    }
+
+                    if (!current.isEmpty()) {
+                        EntityItem entityItem = new EntityItem(getWorld(), getPos().getX(), getPos().getY() + 1, getPos().getZ(), current);
+                        getWorld().spawnEntity(entityItem);
+                    }
+                }
+                inventory = newInventory;
+            }
+        }
         if (nbtTagCompound.hasKey(Names.NBT.CURRENT_RANGE))
             currentRange = nbtTagCompound.getInteger(Names.NBT.CURRENT_RANGE);
         if (nbtTagCompound.hasKey(Names.NBT.FLOODLIGHT_ID))
@@ -208,8 +250,6 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
     public ITextComponent getDisplayName() {
         return null;
     }
-
-    @SuppressWarnings("ConstantConditions")
 
     private void lightSource(boolean remove) {
         lightSource(remove, true);

@@ -56,12 +56,16 @@ public class BlockFLColorableMachine extends BlockFL {
 
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
-        TileEntity tile = worldIn instanceof ChunkCache ? ((ChunkCache)worldIn).getTileEntity(pos, Chunk.EnumCreateEntityType.CHECK) : worldIn.getTileEntity(pos);
+        TileEntity tile = worldIn instanceof ChunkCache ? ((ChunkCache) worldIn).getTileEntity(pos, Chunk.EnumCreateEntityType.CHECK) : worldIn.getTileEntity(pos);
         if (tile instanceof TileEntityMetaFloodlight) {
+            TileEntityMetaFloodlight metaFloodlight = (TileEntityMetaFloodlight) tile;
+            if (metaFloodlight.supportsCloak() && metaFloodlight.getCloak() != null) {
+                return metaFloodlight.getCloak();
+            }
             return state
-                    .withProperty(FACING, ((TileEntityMetaFloodlight) tile).getOrientation())
-                    .withProperty(ACTIVE, ((TileEntityMetaFloodlight) tile).hasLight())
-                    .withProperty(COLOR, ((TileEntityMetaFloodlight) tile).getColor());
+                    .withProperty(FACING, metaFloodlight.getOrientation())
+                    .withProperty(ACTIVE, metaFloodlight.hasLight())
+                    .withProperty(COLOR, metaFloodlight.getColor());
         }
 
         return state;
