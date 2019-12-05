@@ -14,6 +14,7 @@ public class ConfigHandler {
     public static boolean carbonFloodlight;
     public static boolean uvFloodlight;
     public static boolean growLight;
+    public static int energyBufferSize;
     public static int energyUsage;
     public static int energyUsageSmallFloodlight;
     public static int energyUsageUVFloodlight;
@@ -49,6 +50,7 @@ public class ConfigHandler {
         growLight = config.getBoolean("growLightEnabled", "blocks", true, "Enables the Grow Light");
 
         config.getCategory("general");
+        energyBufferSize = config.getInt("energyBufferSize", "general", 50000, 1000, 10000000, "Size of electric floodlights' internal energy buffer, in RF");
         energyUsage = config.getInt("energyUsage", "general", 20, 0, 1000, "Energy Usage in RF/t for the electric FloodLight (x4 for the cone floodlights)");
         energyUsageSmallFloodlight = config.getInt("energyUsageSmallFloodlight", "general", 2, 0, 100, "Energy Usage in RF/t for the small electric FloodLight");
         energyUsageUVFloodlight = config.getInt("energyUsageUVFloodlight", "general", 80, 0, 800, "Energy Usage in RF/t for the UV FloodLight");

@@ -49,7 +49,7 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
     protected int realEnergyUsage;
 
     protected boolean wasAddedToEnergyNet = false;
-    public CustomEnergyStorage energy = new CustomEnergyStorage(50000);
+    public CustomEnergyStorage energy = new CustomEnergyStorage(ConfigHandler.energyBufferSize);
 
     public TileEntityFLElectric() {
         super();
@@ -171,7 +171,7 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
     @Optional.Method(modid = "ic2")
     @Override
     public double getDemandedEnergy() {
-        return energy.getMaxEnergyStored() / EU_TO_RF_RATE;
+        return (double) energy.getMaxEnergyStored() / EU_TO_RF_RATE;
     }
 
     @Optional.Method(modid = "ic2")
@@ -212,7 +212,7 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
 
         public double receiveEU(double amount) {
             int received = receiveEnergy((int) Math.round(amount * EU_TO_RF_RATE), false);
-            return amount - received / EU_TO_RF_RATE;
+            return amount - (double) received / EU_TO_RF_RATE;
         }
 
         /**
