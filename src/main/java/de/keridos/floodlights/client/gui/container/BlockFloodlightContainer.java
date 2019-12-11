@@ -1,7 +1,7 @@
 package de.keridos.floodlights.client.gui.container;
 
 import de.keridos.floodlights.tileentity.TileEntityMetaFloodlight;
-import javafx.util.Pair;
+import de.keridos.floodlights.util.Pair;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemBlock;

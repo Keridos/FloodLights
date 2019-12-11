@@ -1,7 +1,7 @@
 package de.keridos.floodlights.client.gui.container;
 
 import de.keridos.floodlights.tileentity.TileEntityFLElectric;
-import javafx.util.Pair;
+import de.keridos.floodlights.util.Pair;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.CapabilityItemHandler;

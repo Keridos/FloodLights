@@ -1,7 +1,7 @@
 package de.keridos.floodlights.client.gui.container;
 
 import de.keridos.floodlights.tileentity.TileEntityMetaFloodlight;
-import javafx.util.Pair;
+import de.keridos.floodlights.util.Pair;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -24,13 +24,13 @@ public abstract class BaseFloodlightContainer<T extends TileEntityMetaFloodlight
     void initialize() {
         Pair<Integer, Integer> hotbarOffset = getHotbarOffset();
         for (int x = 0; x < 9; x++) {
-            this.addSlotToContainer(new Slot(invPlayer, x, hotbarOffset.getKey() + x * 18, hotbarOffset.getValue()));
+            this.addSlotToContainer(new Slot(invPlayer, x, hotbarOffset.getFirst() + x * 18, hotbarOffset.getSecond()));
         }
 
         Pair<Integer, Integer> inventoryOffset = getInventoryOffset();
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 9; x++) {
-                this.addSlotToContainer(new Slot(invPlayer, 9 + x + y * 9, inventoryOffset.getKey() + x * 18, inventoryOffset.getValue() + y * 18));
+                this.addSlotToContainer(new Slot(invPlayer, 9 + x + y * 9, inventoryOffset.getFirst() + x * 18, inventoryOffset.getSecond() + y * 18));
             }
         }
 
