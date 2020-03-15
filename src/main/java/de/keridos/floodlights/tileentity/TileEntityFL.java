@@ -116,10 +116,13 @@ public class TileEntityFL extends TileEntity {
         }
     }
 
-    @SuppressWarnings("deprecation")
     @Override
-    public void readFromNBT(NBTTagCompound nbtTagCompound) {
+    public final void readFromNBT(NBTTagCompound nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
+        readOwnFromNBT(nbtTagCompound);
+    }
+
+    public void readOwnFromNBT(NBTTagCompound nbtTagCompound) {
         if (nbtTagCompound.hasKey(Names.NBT.DIRECTION)) {
             this.orientation = EnumFacing.getFront(nbtTagCompound.getByte(Names.NBT.DIRECTION));
         }
@@ -142,14 +145,19 @@ public class TileEntityFL extends TileEntity {
         if (supportsCloak() && nbtTagCompound.hasKey(Names.NBT.CLOAK_BLOCK) && nbtTagCompound.hasKey(Names.NBT.CLOAK_BLOCKSTATE)) {
             Block cloakBlock = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(nbtTagCompound.getString(Names.NBT.CLOAK_BLOCK)));
             if (cloakBlock != null) {
+                //noinspection deprecation
                 this.cloak = cloakBlock.getStateFromMeta(nbtTagCompound.getByte(Names.NBT.CLOAK_BLOCKSTATE));
             }
         }
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbtTagCompound) {
+    public final NBTTagCompound writeToNBT(NBTTagCompound nbtTagCompound) {
         nbtTagCompound = super.writeToNBT(nbtTagCompound);
+        return writeOwnToNBT(nbtTagCompound);
+    }
+
+    public NBTTagCompound writeOwnToNBT(NBTTagCompound nbtTagCompound) {
         nbtTagCompound.setByte(Names.NBT.DIRECTION, (byte) getOrientation().ordinal());
         nbtTagCompound.setBoolean(Names.NBT.INVERT, inverted);
         nbtTagCompound.setInteger(Names.NBT.MODE, mode);

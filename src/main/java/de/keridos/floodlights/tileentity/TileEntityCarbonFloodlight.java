@@ -34,16 +34,16 @@ public class TileEntityCarbonFloodlight extends TileEntityMetaFloodlight {
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbtTagCompound) {
-        super.readFromNBT(nbtTagCompound);
+    public void readOwnFromNBT(NBTTagCompound nbtTagCompound) {
+        super.readOwnFromNBT(nbtTagCompound);
         if (nbtTagCompound.hasKey(Names.NBT.TIME_REMAINING)) {
             this.timeRemaining = nbtTagCompound.getInteger(Names.NBT.TIME_REMAINING);
         }
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbtTagCompound) {
-        nbtTagCompound = super.writeToNBT(nbtTagCompound);
+    public NBTTagCompound writeOwnToNBT(NBTTagCompound nbtTagCompound) {
+        nbtTagCompound = super.writeOwnToNBT(nbtTagCompound);
         nbtTagCompound.setInteger(Names.NBT.TIME_REMAINING, timeRemaining);
         return nbtTagCompound;
     }

@@ -1,10 +1,10 @@
 package de.keridos.floodlights.tileentity;
 
 import cofh.redstoneflux.api.IEnergyContainerItem;
+import de.keridos.floodlights.capability.CustomEnergyStorage;
 import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.core.NetworkDataList;
 import de.keridos.floodlights.handler.ConfigHandler;
-import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.util.MathUtil;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
@@ -20,7 +20,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.fml.common.Optional;
 
 import javax.annotation.Nonnull;
@@ -36,9 +35,6 @@ import javax.annotation.Nullable;
         @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink", modid = "ic2")})
 public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IEnergySink {
 
-    // 1 EU = 4 RF
-    private static final int EU_TO_RF_RATE = 4;
-
     /**
      * Base energy usage.
      */
@@ -49,7 +45,7 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
     protected int realEnergyUsage;
 
     protected boolean wasAddedToEnergyNet = false;
-    public CustomEnergyStorage energy = new CustomEnergyStorage(ConfigHandler.energyBufferSize);
+    public CustomEnergyStorage energy = new CustomEnergyStorage();
 
     public TileEntityFLElectric() {
         super();
@@ -116,15 +112,15 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbtTagCompound) {
-        super.readFromNBT(nbtTagCompound);
+    public void readOwnFromNBT(NBTTagCompound nbtTagCompound) {
+        super.readOwnFromNBT(nbtTagCompound);
         energy.readFromNBT(nbtTagCompound);
         updateEnergyUsage();
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbtTagCompound) {
-        nbtTagCompound = super.writeToNBT(nbtTagCompound);
+    public NBTTagCompound writeOwnToNBT(NBTTagCompound nbtTagCompound) {
+        nbtTagCompound = super.writeOwnToNBT(nbtTagCompound);
         energy.writeToNBT(nbtTagCompound);
         return nbtTagCompound;
     }
@@ -171,7 +167,7 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
     @Optional.Method(modid = "ic2")
     @Override
     public double getDemandedEnergy() {
-        return (double) energy.getMaxEnergyStored() / EU_TO_RF_RATE;
+        return (double) energy.getMaxEnergyStored() / CustomEnergyStorage.EU_TO_RF_RATE;
     }
 
     @Optional.Method(modid = "ic2")
@@ -195,45 +191,6 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
         if (!world.isRemote) {
             EnergyTileUnloadEvent event = new EnergyTileUnloadEvent(this);
             MinecraftForge.EVENT_BUS.post(event);
-        }
-    }
-
-    public static class CustomEnergyStorage extends EnergyStorage {
-
-        private int prevStorageRatio;
-
-        public CustomEnergyStorage(int capacity) {
-            super(capacity);
-        }
-
-        public void setEnergyStored(int energy) {
-            this.energy = Math.max(0, Math.min(energy, capacity));
-        }
-
-        public double receiveEU(double amount) {
-            int received = receiveEnergy((int) Math.round(amount * EU_TO_RF_RATE), false);
-            return amount - (double) received / EU_TO_RF_RATE;
-        }
-
-        /**
-         * Returns whether amount of stored energy has changed significantly since last call.
-         */
-        public boolean storageChanged() {
-            int ratio = Math.round(energy * 1000f / capacity);
-            if (Math.abs(ratio - prevStorageRatio) > 10 || (ratio != prevStorageRatio && (energy == 0 || energy == capacity))) {
-                prevStorageRatio = ratio;
-                return true;
-            }
-            return false;
-        }
-
-        public void readFromNBT(NBTTagCompound nbtTagCompound) {
-            if (nbtTagCompound.hasKey(Names.NBT.STORAGE_FE))
-                setEnergyStored(nbtTagCompound.getInteger(Names.NBT.STORAGE_FE));
-        }
-
-        public void writeToNBT(NBTTagCompound nbtTagCompound) {
-            nbtTagCompound.setInteger(Names.NBT.STORAGE_FE, energy);
         }
     }
 }

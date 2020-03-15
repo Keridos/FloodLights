@@ -1,6 +1,7 @@
 package de.keridos.floodlights.init;
 
 import de.keridos.floodlights.block.*;
+import de.keridos.floodlights.item.itemBlock.ElectricItemBlock;
 import de.keridos.floodlights.item.itemBlock.ItemBlockSmallElectricMetaBlock;
 import de.keridos.floodlights.reference.Names;
 import de.keridos.floodlights.reference.Reference;
@@ -46,11 +47,11 @@ public class ModBlocks {
     @SubscribeEvent
     public static void registerItemBlocks(RegistryEvent.Register<Item> event) {
         event.getRegistry().registerAll(
-                new ItemBlock(blockElectricFloodlight).setRegistryName(blockElectricFloodlight.getRegistryName()),
+                new ElectricItemBlock(blockElectricFloodlight).setRegistryName(blockElectricFloodlight.getRegistryName()),
                 new ItemBlock(blockCarbonFloodlight).setRegistryName(blockCarbonFloodlight.getRegistryName()),
                 new ItemBlockSmallElectricMetaBlock(blockSmallElectricLight).setRegistryName(blockSmallElectricLight.getRegistryName()),
-                new ItemBlock(blockUVFloodlight).setRegistryName(blockUVFloodlight.getRegistryName()),
-                new ItemBlock(blockGrowLight).setRegistryName(blockGrowLight.getRegistryName()),
+                new ElectricItemBlock(blockUVFloodlight).setRegistryName(blockUVFloodlight.getRegistryName()),
+                new ElectricItemBlock(blockGrowLight).setRegistryName(blockGrowLight.getRegistryName()),
                 new ItemBlock(blockPhantomLight).setRegistryName(blockPhantomLight.getRegistryName()),
                 new ItemBlock(blockPhantomUVLight).setRegistryName(blockPhantomUVLight.getRegistryName())
         );

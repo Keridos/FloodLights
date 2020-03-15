@@ -170,8 +170,8 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbtTagCompound) {
-        super.readFromNBT(nbtTagCompound);
+    public void readOwnFromNBT(NBTTagCompound nbtTagCompound) {
+        super.readOwnFromNBT(nbtTagCompound);
         if (nbtTagCompound.hasKey(Names.NBT.WAS_ACTIVE))
             wasActive = nbtTagCompound.getBoolean(Names.NBT.WAS_ACTIVE);
         if (nbtTagCompound.hasKey(Names.NBT.LIGHT))
@@ -208,8 +208,8 @@ public abstract class TileEntityMetaFloodlight extends TileEntityFL implements I
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbtTagCompound) {
-        nbtTagCompound = super.writeToNBT(nbtTagCompound);
+    public NBTTagCompound writeOwnToNBT(NBTTagCompound nbtTagCompound) {
+        nbtTagCompound = super.writeOwnToNBT(nbtTagCompound);
         nbtTagCompound.setBoolean(Names.NBT.WAS_ACTIVE, wasActive);
         nbtTagCompound.setBoolean(Names.NBT.LIGHT, hasLight);
         nbtTagCompound.setBoolean(Names.NBT.HAS_REDSTONE, hasRedstone);
