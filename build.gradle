@@ -154,6 +154,7 @@ task downloadDirectDependencies {
 }
 
 build.dependsOn sourceJar, deobfJar, downloadDirectDependencies
+compileJava.dependsOn downloadDirectDependencies
 
 dependencies {
     compile "com.google.code.findbugs:annotations:3.0.1"
