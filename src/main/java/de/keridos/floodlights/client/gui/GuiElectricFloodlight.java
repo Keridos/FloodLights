@@ -33,8 +33,8 @@ public class GuiElectricFloodlight extends GuiContainer {
     protected void drawGuiContainerForegroundLayer(int par1, int par2) {
         String format = I18n.format(
                 Names.Localizations.RF_STORAGE,
-                String.format("%.1fk", tileEntityFLElectric.energy.getEnergyStored() / 1000f),
-                tileEntityFLElectric.energy.getMaxEnergyStored() / 1000 + "k"
+                String.format("%.1fk", tileEntityFLElectric.getEnergy().getEnergyStored() / 1000f),
+                tileEntityFLElectric.getEnergy().getMaxEnergyStored() / 1000 + "k"
         );
         fontRenderer.drawString(format, 50, cloak ? 20 : 26, 0x000000);
     }

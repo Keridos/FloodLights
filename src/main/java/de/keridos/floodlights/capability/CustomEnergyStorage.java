@@ -36,6 +36,10 @@ public class CustomEnergyStorage extends EnergyStorage {
         return amount - (double) received / EU_TO_RF_RATE;
     }
 
+    public boolean isFull() {
+        return getEnergyStored() == getMaxEnergyStored();
+    }
+
     @Override
     public int receiveEnergy(int maxReceive, boolean simulate) {
         int prev = getEnergyStored();

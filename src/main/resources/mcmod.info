@@ -14,7 +14,8 @@
   "requiredMods": [ "Forge" ],
   "dependencies": [
     "IC2",
-    "JEI"
+    "JEI",
+    "enderio"
   ],
   "dependants": [  ],
   "useDependencyInformation": "true"

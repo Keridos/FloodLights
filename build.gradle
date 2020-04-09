@@ -63,10 +63,6 @@ repositories {
         name = "ChickenBones"
         url = "http://chickenbones.net/maven/"
     }
-
-    flatDir {
-        dirs "libs"
-    }
 }
 
 // define the properties file
@@ -172,7 +168,7 @@ dependencies {
     compile "mcp.mobius.waila:Hwyla:${config.hwyla_version}"
     compile "cofh:RedstoneFlux:${config.redstoneflux_version}:deobf"
 
-    compile fileTree(dir: "libs", includes: ["*.jar"])
+    provided fileTree(dir: "libs", includes: ["*.jar"])
 }
 
 minecraft {

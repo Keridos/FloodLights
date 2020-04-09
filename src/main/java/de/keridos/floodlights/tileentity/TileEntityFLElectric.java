@@ -1,6 +1,7 @@
 package de.keridos.floodlights.tileentity;
 
 import cofh.redstoneflux.api.IEnergyContainerItem;
+import crazypants.enderio.base.power.wireless.WirelessChargedLocation;
 import de.keridos.floodlights.capability.CustomEnergyStorage;
 import de.keridos.floodlights.compatability.ModCompatibility;
 import de.keridos.floodlights.core.NetworkDataList;
@@ -43,9 +44,10 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
      * Real energy usage - with light mode taken into acocunt.
      */
     protected int realEnergyUsage;
-
     protected boolean wasAddedToEnergyNet = false;
-    public CustomEnergyStorage energy = new CustomEnergyStorage();
+
+    private CustomEnergyStorage energy = new CustomEnergyStorage();
+    private WirelessChargedLocation wirelessChargedLocation;
 
     public TileEntityFLElectric() {
         super();
@@ -65,6 +67,7 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
             return;
 
         tryDischargeItem(inventory.getStackInSlot(0));
+        tryChargeFromWirelessCharger();
 
         // Update client GUI when amount of stored energy has changed
         if (energy.storageChanged())
@@ -93,6 +96,17 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
                 energy.receiveEnergy(item.extractEnergy(itemStack, dischargeValue, false), false);
             }
         }
+    }
+
+    private void tryChargeFromWirelessCharger() {
+        if (!ModCompatibility.EnderIOLoaded || energy.isFull())
+            return;
+
+        if (wirelessChargedLocation == null)
+            wirelessChargedLocation = new WirelessChargedLocation(this);
+
+        int taken = wirelessChargedLocation.takeEnergy(energy.getMaxEnergyStored() - energy.getEnergyStored());
+        energy.receiveEnergy(taken, false);
     }
 
     @Override
@@ -141,6 +155,10 @@ public class TileEntityFLElectric extends TileEntityMetaFloodlight implements IE
     @Override
     public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
         return capability == CapabilityEnergy.ENERGY || super.hasCapability(capability, facing);
+    }
+
+    public CustomEnergyStorage getEnergy() {
+        return energy;
     }
 
     @SuppressWarnings("unchecked")
