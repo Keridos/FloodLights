@@ -18,14 +18,10 @@ public abstract class BlockFloodlightContainer<T extends TileEntityMetaFloodligh
     }
 
     @Override
-    protected boolean mergeStack(int slotId, ItemStack itemStack) {
+    protected boolean mergeIntoThisContainer(int slotId, ItemStack itemStack) {
         // slotId = sourceSlot
-        if (slotId < 2) {
-            return mergeItemStack(itemStack, 0, 2, false);
-        } else {
-            return mergeItemStack(itemStack, 36, 37, false)
-                    || mergeItemStack(itemStack, 37, 38, false);
-        }
+        return mergeItemStack(itemStack, 36, 37, false)
+                || mergeItemStack(itemStack, 37, 38, false);
     }
 
     @SuppressWarnings("SameParameterValue")

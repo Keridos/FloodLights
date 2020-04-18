@@ -37,7 +37,7 @@ public abstract class BaseFloodlightContainer<T extends TileEntityMetaFloodlight
         entity.onInventoryOpen(invPlayer.player);
     }
 
-    protected abstract boolean mergeStack(int slotId, ItemStack itemStack);
+    protected abstract boolean mergeIntoThisContainer(int slotId, ItemStack itemStack);
 
     @Override
     public boolean canInteractWith(@Nonnull EntityPlayer playerIn) {
@@ -64,7 +64,7 @@ public abstract class BaseFloodlightContainer<T extends TileEntityMetaFloodlight
                 if (!mergeItemStack(itemstack, 0, 36, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!mergeStack(slotId, itemstack)) {
+            } else if (!mergeIntoThisContainer(slotId, itemstack)) {
                 return ItemStack.EMPTY;
             }
 
