@@ -14,11 +14,8 @@ import static de.keridos.floodlights.util.GeneralUtil.isItemStackValidElectrical
 
 public class ElectricFloodlightContainer extends BlockFloodlightContainer<TileEntityFLElectric> {
 
-    private boolean cloak;
-
-    private ElectricFloodlightContainer(InventoryPlayer invPlayer, TileEntityFLElectric entity, boolean cloak) {
-        super(invPlayer, entity);
-        this.cloak = cloak;
+    private ElectricFloodlightContainer(InventoryPlayer invPlayer, TileEntityFLElectric entity, boolean hasCloakSlot) {
+        super(invPlayer, entity, hasCloakSlot);
     }
 
     @Override
@@ -26,7 +23,7 @@ public class ElectricFloodlightContainer extends BlockFloodlightContainer<TileEn
         super.initialize();
 
         IItemHandler inventory = entity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-        addSlotToContainer(new SlotItemHandler(inventory, 0, 26, cloak ? 16 : 22) {
+        addSlotToContainer(new SlotItemHandler(inventory, 0, 26, hasCloakSlot ? 16 : 22) {
             @Override
             public boolean isItemValid(@Nonnull ItemStack stack) {
                 return isItemStackValidElectrical(stack);
@@ -39,19 +36,19 @@ public class ElectricFloodlightContainer extends BlockFloodlightContainer<TileEn
             }
         });
 
-        if (cloak) {
+        if (hasCloakSlot) {
             addSlotToContainer(getCloakSlot(inventory, 1, 26, 41));
         }
     }
 
     @Override
     protected Pair<Integer, Integer> getHotbarOffset() {
-        return new Pair<>(8, cloak ? 132 : 116);
+        return new Pair<>(8, hasCloakSlot ? 132 : 116);
     }
 
     @Override
     protected Pair<Integer, Integer> getInventoryOffset() {
-        return new Pair<>(8, cloak ? 74 : 58);
+        return new Pair<>(8, hasCloakSlot ? 74 : 58);
     }
 
     public static ElectricFloodlightContainer create(InventoryPlayer inventoryPlayer, TileEntityFLElectric entity, boolean cloak) {

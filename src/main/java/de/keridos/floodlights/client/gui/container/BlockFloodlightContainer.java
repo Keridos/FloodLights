@@ -11,17 +11,21 @@ import net.minecraftforge.items.SlotItemHandler;
 
 import javax.annotation.Nonnull;
 
+@SuppressWarnings("WeakerAccess")
 public abstract class BlockFloodlightContainer<T extends TileEntityMetaFloodlight> extends BaseFloodlightContainer<T> {
 
-    BlockFloodlightContainer(InventoryPlayer invPlayer, T entity) {
+    protected boolean hasCloakSlot;
+
+    BlockFloodlightContainer(InventoryPlayer invPlayer, T entity, boolean hasCloakSlot) {
         super(invPlayer, entity);
+        this.hasCloakSlot = hasCloakSlot;
     }
 
     @Override
     protected boolean mergeIntoThisContainer(int slotId, ItemStack itemStack) {
         // slotId = sourceSlot
         return mergeItemStack(itemStack, 36, 37, false)
-                || mergeItemStack(itemStack, 37, 38, false);
+                || (hasCloakSlot && mergeItemStack(itemStack, 37, 38, false));
     }
 
     @SuppressWarnings("SameParameterValue")

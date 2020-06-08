@@ -14,12 +14,13 @@ import static de.keridos.floodlights.util.GeneralUtil.getBurnTime;
 public class CarbonFloodlightContainer extends BlockFloodlightContainer<TileEntityCarbonFloodlight> {
 
     private CarbonFloodlightContainer(InventoryPlayer invPlayer, TileEntityCarbonFloodlight entity) {
-        super(invPlayer, entity);
+        super(invPlayer, entity, true);
     }
 
     @Override
     void initialize() {
         super.initialize();
+
         IItemHandler inventory = entity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
         addSlotToContainer(new SlotItemHandler(inventory, 0, 26, 16) {
             @Override
